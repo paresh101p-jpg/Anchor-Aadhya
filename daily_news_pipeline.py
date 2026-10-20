@@ -80,13 +80,13 @@ STORIES = [
     },
     {
         "id": "scene_6_outro",
-        "bg_img": os.path.join(BASE_DIR, "anchor_aadhya_outro.jpg"),
+        "bg_img": os.path.join(BASE_DIR, "anchor_aadhya_profile.jpg"),
         "category": "DAILY 5PM BULLETIN",
         "badge_color": (255, 30, 86, 255),
         "headline": "ROZ SHAAM 5 BAJE NAYA VIDEO!",
         "bullet1": "• Like karo, doston ko share karo aur bell icon dabao",
         "bullet2": "• Kal shaam 5 baje milte hain ek aur naye dhamake ke saath!",
-        "speech": "तो दोस्तों, ये थीं आज की सबसे बड़ी फ्यूचर टेक की सनसनीखेज़ खबरें! कैसी लगी आपको आज आध्या की टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! हम रोज़ शाम ठीक पाँच बजे मिलेंगे ताज़ा टेक न्यूज़ के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
+        "speech": "तो दोस्तों, ये थीं आज की सबसे बड़ी फ्यूचर टेक की सनसनीखेज़ खबरें! कैसी लगी आपको आज आध्या की टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और स्क्रीन पर दिख रहे बटन से चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! यहाँ देखिए हमारा पिछला स्पेशल बुलेटिन! हम रोज़ शाम ठीक पाँच बजे मिलेंगे ताज़ा टेक न्यूज़ के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
     }
 ]
 
@@ -215,7 +215,37 @@ def create_graphics_layers():
         b2_img.save(b2_file, "PNG")
         bullet2_paths.append(b2_file)
 
-    return board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths
+    # High-CTR YouTube End Screen Overlay (Left Side Panel)
+    endscreen_img = Image.new("RGBA", (1920, 1080), (0, 0, 0, 0))
+    ed = ImageDraw.Draw(endscreen_img)
+    px1, py1, px2, py2 = 60, 100, 920, 980
+    ed.rounded_rectangle([(px1, py1), (px2, py2)], radius=24, fill=(10, 16, 32, 230), outline=(0, 220, 255, 255), width=3)
+    ed.rounded_rectangle([(px1, py1), (px2, py1+70)], radius=24, fill=(220, 20, 60, 255))
+
+    font_es_bold = get_font(26, bold=True)
+    font_es_sm = get_font(20, bold=False)
+    font_es_title = get_font(30, bold=True)
+
+    ed.text((px1+35, py1+18), "THANKS FOR WATCHING • ANCHOR AADHYA", font=font_es_title, fill=(255, 255, 255))
+
+    # Video 1 Box (16:9 standard: 670x377)
+    vx1, vy1, vx2, vy2 = 120, 210, 860, 626
+    ed.rounded_rectangle([(vx1, vy1), (vx2, vy2)], radius=16, fill=(18, 25, 48, 210), outline=(0, 220, 255, 255), width=3)
+    ed.text((vx1+250, vy1+170), "▶  WATCH NEXT", font=font_es_bold, fill=(0, 220, 255))
+    ed.text((vx1+200, vy1+210), "Recommended / Previous Tech Bulletin", font=font_es_sm, fill=(200, 215, 235))
+
+    # Subscribe Circle & Text
+    cx, cy, r = 240, 800, 80
+    ed.ellipse([(cx-r, cy-r), (cx+r, cy+r)], fill=(220, 20, 60, 220), outline=(255, 215, 0, 255), width=4)
+    ed.text((cx-42, cy-14), "SUBSCRIBE", font=get_font(20, bold=True), fill=(255, 255, 255))
+    ed.text((cx+115, cy-25), "ANCHOR AADHYA", font=font_es_bold, fill=(255, 255, 255))
+    ed.text((cx+115, cy+8), "Roz Shaam 5:00 Baje Daily Tech News", font=font_es_sm, fill=(0, 220, 255))
+    ed.text((cx+115, cy+35), "Bell Icon Dabayein!", font=font_es_sm, fill=(255, 215, 0))
+
+    endscreen_path = os.path.join(BASE_DIR, "endscreen_overlay.png")
+    endscreen_img.save(endscreen_path, "PNG")
+
+    return board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, endscreen_path
 
 async def generate_speech_audio():
     print("\n--- 3. Synthesizing Pure Hindi Voice (Microsoft Swara Neural) ---", flush=True)
@@ -240,7 +270,7 @@ def get_audio_duration(file_path):
     except Exception:
         return 28.0
 
-def render_scenes_with_motion(board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, audio_paths):
+def render_scenes_with_motion(board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, endscreen_path, audio_paths):
     print("\n--- 4. Rendering HD 1080p Scenes with Motion Graphics & Real Photos ---", flush=True)
     scene_videos = []
     ticker_font = "C\\:/Windows/Fonts/segoeui.ttf"
@@ -300,6 +330,32 @@ def render_scenes_with_motion(board_path, rundown_paths, plate_paths, bullet1_pa
                 "-i", audio,
                 "-filter_complex", filter_complex,
                 "-map", "[v]", "-map", "11:a",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
+                "-c:a", "aac", "-b:a", "192k",
+                "-t", str(dur),
+                scene_mp4
+            ]
+        elif idx == len(STORIES) - 1:
+            # SCENE 6 (OUTRO): High-CTR YouTube End-Screen Card on Left + Aadhya on Right
+            filter_complex = (
+                f"[0:v]scale=1920:1080,zoompan=z='min(zoom+0.0003,1.03)':d={frames}:s=1920x1080:fps=25[bg];"
+                f"[bg][1:v]overlay=0:0[with_hdr];"
+                f"[with_hdr][2:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[with_logo];"
+                f"[with_logo][3:v]overlay=x='if(lte(t,1.0), -950 + 950*sin((t-0.3)/0.7*1.5708), 0)':y=0:enable='between(t,0.3,999)'[with_endscreen];"
+                f"[with_endscreen]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
+                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
+                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
+            )
+
+            cmd = [
+                FFMPEG_BIN, "-y",
+                "-loop", "1", "-i", item["bg_img"],
+                "-loop", "1", "-i", HEADER_BAR_PATH,
+                "-loop", "1", "-i", LOGO_BUG_PATH,
+                "-loop", "1", "-i", endscreen_path,
+                "-i", audio,
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "4:a",
                 "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
@@ -374,7 +430,7 @@ def render_master_news_video(scene_videos):
 
 def cleanup_temp_files():
     print("\n--- 6. Cleaning Up Temporary Rendering Assets ---", flush=True)
-    patterns = ["tv_scene_*", "plate_*", "bullet*", "scene1_*", "tv_voice_*", "temp_concat*"]
+    patterns = ["tv_scene_*", "plate_*", "bullet*", "scene1_*", "tv_voice_*", "temp_concat*", "endscreen_overlay*"]
     import glob
     for pat in patterns:
         for f in glob.glob(os.path.join(BASE_DIR, pat)):
@@ -397,9 +453,9 @@ async def main():
     print("==============================================================")
 
     download_news_images()
-    board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths = create_graphics_layers()
+    board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, endscreen_path = create_graphics_layers()
     audio_paths = await generate_speech_audio()
-    scene_videos = render_scenes_with_motion(board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, audio_paths)
+    scene_videos = render_scenes_with_motion(board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, endscreen_path, audio_paths)
     render_master_news_video(scene_videos)
     cleanup_temp_files()
 
