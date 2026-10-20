@@ -356,8 +356,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Human champion pilots ko race mein piche chhoda!",
         "emotion": "dramatic",
         "speech": "पहली बड़ी खबर: दुनिया के सबसे तेज़ इंसानी ड्रोन रेसर्स को एक एआई ड्रोन ने धूल चटा दी है! डेल्फ़्ट यूनिवर्सिटी के 'मोनो-रेस' एआई ने बिना किसी जीपीएस या मैप के, सिर्फ एक कैमरे की मदद से सौ किलोमीटर प्रति घंटे की रफ़्तार से उड़ते हुए वर्ल्ड चैंपियन पायलट को हरा दिया! मतलब अब आसमान में उड़ने की रेस में भी इंसान कंप्यूटर से हार गया! अब आप ही बताइए... क्या इंसान कभी एआई से जीत पाएगा? या फिर हमें अपनी हार मान लेनी चाहिए? कमेंट में अपनी राय ज़रूर दीजिए!",
-        "ai_image_prompt": "high-speed autonomous racing drone with glowing cyan LED lights flying through glowing obstacle gates on a stadium race track at 100 km/h, motion blur, sharp focus",
-        "ai_image_prompt_2": "extreme macro close-up photography of carbon fiber racing drone camera gimbal and spinning cyan glowing aerodynamic propellers, 8k"
+        "ai_image_prompt": "Delft autonomous AI quadcopter racing drone with high-speed spinning carbon-fiber propellers flying aggressively at 100 km/h through glowing neon-cyan illuminated obstacle gate in indoor stadium drone racing tournament, front camera lens glinting, motion blur background, razor-sharp focus on racing drone, 8k editorial sports photo",
+        "ai_image_prompt_2": "Extreme macro close-up photograph of carbon-fiber racing drone chassis showing high-speed brushless motors, four spinning aerodynamic blades, miniature high-speed AI optical camera sensor and copper cooling heatsink, technical journalism photography, 8k"
     },
     {
         "id": "tesla_roadster_spacex_thrusters",
