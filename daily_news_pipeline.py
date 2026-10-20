@@ -48,11 +48,15 @@ def get_font(size, bold=True):
         r"C:\Windows\Fonts\impact.ttf",
         r"C:\Windows\Fonts\segoeuib.ttf",
         r"C:\Windows\Fonts\arialbd.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
     ] if bold else [
         r"C:\Windows\Fonts\segoeui.ttf",
         r"C:\Windows\Fonts\arial.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
     ]
@@ -64,6 +68,40 @@ def get_font(size, bold=True):
                 continue
     return ImageFont.load_default()
 
+def get_topic_matching_fallback(story):
+    """
+    Intelligently select the best matching fallback visual based on story topic.
+    NEVER use a car image for robots, drones, medical, or quantum stories!
+    """
+    cat = (story.get("category", "") + " " + story.get("headline", "") + " " + " ".join(story.get("keywords", []))).lower()
+    
+    if any(k in cat for k in ["drone", "racing", "aerial", "aviation"]):
+        cand = os.path.join(BASE_DIR, "news_1_drone.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["robot", "humanoid", "factory", "assembly", "figure", "bipedal"]):
+        cand = os.path.join(BASE_DIR, "news_3_robots.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["quantum", "crystal", "chip", "computing", "hacker"]):
+        cand = os.path.join(BASE_DIR, "news_4_quantum.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["neuralink", "brain", "mind", "telepathy", "paralysis"]):
+        cand = os.path.join(BASE_DIR, "scene_6_neuralink.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["fusion", "sun", "reactor", "tokamak", "energy", "solar"]):
+        cand = os.path.join(BASE_DIR, "scene_4_energy.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["flying car", "evtol", "air taxi", "flying"]):
+        cand = os.path.join(BASE_DIR, "scene_5_flying_car.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["car", "tesla", "roadster", "thruster", "vehicle"]):
+        cand = os.path.join(BASE_DIR, "news_2_tesla.jpg")
+        if os.path.exists(cand): return cand
+    if any(k in cat for k in ["medicine", "health", "cancer", "cure", "dna", "biology"]):
+        cand = os.path.join(BASE_DIR, "scene_3_medicine.jpg")
+        if os.path.exists(cand): return cand
+        
+    return os.path.join(BASE_DIR, "scene_2_robots.jpg")
+
 def create_ai_news_images(slot, stories):
     print("\n--- 1. Generating 100% Brand-New AI Photorealistic News Imagery (Zero Copyright Risk) ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
@@ -73,7 +111,7 @@ def create_ai_news_images(slot, stories):
         prompt = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
         ok = generate_ai_news_image(prompt, dest)
         if not ok or not os.path.exists(dest):
-            dest = os.path.join(BASE_DIR, "news_2_tesla.jpg")
+            dest = get_topic_matching_fallback(item)
         item["bg_img"] = dest
         print(f"  --> [AI IMAGE READY] Scene {idx+2}: {dest}", flush=True)
 
@@ -376,7 +414,8 @@ async def main():
     for idx, s in enumerate(stories):
         rundown_items.append({"num": f"0{idx+1}", "title": s["headline"]})
 
-    next_bulletin_time = "आज शाम ठीक 5:00 बजे" if slot == "12PM" else "कल दोपहर ठीक 12:00 बजे"
+    next_slot_label = "AAJ SHAAM 05:00 PM" if slot == "12PM" else "KAL DOPAHAR 12:00 PM"
+    next_bulletin_hindi = "आज शाम ठीक 5:00 बजे" if slot == "12PM" else "कल दोपहर ठीक 12:00 बजे"
     intro_label = "दोपहर 12 बजे का स्पेशल बुलेटिन" if slot == "12PM" else "शाम 5 बजे का प्राइम बुलेटिन"
 
     hook_scene = {
@@ -393,14 +432,14 @@ async def main():
 
     outro_scene = {
         "id": "scene_6_outro",
-        "bg_img": os.path.join(BASE_DIR, "anchor_aadhya_outro.jpg"),
+        "bg_img": anchor_look["file"],
         "category": f"NEXT {slot} BULLETIN",
         "badge_color": anchor_look["theme_color"],
-        "headline": f"AGLA BULLETIN: {next_bulletin_time.upper()}!",
-        "bullet1": "• Like karo, doston ko share karo aur bell icon dabao",
-        "bullet2": f"• {next_bulletin_time} milte hain ek aur naye dhamake ke saath!",
+        "headline": f"AGLA BULLETIN: {next_slot_label}!",
+        "bullet1": "• Video ko Like & Doston ke saath Share karein",
+        "bullet2": f"• Channel Subscribe karein aur Bell Icon dabayein!",
         "emotion": "inspirational_joy",
-        "speech": f"तो दोस्तों, ये थीं आज के इस {intro_label} की सबसे बड़ी फ्यूचर टेक खबरें! कैसी लगी आपको आज की टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! हम फिर मिलेंगे {next_bulletin_time} ताज़ा और प्रामाणिक टेक न्यूज़ के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
+        "speech": f"तो दोस्तों, ये थीं आज के इस {intro_label} की सबसे बड़ी फ्यूचर टेक खबरें! कैसी लगी आपको आज की टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! हम फिर मिलेंगे {next_bulletin_hindi} ताज़ा और प्रामाणिक टेक न्यूज़ के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
     }
 
     full_scenes_list = [hook_scene] + stories + [outro_scene]
