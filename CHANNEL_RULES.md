@@ -61,13 +61,13 @@
 
 ---
 
-## 6. YouTube End Screen (Outro Card) Architecture & Rules
+## 6. 100% Autonomous Broadcast TV Outro Architecture
 * **Duration**: Last 15–20 seconds of the video (Scene 6 Outro).
-* **Safe Zone Layout**:
-  * **Left Side (x=60 to 920px)**: Dedicated dark glassmorphic End-Screen Panel with glowing cyan/crimson borders:
-    1. Header: `THANKS FOR WATCHING • ANCHOR AADHYA`.
-    2. Video Card Box (16:9 standard, 670x377px): `▶ WATCH NEXT — Recommended / Previous Tech Bulletin`.
-    3. Subscribe Circle (Radius 80px with glowing gold ring): `SUBSCRIBE — ANCHOR AADHYA • Bell Icon Dabayein!`.
-  * **Right Side (x=920 to 1920px)**: Radiant Anchor Aadhya (`anchor_aadhya_profile.jpg`) unhindered and smiling, verbally guiding viewers: *"स्क्रीन पर दिख रहे बटन से चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! यहाँ देखिए हमारा पिछला स्पेशल बुलेटिन!"*
-* **Compliance**: 100% compliant with YouTube End Screen safe zones and YPP transparency rules. Zero overlapping of facial features.
+* **Zero Manual Studio Touch**: The pipeline is 100% hands-off. The creator NEVER needs to open YouTube Studio to manually add end screen elements.
+* **Autonomous Visual & Audio Sign-off**:
+  * Anchor Aadhya (`anchor_aadhya_outro.jpg`) warmly smiles on full broadcast studio frame.
+  * Professional Animated Lower-Third Plate: `DAILY 5PM BULLETIN | ROZ SHAAM 5 BAJE NAYA VIDEO!`.
+  * Animated Bullets: `• Like karo, doston ko share karo aur bell icon dabao` and `• Kal shaam 5 baje milte hain ek aur naye dhamake ke saath!`.
+  * Scrolling Bottom Ticker Tape with daily 5 PM schedule and subscribe callout.
+  * Audio: Natural, engaging sign-off inviting viewers to like, share, subscribe, and meet tomorrow at 5:00 PM.
 * `uploaded_bulletins_tracker.txt`: Permanent history log preventing duplicate uploads.
