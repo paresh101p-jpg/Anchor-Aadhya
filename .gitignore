@@ -1,0 +1,21 @@
+# Video & Audio Render Output (Generated daily)
+*.mp4
+*.mp3
+*.wav
+*.tmp
+tv_scenes_list.txt
+
+# Temporary Motion Graphics Assets
+tv_scene_*
+plate_*
+bullet*
+scene1_*
+temp_*
+
+# Python Cache
+__pycache__/
+*.pyc
+
+# Sensitive Local OAuth Credentials (Use GitHub Secrets in Cloud!)
+client_secret.json
+youtube_token.json
