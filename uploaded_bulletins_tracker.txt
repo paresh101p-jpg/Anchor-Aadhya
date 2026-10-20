@@ -1,2 +1,2 @@
-2026-10-20 15:17:01 | Anchor_Aadhya_News_2026-10-20.mp4 | Zs93iZMnJVA | https://www.youtube.com/watch?v=Zs93iZMnJVA
-2026-10-20 11:48:32 | Anchor_Aadhya_News_2026-10-20_12PM.mp4 | aoWqcCwn5Yg | https://www.youtube.com/watch?v=aoWqcCwn5Yg
+# Anchor Aadhya Bulletin Upload Tracker
+# Format: Timestamp | Video Filename | Video ID | URL
