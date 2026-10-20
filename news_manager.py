@@ -150,8 +150,8 @@ CURATED_CATEGORY_VISUALS = {
         2: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1920&q=85"
     },
     "tesla_roadster_spacex_thrusters": {
-        1: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85"
+        1: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=85"
     },
     "factory_humanoid_robots_10000": {
         1: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85",
@@ -203,9 +203,15 @@ def generate_nano_banana_image(prompt, output_file):
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key)
+        enhanced_prompt = (
+            f"Authentic editorial news photojournalism. {prompt}. "
+            f"100% physically accurate representation of the exact model, vehicle, robot, or device described. "
+            f"Ultra-detailed real-world commercial photography, sharp 8k focus, cinematic broadcast news studio lighting, "
+            f"natural textures and reflections, no cartoon, no CGI render art, no watermark, no digital overlays"
+        )
         response = client.models.generate_images(
             model="imagen-3.0-generate-002",
-            prompt=f"Photojournalism documentary style, ultra-realistic photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos",
+            prompt=enhanced_prompt,
             config=types.GenerateImageConfig(
                 number_of_images=1,
                 output_mime_type="image/jpeg",
@@ -355,16 +361,16 @@ MASTER_STORIES_POOL = [
     },
     {
         "id": "tesla_roadster_spacex_thrusters",
-        "keywords": ["tesla", "roadster", "spacex", "rocket thruster", "elon musk"],
+        "keywords": ["tesla roadster", "spacex", "rocket thruster", "elon musk", "hypercar"],
         "category": "TESLA ROADSTER",
         "badge_color": (245, 158, 11, 255),
-        "headline": "TESLA CAR MEIN LAG GAYE ROCKET THRUSTERS!",
+        "headline": "TESLA ROADSTER MEIN ROCKET THRUSTERS!",
         "bullet1": "• SpaceX cold-gas thrusters se hawa mein uregi car",
         "bullet2": "• 0 se 100 km/h sirf 1 second se kam mein!",
         "emotion": "dramatic",
-        "speech": "दूसरी होश उड़ाने वाली खबर एलन मस्क की टेस्ला से आई है! टेस्ला की नई रोडस्टर कार में स्पेस-एक्स के असली रॉकेट थ्रस्टर्स लगा दिए गए हैं! जी हाँ, ये कार सिर्फ ज़मीन पर दौड़ेगी नहीं, बल्कि रॉकेट की ताकत से हवा में उड़ती हुई छलाँग भी लगाएगी! शून्य से सौ की रफ़्तार एक सेकंड से भी कम समय में! ज़रा सोचिए, अगर किसी दिन मैं आपको इस उड़ती हुई टेस्ला में अपने साथ लॉन्ग ड्राइव पर ले चलूँ, तो आपका दिल कितनी तेज़ी से धड़केगा? सीट बेल्ट कसकर बाँध लेना, क्योंकि झटका बहुत ज़ोर का लगने वाला है!",
-        "ai_image_prompt": "metallic crimson red luxury electric hypercar with cold gas thrusters firing white vapor thrust on high-tech test track, dramatic sunset, motion blur, 8k",
-        "ai_image_prompt_2": "dramatic close-up macro of hypercar rocket thruster nozzle firing supersonic vapor exhaust with glowing heat distortion, 8k"
+        "speech": "दूसरी होश उड़ाने वाली खबर एलन मस्क की टेस्ला से आई है! टेस्ला की नई रोडस्टर स्पोर्ट्स कार में स्पेस-एक्स के असली रॉकेट थ्रस्टर्स लगा दिए गए हैं! जी हाँ, ये लाल रंग की सुपरकार सिर्फ ज़मीन पर दौड़ेगी नहीं, बल्कि रॉकेट की ताकत से हवा में उड़ती हुई छलाँग भी लगाएगी! शून्य से सौ की रफ़्तार एक सेकंड से भी कम समय में! ज़रा सोचिए, अगर किसी दिन मैं आपको इस उड़ती हुई टेस्ला रोडस्टर में अपने साथ लॉन्ग ड्राइव पर ले चलूँ, तो आपका दिल कितनी तेज़ी से धड़केगा? सीट बेल्ट कसकर बाँध लेना, क्योंकि झटका बहुत ज़ोर का लगने वाला है!",
+        "ai_image_prompt": "Official crimson red next-generation Tesla Roadster sports car equipped with SpaceX rocket package, high-pressure cold-gas thruster nozzles mounted on the rear diffuser, accelerating violently on modern asphalt test track at sunset, glowing red horizontal LED taillight bar, authentic aerodynamic Tesla sports car curves, 8k commercial photography",
+        "ai_image_prompt_2": "Extreme macro close-up photograph of the rear carbon-fiber diffuser of a red Tesla Roadster, focusing on the aerospace cold-gas rocket thruster nozzle actively venting supersonic vapor thrust, official Tesla emblem badge, razor-sharp mechanical detail, 8k"
     },
     {
         "id": "factory_humanoid_robots_10000",

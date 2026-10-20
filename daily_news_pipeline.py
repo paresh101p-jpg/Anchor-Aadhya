@@ -96,8 +96,8 @@ TOPIC_STOCK_URLS = {
         2: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85"
     },
     "car": {
-        1: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85"
+        1: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=85"
     },
     "medicine": {
         1: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1920&q=85",
@@ -178,7 +178,10 @@ def create_ai_news_images(slot, stories):
     for idx, item in enumerate(stories):
         # Shot 1: Wide / Action Perspective
         dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
-        prompt1 = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
+        prompt1 = item.get("ai_image_prompt")
+        if not prompt1:
+            kw = ", ".join(item.get("keywords", [item.get("category", "")]))
+            prompt1 = f"Ultra-realistic news photojournalism of {item['headline']}, {kw}, high-tech authentic photography, sharp details, 8k"
         ok1 = generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1)
         if not ok1 or not os.path.exists(dest1):
             dest1 = get_topic_matching_fallback(item, shot_idx=1, dest_file=dest1)
@@ -187,7 +190,10 @@ def create_ai_news_images(slot, stories):
 
         # Shot 2: Dynamic Macro / High-Tech Close-up Perspective
         dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
-        prompt2 = item.get("ai_image_prompt_2", f"extreme high-tech macro close-up photography of {item['category']}, 8k")
+        prompt2 = item.get("ai_image_prompt_2")
+        if not prompt2:
+            kw = ", ".join(item.get("keywords", [item.get("category", "")]))
+            prompt2 = f"Extreme macro close-up photography of {kw}, detailed technical mechanism and textures, razor-sharp focus, 8k"
         ok2 = generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2)
         if not ok2 or not os.path.exists(dest2):
             dest2 = get_topic_matching_fallback(item, shot_idx=2, dest_file=dest2)
