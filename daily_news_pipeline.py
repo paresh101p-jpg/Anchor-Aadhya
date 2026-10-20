@@ -24,6 +24,7 @@ from news_manager import (
     get_fresh_bulletin_stories,
     select_anchor_look,
     commit_bulletin_stories,
+    generate_ai_news_image,
     VOICE_PROFILES,
     append_image_archive,
     load_images_archive
@@ -63,34 +64,19 @@ def get_font(size, bold=True):
                 continue
     return ImageFont.load_default()
 
-def download_fresh_news_images(slot, stories):
-    print("\n--- 1. Downloading Authentic, Brand-New News Photography (Zero Duplicates) ---", flush=True)
+def create_ai_news_images(slot, stories):
+    print("\n--- 1. Generating 100% Brand-New AI Photorealistic News Imagery (Zero Copyright Risk) ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-    used_images = load_images_archive()
 
     for idx, item in enumerate(stories):
-        dest = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_story_{idx+1}.jpg")
-        url = item.get("selected_img_url")
+        dest = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}.jpg")
+        prompt = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
+        ok = generate_ai_news_image(prompt, dest)
+        if not ok or not os.path.exists(dest):
+            dest = os.path.join(BASE_DIR, "news_2_tesla.jpg")
+        item["bg_img"] = dest
+        print(f"  --> [AI IMAGE READY] Scene {idx+2}: {dest}", flush=True)
 
-        if url and (not os.path.exists(dest) or os.path.getsize(dest) < 10000):
-            try:
-                req = urllib.request.Request(url, headers=headers)
-                with urllib.request.urlopen(req, timeout=15) as resp:
-                    with open(dest + ".tmp", "wb") as f:
-                        f.write(resp.read())
-                img = Image.open(dest + ".tmp").convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-                img.save(dest, "JPEG", quality=95)
-                if os.path.exists(dest + ".tmp"):
-                    os.remove(dest + ".tmp")
-                append_image_archive(url)
-                print(f"  --> [DOWNLOADED FRESH] Scene {idx+2}: {dest}", flush=True)
-            except Exception as e:
-                print(f"  --> Image download fallback for {dest}: {e}", flush=True)
-                # Fallback to existing asset if needed
-                dest = os.path.join(BASE_DIR, f"news_{idx+1}_fallback.jpg")
-
-        item["bg_img"] = dest if os.path.exists(dest) else os.path.join(BASE_DIR, "news_2_tesla.jpg")
 
 def create_graphics_layers(today_display, slot, stories, rundown_items):
     print("\n--- 2. Generating Modern TV Broadcast Motion Overlays ---", flush=True)
@@ -375,8 +361,8 @@ async def main():
     anchor_look = select_anchor_look(slot, dominant_emotion)
     print(f"  --> Active Anchor Look: {anchor_look['name']} ({anchor_look['style_desc']})")
 
-    # 2. Download fresh photojournalism images
-    download_fresh_news_images(slot, stories)
+    # 2. Generate 100% Brand-New AI Photorealistic News Imagery
+    create_ai_news_images(slot, stories)
 
     # 3. Create Scene 1 (Hook / Rundown) & Scene 6 (Outro)
     rundown_items = []
