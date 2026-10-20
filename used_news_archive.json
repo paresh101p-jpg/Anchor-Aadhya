@@ -2,29 +2,103 @@
   {
     "id": "delft_ai_drone_racing_champion",
     "headline": "AI DRONE NE WORLD CHAMPION KO HARAYA!",
-    "keywords": ["delft", "ai drone", "drone racing", "human champion"],
+    "keywords": [
+      "delft",
+      "ai drone",
+      "drone racing",
+      "human champion"
+    ],
     "slot": "5PM",
     "timestamp": "2026-10-20 15:17:00"
   },
   {
     "id": "tesla_roadster_spacex_thrusters",
     "headline": "TESLA CAR MEIN LAG GAYE ROCKET THRUSTERS!",
-    "keywords": ["tesla", "roadster", "spacex", "rocket thruster", "elon musk"],
+    "keywords": [
+      "tesla",
+      "roadster",
+      "spacex",
+      "rocket thruster",
+      "elon musk"
+    ],
     "slot": "5PM",
     "timestamp": "2026-10-20 15:17:00"
   },
   {
     "id": "factory_humanoid_robots_10000",
     "headline": "FACTORIES MEIN 10,000 ROBOTS DEPLOYED!",
-    "keywords": ["humanoid robot", "auto factory", "assembly line", "figure"],
+    "keywords": [
+      "humanoid robot",
+      "auto factory",
+      "assembly line",
+      "figure"
+    ],
     "slot": "5PM",
     "timestamp": "2026-10-20 15:17:00"
   },
   {
     "id": "max_planck_quantum_unhackable_internet",
     "headline": "QUANTUM INTERNET KA NAYA WORLD RECORD!",
-    "keywords": ["max planck", "quantum internet", "unhackable", "cryptography", "crystal"],
+    "keywords": [
+      "max planck",
+      "quantum internet",
+      "unhackable",
+      "cryptography",
+      "crystal"
+    ],
     "slot": "5PM",
     "timestamp": "2026-10-20 15:17:00"
+  },
+  {
+    "id": "neuralink_brain_chip_telepathy_world",
+    "headline": "DIMAG KI SOCH SE COMPUTER CONTROL HOGA!",
+    "keywords": [
+      "neuralink",
+      "brain chip",
+      "telepathy",
+      "mind control",
+      "bci"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-20 11:48:21"
+  },
+  {
+    "id": "evtol_flying_car_certified_commercial",
+    "headline": "FLYING CAR KO MILI OFFICIAL PERMISSION!",
+    "keywords": [
+      "flying car",
+      "evtol",
+      "air taxi",
+      "aviation",
+      "traffic"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-20 11:48:21"
+  },
+  {
+    "id": "artificial_sun_nuclear_fusion_record",
+    "headline": "NAKLI SURAJ NE BANAYA UNLIMITED POWER!",
+    "keywords": [
+      "artificial sun",
+      "nuclear fusion",
+      "unlimited energy",
+      "plasma",
+      "clean energy"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-20 11:48:21"
+  },
+  {
+    "id": "robotic_chef_masti_household_cooking",
+    "headline": "ROBOT NE BANAYA CRUNCHY CRISPY DOSA!",
+    "keywords": [
+      "robotic chef",
+      "ai cooking",
+      "smart kitchen",
+      "dosa robot",
+      "household"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-20 11:48:21"
   }
 ]
