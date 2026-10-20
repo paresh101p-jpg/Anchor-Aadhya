@@ -185,7 +185,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Human champion pilots ko race mein piche chhoda!",
         "emotion": "dramatic",
         "speech": "पहली बड़ी खबर: दुनिया के सबसे तेज़ इंसानी ड्रोन रेसर्स को एक एआई ड्रोन ने धूल चटा दी है! डेल्फ़्ट यूनिवर्सिटी के 'मोनो-रेस' एआई ने बिना किसी जीपीएस या मैप के, सिर्फ एक कैमरे की मदद से सौ किलोमीटर प्रति घंटे की रफ़्तार से उड़ते हुए वर्ल्ड चैंपियन पायलट को हरा दिया! मतलब अब आसमान में उड़ने की रेस में भी इंसान कंप्यूटर से हार गया! अब आप ही बताइए... क्या इंसान कभी एआई से जीत पाएगा? या फिर हमें अपनी हार मान लेनी चाहिए? कमेंट में अपनी राय ज़रूर दीजिए!",
-        "ai_image_prompt": "high-speed autonomous racing drone with glowing cyan LED lights flying through glowing obstacle gates on a stadium race track at 100 km/h, motion blur, sharp focus"
+        "ai_image_prompt": "high-speed autonomous racing drone with glowing cyan LED lights flying through glowing obstacle gates on a stadium race track at 100 km/h, motion blur, sharp focus",
+        "ai_image_prompt_2": "extreme macro close-up photography of carbon fiber racing drone camera gimbal and spinning cyan glowing aerodynamic propellers, 8k"
     },
     {
         "id": "tesla_roadster_spacex_thrusters",
@@ -197,7 +198,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• 0 se 100 km/h sirf 1 second se kam mein!",
         "emotion": "dramatic",
         "speech": "दूसरी होश उड़ाने वाली खबर एलन मस्क की टेस्ला से आई है! टेस्ला की नई रोडस्टर कार में स्पेस-एक्स के असली रॉकेट थ्रस्टर्स लगा दिए गए हैं! जी हाँ, ये कार सिर्फ ज़मीन पर दौड़ेगी नहीं, बल्कि रॉकेट की ताकत से हवा में उड़ती हुई छलाँग भी लगाएगी! शून्य से सौ की रफ़्तार एक सेकंड से भी कम समय में! ज़रा सोचिए, अगर किसी दिन मैं आपको इस उड़ती हुई टेस्ला में अपने साथ लॉन्ग ड्राइव पर ले चलूँ, तो आपका दिल कितनी तेज़ी से धड़केगा? सीट बेल्ट कसकर बाँध लेना, क्योंकि झटका बहुत ज़ोर का लगने वाला है!",
-        "ai_image_prompt": "metallic crimson red luxury electric hypercar with cold gas thrusters firing white vapor thrust on high-tech test track, dramatic sunset, motion blur, 8k"
+        "ai_image_prompt": "metallic crimson red luxury electric hypercar with cold gas thrusters firing white vapor thrust on high-tech test track, dramatic sunset, motion blur, 8k",
+        "ai_image_prompt_2": "dramatic close-up macro of hypercar rocket thruster nozzle firing supersonic vapor exhaust with glowing heat distortion, 8k"
     },
     {
         "id": "factory_humanoid_robots_10000",
@@ -209,7 +211,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• 9-minute ultra-fast charge aur 20 ghante continuous duty!",
         "emotion": "funny_masti",
         "speech": "तीसरी खबर उन सभी के लिए है जो अपने ऑफिस के काम से थक जाते हैं! दुनिया की बड़ी ऑटोमोबाइल कंपनियों ने अपनी फैक्ट्रियों में दस हज़ार से ज़्यादा ह्यूमनॉइड रोबोट्स तैनात कर दिए हैं! इनमें इंसानों की तरह छूने और आवाज़ सुनने वाले सेंसर्स लगे हैं... और सबसे कमाल की बात? ये सिर्फ नौ मिनट में चार्ज हो जाते हैं और पूरे बीस घंटे बिना रुके भारी-भरकम कारें असेंबल करते हैं! ना लंच ब्रेक, ना छुट्टी! अब अगर ये रोबोट हमारे घरों में आ गए, तो घर के सारे काम कौन करेगा? ज़ाहिर सी बात है रोबोट! तो आलसी पतियों, अब तुम्हारी खैर नहीं!",
-        "ai_image_prompt": "sleek white futuristic humanoid bipedal robot assembling car chassis on high-tech automotive manufacturing assembly line, glowing industrial lighting"
+        "ai_image_prompt": "sleek white futuristic humanoid bipedal robot assembling car chassis on high-tech automotive manufacturing assembly line, glowing industrial lighting",
+        "ai_image_prompt_2": "macro detail of white robotic humanoid five-finger dexterity hand precisely soldering delicate electronics on assembly line, 8k"
     },
     {
         "id": "max_planck_quantum_unhackable_internet",
@@ -221,7 +224,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Unhackable super-fast quantum communication network!",
         "emotion": "serious_caution",
         "speech": "चौथी वैज्ञानिक खबर क्वांटम फिजिक्स से है! मैक्स प्लैंक इंस्टीट्यूट के वैज्ञानिकों ने क्वांटम दुनिया की सबसे बड़ी रुकावट को पार कर लिया है! उन्होंने एक ऐसा क्रिस्टल तैयार किया है जिससे अनहैकेबल क्वांटम इंटरनेट और सुपर-फास्ट क्वांटम कंप्यूटिंग हकीकत बनने जा रही है! यानी भविष्य में आपका डेटा और पासवर्ड दुनिया का कोई भी हैकर कभी चुरा नहीं पाएगा! क्योंकि आपकी प्राइवेसी और सुरक्षा की चिंता आपसे ज़्यादा मुझे रहती है!",
-        "ai_image_prompt": "luminous glowing quantum optical crystal in high-tech dark physics laboratory with blue and emerald laser beams passing through it, macro photography"
+        "ai_image_prompt": "luminous glowing quantum optical crystal in high-tech dark physics laboratory with blue and emerald laser beams passing through it, macro photography",
+        "ai_image_prompt_2": "macro optical quantum crystal glowing with neon blue and emerald laser beams refracting through glass prism, 8k"
     },
     {
         "id": "neuralink_brain_chip_telepathy_world",
@@ -233,7 +237,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Lakhon paralysis mareezon ko mila naya jeevan!",
         "emotion": "inspirational_joy",
         "speech": "आज की अगली खबर सीधे आपके दिमाग की शक्ति से जुड़ी है! न्यूरालिंक ब्रेन चिप ने एक और अविश्वसनीय कारनामा कर दिखाया है! अब मरीज सिर्फ अपनी सोच की ताकत से कंप्यूटर चला रहे हैं, गेम खेल रहे हैं और सोशल मीडिया पर पोस्ट कर रहे हैं, वो भी बिना हाथ हिलाए! ज़रा सोचिए, अगर किसी दिन आपका मोबाइल आपकी आँखों के इशारे और सिर्फ सोचने भर से चलने लगे, तो ज़िंदगी कितनी आसान और जादुई हो जाएगी! विज्ञान ने उन लोगों को आवाज़ और गति दी है जिन्होंने उम्मीद छोड़ दी थी। ये है असली फ्यूचर!",
-        "ai_image_prompt": "futuristic brain-computer interface concept, transparent glowing neural chip with illuminated fiber optic brain synapses, medical technology photography"
+        "ai_image_prompt": "futuristic brain-computer interface concept, transparent glowing neural chip with illuminated fiber optic brain synapses, medical technology photography",
+        "ai_image_prompt_2": "extreme macro close-up of bio-compatible micro-electrode array threads interfacing with glowing neural circuits on silicon wafer, 8k"
     },
     {
         "id": "evtol_flying_car_certified_commercial",
@@ -245,7 +250,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• 100% electric vertical takeoff bina runway ke!",
         "emotion": "dramatic",
         "speech": "सड़कों के लंबे-लंबे ट्रैफिक जाम से परेशान लोगों के लिए एक बहुत बड़ी खुशखबरी! दुनिया की पहली कमर्शियल फ्लाइंग कार को आधिकारिक उड़ान का लाइसेंस मिल चुका है! ये कार सड़क पर आम गाड़ी की तरह दौड़ेगी, और जैसे ही भारी जाम दिखेगा, सीधे बटन दबाते ही हेलिकॉप्टर की तरह वर्टिकल टेकऑफ़ करके आसमान में उड़ जाएगी! ना कोई रनवे चाहिए, ना कोई लंबा इंतज़ार! अब बताइए, अगर शाम को ऑफिस से सीधे उड़कर घर पहुँचने का मौका मिले, तो कौन नहीं चाहेगा? कमेंट्स में बताइए क्या आप इसमें बैठना चाहेंगे?",
-        "ai_image_prompt": "modern futuristic electric flying car eVTOL lifting off vertically above city skyscrapers at sunset, illuminated windows, sleek aeronautical design"
+        "ai_image_prompt": "modern futuristic electric flying car eVTOL lifting off vertically above city skyscrapers at sunset, illuminated windows, sleek aeronautical design",
+        "ai_image_prompt_2": "close-up cockpit view of modern flying car showing holographic glass touch navigation flight instruments and rotating tilt-rotor engine, 8k"
     },
     {
         "id": "artificial_sun_nuclear_fusion_record",
@@ -257,7 +263,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Zero pollution aur hamesha ke liye bijli ka crisis khatam!",
         "emotion": "inspirational_joy",
         "speech": "ऊर्जा की दुनिया में एक बहुत बड़ा चमत्कार हुआ है! वैज्ञानिकों के 'आर्टिफिशियल सन' यानी कृत्रिम सूर्य ने दस करोड़ डिग्री सेल्सियस के खौलते तापमान को एक हज़ार सेकंड तक लगातार स्थिर रखकर नया वर्ल्ड रिकॉर्ड बना दिया है! ये तापमान हमारे असली सूरज के केंद्र से भी छह गुना ज़्यादा गर्म है! इसका सीधा मतलब यह है कि आने वाले सालों में धरती से बिजली का बिल और प्रदूषण हमेशा-हमेशा के लिए खत्म हो जाएगा! इंसानों ने तारे की ऊर्जा को धरती पर उतार लिया है!",
-        "ai_image_prompt": "massive glowing tokamak fusion reactor interior with swirling purple and golden superheated plasma ring, scientific engineering breakthrough, 8k"
+        "ai_image_prompt": "massive glowing tokamak fusion reactor interior with swirling purple and golden superheated plasma ring, scientific engineering breakthrough, 8k",
+        "ai_image_prompt_2": "blinding intense magnetic plasma arc inside fusion chamber reactor walls with glowing amber magnetic field coils, 8k"
     },
     {
         "id": "robotic_chef_masti_household_cooking",
@@ -269,7 +276,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Roti se lekar pizza tak har dish ready sirf 5 minute mein!",
         "emotion": "funny_masti",
         "speech": "अब ज़रा थोड़ा मुस्कुराइए, क्योंकि ये खबर आपको बहुत हंसाने वाली है! एक ऐसी रोबोटिक रसोई आ चुकी है जो सिर्फ आपकी आवाज़ सुनकर गरमा-गरम क्रिस्पी डोसा, चाय और पचास तरह के व्यंजन अपने आप बना देती है! चम्मच हिलाने से लेकर प्लेट में परोसने तक, सारा काम ये रोबोटिक हाथ करते हैं! अब बताइए, अगर ये रोबोट आपके घर आ गया, तो फिर मम्मी या बीवी के गुस्से से कौन बचाएगा? और होटल वालों का क्या होगा? वैसे जो भी हो, मुझे तो ऐसा शेफ बहुत पसंद आएगा जो बिना नखरे दिखाए गरमा-गरम खाना खिलाए!",
-        "ai_image_prompt": "friendly modern robotic kitchen assistant with dual mechanical hands flipping a golden crispy dosa on sleek induction pan in luxury smart kitchen"
+        "ai_image_prompt": "friendly modern robotic kitchen assistant with dual mechanical hands flipping a golden crispy dosa on sleek induction pan in luxury smart kitchen",
+        "ai_image_prompt_2": "close-up action shot of precision robotic spatula flipping golden steaming crispy dosa in modern futuristic illuminated kitchen, 8k"
     },
     {
         "id": "ai_voice_clone_deepfake_security_alert",
@@ -281,7 +289,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Cyber police ne family safety code use karne ki advisory di!",
         "emotion": "serious_caution",
         "speech": "अब ध्यान से सुनिए, ये खबर आपकी सुरक्षा और सतर्कता के लिए बहुत ज़रूरी है! साइबर एक्सपर्ट्स ने चेतावनी दी है कि नया एआई टूल सिर्फ तीन सेकंड की ऑडियो रिकॉर्डिंग सुनकर किसी भी इंसान की असली आवाज़ हूबहू क्लोन कर लेता है! यहां तक कि बैंक और रिश्तेदार भी धोखा खा सकते हैं! इसलिए मेरी आप सभी से गुज़ारिश है — किसी भी अनजान नंबर से कॉल आने पर अपने परिवार का सीक्रेट कोड ज़रूर पूछें और तुरंत पैसे ट्रांसफर ना करें! तकनीक जितनी खूबसूरत है, उतनी ही सतर्कता की मांग भी करती है!",
-        "ai_image_prompt": "digital cyber security concept with glowing biometric sound waves transforming into holographic digital identity wireframe in dark security operations center"
+        "ai_image_prompt": "digital cyber security concept with glowing biometric sound waves transforming into holographic digital identity wireframe in dark security operations center",
+        "ai_image_prompt_2": "macro close-up of biometric voice wave frequency spectrum visualizer displaying unauthorized clone wave match on dark digital monitor, 8k"
     },
     {
         "id": "supersonic_passenger_jet_boom_overture",
@@ -293,7 +302,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• 100% sustainable aviation fuel bina carbon emission!",
         "emotion": "dramatic",
         "speech": "हवाई यात्रा के शौकीनों के लिए ऐतिहासिक खबर! कॉनकॉर्ड के बीस साल बाद, नई पीढ़ी के सुपरसोनिक यात्री विमान ने अपना हाई-स्पीड टेस्ट सफलतापूर्वक पूरा कर लिया है! ये विमान आवाज़ की रफ़्तार से भी पौने दो गुना तेज़ उड़ता है! यानी दिल्ली से लंदन का बारह घंटे का थकाऊ सफ़र अब सिर्फ चार घंटे में पूरा हो जाएगा! नाश्ता दिल्ली में और लंच सीधे लंदन में! क्या बात है! तैयार हो जाइए भविष्य की इस सुपर-फास्ट उड़ान के लिए!",
-        "ai_image_prompt": "ultra-sleek white supersonic passenger commercial airliner breaking through sound barrier clouds in bright blue stratosphere at sunset, razor-sharp details"
+        "ai_image_prompt": "ultra-sleek white supersonic passenger commercial airliner breaking through sound barrier clouds in bright blue stratosphere at sunset, razor-sharp details",
+        "ai_image_prompt_2": "dramatic angle of supersonic jet delta wing and supersonic air intake engine with condensation vapor shockwaves at sunrise, 8k"
     },
     {
         "id": "bionic_eye_restores_vision_breakthrough",
@@ -305,7 +315,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• 100 se zyada mareezon ne pehli baar dekhi roshni!",
         "emotion": "inspirational_joy",
         "speech": "मेडिकल साइंस से आई इस खबर को सुनकर आपका सीना गर्व से चौड़ा हो जाएगा! वैज्ञानिकों ने एक ऐसा बायोनिक आई इम्प्लांट तैयार किया है जिसने जन्म से दृष्टिहीन लोगों को भी दुनिया देखने की शक्ति दे दी है! चश्मे में लगा कैमरा सीधे दिमाग की ऑप्टिक नसों में डिजिटल सिग्नल भेजता है, जिससे मरीज अपने बच्चों के चेहरे और रोशनी को साफ़ देख पा रहे हैं! ये सिर्फ तकनीक नहीं, बल्कि इंसानियत के लिए किसी ईश्वरीय वरदान से कम नहीं है!",
-        "ai_image_prompt": "futuristic biometric bionic human eye with delicate micro-circuits and gentle glowing iris lens, macro clinical medical photography"
+        "ai_image_prompt": "futuristic biometric bionic human eye with delicate micro-circuits and gentle glowing iris lens, macro clinical medical photography",
+        "ai_image_prompt_2": "extreme macro photography of high-tech retinal bionic implant microchip with glowing gold nano-wires under microscope, 8k"
     },
     {
         "id": "robot_dog_guard_patrol_funny",
@@ -317,7 +328,8 @@ MASTER_STORIES_POOL = [
         "bullet2": "• Na khana mangta hai, na bimaar hota hai, sirf 24 ghante pehra!",
         "emotion": "funny_masti",
         "speech": "और अब एक मज़ेदार खबर रोबोटिक पालतू जानवरों की दुनिया से! चार पैरों वाले नए एआई रोबोट डॉग अब कॉलोनियों और घरों में असली पहरेदारी कर रहे हैं! ये रोबोट डॉग ना तो रोटी मांगते हैं, ना बीमार होते हैं, और रात के अंधेरे में भी तीन सौ साठ डिग्री घूमकर चोरों को देखकर ज़ोरदार सायरन बजा देते हैं! मोहल्ले के असली कुत्ते तो इन्हें देखकर हैरान हैं कि ये कौन सा अजीब रिश्तेदार आ गया! लेकिन घर की सुरक्षा के लिए ये वाकई एक ज़बरदस्त गैजेट बन चुका है!",
-        "ai_image_prompt": "sleek yellow and black robotic quadruped dog with 360 cameras standing alert on night city residential street, realistic commercial tech photography"
+        "ai_image_prompt": "sleek yellow and black robotic quadruped dog with 360 cameras standing alert on night city residential street, realistic commercial tech photography",
+        "ai_image_prompt_2": "close-up macro of quadruped robot dog mechanical head with glowing optical radar sensors and carbon fiber legs, 8k"
     }
 ]
 

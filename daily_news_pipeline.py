@@ -45,18 +45,18 @@ HEADER_BAR_PATH = os.path.join(BASE_DIR, "header_bar.png")
 
 def get_font(size, bold=True):
     font_paths = [
-        r"C:\Windows\Fonts\impact.ttf",
         r"C:\Windows\Fonts\segoeuib.ttf",
         r"C:\Windows\Fonts\arialbd.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",
+        r"C:\Windows\Fonts\impact.ttf",
         "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
     ] if bold else [
         r"C:\Windows\Fonts\segoeui.ttf",
         r"C:\Windows\Fonts\arial.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
         "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
     ]
@@ -68,52 +68,97 @@ def get_font(size, bold=True):
                 continue
     return ImageFont.load_default()
 
-def get_topic_matching_fallback(story):
+def get_topic_matching_fallback(story, shot_idx=1):
     """
-    Intelligently select the best matching fallback visual based on story topic.
+    Intelligently select the best matching fallback visual based on story topic and shot index.
+    Shot 1 = Wide/Action view, Shot 2 = Close-up / Macro / Alternative angle.
     NEVER use a car image for robots, drones, medical, or quantum stories!
     """
     cat = (story.get("category", "") + " " + story.get("headline", "") + " " + " ".join(story.get("keywords", []))).lower()
     
     if any(k in cat for k in ["drone", "racing", "aerial", "aviation"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "preview_drone.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "news_1_drone.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["robot", "humanoid", "factory", "assembly", "figure", "bipedal"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "scene_2_robots.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "news_3_robots.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["quantum", "crystal", "chip", "computing", "hacker"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "scene_4_energy.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "news_4_quantum.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["neuralink", "brain", "mind", "telepathy", "paralysis"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "scene_3_medicine.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "scene_6_neuralink.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["fusion", "sun", "reactor", "tokamak", "energy", "solar"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "news_4_quantum.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "scene_4_energy.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["flying car", "evtol", "air taxi", "flying"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "news_1_drone.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "scene_5_flying_car.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["car", "tesla", "roadster", "thruster", "vehicle"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "preview_tesla.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "news_2_tesla.jpg")
         if os.path.exists(cand): return cand
+
     if any(k in cat for k in ["medicine", "health", "cancer", "cure", "dna", "biology"]):
+        if shot_idx == 2:
+            cand = os.path.join(BASE_DIR, "scene_6_neuralink.jpg")
+            if os.path.exists(cand): return cand
         cand = os.path.join(BASE_DIR, "scene_3_medicine.jpg")
         if os.path.exists(cand): return cand
         
-    return os.path.join(BASE_DIR, "scene_2_robots.jpg")
+    return os.path.join(BASE_DIR, "scene_2_robots.jpg" if shot_idx == 1 else "news_3_robots.jpg")
 
 def create_ai_news_images(slot, stories):
-    print("\n--- 1. Generating 100% Brand-New AI Photorealistic News Imagery (Zero Copyright Risk) ---", flush=True)
+    print("\n--- 1. Generating 100% Brand-New AI Photorealistic News Imagery (Dual-Shot B-Roll) ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
 
     for idx, item in enumerate(stories):
-        dest = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}.jpg")
-        prompt = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
-        ok = generate_ai_news_image(prompt, dest)
-        if not ok or not os.path.exists(dest):
-            dest = get_topic_matching_fallback(item)
-        item["bg_img"] = dest
-        print(f"  --> [AI IMAGE READY] Scene {idx+2}: {dest}", flush=True)
+        # Shot 1: Wide / Action Perspective
+        dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
+        prompt1 = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
+        ok1 = generate_ai_news_image(prompt1, dest1)
+        if not ok1 or not os.path.exists(dest1):
+            dest1 = get_topic_matching_fallback(item, shot_idx=1)
+        item["bg_img_1"] = dest1
+        item["bg_img"] = dest1  # Backwards compatibility (for thumbnails & metadata)
+
+        # Shot 2: Dynamic Macro / High-Tech Close-up Perspective
+        dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
+        prompt2 = item.get("ai_image_prompt_2", f"extreme high-tech macro close-up photography of {item['category']}, 8k")
+        ok2 = generate_ai_news_image(prompt2, dest2)
+        if not ok2 or not os.path.exists(dest2):
+            dest2 = get_topic_matching_fallback(item, shot_idx=2)
+        item["bg_img_2"] = dest2
+
+        print(f"  --> [AI DUAL SHOTS READY] Story {idx+1}:", flush=True)
+        print(f"       • Shot 1 (Wide): {dest1}", flush=True)
+        print(f"       • Shot 2 (Macro): {dest2}", flush=True)
 
 
 def create_graphics_layers(today_display, slot, stories, rundown_items):
@@ -243,6 +288,8 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
     for candidate in [
         r"C:\Windows\Fonts\segoeui.ttf",
         r"C:\Windows\Fonts\arial.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
         "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
     ]:
@@ -301,7 +348,47 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
                 "-t", str(dur),
                 scene_mp4
             ]
+        elif idx < len(scenes_list) - 1:
+            # News Story Scenes (Scenes 2 to 5): Dual-Shot B-Roll Cuts with Zoom-In & Zoom-Out
+            img1 = item.get("bg_img_1", item.get("bg_img"))
+            img2 = item.get("bg_img_2", img1)
+            dur1 = round(dur / 2.0, 2)
+            dur2 = round(dur - dur1, 2)
+            f1 = int(dur1 * 25)
+            f2 = int(dur2 * 25)
+
+            filter_complex = (
+                f"[0:v]scale=1920:1080,setsar=1,zoompan=z='min(zoom+0.0004,1.06)':d={f1}:s=1920x1080:fps=25,setsar=1[shot1];"
+                f"[1:v]scale=1920:1080,setsar=1,zoompan=z='max(1.06-0.0004*on,1.0)':d={f2}:s=1920x1080:fps=25,setsar=1[shot2];"
+                f"[shot1][shot2]concat=n=2:v=1:a=0[bg];"
+                f"[bg][2:v]overlay=0:0[with_hdr];"
+                f"[with_hdr][3:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[with_logo];"
+                f"[with_logo][4:v]overlay=x='if(lte(t,0.7), -1920 + 1920*sin(t/0.7*1.5708), 0)':y=770[with_plate];"
+                f"[with_plate][5:v]overlay=x='if(lte(t,1.8), -1800 + 1870*sin((t-1.2)/0.6*1.5708), 70)':y=915:enable='between(t,1.2,999)'[with_b1];"
+                f"[with_b1][6:v]overlay=x='if(lte(t,4.1), -1800 + 1870*sin((t-3.5)/0.6*1.5708), 70)':y=965:enable='between(t,3.5,999)'[with_b2];"
+                f"[with_b2]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
+                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
+                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
+            )
+            cmd = [
+                FFMPEG_BIN, "-y",
+                "-loop", "1", "-t", str(dur1), "-i", img1,
+                "-loop", "1", "-t", str(dur2), "-i", img2,
+                "-loop", "1", "-i", HEADER_BAR_PATH,
+                "-loop", "1", "-i", LOGO_BUG_PATH,
+                "-loop", "1", "-i", plate,
+                "-loop", "1", "-i", b1_path,
+                "-loop", "1", "-i", b2_path,
+                "-i", audio,
+                "-filter_complex", filter_complex,
+                "-map", "[v]", "-map", "7:a",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
+                "-c:a", "aac", "-b:a", "192k",
+                "-t", str(dur),
+                scene_mp4
+            ]
         else:
+            # Outro Scene (Scene 6): Anchor Aadhya Goodbye & Call-to-Action
             filter_complex = (
                 f"[0:v]scale=1920:1080,zoompan=z='min(zoom+0.0003,1.03)':d={frames}:s=1920x1080:fps=25[bg];"
                 f"[bg][1:v]overlay=0:0[with_hdr];"
