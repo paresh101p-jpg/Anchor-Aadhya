@@ -149,12 +149,13 @@ def generate_ai_news_image(prompt, output_file):
     seed = random.randint(10000, 9999999)
     clean_prompt = f"Photojournalism documentary style, ultra-realistic commercial photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos, no text"
     encoded = urllib.parse.quote(clean_prompt)
-    url = f"https://image.pollinations.ai/prompt/{encoded}?width=1920&height=1080&model=flux&nologo=true&seed={seed}"
+    # Use 100% free default Pollinations endpoint without model=flux (model=flux causes HTTP 402 Payment Required)
+    url = f"https://image.pollinations.ai/prompt/{encoded}?width=1920&height=1080&nologo=true&seed={seed}"
     
     headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
     req = urllib.request.Request(url, headers=headers)
     try:
-        with urllib.request.urlopen(req, timeout=45) as resp:
+        with urllib.request.urlopen(req, timeout=35) as resp:
             data = resp.read()
         if len(data) > 15000:
             with open(output_file, "wb") as f:
