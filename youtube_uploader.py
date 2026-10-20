@@ -5,6 +5,7 @@ Automated YouTube Video & Thumbnail Uploader for Anchor Aadhya News Channel
 - Attaches the Custom 1280x720 High-CTR Thumbnail
 - Injects Full Rich Hinglish Description, Timestamps, and SEO Tags
 - Declares Synthetic/AI Content & Sets Not Made For Kids (100% YPP Compliant)
+- Supports Dual Daily Slots: 12:00 PM & 05:00 PM
 - Tracks upload status in uploaded_bulletins_tracker.txt to prevent duplicates
 """
 
@@ -12,6 +13,7 @@ import os
 import sys
 import json
 import time
+import argparse
 from datetime import datetime
 from google.oauth2.credentials import Credentials
 from googleapiclient.discovery import build
@@ -42,7 +44,6 @@ def get_authenticated_service():
 
     if not (client_id and client_secret and refresh_token):
         print("\n[ERROR] YouTube Credentials not found!")
-        print("Please run 'python get_youtube_token.py' once to link your new YouTube channel.")
         return None
 
     creds = Credentials(
@@ -70,29 +71,65 @@ def mark_as_uploaded(video_name, video_id, url):
     with open(TRACKER_FILE, "a", encoding="utf-8") as f:
         f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | {video_name} | {video_id} | {url}\n")
 
-def upload_daily_bulletin():
+def upload_daily_bulletin(slot=None):
     today_slug = datetime.now().strftime("%Y-%m-%d")
-    meta_path = os.path.join(BASE_DIR, f"metadata_{today_slug}.json")
-    video_path = os.path.join(BASE_DIR, f"Anchor_Aadhya_News_{today_slug}.mp4")
-    thumb_path = os.path.join(BASE_DIR, f"Thumbnail_{today_slug}.jpg")
 
-    if not os.path.exists(video_path):
-        print(f"[WAIT] Today's video not found: {video_path}")
+    candidates = []
+    if slot:
+        candidates.append(slot)
+    else:
+        # Check current hour
+        current_hour = datetime.now().hour
+        if current_hour < 14:
+            candidates = ["12PM", "5PM"]
+        else:
+            candidates = ["5PM", "12PM"]
+
+    target_video = None
+    target_meta = None
+    target_thumb = None
+    target_slot = None
+
+    for s in candidates:
+        v_path = os.path.join(BASE_DIR, f"Anchor_Aadhya_News_{today_slug}_{s}.mp4")
+        # Check fallback legacy filename if applicable
+        if not os.path.exists(v_path) and s == "5PM":
+            legacy_v = os.path.join(BASE_DIR, f"Anchor_Aadhya_News_{today_slug}.mp4")
+            if os.path.exists(legacy_v):
+                v_path = legacy_v
+
+        m_path = os.path.join(BASE_DIR, f"metadata_{today_slug}_{s}.json")
+        if not os.path.exists(m_path) and s == "5PM":
+            legacy_m = os.path.join(BASE_DIR, f"metadata_{today_slug}.json")
+            if os.path.exists(legacy_m):
+                m_path = legacy_m
+
+        t_path = os.path.join(BASE_DIR, f"Thumbnail_{today_slug}_{s}.jpg")
+        if not os.path.exists(t_path) and s == "5PM":
+            legacy_t = os.path.join(BASE_DIR, f"Thumbnail_{today_slug}.jpg")
+            if os.path.exists(legacy_t):
+                t_path = legacy_t
+
+        if os.path.exists(v_path) and not is_already_uploaded(os.path.basename(v_path)):
+            target_video = v_path
+            target_meta = m_path
+            target_thumb = t_path
+            target_slot = s
+            break
+
+    if not target_video:
+        print(f"[SKIP] No pending new video found to upload for {today_slug}.")
         return False
-
-    if not os.path.exists(meta_path):
-        print(f"[WAIT] Today's metadata not found: {meta_path}")
-        return False
-
-    if is_already_uploaded(os.path.basename(video_path)):
-        print(f"[SKIP] Today's video {os.path.basename(video_path)} has ALREADY been uploaded to YouTube!")
-        return True
 
     print("\n==============================================================")
-    print(f"  STARTING AUTOMATED YOUTUBE UPLOAD: {today_slug}")
+    print(f"  STARTING AUTOMATED YOUTUBE UPLOAD: {today_slug} ({target_slot})")
     print("==============================================================")
 
-    with open(meta_path, "r", encoding="utf-8") as f:
+    if not os.path.exists(target_meta):
+        print(f"[ERROR] Metadata file missing: {target_meta}")
+        return False
+
+    with open(target_meta, "r", encoding="utf-8") as f:
         meta = json.load(f)
 
     youtube = get_authenticated_service()
@@ -101,7 +138,7 @@ def upload_daily_bulletin():
 
     body = {
         "snippet": {
-            "title": meta.get("title", f"Anchor Aadhya Tech News {today_slug}"),
+            "title": meta.get("title", f"Anchor Aadhya Tech News {today_slug} ({target_slot})"),
             "description": meta.get("description", ""),
             "tags": meta.get("tags", ["AI News", "Tech News", "Anchor Aadhya"]),
             "categoryId": "28",  # Science & Technology
@@ -116,11 +153,11 @@ def upload_daily_bulletin():
     }
 
     print(f"  --> Title: {body['snippet']['title']}")
-    print(f"  --> Video File: {video_path} ({os.path.getsize(video_path)/(1024*1024):.2f} MB)")
+    print(f"  --> Video File: {target_video} ({os.path.getsize(target_video)/(1024*1024):.2f} MB)")
     print("  --> Uploading video stream to YouTube...")
 
     media = MediaFileUpload(
-        video_path,
+        target_video,
         mimetype="video/mp4",
         chunksize=1024 * 1024 * 4,  # 4MB chunks
         resumable=True
@@ -144,10 +181,10 @@ def upload_daily_bulletin():
     print(f"  --> Live URL: {video_url}")
 
     # Upload Custom Thumbnail
-    if os.path.exists(thumb_path):
-        print(f"  --> Uploading High-CTR Thumbnail: {thumb_path}...")
+    if os.path.exists(target_thumb):
+        print(f"  --> Uploading High-CTR Thumbnail: {target_thumb}...")
         try:
-            thumb_media = MediaFileUpload(thumb_path, mimetype="image/jpeg")
+            thumb_media = MediaFileUpload(target_thumb, mimetype="image/jpeg")
             youtube.thumbnails().set(
                 videoId=video_id,
                 media_body=thumb_media
@@ -156,12 +193,15 @@ def upload_daily_bulletin():
         except Exception as e:
             print(f"  Notice uploading thumbnail: {e}")
 
-    mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
+    mark_as_uploaded(os.path.basename(target_video), video_id, video_url)
     print("==============================================================")
-    print(f"🎉 FULL DAILY NEWS BULLETIN IS NOW LIVE ON YOUTUBE!")
+    print(f"🎉 {target_slot} NEWS BULLETIN IS NOW LIVE ON YOUTUBE!")
     print(f"   URL: {video_url}")
     print("==============================================================")
     return True
 
 if __name__ == "__main__":
-    upload_daily_bulletin()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--slot", choices=["12PM", "5PM"], default=None, help="Specific slot to upload")
+    args = parser.parse_args()
+    upload_daily_bulletin(args.slot)

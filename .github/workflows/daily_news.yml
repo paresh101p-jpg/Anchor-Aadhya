@@ -2,6 +2,8 @@ name: Anchor Aadhya Daily Tech News Bulletin
 
 on:
   schedule:
+    # 12:00 PM IST (12:00 IST) is 06:30 AM UTC
+    - cron: '30 6 * * *'
     # 5:00 PM IST (17:00 IST) is 11:30 AM UTC
     - cron: '30 11 * * *'
   repository_dispatch:
@@ -43,7 +45,7 @@ jobs:
           python -m pip install --upgrade pip
           pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests
 
-      - name: Generate Today's Daily Tech News Video & Thumbnail
+      - name: Generate Today's Tech News Video & Thumbnail
         run: |
           python daily_news_pipeline.py
 
@@ -55,10 +57,10 @@ jobs:
         run: |
           python youtube_uploader.py
 
-      - name: Commit & Push Upload Tracker
+      - name: Commit & Push Upload Tracker & Memory Archives
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Anchor Aadhya Cloud Bot"
-          git add uploaded_bulletins_tracker.txt
-          git commit -m "chore: record daily news upload $(date +'%Y-%m-%d')" || echo "No changes to commit"
+          git add uploaded_bulletins_tracker.txt used_news_archive.json used_images_archive.txt
+          git commit -m "chore: record news upload & memory $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref_name }} || echo "Push skipped or up-to-date"

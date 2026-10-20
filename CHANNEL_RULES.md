@@ -6,68 +6,78 @@
 
 ---
 
-## 2. Daily Schedule & Automation Workflow
-* **Daily 04:30 PM (16:30 IST)**: Automated Research & Video Creation Engine triggers (`RUN_DAILY_430PM.bat`).
-  1. Dynamically fetches today's latest breaking AI, Robotics, Space & Future Tech news.
-  2. Sourcing 100% real photojournalism images for each news topic (never generic cartoonish neon glow).
-  3. Synthesizes energetic, humanized Hindi voiceover via Microsoft Swara Neural (`hi-IN-SwaraNeural`).
-  4. Renders full HD 1080p (1920x1080) Master Video (approx 3.5 to 5 minutes duration).
-  5. Dynamically generates High-CTR YouTube Thumbnail (1280x720) with strict mathematical aspect ratio preservation (zero facial stretching).
-  6. Automatically writes YouTube SEO Title, full Hinglish Description with Chapters/Timestamps, and SEO Tags.
-* **Daily 05:00 PM (17:00 IST)**: Automated YouTube Uploader triggers (`RUN_DAILY_5PM_UPLOAD.bat`).
-  * Publishes video to YouTube with attached custom thumbnail, chapters, description, and tags via YouTube Data API v3.
+## 2. Daily Schedule & Automation Workflow (Dual Daily Slots)
+* **Slot 1 (12:00 PM IST)**: Afternoon Tech Special Bulletin
+  * Cron trigger: `30 6 * * *` (06:30 UTC)
+  * Script target: `daily_news_pipeline.py --slot 12PM`
+  * Upload target: `youtube_uploader.py --slot 12PM`
+* **Slot 2 (05:00 PM IST)**: Evening Prime Tech Bulletin
+  * Cron trigger: `30 11 * * *` (11:30 UTC)
+  * Script target: `daily_news_pipeline.py --slot 5PM`
+  * Upload target: `youtube_uploader.py --slot 5PM`
 
 ---
 
-## 3. Anchor Aadhya Character & Visual Standards
-* **Name & Spelling**: Always **आध्या** / **Anchor Aadhya** (Channel: **AI Aadhya**).
-* **Persona**: Charismatic, gorgeous, glamorous Indian female tech news anchor (late 20s), confident, radiant smile, articulate Hindi delivery.
-* **Studio Branding**: Digital screens and desk plates must display **"AI Aadhya"** (never generic "Tech News").
-* **Wardrobe & Poses**:
-  * Outfits: Modern, chic, fitted broadcast blazers (crimson red with asymmetrical cut, royal navy, emerald green).
-  * Dynamic Camera Framing:
-    * **Intro**: Desk shot with cascading breaking news rundown board (`#01` to `#04`).
-    * **News Scenes**: Authentic documentary/photojournalism footage + animated lower thirds, category badges, dual-color bullets (cyan & gold), and bottom live ticker.
-    * **Outro**: Warm, intimate medium close-up smiling sign-off.
-* **Thumbnail Aspect Ratio Rule**:
-  * ALWAYS preserve mathematical aspect ratio `(crop_w / crop_h) == (target_w / target_h)`. Never stretch or compress facial features horizontally or vertically.
+## 3. Strict Zero News Duplication & Memory Engine
+* **Rule**: No news story can EVER be repeated across any day or month.
+  * Only fresh developments / official updates (e.g., Part 2 / new milestones) on previous topics can be covered.
+* **Archive Log**: `used_news_archive.json` permanently records every story ID, headline, core entity keywords, and publish timestamp.
+* **Deduplication Check**: Before producing any bulletin, every candidate story is evaluated. If it shares >= 2 core keywords with any previously covered story, it is strictly skipped.
 
 ---
 
-## 4. YouTube Partner Program (YPP) & Monetization Compliance
+## 4. Strict Zero Image Reuse Rule
+* **Rule**: For every new news story, ALL images MUST be 100% brand new. The same news photo must NEVER be used twice.
+* **Archive Log**: `used_images_archive.txt` permanently records every image URL and checksum.
+* **Naming**: Each story's photo is saved with a unique edition timestamp (e.g., `news_2026-10-21_12PM_story_1.jpg`).
+
+---
+
+## 5. Dynamic Anchor Wardrobe Rotation across 5 Broadcast-Grade Looks
+Anchor Aadhya rotates across 5 broadcast-grade looks with identical facial identity:
+1. `anchor_look_1_crimson.jpg`: Crimson Power Blazer (Prime Time Headline Host)
+2. `anchor_look_2_blue.jpg`: Royal Sapphire Blue Blazer (Senior Tech Analyst, Serious & In-Depth)
+3. `anchor_look_3_emerald.jpg`: Emerald Teal Modern Blazer (Innovation Host with Warm Open Smile)
+4. `anchor_look_4_black_gold.jpg`: Luxury Black & Gold Lapel Blazer (Dramatic Breaking News Presentation)
+5. `anchor_look_5_lilac.jpg`: Chic Lavender Lilac Blazer (Playful, Cheerful & Humorous Masti Tech)
+
+---
+
+## 6. Emotion-Adaptive Voice Modulation (अंदाज़)
+Every news story is categorized by emotion, and the script + voiceover dynamically adapt:
+* **Dramatic (रोमांचक / सनसनीखेज)**:
+  * Speech Rate: `+4%`, Pitch: `+1Hz` (High energy, thrilling discovery)
+* **Funny / Masti (मज़ाकिया / चुटीला अंदाज़)**:
+  * Speech Rate: `+2%`, Pitch: `+3Hz` (Playful banter, witty laughing delivery, robot chores)
+* **Serious / Caution (गंभीर / प्राइवेसी व सुरक्षा)**:
+  * Speech Rate: `-5%`, Pitch: `-2Hz` (Calm, thoughtful, dignified and serious alert)
+* **Inspirational / Joy (खुशी / नई तकनीक की जीत)**:
+  * Speech Rate: `0%`, Pitch: `+1Hz` (Warm, uplifting, smiling human triumph)
+* **Vocabulary Standard**: Always polite, dignified, respectful Hindi/Hinglish ("sab aache vala word ke sath").
+
+---
+
+## 7. YouTube Partner Program (YPP) & Monetization Compliance
 * **No Tag Stuffing Rule**:
-  * NEVER put comma-separated lists of tags inside the video description. Doing so violates YouTube's "Spam and Misleading Metadata" policy.
+  * NEVER put comma-separated lists of tags inside the video description.
   * Description format:
     1. Engaging viral Hinglish hook & introduction.
     2. Exact Chapter Timestamps (`00:00 - Intro`, `00:38 - Story 1`, etc.).
     3. In-depth analysis of each story with technical insights.
     4. Question of the day to drive viewer comments.
-    5. Channel Mission & Daily 5 PM Schedule.
+    5. Channel Mission & Daily Schedule.
     6. **Mandatory AI Disclosure**: Declare synthetic/altered content in description and API flags (`syntheticMedia = True`, `selfDeclaredMadeForKids = False`).
     7. 6 to 10 relevant `#Hashtags` at the bottom.
   * Comma-separated tags belong STRICTLY in YouTube's backend `tags` field.
 
 ---
 
-## 5. File Inventory & Roles
-* `daily_news_pipeline.py`: Master automated news fetcher, scriptwriter, and FFmpeg video generator.
-* `generate_thumbnail.py`: High-CTR 1280x720 YouTube thumbnail generator.
-* `generate_metadata.py`: Generates `metadata_YYYY-MM-DD.json` and human-readable `YOUTUBE_METADATA_YYYY-MM-DD.txt`.
-* `youtube_uploader.py`: Resumable YouTube API v3 uploader for video, thumbnail, and metadata.
-* `get_youtube_token.py`: 1-time OAuth authorization script for new Gmail/YouTube channel.
-* `anchor_aadhya_master.jpg`: Master 4K portrait of glamorous Anchor Aadhya with "AI Aadhya" studio branding.
-* `RUN_DAILY_430PM.bat`: 1-click / Scheduled batch runner for 4:30 PM generation.
-* `RUN_DAILY_5PM_UPLOAD.bat`: 1-click / Scheduled batch runner for 5:00 PM upload.
-
----
-
-## 6. 100% Autonomous Broadcast TV Outro Architecture
+## 8. 100% Autonomous Broadcast TV Outro Architecture
 * **Duration**: Last 15–20 seconds of the video (Scene 6 Outro).
 * **Zero Manual Studio Touch**: The pipeline is 100% hands-off. The creator NEVER needs to open YouTube Studio to manually add end screen elements.
 * **Autonomous Visual & Audio Sign-off**:
   * Anchor Aadhya (`anchor_aadhya_outro.jpg`) warmly smiles on full broadcast studio frame.
-  * Professional Animated Lower-Third Plate: `DAILY 5PM BULLETIN | ROZ SHAAM 5 BAJE NAYA VIDEO!`.
-  * Animated Bullets: `• Like karo, doston ko share karo aur bell icon dabao` and `• Kal shaam 5 baje milte hain ek aur naye dhamake ke saath!`.
-  * Scrolling Bottom Ticker Tape with daily 5 PM schedule and subscribe callout.
-  * Audio: Natural, engaging sign-off inviting viewers to like, share, subscribe, and meet tomorrow at 5:00 PM.
+  * Professional Animated Lower-Third Plate indicating next upcoming bulletin.
+  * Animated Bullets: Like, share, subscribe, and next bulletin timing.
+  * Scrolling Bottom Ticker Tape with schedule and subscribe callout.
 * `uploaded_bulletins_tracker.txt`: Permanent history log preventing duplicate uploads.

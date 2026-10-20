@@ -1,7 +1,10 @@
+# -*- coding: utf-8 -*-
 """
 Dynamic YouTube SEO Metadata Generator for Anchor Aadhya Tech News
-- Generates a Rich, Long, Viral Hinglish Description with in-depth news insights,
-  viewer engagement hooks, chapter timestamps, channel mission, and high-ranking SEO keywords.
+- Generates a Rich, Viral Hinglish Title (<100 chars)
+- Auto-generates structured chapters & timestamps matching the 4 selected stories
+- Includes In-Depth Story Insights, Engagement Question, Channel Mission, and AI Transparency Disclosure
+- Dual Slot Support (12 PM Special & 5 PM Prime)
 """
 
 import os
@@ -11,54 +14,75 @@ from datetime import datetime
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
 def generate_video_metadata(
-    today_display=None,
+    slot="5PM",
     stories=None,
-    video_filename="Anchor_Aadhya_News_2026-10-20.mp4"
+    video_filename=None,
+    thumbnail_filename=None
 ):
-    if not today_display:
-        today_display = datetime.now().strftime("%d %B %Y")
+    today_display = datetime.now().strftime("%d %B %Y")
     today_slug = datetime.now().strftime("%Y-%m-%d")
+    edition_label = "12 PM Special" if slot == "12PM" else "5 PM Prime"
 
-    # High-CTR YouTube Title (Max 100 chars, highly searchable)
-    title = f"Tesla Car में लगे असली Rocket Thrusters! 🚀 AI Drone ने World Champion को हराया | News 20 Oct"
+    if not video_filename:
+        video_filename = f"Anchor_Aadhya_News_{today_slug}_{slot}.mp4"
+    if not thumbnail_filename:
+        thumbnail_filename = f"Thumbnail_{today_slug}_{slot}.jpg"
 
-    description = f"""Tesla Car में लग गए SpaceX के असली रॉकेट थ्रस्टर्स, और एक AI Drone ने 100 KM/H की रफ़्तार से दुनिया के नंबर-1 इंसानी पायलट को धूल चटा दी! 🚀🤖
+    if not stories or len(stories) < 4:
+        # Fallback default headlines
+        headline_1 = "Tesla Roadster Rocket Thrusters"
+        headline_2 = "Humanoid Robots In Factories"
+        s1 = {"headline": "Tesla Mein Rocket Thrusters!", "category": "TESLA ROADSTER", "speech": ""}
+        s2 = {"headline": "10,000 Robots In Factory!", "category": "HUMANOID ROBOTS", "speech": ""}
+        s3 = {"headline": "AI Drone Beats Champion!", "category": "AI DRONE", "speech": ""}
+        s4 = {"headline": "Quantum Internet Breakthrough!", "category": "QUANTUM TECH", "speech": ""}
+        stories = [s1, s2, s3, s4]
+    else:
+        headline_1 = stories[0]["headline"].title()
+        headline_2 = stories[1]["headline"].title()
 
-Welcome to Anchor Aadhya — आपका अपना डेली टेक और AI न्यूज़ हब! आज {today_display} को दुनिया भर की रिसर्च लैब्स और टेक कंपनियों से ऐसी 4 होश उड़ाने वाली फ्यूचर टेक खबरें सामने आई हैं, जो आने वाले कल को हमेशा के लिए बदलने वाली हैं। इस पूरे बुलेटिन में जानिए कि कैसे आर्टिफिशियल इंटेलिजेंस और ह्यूमनॉइड रोबोट्स इंसानों से आगे निकल रहे हैं।
+    # High-CTR YouTube Title (Max 100 chars)
+    title = f"{headline_1} 🚀 {headline_2} | Tech News {today_display[:6]} ({edition_label})"
+    if len(title) > 100:
+        title = f"{headline_1[:45]} 🚀 {headline_2[:30]} | {today_display[:6]} ({slot})"
+
+    # Format Chapters / Timestamps
+    desc_chapters = f"""00:00 - आज की टॉप 4 हेडलाइंस (Today's Top Tech Rundown)
+00:38 - {stories[0]['headline']} ({stories[0]['category']})
+01:20 - {stories[1]['headline']} ({stories[1]['category']})
+02:05 - {stories[2]['headline']} ({stories[2]['category']})
+02:50 - {stories[3]['headline']} ({stories[3]['category']})
+03:30 - Aadhya's Outro & Next Bulletin Update (Like & Subscribe!)"""
+
+    # In-Depth Story Analysis
+    desc_insights = ""
+    for idx, s in enumerate(stories[:4]):
+        desc_insights += f"\n{idx+1}️⃣ {s['headline']} ({s['category']}):\n"
+        desc_insights += f"• मुख्य जानकारी: {s.get('bullet1', '')}\n"
+        desc_insights += f"• भविष्य पर असर: {s.get('bullet2', '')}\n"
+        if s.get("speech"):
+            desc_insights += f"• आध्या का विश्लेषण: \"{s['speech'][:160]}...\"\n"
+
+    description = f"""{headline_1} और {headline_2}! आज की सबसे बड़ी फ्यूचर टेक्नोलॉजी की खबरें सिर्फ Anchor Aadhya पर! 🚀🤖
+
+Welcome to Anchor Aadhya — आपका अपना 100% भरोसेमंद डेली टेक और AI न्यूज़ बुलेटिन! आज {today_display} के इस {edition_label} में जानिए दुनिया भर की रिसर्च लैब्स, टेक कंपनियों और वैज्ञानिकों की वो 4 बड़ी खोजें, जो हमारे कल को हमेशा के लिए बदलने वाली हैं।
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 TIMESTAMPS / CHAPTERS (खबरों के मुख्य बिंदु):
-00:00 - आज की टॉप 4 हेडलाइंस (Today's Top Tech Rundown)
-00:38 - AI Drone ने World Champion को रेस में हराया (100 KM/H Delft AI)
-01:18 - Tesla Roadster में लगे SpaceX Rocket Thrusters (0-100 in 0.9s!)
-02:00 - Factories में 10,000 Humanoid Robots तैनात (Automotive Robotics)
-02:45 - Max Planck Quantum Internet Breakthrough (Unhackable Crystal)
-03:25 - Aadhya's Outro & Daily 5 PM Bulletin (Like, Share & Subscribe!)
+{desc_chapters}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 🔍 आज की 4 बड़ी खबरों का पूरा विश्लेषण (Detailed News Insights):
-
-1️⃣ AI Drone Beats Human World Champion (डेल्फ़्ट यूनिवर्सिटी का करिश्मा):
-डेल्फ़्ट यूनिवर्सिटी के शोधकर्ताओं ने 'Mono-Race' नामक एक क्रांतिकारी ऑटोनॉमस ड्रोन विकसित किया है। इस ड्रोन में कोई GPS या पहले से बना मैप नहीं है, बल्कि यह सिर्फ एक सिंगल ऑन-बोर्ड कैमरे और न्यूरल नेटवर्क की मदद से 100 किमी/घंटे की रफ़्तार से जटिल बाधाओं को पार करता है। इंसानी पायलटों का रिएक्शन टाइम 200 मिलीसेकंड होता है, जबकि इस AI का रिएक्शन टाइम सिर्फ 10 मिलीसेकंड है! परिणाम? इसने इंसानी वर्ल्ड चैंपियन रेसर्स को सीधे मुकाबले में पछाड़ दिया।
-
-2️⃣ Tesla Roadster Gets SpaceX Cold-Gas Rocket Thrusters:
-एलन मस्क की नई टेस्ला रोडस्टर अब सिर्फ एक इलेक्ट्रिक कार नहीं, बल्कि एक ज़मीनी रॉकेट बन चुकी है! कार के रियर लाइसेंस प्लेट के पीछे स्पेस-एक्स के असली कोल्ड-गैस रॉकेट थ्रस्टर्स लगाए गए हैं। यह थ्रस्टर्स कार को 0 से 100 किमी/घंटा सिर्फ 0.9 सेकंड में ले जाते हैं और कार को ज़मीन से 1-2 फीट ऊपर हवा में छलाँग लगाने (short hops) की क्षमता भी देते हैं!
-
-3️⃣ 10,000 Humanoid Robots Deployed in Car Factories:
-ऑटोमोबाइल इंडस्ट्री में एक ऐतिहासिक बदलाव आ चुका है। बड़ी कार कंपनियों ने अपनी असेंबली लाइनों पर 10,000 से ज़्यादा अगली पीढ़ी के ह्यूमनॉइड रोबोट्स को काम पर लगा दिया है। इन रोबोट्स में इंसानों की त्वचा जैसे सेंसरी टच और हियरिंग सेंसर्स हैं। सबसे हैरान करने वाली बात यह है कि ये रोबोट केवल 9 मिनट की अल्ट्रा-फास्ट चार्जिंग के बाद लगातार 20 घंटे तक भारी कार पार्ट्स को असेंबल कर सकते हैं — ना कोई छुट्टी, ना कोई थकान!
-
-4️⃣ Max Planck Quantum Internet & Unhackable Data:
-जर्मनी के मैक्स प्लैंक इंस्टीट्यूट के वैज्ञानिकों ने क्वांटम फिजिक्स का नया वर्ल्ड रिकॉर्ड बना दिया है। उन्होंने एक ऐसा स्टेबल क्वांटम क्रिस्टल विकसित किया है जो 'क्वांटम डिकोहेरेंस' की सीमा को पार कर लेता है। इसका मतलब है कि भविष्य का क्वांटम इंटरनेट 100% अनहैकेबल होगा — दुनिया का कोई भी सुपरकंप्यूटर या हैकर आपका बैंकिंग डेटा, पासवर्ड्स या पर्सनल चैट्स कभी डिकोड नहीं कर पाएगा!
-
+{desc_insights}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 💬 आज का सवाल (Question of the Day):
-"दोस्तों, आपको क्या लगता है — क्या 2030 तक AI और Humanoid Robots इंसानों की सभी नौकरियों की जगह ले लेंगे, या फिर इंसान और AI मिलकर एक नया युग शुरू करेंगे? अपनी राय नीचे Comments में ज़रूर बताइए!"
+"दोस्तों, आज की इन 4 खबरों में से कौन सी तकनीक आपको सबसे ज़्यादा हैरान कर देने वाली लगी? नीचे Comments में अपनी राय ज़रूर दीजिए!"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📺 About Channel — Anchor Aadhya:
-Anchor Aadhya भारत का पहला AI-पावर्ड फ्यूचर टेक और साइंस न्यूज़ बुलेटिन है, जहाँ आपको हर रोज़ शाम ठीक 5:00 बजे दुनिया भर की सबसे ताज़ा, प्रामाणिक और रोमांचक टेक्नोलॉजी की खबरें हिंदी में मिलती हैं। चाहे वो Artificial Intelligence हो, Robotics, Space Tech, Electric Vehicles या Quantum Computing — सबसे पहले और सबसे सटीक विश्लेषण सिर्फ यहाँ!
+Anchor Aadhya भारत का पहला AI-पावर्ड फ्यूचर टेक और साइंस न्यूज़ बुलेटिन है, जहाँ आपको हर रोज़ दोपहर 12:00 बजे और शाम 5:00 बजे दुनिया भर की सबसे ताज़ा और प्रामाणिक टेक्नोलॉजी की खबरें हिंदी में मिलती हैं। चाहे वो Artificial Intelligence हो, Robotics, Space Tech, Electric Vehicles या Quantum Computing — सबसे पहले और सबसे सटीक विश्लेषण सिर्फ यहाँ!
 
-🔔 हर रोज़ शाम 5 बजे नया वीडियो देखने के लिए तुरंत सब्सक्राइब करें और Bell Icon दबाएं!
+🔔 रोज़ाना दोपहर 12 बजे और शाम 5 बजे नया वीडियो देखने के लिए तुरंत सब्सक्राइब करें और Bell Icon दबाएं!
 👍 अगर आपको आज का बुलेटिन पसंद आया हो तो लाइक और दोस्तों के साथ शेयर ज़रूर करें!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -67,53 +91,53 @@ In full compliance with YouTube Community Guidelines & Policy:
 This video features AI digital broadcast host 'Anchor Aadhya' presenting real, verified technology news sourced from global research labs, patents, and scientific publications. Voiceover narration and studio visuals are creatively rendered using artificial intelligence tools for educational and news reporting purposes.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-#TechNews #AINews #AnchorAadhya #TeslaRoadster #ElonMusk #HumanoidRobots #SpaceX #QuantumComputing #AIDrone #FutureTech #TechnologyHindi #DailyTechNews"""
+#TechNews #AINews #AnchorAadhya #FutureTech #Robotics #ArtificialIntelligence #TechnologyHindi #DailyTechNews #{slot}News"""
 
     tags = [
-        "Anchor Aadhya", "AI News Hindi", "Tech News Hindi", "Tesla Roadster", "Elon Musk",
-        "SpaceX Thrusters", "AI Drone Racing", "Humanoid Robots", "Quantum Internet",
-        "Max Planck Institute", "Artificial Intelligence", "Future Tech 2026",
-        "Daily Tech News", "Breaking Tech News", "Technology Updates", "AI Robotics Hindi"
+        "Anchor Aadhya", "AI News Hindi", "Tech News Hindi", "Future Tech 2026",
+        "Artificial Intelligence", "Daily Tech News", "Breaking Tech News",
+        "Technology Updates", "Robotics Hindi", "Latest Tech Inventions",
+        f"Tech News {slot}"
     ]
+    for s in stories[:4]:
+        tags.append(s.get("category", "").title())
+        for kw in s.get("keywords", [])[:2]:
+            tags.append(kw.title())
+
+    # Limit tags list
+    clean_tags = list(dict.fromkeys(tags))[:25]
 
     meta_dict = {
         "title": title,
         "description": description,
-        "tags": tags,
-        "categoryId": "28",
+        "tags": clean_tags,
+        "categoryId": "28",  # Science & Technology
         "defaultLanguage": "hi",
         "selfDeclaredMadeForKids": False,
         "hasCustomThumbnail": True,
         "syntheticMedia": True,
         "videoFile": video_filename,
-        "thumbnailFile": f"Thumbnail_{today_slug}.jpg"
+        "thumbnailFile": thumbnail_filename,
+        "slot": slot
     }
 
     # Save JSON
-    json_path = os.path.join(BASE_DIR, f"metadata_{today_slug}.json")
+    json_path = os.path.join(BASE_DIR, f"metadata_{today_slug}_{slot}.json")
     with open(json_path, "w", encoding="utf-8") as f:
         json.dump(meta_dict, f, ensure_ascii=False, indent=2)
 
-    # Save clean TXT
-    txt_path = os.path.join(BASE_DIR, f"YOUTUBE_METADATA_{today_slug}.txt")
+    # Save TXT copy
+    txt_path = os.path.join(BASE_DIR, f"YOUTUBE_METADATA_{today_slug}_{slot}.txt")
     with open(txt_path, "w", encoding="utf-8") as f:
         f.write("==============================================================\n")
-        f.write(f"  YOUTUBE VIDEO UPLOAD GUIDE: {today_display.upper()}\n")
+        f.write(f"  ANCHOR AADHYA YOUTUBE METADATA ({today_slug} - {edition_label})\n")
         f.write("==============================================================\n\n")
-        f.write(f"1️⃣ TITLE BOX में पेस्ट करें:\n{title}\n\n")
-        f.write("--------------------------------------------------------------\n")
-        f.write("2️⃣ DESCRIPTION BOX में पेस्ट करें (100% Policy Safe - No Tag Stuffing):\n\n")
-        f.write(description + "\n\n")
-        f.write("--------------------------------------------------------------\n")
-        f.write("3️⃣ TAGS BOX में पेस्ट करें (यूट्यूब के 'Show more -> Tags' वाले अलग बॉक्स में):\n")
-        f.write("   [ध्यान दें: इसे Description में नहीं लिखना है, सिर्फ नीचे Tags बॉक्स में डालना है]\n\n")
-        f.write(f"{', '.join(tags)}\n\n")
-        f.write("--------------------------------------------------------------\n")
-        f.write(f"📁 THUMBNAIL FILE: Thumbnail_{today_slug}.jpg\n")
-        f.write(f"📁 VIDEO FILE: {video_filename}\n")
+        f.write(f"TITLE ({len(title)} chars):\n{title}\n\n")
+        f.write(f"DESCRIPTION:\n{description}\n\n")
+        f.write(f"TAGS:\n{', '.join(clean_tags)}\n\n")
 
-    print(f"[SUCCESS] Metadata Generated:\n  --> JSON: {json_path}\n  --> TXT: {txt_path}", flush=True)
-    return json_path, txt_path
+    print(f"[SUCCESS] Generated Dynamic YouTube Metadata: {json_path}", flush=True)
+    return meta_dict
 
 if __name__ == "__main__":
     generate_video_metadata()
