@@ -168,12 +168,19 @@ async def generate_speech_audio(scenes_list):
         emotion = item.get("emotion", "dramatic")
         profile = VOICE_PROFILES.get(emotion, {"rate": "+2%", "pitch": "+0Hz"})
         
-        print(f"  --> Voice {idx+1} Emotion [{emotion.upper()}]: Rate={profile['rate']}, Pitch={profile['pitch']}", flush=True)
+        rate_val = profile.get("rate", "+0%")
+        if not rate_val.startswith(("+", "-")):
+            rate_val = f"+{rate_val}"
+        pitch_val = profile.get("pitch", "+0Hz")
+        if not pitch_val.startswith(("+", "-")):
+            pitch_val = f"+{pitch_val}"
+
+        print(f"  --> Voice {idx+1} Emotion [{emotion.upper()}]: Rate={rate_val}, Pitch={pitch_val}", flush=True)
         communicate = edge_tts.Communicate(
             item["speech"],
             voice=voice,
-            rate=profile["rate"],
-            pitch=profile["pitch"]
+            rate=rate_val,
+            pitch=pitch_val
         )
         await communicate.save(audio_path)
         audio_paths.append(audio_path)

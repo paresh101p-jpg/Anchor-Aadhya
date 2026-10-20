@@ -52,7 +52,7 @@ Every news story is categorized by emotion, and the script + voiceover dynamical
 * **Serious / Caution (गंभीर / प्राइवेसी व सुरक्षा)**:
   * Speech Rate: `-5%`, Pitch: `-2Hz` (Calm, thoughtful, dignified and serious alert)
 * **Inspirational / Joy (खुशी / नई तकनीक की जीत)**:
-  * Speech Rate: `0%`, Pitch: `+1Hz` (Warm, uplifting, smiling human triumph)
+  * Speech Rate: `+0%`, Pitch: `+1Hz` (Warm, uplifting, smiling human triumph)
 * **Vocabulary Standard**: Always polite, dignified, respectful Hindi/Hinglish ("sab aache vala word ke sath").
 
 ---

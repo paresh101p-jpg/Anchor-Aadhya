@@ -82,7 +82,7 @@ VOICE_PROFILES = {
         "desc": "Calm, thoughtful, dignified and serious alert"
     },
     "inspirational_joy": {
-        "rate": "0%",
+        "rate": "+0%",
         "pitch": "+1Hz",
         "desc": "Warm, inspiring, smiling and uplifting news"
     }
