@@ -20,6 +20,7 @@ import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
 from datetime import datetime
+from io import BytesIO
 from PIL import Image
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -190,10 +191,46 @@ CURATED_CATEGORY_VISUALS = {
     }
 }
 
+def generate_nano_banana_image(prompt, output_file):
+    """
+    Generate image using Google's Imagen 3 / Nano Banana engine via Gemini API.
+    Used automatically whenever GEMINI_API_KEY is present in environment/secrets.
+    """
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return False
+    try:
+        from google import genai
+        from google.genai import types
+        client = genai.Client(api_key=api_key)
+        response = client.models.generate_images(
+            model="imagen-3.0-generate-002",
+            prompt=f"Photojournalism documentary style, ultra-realistic photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos",
+            config=types.GenerateImageConfig(
+                number_of_images=1,
+                output_mime_type="image/jpeg",
+                aspect_ratio="16:9"
+            )
+        )
+        for gen_img in response.generated_images:
+            im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+            im.save(output_file, "JPEG", quality=95)
+            append_image_archive(f"Nano Banana: {prompt}")
+            print(f"  [SUCCESS] Nano Banana (Google Imagen 3) Created: {output_file}", flush=True)
+            return True
+    except Exception as e:
+        print(f"  [NOTICE] Nano Banana generation: {e}", flush=True)
+    return False
+
 # Generate a 100% Brand-New AI Photorealistic Image for each news story
 # (Never uploads raw copyrighted internet photos directly!)
 def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1):
     print(f"  --> Generating Brand-New AI News Image: \"{prompt[:60]}...\"", flush=True)
+    
+    # 1. Primary: Nano Banana (Google Imagen 3 via Gemini API)
+    if generate_nano_banana_image(prompt, output_file):
+        return True
+
     seed = random.randint(10000, 9999999)
     clean_prompt = f"Photojournalism documentary style, ultra-realistic commercial photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos, no text"
     encoded = urllib.parse.quote(clean_prompt)
@@ -245,6 +282,55 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1):
                     return True
             except Exception as e:
                 print(f"  [WARN] Stock visual download failed: {e}", flush=True)
+            finally:
+                if os.path.exists(temp_download):
+                    try: os.remove(temp_download)
+                    except Exception: pass
+
+    # 3. Tertiary: Topic-keyword matched visual
+    prompt_lower = (prompt + " " + str(story_id or "")).lower()
+    match_cat = "max_planck_quantum_unhackable_internet"
+    if any(k in prompt_lower for k in ["drone", "racing", "aerial"]):
+        match_cat = "delft_ai_drone_racing_champion"
+    elif any(k in prompt_lower for k in ["robot", "humanoid", "factory"]):
+        match_cat = "factory_humanoid_robots_10000"
+    elif any(k in prompt_lower for k in ["quantum", "crystal", "computing", "chip"]):
+        match_cat = "max_planck_quantum_unhackable_internet"
+    elif any(k in prompt_lower for k in ["neuralink", "brain", "telepathy"]):
+        match_cat = "neuralink_brain_chip_telepathy_world"
+    elif any(k in prompt_lower for k in ["sun", "fusion", "reactor", "tokamak"]):
+        match_cat = "artificial_sun_nuclear_fusion_record"
+    elif any(k in prompt_lower for k in ["flying car", "evtol", "air taxi"]):
+        match_cat = "evtol_flying_car_certified_commercial"
+    elif any(k in prompt_lower for k in ["car", "tesla", "roadster"]):
+        match_cat = "tesla_roadster_spacex_thrusters"
+    elif any(k in prompt_lower for k in ["bionic", "eye", "vision", "medicine", "health"]):
+        match_cat = "bionic_eye_restores_vision_breakthrough"
+    elif any(k in prompt_lower for k in ["chef", "cooking"]):
+        match_cat = "robotic_chef_masti_household_cooking"
+    elif any(k in prompt_lower for k in ["jet", "supersonic", "boom"]):
+        match_cat = "supersonic_passenger_jet_boom_overture"
+
+    if match_cat in CURATED_CATEGORY_VISUALS:
+        stock_url = CURATED_CATEGORY_VISUALS[match_cat].get(shot_idx, CURATED_CATEGORY_VISUALS[match_cat].get(1))
+        if stock_url:
+            dl_cmd = [
+                "curl", "-s", "-L", "-f", "-m", "15",
+                "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                stock_url, "-o", temp_download
+            ]
+            try:
+                res = subprocess.run(dl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
+                if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
+                    im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im.save(output_file, "JPEG", quality=95)
+                    if os.path.exists(temp_download):
+                        os.remove(temp_download)
+                    append_image_archive(stock_url)
+                    print(f"  [SUCCESS] Category Fallback Visual Loaded: {output_file}", flush=True)
+                    return True
+            except Exception:
+                pass
             finally:
                 if os.path.exists(temp_download):
                     try: os.remove(temp_download)

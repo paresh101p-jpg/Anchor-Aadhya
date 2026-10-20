@@ -54,8 +54,8 @@ def create_youtube_thumbnail(
         if not os.path.exists(anchor_img_path):
             anchor_img_path = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
 
-    if not news_bg_path or not os.path.exists(news_bg_path):
-        news_bg_path = os.path.join(BASE_DIR, "news_2_tesla.jpg")
+    if news_bg_path and not os.path.exists(news_bg_path):
+        news_bg_path = None
 
     today_slug = datetime.now().strftime("%Y-%m-%d")
     if not date_str:
@@ -75,8 +75,8 @@ def create_youtube_thumbnail(
     W, H = 1280, 720
     canvas = Image.new("RGB", (W, H), (10, 14, 25))
 
-    # 1. Left Background (News Highlight)
-    if os.path.exists(news_bg_path):
+    # 1. Left Background (News Highlight or High-Tech Gradient)
+    if news_bg_path and os.path.exists(news_bg_path):
         try:
             bg = Image.open(news_bg_path).convert("RGB").resize((760, H), Image.Resampling.LANCZOS)
             enhancer = ImageEnhance.Brightness(bg)
@@ -84,6 +84,16 @@ def create_youtube_thumbnail(
             canvas.paste(bg, (0, 0))
         except Exception as e:
             print(f"Warning loading news bg: {e}", flush=True)
+    else:
+        # High-tech cyber gradient background
+        from PIL import ImageDraw
+        draw_bg = ImageDraw.Draw(canvas)
+        for y in range(H):
+            ratio = y / H
+            r = int(12 + ratio * 15)
+            g = int(18 + ratio * 20)
+            b = int(45 + ratio * 40)
+            draw_bg.line([(0, y), (760, y)], fill=(r, g, b))
 
     # 2. Right Background (Anchor Aadhya - STRICT 100% ASPECT RATIO PRESERVATION)
     if os.path.exists(anchor_img_path):
