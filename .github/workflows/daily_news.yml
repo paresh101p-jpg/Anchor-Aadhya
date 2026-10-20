@@ -18,6 +18,8 @@ jobs:
   produce_and_upload:
     name: Generate News & Upload to YouTube
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     timeout-minutes: 45
 
     steps:
