@@ -1,3 +1,2 @@
 # Anchor Aadhya Bulletin Upload Tracker
 # Format: Timestamp | Video Filename | Video ID | URL
-2026-10-20 12:34:38 | Anchor_Aadhya_News_2026-10-20_12PM.mp4 | s-pkmMpUS1c | https://www.youtube.com/watch?v=s-pkmMpUS1c

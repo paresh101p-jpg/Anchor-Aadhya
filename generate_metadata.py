@@ -42,17 +42,17 @@ def generate_video_metadata(
         headline_2 = stories[1]["headline"].title()
 
     # High-CTR YouTube Title (Max 100 chars)
-    title = f"{headline_1} 🚀 {headline_2} | Tech News {today_display[:6]} ({edition_label})"
+    title = f"{headline_1} 🚀 {headline_2} | Daily Tech News • {today_display[:6]}"
     if len(title) > 100:
-        title = f"{headline_1[:45]} 🚀 {headline_2[:30]} | {today_display[:6]} ({slot})"
+        title = f"{headline_1[:45]} 🚀 {headline_2[:30]} | Tech News {today_display[:6]}"
 
     # Format Chapters / Timestamps
-    desc_chapters = f"""00:00 - आज की टॉप 4 हेडलाइंस (Today's Top Tech Rundown)
+    desc_chapters = f"""00:00 - आज की टॉप 4 हेडलाइंस (Today's Top 4 Tech Rundown)
 00:38 - {stories[0]['headline']} ({stories[0]['category']})
 01:20 - {stories[1]['headline']} ({stories[1]['category']})
 02:05 - {stories[2]['headline']} ({stories[2]['category']})
 02:50 - {stories[3]['headline']} ({stories[3]['category']})
-03:30 - Aadhya's Outro & Next Bulletin Update (Like & Subscribe!)"""
+03:30 - Anchor Aadhya Outro (Like & Subscribe!)"""
 
     # In-Depth Story Analysis
     desc_insights = ""

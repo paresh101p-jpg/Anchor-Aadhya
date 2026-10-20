@@ -61,7 +61,7 @@ def create_youtube_thumbnail(
     if not date_str:
         date_str = datetime.now().strftime("%d %b %Y").upper()
     if not top_badge:
-        top_badge = "12 PM TECH SPECIAL" if slot == "12PM" else "5 PM TECH PRIME"
+        top_badge = "DAILY TECH SPECIAL"
     if not output_path:
         output_path = os.path.join(BASE_DIR, f"Thumbnail_{today_slug}_{slot}.jpg")
 

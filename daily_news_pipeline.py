@@ -45,20 +45,22 @@ HEADER_BAR_PATH = os.path.join(BASE_DIR, "header_bar.png")
 
 def get_font(size, bold=True):
     font_paths = [
+        # Windows Fonts
         r"C:\Windows\Fonts\segoeuib.ttf",
         r"C:\Windows\Fonts\arialbd.ttf",
         r"C:\Windows\Fonts\impact.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf",
+        # Ubuntu / Linux Fonts with full Latin / Hinglish / Symbol support
         "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf"
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
     ] if bold else [
+        # Windows Fonts
         r"C:\Windows\Fonts\segoeui.ttf",
         r"C:\Windows\Fonts\arial.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
+        # Ubuntu / Linux Fonts with full Latin / Hinglish / Symbol support
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"
     ]
     for p in font_paths:
         if os.path.exists(p):
@@ -142,7 +144,7 @@ def create_ai_news_images(slot, stories):
         # Shot 1: Wide / Action Perspective
         dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
         prompt1 = item.get("ai_image_prompt", f"futuristic modern technology {item['category']}")
-        ok1 = generate_ai_news_image(prompt1, dest1)
+        ok1 = generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1)
         if not ok1 or not os.path.exists(dest1):
             dest1 = get_topic_matching_fallback(item, shot_idx=1)
         item["bg_img_1"] = dest1
@@ -151,7 +153,7 @@ def create_ai_news_images(slot, stories):
         # Shot 2: Dynamic Macro / High-Tech Close-up Perspective
         dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
         prompt2 = item.get("ai_image_prompt_2", f"extreme high-tech macro close-up photography of {item['category']}, 8k")
-        ok2 = generate_ai_news_image(prompt2, dest2)
+        ok2 = generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2)
         if not ok2 or not os.path.exists(dest2):
             dest2 = get_topic_matching_fallback(item, shot_idx=2)
         item["bg_img_2"] = dest2
@@ -163,7 +165,7 @@ def create_ai_news_images(slot, stories):
 
 def create_graphics_layers(today_display, slot, stories, rundown_items):
     print("\n--- 2. Generating Modern TV Broadcast Motion Overlays ---", flush=True)
-    edition_label = "12 PM SPECIAL REPORT" if slot == "12PM" else "5 PM PRIME REPORT"
+    edition_label = "LATEST BREAKING TECH"
 
     # Header bar
     header = Image.new("RGBA", (1920, 65), (0, 0, 0, 0))
@@ -173,7 +175,7 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
     hd.line([(0, 63), (1920, 63)], fill=bar_line_color, width=3)
     font_header = get_font(24, bold=True)
     hd.text((180, 18), f"ANCHOR AADHYA  |  DAILY TECH BULLETIN • {today_display.upper()}", font=font_header, fill=(255, 255, 255))
-    hd.text((1520, 18), edition_label, font=font_header, fill=(0, 220, 255))
+    hd.text((1480, 18), edition_label, font=font_header, fill=(0, 220, 255))
     header.save(HEADER_BAR_PATH, "PNG")
 
     # Scene 1 Rundown Board
@@ -182,7 +184,7 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
     bd.rectangle([(0, 0), (840, 480)], fill=(10, 15, 28, 230))
     bd.rectangle([(0, 0), (840, 65)], fill=(220, 20, 60, 255))
     font_board_title = get_font(30, bold=True)
-    bd.text((25, 16), f"TOP 4 HEADLINES ({slot})", font=font_board_title, fill=(255, 255, 255))
+    bd.text((25, 16), "TOP 4 TECH HEADLINES", font=font_board_title, fill=(255, 255, 255))
     board_path = os.path.join(BASE_DIR, "scene1_board.png")
     board.save(board_path, "PNG")
 
@@ -288,20 +290,18 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
     for candidate in [
         r"C:\Windows\Fonts\segoeui.ttf",
         r"C:\Windows\Fonts\arial.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
-        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf",
         "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
-        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf"
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"
     ]:
         if os.path.exists(candidate):
             ticker_font = candidate.replace("\\", "/").replace(":", "\\:")
             break
 
-    next_slot = "SHAAM 5 BAJE" if slot == "12PM" else "KAL DOPAHAR 12 BAJE"
     ticker_text = (
-        f"ANCHOR AADHYA {slot} TECH BULLETIN • {today_display.upper()} • "
+        f"ANCHOR AADHYA • DAILY TECH BULLETIN • {today_display.upper()} • "
         f"TOP 4 BREAKING AI & FUTURE TECH STORIES • "
-        f"NEXT BULLETIN: {next_slot} • SUBSCRIBE TO ANCHOR AADHYA • "
+        f"STAY TUNED FOR NEXT UPDATE • SUBSCRIBE TO ANCHOR AADHYA • "
     )
 
     for idx, (item, plate, b1_path, b2_path, audio) in enumerate(zip(scenes_list, plate_paths, bullet1_paths, bullet2_paths, audio_paths)):
@@ -501,32 +501,28 @@ async def main():
     for idx, s in enumerate(stories):
         rundown_items.append({"num": f"0{idx+1}", "title": s["headline"]})
 
-    next_slot_label = "AAJ SHAAM 05:00 PM" if slot == "12PM" else "KAL DOPAHAR 12:00 PM"
-    next_bulletin_hindi = "आज शाम ठीक 5:00 बजे" if slot == "12PM" else "कल दोपहर ठीक 12:00 बजे"
-    intro_label = "दोपहर 12 बजे का स्पेशल बुलेटिन" if slot == "12PM" else "शाम 5 बजे का प्राइम बुलेटिन"
-
     hook_scene = {
         "id": "scene_1_hook",
         "bg_img": anchor_look["file"],
-        "category": f"TOP 4 HEADLINES ({slot})",
+        "category": "TOP 4 BREAKING NEWS",
         "badge_color": anchor_look["theme_color"],
-        "headline": f"CRAZY TECH BULLETINS: TOP 4 BREAKING!",
+        "headline": "CRAZY TECH BULLETINS: TOP 4 BREAKING!",
         "bullet1": f"• 1. {stories[0]['headline'][:45]}",
         "bullet2": f"• 2. {stories[1]['headline'][:45]}",
         "emotion": "dramatic",
-        "speech": f"अरे रुकिए रुकिए! अगर आप आज की सबसे बड़ी फ्यूचर टेक खबरें मिस नहीं करना चाहते, तो स्क्रीन स्क्रॉल करना तुरंत बंद कीजिए! नमस्कार, आज {today_display} है, मैं हूँ आपकी अपनी होस्ट आध्या... और स्वागत है Anchor Aadhya के {intro_label} में! आज दुनिया भर की रिसर्च लैब्स से ऐसी चार क्रांतिकारी खबरें सामने आई हैं जो होश उड़ा देंगी! चलिए शुरू करते हैं!"
+        "speech": f"अरे रुकिए रुकिए! अगर आप आज की सबसे बड़ी फ्यूचर टेक खबरें मिस नहीं करना चाहते, तो स्क्रीन स्क्रॉल करना तुरंत बंद कीजिए! नमस्कार, आज {today_display} है, मैं हूँ आपकी अपनी होस्ट आध्या... और स्वागत है Anchor Aadhya के आज के ताज़ा टेक बुलेटिन में! आज दुनिया भर की रिसर्च लैब्स से ऐसी चार क्रांतिकारी खबरें सामने आई हैं जो होश उड़ा देंगी! चलिए शुरू करते हैं!"
     }
 
     outro_scene = {
         "id": "scene_6_outro",
         "bg_img": anchor_look["file"],
-        "category": f"NEXT {slot} BULLETIN",
+        "category": "NEXT TECH BULLETIN",
         "badge_color": anchor_look["theme_color"],
-        "headline": f"AGLA BULLETIN: {next_slot_label}!",
+        "headline": "AGLA BULLETIN: JALD HI AAYEGA!",
         "bullet1": "• Video ko Like & Doston ke saath Share karein",
-        "bullet2": f"• Channel Subscribe karein aur Bell Icon dabayein!",
+        "bullet2": "• Channel Subscribe karein aur Bell Icon dabayein!",
         "emotion": "inspirational_joy",
-        "speech": f"तो दोस्तों, ये थीं आज के इस {intro_label} की सबसे बड़ी फ्यूचर टेक खबरें! कैसी लगी आपको आज की टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! हम फिर मिलेंगे {next_bulletin_hindi} ताज़ा और प्रामाणिक टेक न्यूज़ के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
+        "speech": "तो दोस्तों, ये थीं आज की सबसे बड़ी और क्रांतिकारी फ्यूचर टेक खबरें! कैसी लगी आपको आज की ये ताज़ा टेक बुलेटिन? अगर मज़ा आया हो तो तुरंत वीडियो को लाइक करो, अपने दोस्तों के साथ शेयर करो, और चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! हम फिर मिलेंगे अगले ताज़ा और ब्रेकिंग टेक बुलेटिन के साथ! तब तक अपना ख़्याल रखिए, खुश रहिए और बाय-बाय!"
     }
 
     full_scenes_list = [hook_scene] + stories + [outro_scene]

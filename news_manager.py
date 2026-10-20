@@ -15,6 +15,7 @@ import os
 import sys
 import json
 import random
+import subprocess
 import urllib.request
 import urllib.parse
 import xml.etree.ElementTree as ET
@@ -142,36 +143,114 @@ def select_anchor_look(slot, dominant_emotion=None):
     else:
         return ANCHOR_LOOKS[0] if (day_num % 2 == 0) else ANCHOR_LOOKS[3]
 
+CURATED_CATEGORY_VISUALS = {
+    "delft_ai_drone_racing_champion": {
+        1: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1920&q=85"
+    },
+    "tesla_roadster_spacex_thrusters": {
+        1: "https://images.unsplash.com/photo-1560958089-b8a1929cea89?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85"
+    },
+    "factory_humanoid_robots_10000": {
+        1: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=85"
+    },
+    "max_planck_quantum_unhackable_internet": {
+        1: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85"
+    },
+    "neuralink_brain_chip_telepathy_world": {
+        1: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1920&q=85"
+    },
+    "evtol_flying_car_certified_commercial": {
+        1: "https://images.unsplash.com/photo-1559087867-ce4c91325525?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85"
+    },
+    "artificial_sun_nuclear_fusion_record": {
+        1: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=1920&q=85"
+    },
+    "robotic_chef_masti_household_cooking": {
+        1: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=85"
+    },
+    "supersonic_passenger_jet_boom_overture": {
+        1: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1519074069444-1ba4ea16e6f1?w=1920&q=85"
+    },
+    "bionic_eye_restores_vision_breakthrough": {
+        1: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=85"
+    },
+    "robot_dog_guard_patrol_funny": {
+        1: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85"
+    }
+}
+
 # Generate a 100% Brand-New AI Photorealistic Image for each news story
 # (Never uploads raw copyrighted internet photos directly!)
-def generate_ai_news_image(prompt, output_file):
+def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1):
     print(f"  --> Generating Brand-New AI News Image: \"{prompt[:60]}...\"", flush=True)
     seed = random.randint(10000, 9999999)
     clean_prompt = f"Photojournalism documentary style, ultra-realistic commercial photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos, no text"
     encoded = urllib.parse.quote(clean_prompt)
-    # Use 100% free default Pollinations endpoint without model=flux (model=flux causes HTTP 402 Payment Required)
-    url = f"https://image.pollinations.ai/prompt/{encoded}?width=1920&height=1080&nologo=true&seed={seed}"
+    url = f"https://image.pollinations.ai/prompt/{encoded}?width=1280&height=720&nologo=true&seed={seed}"
+    temp_download = output_file + ".tmp.jpg"
     
-    headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"}
-    req = urllib.request.Request(url, headers=headers)
+    # 1. Primary: Native curl (fast, HTTP/2 & modern TLS 1.3 to pass Cloudflare)
+    curl_cmd = [
+        "curl", "-s", "-L", "-f", "-m", "15",
+        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+        url, "-o", temp_download
+    ]
     try:
-        with urllib.request.urlopen(req, timeout=35) as resp:
-            data = resp.read()
-        if len(data) > 15000:
-            with open(output_file, "wb") as f:
-                f.write(data)
-            # Resize and save strictly at 1920x1080 Full HD
-            im = Image.open(output_file).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+        res = subprocess.run(curl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
+        if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
+            im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
             im.save(output_file, "JPEG", quality=95)
+            if os.path.exists(temp_download):
+                os.remove(temp_download)
             append_image_archive(clean_prompt)
-            print(f"  [SUCCESS] 100% Unique AI News Photo Created: {output_file} ({len(data)} bytes)", flush=True)
+            print(f"  [SUCCESS] 100% Unique AI News Photo Created: {output_file}", flush=True)
             return True
-        else:
-            print("  [WARN] Downloaded image payload too small, falling back...", flush=True)
-            return False
-    except Exception as e:
-        print(f"  [NOTICE] AI image generation notice: {e}. Using curated authentic visual fallback.", flush=True)
-        return False
+    except Exception:
+        pass
+    finally:
+        if os.path.exists(temp_download):
+            try: os.remove(temp_download)
+            except Exception: pass
+
+    # 2. Secondary: If Pollinations times out or fails, fetch curated high-res topic-specific visual
+    if story_id and story_id in CURATED_CATEGORY_VISUALS:
+        stock_url = CURATED_CATEGORY_VISUALS[story_id].get(shot_idx, CURATED_CATEGORY_VISUALS[story_id].get(1))
+        if stock_url:
+            print(f"  --> Fetching Curated High-Res Category Visual: {stock_url[:50]}...", flush=True)
+            dl_cmd = [
+                "curl", "-s", "-L", "-f", "-m", "15",
+                "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+                stock_url, "-o", temp_download
+            ]
+            try:
+                res = subprocess.run(dl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
+                if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
+                    im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im.save(output_file, "JPEG", quality=95)
+                    if os.path.exists(temp_download):
+                        os.remove(temp_download)
+                    append_image_archive(stock_url)
+                    print(f"  [SUCCESS] Curated 1080p Story Visual Loaded: {output_file}", flush=True)
+                    return True
+            except Exception as e:
+                print(f"  [WARN] Stock visual download failed: {e}", flush=True)
+            finally:
+                if os.path.exists(temp_download):
+                    try: os.remove(temp_download)
+                    except Exception: pass
+
+    return False
 
 # Master Curated Stories Bank with AI Generation Prompts & Diverse Emotions
 MASTER_STORIES_POOL = [
