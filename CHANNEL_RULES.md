@@ -58,4 +58,16 @@
 * `anchor_aadhya_master.jpg`: Master 4K portrait of glamorous Anchor Aadhya with "AI Aadhya" studio branding.
 * `RUN_DAILY_430PM.bat`: 1-click / Scheduled batch runner for 4:30 PM generation.
 * `RUN_DAILY_5PM_UPLOAD.bat`: 1-click / Scheduled batch runner for 5:00 PM upload.
+
+---
+
+## 6. YouTube End Screen (Outro Card) Architecture & Rules
+* **Duration**: Last 15–20 seconds of the video (Scene 6 Outro).
+* **Safe Zone Layout**:
+  * **Left Side (x=60 to 920px)**: Dedicated dark glassmorphic End-Screen Panel with glowing cyan/crimson borders:
+    1. Header: `THANKS FOR WATCHING • ANCHOR AADHYA`.
+    2. Video Card Box (16:9 standard, 670x377px): `▶ WATCH NEXT — Recommended / Previous Tech Bulletin`.
+    3. Subscribe Circle (Radius 80px with glowing gold ring): `SUBSCRIBE — ANCHOR AADHYA • Bell Icon Dabayein!`.
+  * **Right Side (x=920 to 1920px)**: Radiant Anchor Aadhya (`anchor_aadhya_profile.jpg`) unhindered and smiling, verbally guiding viewers: *"स्क्रीन पर दिख रहे बटन से चैनल Anchor Aadhya को सब्सक्राइब ज़रूर कर लेना! यहाँ देखिए हमारा पिछला स्पेशल बुलेटिन!"*
+* **Compliance**: 100% compliant with YouTube End Screen safe zones and YPP transparency rules. Zero overlapping of facial features.
 * `uploaded_bulletins_tracker.txt`: Permanent history log preventing duplicate uploads.
