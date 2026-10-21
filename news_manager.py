@@ -100,8 +100,11 @@ def fetch_live_top_news():
                 le = item.find("link") or item.find("{http://www.w3.org/2005/Atom}link")
                 link = ((le.text or le.get("href","")) if le is not None else "").strip()
                 articles.append({"title":title,"description":desc,"link":link,"source":src})
-                if len(articles) >= 60: break
         except Exception as e:
+            print(f"  [RSS] Skipped ({feed_url[:50]}): {e}", flush=True)
+    print(f"  [RSS] {len(articles)} live articles fetched", flush=True)
+    return articles
+
 def _get_gemini_api_key():
     key = os.environ.get("GEMINI_API_KEY", "").strip()
     if key: return key
