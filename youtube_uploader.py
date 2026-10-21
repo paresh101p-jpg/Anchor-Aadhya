@@ -173,10 +173,19 @@ def upload_daily_bulletin(slot=None, force=False):
     )
 
     response = None
-    while response is None:
-        status, response = request.next_chunk()
-        if status:
-            print(f"  --> Upload Progress: {int(status.progress() * 100)}%", flush=True)
+    try:
+        while response is None:
+            status, response = request.next_chunk()
+            if status:
+                print(f"  --> Upload Progress: {int(status.progress() * 100)}%", flush=True)
+    except Exception as e:
+        if "uploadLimitExceeded" in str(e):
+            print("\n[WARNING] YOUTUBE DAILY UPLOAD LIMIT EXCEEDED (uploadLimitExceeded)!")
+            print("  --> YouTube restricts the number of videos uploaded per 24 hours (10-12 videos limit).")
+            print("  --> The channel has reached today's limit. Next upload will resume when quota resets.")
+            return True
+        else:
+            raise e
 
     video_id = response.get("id")
     video_url = f"https://www.youtube.com/watch?v={video_id}"
@@ -256,10 +265,19 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
     media = MediaFileUpload(video_path, mimetype="video/mp4", chunksize=1024*1024*4, resumable=True)
     request = youtube.videos().insert(part="snippet,status", body=body, media_body=media)
     response = None
-    while response is None:
-        status, response = request.next_chunk()
-        if status:
-            print(f"  --> Upload Progress: {int(status.progress() * 100)}%", flush=True)
+    try:
+        while response is None:
+            status, response = request.next_chunk()
+            if status:
+                print(f"  --> Upload Progress: {int(status.progress() * 100)}%", flush=True)
+    except Exception as e:
+        if "uploadLimitExceeded" in str(e):
+            print("\n[WARNING] YOUTUBE DAILY UPLOAD LIMIT EXCEEDED (uploadLimitExceeded)!")
+            print("  --> YouTube restricts the number of videos uploaded per 24 hours (10-12 videos limit).")
+            print("  --> The channel has reached today's limit. Next upload will resume when quota resets.")
+            return True
+        else:
+            raise e
 
     video_id = response.get("id")
     video_url = f"https://www.youtube.com/watch?v={video_id}"

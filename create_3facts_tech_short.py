@@ -30,7 +30,9 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 FFMPEG_BIN = r"E:\Paresh\Auto Post\ffmpeg-master-latest-win64-gpl\ffmpeg-master-latest-win64-gpl\bin\ffmpeg.exe"
 if not os.path.exists(FFMPEG_BIN):
     FFMPEG_BIN = "ffmpeg"
-FFPROBE_BIN = FFMPEG_BIN.replace("ffmpeg.exe", "ffprobe.exe")
+    FFPROBE_BIN = "ffprobe"
+else:
+    FFPROBE_BIN = FFMPEG_BIN.replace("ffmpeg.exe", "ffprobe.exe")
 
 FONTS_DIR = os.path.join(BASE_DIR, "fonts")
 LOCAL_IMPACT = os.path.join(FONTS_DIR, "impact.ttf")
