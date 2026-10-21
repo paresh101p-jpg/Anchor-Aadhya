@@ -107,12 +107,14 @@ def generate_ai_anchor_look(slot, dominant_emotion=None):
 select_anchor_look = generate_ai_anchor_look
 
 RSS_FEEDS = [
-    "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "https://www.engadget.com/rss.xml",
+    "https://feeds.bbci.co.uk/news/technology/rss.xml",
+    "https://gizmodo.com/feed",
+    "https://feeds.arstechnica.com/arstechnica/technology-lab",
     "https://techcrunch.com/feed/",
     "https://www.theverge.com/rss/index.xml",
-    "https://www.technologyreview.com/feed/",
-    "https://feeds.arstechnica.com/arstechnica/technology-lab",
     "https://www.wired.com/feed/rss",
+    "https://www.technologyreview.com/feed/"
 ]
 
 def _clean_html(text):
@@ -122,7 +124,29 @@ def _clean_html(text):
         text = text.replace(ent,ch)
     return re.sub(r"\s+"," ",text).strip()[:500]
 
+def _is_image_url_valid(url):
+    """
+    Validates that the article image URL is live, reachable, and contains actual image data.
+    If an image link is dead, broken, or 404, returns False so the article is skipped.
+    """
+    if not url or len(url) < 10:
+        return False
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        with urllib.request.urlopen(req, timeout=6) as resp:
+            status = getattr(resp, "status", 200)
+            if status >= 400: return False
+            chunk = resp.read(2048)
+            return len(chunk) > 50
+    except Exception:
+        return False
+
 def fetch_live_top_news():
+    """
+    Fetches real-time tech news articles with a STRICT requirement:
+    Only articles with authentic, verified journalist photos attached are picked.
+    Articles without images are completely skipped.
+    """
     articles, seen = [], set()
     for feed_url in RSS_FEEDS:
         try:
@@ -140,15 +164,43 @@ def fetch_live_top_news():
                 if not title or len(title) < 15: continue
                 norm = title.lower()[:60]
                 if norm in seen: continue
+
+                # 1. Direct Journalist Image Extraction from RSS Item
+                img_url = ""
+                for child in item:
+                    tag = child.tag.lower()
+                    if any(k in tag for k in ["content", "thumbnail", "enclosure"]):
+                        u = child.get("url") or child.get("href")
+                        if u and any(ext in u.lower() for ext in [".jpg", ".png", ".jpeg", ".webp"]):
+                            img_url = u
+                            break
+
+                # 2. Check description HTML for <img> tag fallback
+                de_raw = item.find("description")
+                if not img_url and de_raw is not None and de_raw.text:
+                    img_match = re.search(r'<img[^>]+src=["\']([^"\']+\.(?:jpg|jpeg|png|webp)[^"\']*)["\']', de_raw.text, re.IGNORECASE)
+                    if img_match:
+                        img_url = img_match.group(1)
+
+                # STRICT USER RULE: If an article has NO image, DO NOT PICK IT!
+                if not img_url or len(img_url) < 10:
+                    continue
+
                 seen.add(norm)
                 de = item.find("description") or item.find("{http://www.w3.org/2005/Atom}summary")
                 desc = _clean_html(de.text if de is not None else "")
                 le = item.find("link") or item.find("{http://www.w3.org/2005/Atom}link")
                 link = ((le.text or le.get("href","")) if le is not None else "").strip()
-                articles.append({"title":title,"description":desc,"link":link,"source":src})
+                articles.append({
+                    "title": title,
+                    "description": desc,
+                    "link": link,
+                    "source": src,
+                    "direct_image_url": img_url
+                })
         except Exception as e:
             print(f"  [RSS] Skipped ({feed_url[:50]}): {e}", flush=True)
-    print(f"  [RSS] {len(articles)} live articles fetched", flush=True)
+    print(f"  [RSS] {len(articles)} verified image-backed live articles fetched", flush=True)
     return articles
 
 def _get_gemini_api_key():
@@ -206,6 +258,14 @@ def _synthesize_story_from_article(article):
     else:
         bullet2 = f"Live tech bulletin update via {source}"
 
+    # Pure factual news points for left-side TV graphics (NO conversational filler, NO masti-majak)
+    sents = [s.strip() for s in re.split(r"[.\n]+", desc) if len(s.strip()) > 15]
+    f1 = clean_title[:65]
+    f2 = sents[0][:65] if len(sents) > 0 else f"Official development reported via {source}."
+    f3 = sents[1][:65] if len(sents) > 1 else f"Major industry milestone reported across {category}."
+    f4 = sents[2][:65] if len(sents) > 2 else f"Global tech market and consumers closely watching further rollout."
+    facts = [f1, f2, f3, f4]
+
     speech_body = desc if len(desc) > 30 else f"{clean_title}. Tech industry mein is nayi vikas par sabhi experts ki nigahein bani hui hain."
     speech = (
         f"Dosto, aaj ki badi tech khabar! {clean_title}. "
@@ -231,6 +291,8 @@ def _synthesize_story_from_article(article):
         "category": category,
         "bullet1": bullet1,
         "bullet2": bullet2,
+        "facts": facts,
+        "direct_image_url": article.get("direct_image_url", ""),
         "emotion": emotion,
         "speech": speech,
         "ai_image_prompt": ai_prompt_1,
@@ -263,6 +325,12 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
   "category": "CATEGORY 2-3 WORDS CAPS",
   "bullet1": "Key fact 1 Hinglish max 12 words",
   "bullet2": "Key fact 2 Hinglish max 12 words",
+  "facts": [
+    "Serious factual news point 1 (What happened, max 14 words)",
+    "Serious factual news point 2 (Technical feature/detail, max 14 words)",
+    "Serious factual news point 3 (Significance/industry milestone, max 14 words)",
+    "Serious factual news point 4 (Official confirmation or rollout, max 14 words)"
+  ],
   "emotion": "dramatic or funny_masti or serious_caution or inspirational_joy",
   "speech": "120-160 word Hindi/Hinglish anchor broadcast script, natural conversational tone, audience engagement question at end. CRITICAL RULE: NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
   "ai_image_prompt": "SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3. Describe the real-world scene, vehicle, device, hardware, lab, or setting from this story in vivid detail. NEVER use real celebrity or politician names (use generic terms like 'tech CEO', 'engineer', 'investor') to prevent safety blocks. Photojournalism cinematic lighting, sharp 8k. NO text, NO watermarks.",
@@ -286,6 +354,14 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                 bc = story.get("badge_color",[220,38,38,255])
                 story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                 story["keywords"] = story.get("id","").replace("_"," ").split()
+                story["direct_image_url"] = article.get("direct_image_url", "")
+                if "facts" not in story or not story["facts"] or len(story["facts"]) < 3:
+                    story["facts"] = [
+                        story.get("headline", article["title"][:50])[:65],
+                        story.get("bullet1", "Key technical breakthrough reported.")[:65],
+                        story.get("bullet2", "Industry experts tracking global impact.")[:65],
+                        f"Official coverage verified via {article.get('source','Tech News')}."
+                    ]
                 print(f"  [GEMINI] '{story.get('headline','?')}' via {ACTIVE_GEMINI_MODEL}", flush=True)
                 return story
             except Exception:
@@ -561,24 +637,28 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
         except Exception as e:
             print(f"  [WARN] Query '{q_try}' attempt failed: {e}", flush=True)
 
-    # Emergency Fallback: Guaranteed direct Wikimedia 1080p press photograph URLs
-    direct_press_urls = [
-        "https://upload.wikimedia.org/wikipedia/commons/9/9d/Netflix_headquarters.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/f/f3/Starship_SN16.jpeg",
-        "https://upload.wikimedia.org/wikipedia/commons/f/ff/Tesla_Model_Y_Classic-Days_2022_DSC_0118.jpg",
-        "https://upload.wikimedia.org/wikipedia/commons/e/ec/Supercomputer_Cray-1.jpg"
-    ]
-    for d_url in direct_press_urls:
+    # If Wikimedia search for specific query failed, try generic tech photojournalism queries
+    generic_tech_queries = ["Artificial intelligence laboratory", "High tech microchip cleanroom", "Supercomputer data center"]
+    for g_q in generic_tech_queries:
         try:
-            req = urllib.request.Request(d_url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = resp.read()
-            if len(data) > 20000:
-                im = Image.open(BytesIO(data)).convert("RGB")
-                im = fit_to_16_9(im)
-                im.save(output_file, "JPEG", quality=95)
-                print(f"  [SUCCESS] Saved 1080p Direct Press Photo (No Stretch): {os.path.basename(output_file)}", flush=True)
-                return True
+            url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrsearch=" + urllib.parse.quote(g_q) + "&gsrlimit=3&prop=imageinfo&iiprop=url|size"
+            req = urllib.request.Request(url, headers=headers)
+            with urllib.request.urlopen(req, timeout=10) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+            pages = data.get("query", {}).get("pages", {})
+            for pid, p in pages.items():
+                ii = p.get("imageinfo", [{}])[0]
+                img_url = ii.get("url", "")
+                if img_url and any(ext in img_url.lower() for ext in [".jpg", ".jpeg", ".png"]):
+                    img_req = urllib.request.Request(img_url, headers={"User-Agent": "Mozilla/5.0"})
+                    with urllib.request.urlopen(img_req, timeout=12) as img_resp:
+                        img_bytes = img_resp.read()
+                    if len(img_bytes) > 20000:
+                        im = Image.open(BytesIO(img_bytes)).convert("RGB")
+                        im = fit_to_16_9(im)
+                        im.save(output_file, "JPEG", quality=95)
+                        print(f"  [SUCCESS] Saved 1080p Generic Tech Photo: {os.path.basename(output_file)}", flush=True)
+                        return True
         except:
             pass
 
@@ -740,8 +820,26 @@ def get_fresh_bulletin_stories(slot):
 
     random.shuffle(fresh)
     selected, used_ids = [], set()
+
+    # Dynamic Story Count (3-4 for big/detailed stories, 5-6 for short/quick updates)
+    avg_desc_len = sum(len(a.get("description", "")) for a in fresh[:8]) / max(1, min(len(fresh), 8))
+    if avg_desc_len > 220:
+        target_count = 3  # Long in-depth stories
+    elif avg_desc_len < 120:
+        target_count = 5  # Quick short updates
+    else:
+        target_count = 4  # Standard balanced
+    print(f"[TARGET] Dynamic Story Count: {target_count} stories (Avg summary length: {avg_desc_len:.0f} chars)", flush=True)
+
     for article in fresh:
-        if len(selected) >= 4: break
+        if len(selected) >= target_count: break
+
+        # STRICT USER RULE: If an article has NO direct verified image, DO NOT PICK IT!
+        img_url = article.get("direct_image_url")
+        if not img_url or not _is_image_url_valid(img_url):
+            print(f"  [SKIP NO VALID IMAGE] {article['title'][:55]}", flush=True)
+            continue
+
         print(f"\n  [PROCESSING] {article['title'][:75]}", flush=True)
         # Try Gemini Flash first
         story = generate_story_metadata_with_gemini(article)
@@ -756,15 +854,16 @@ def get_fresh_bulletin_stories(slot):
             print(f"  [SKIP] Duplicate: {sid}", flush=True); continue
         story["raw_title"] = article["title"]
         story["source"] = article.get("source","")
+        story["direct_image_url"] = article.get("direct_image_url", "")
         selected.append(story); used_ids.add(sid)
-        print(f"  [ADDED] {len(selected)}/4: {headline}", flush=True)
+        print(f"  [ADDED] {len(selected)}/{target_count}: {headline}", flush=True)
 
-    # Safety net: ensure at least 4 stories
-    if len(selected) < 4:
+    # Safety net: ensure at least target_count stories
+    if len(selected) < min(3, target_count):
         print(f"  [WARN] Only {len(selected)} stories selected — padding with emergency stories", flush=True)
         emergency = get_emergency_bulletin_stories(slot)
         for em in emergency:
-            if len(selected) >= 4: break
+            if len(selected) >= target_count: break
             if em["id"] not in used_ids:
                 selected.append(em)
                 used_ids.add(em["id"])

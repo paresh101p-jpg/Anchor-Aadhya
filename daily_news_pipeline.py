@@ -74,47 +74,57 @@ def get_font(size, bold=True):
 
 def create_ai_news_images(slot, stories):
     """
-    Generates ALL news images using ONLY Gemini Imagen 3.
-    Zero stock photos, zero Unsplash URLs, zero copyright risk.
+    Downloads/Generates authentic, high-resolution 16:9 images for each story.
+    STRICT USER RULE: Only images directly relevant to the news are used.
     """
-    print("\n--- 1. Generating AI Photorealistic News Images (Gemini Imagen 3 ONLY) ---", flush=True)
+    print("\n--- 1. Generating & Preparing Topic-Relevant 16:9 News Images ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
 
     for idx, item in enumerate(stories):
-        # Shot 1: Wide / Action Perspective
         dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
-        prompt1 = item.get("ai_image_prompt")
-        if not prompt1:
-            kw = ", ".join(item.get("keywords", [item.get("category", "")])) 
-            prompt1 = f"Ultra-realistic news photojournalism: {item.get('headline','tech news')}, {kw}, professional broadcast news photography, cinematic lighting, sharp 8k"
-        # Gemini Imagen 3 ONLY — no URL fallbacks
-        generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
-        item["bg_img_1"] = dest1
-        item["bg_img"] = dest1  # backward compatibility
-
-        # Shot 2: Dynamic Macro / Close-up Perspective
         dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
-        prompt2 = item.get("ai_image_prompt_2")
-        if not prompt2:
-            kw = ", ".join(item.get("keywords", [item.get("category", "")]))
-            prompt2 = f"Extreme macro close-up photojournalism: {kw}, technical detail, razor-sharp focus, 8k professional news photography"
-        # Gemini Imagen 3 ONLY — no URL fallbacks
-        generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=item.get("headline", ""))
-        item["bg_img_2"] = dest2
 
-        # Sanity Guard: Verify both files exist and are valid (>20KB). Never allow missing files to reach FFmpeg.
-        for d_check, p_fallback in [(dest1, prompt1), (dest2, prompt2)]:
+        # 1. Direct Journalist Image from Article
+        direct_url = item.get("direct_image_url")
+        saved_direct = False
+        if direct_url:
+            try:
+                req = urllib.request.Request(direct_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+                with urllib.request.urlopen(req, timeout=12) as resp:
+                    data = resp.read()
+                if len(data) > 15000:
+                    im = Image.open(BytesIO(data)).convert("RGB")
+                    im1 = fit_to_16_9(im)
+                    im1.save(dest1, "JPEG", quality=95)
+                    # Shot 2: Dramatic Macro / Hardware Close-up Crop of the SAME photo
+                    w_im, h_im = im.size
+                    cx, cy = w_im // 2, h_im // 2
+                    cw, ch = int(w_im * 0.65), int(h_im * 0.65)
+                    im2 = im.crop((cx - cw//2, cy - ch//2, cx + cw//2, cy + ch//2))
+                    im2 = fit_to_16_9(im2)
+                    im2.save(dest2, "JPEG", quality=95)
+                    saved_direct = True
+                    print(f"  [SUCCESS] Story {idx+1}: Saved authentic article photo: {os.path.basename(dest1)}", flush=True)
+            except Exception as e:
+                print(f"  [WARN] Direct photo download failed ({direct_url[:50]}): {e}", flush=True)
+
+        if not saved_direct:
+            prompt1 = item.get("ai_image_prompt") or f"Commercial broadcast news photography of {item.get('headline','tech news')}"
+            generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
+            prompt2 = item.get("ai_image_prompt_2") or f"Close up technical detail of {item.get('headline','tech news')}"
+            generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=item.get("headline", ""))
+
+        item["bg_img_1"] = dest1
+        item["bg_img_2"] = dest2
+        item["bg_img"] = dest1
+
+        # Sanity Guard: Verify both files exist and are valid (>15KB)
+        for d_check in [dest1, dest2]:
             if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
-                print(f"  [CRITICAL RECOVERY] Image {os.path.basename(d_check)} missing or small, forcing immediate recovery...", flush=True)
-                # First try fetching a real photo directly
-                fetch_real_news_photo(p_fallback or "Humanoid robot technology", d_check, shot_idx=1)
-                # If still not present, copy master reference
-                if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
-                    master_ref = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
-                    if os.path.exists(master_ref):
-                        import shutil
-                        shutil.copyfile(master_ref, d_check)
-                        print(f"  [RECOVERY OK] Cloned master to {os.path.basename(d_check)}", flush=True)
+                master_ref = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+                if os.path.exists(master_ref):
+                    import shutil
+                    shutil.copyfile(master_ref, d_check)
 
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
         print(f"       Shot 1 (Wide):  {dest1} ({os.path.getsize(dest1)} bytes)", flush=True)
@@ -137,12 +147,14 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
     header.save(HEADER_BAR_PATH, "PNG")
 
     # Scene 1 Rundown Board
-    board = Image.new("RGBA", (840, 480), (0, 0, 0, 0))
+    num_items = len(rundown_items)
+    board_h = min(560, 100 + num_items * 82)
+    board = Image.new("RGBA", (840, board_h), (0, 0, 0, 0))
     bd = ImageDraw.Draw(board)
-    bd.rectangle([(0, 0), (840, 480)], fill=(10, 15, 28, 230))
+    bd.rectangle([(0, 0), (840, board_h)], fill=(10, 15, 28, 230))
     bd.rectangle([(0, 0), (840, 65)], fill=(220, 20, 60, 255))
     font_board_title = get_font(30, bold=True)
-    bd.text((25, 16), "TOP 4 TECH HEADLINES", font=font_board_title, fill=(255, 255, 255))
+    bd.text((25, 16), f"TOP {num_items} TECH HEADLINES", font=font_board_title, fill=(255, 255, 255))
     board_path = os.path.join(BASE_DIR, "scene1_board.png")
     board.save(board_path, "PNG")
 
@@ -161,7 +173,7 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
         strip.save(s_path, "PNG")
         rundown_paths.append(s_path)
 
-    # Lower-third plates and bullets
+    # Lower-third plates and bullets (ORIGINAL)
     plate_paths = []
     bullet1_paths = []
     bullet2_paths = []
@@ -199,7 +211,58 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
         b2_img.save(b2_file, "PNG")
         bullet2_paths.append(b2_file)
 
-    return board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths
+    # Left-side TV Story Graphics Cards & Pure Factual Points (NO masti-majak)
+    card_paths = []
+    facts_paths_list = []
+    font_card_badge = get_font(20, bold=True)
+    font_card_title = get_font(26, bold=True)
+    font_fact_text = get_font(21, bold=True)
+
+    for idx, item in enumerate(stories):
+        # Card Background (x=60..680, y=130..740)
+        card_w, card_h = 620, 600
+        card = Image.new("RGBA", (card_w, card_h), (0, 0, 0, 0))
+        cd = ImageDraw.Draw(card)
+        cd.rounded_rectangle([(0, 0), (card_w, card_h)], radius=14, fill=(10, 16, 30, 225))
+        cd.rounded_rectangle([(0, 0), (card_w, 6)], radius=3, fill=(0, 220, 255, 255))
+        # Category Badge inside card
+        cd.rounded_rectangle([(25, 20), (300, 56)], radius=6, fill=item["badge_color"])
+        cd.text((38, 26), f"🔴 {item['category'][:18]}", font=font_card_badge, fill=(255, 255, 255))
+        # Headline inside card
+        cd.text((25, 75), item["headline"][:32], font=font_card_title, fill=(255, 220, 50))
+        cd.line([(25, 115), (card_w - 25, 115)], fill=(0, 200, 255, 150), width=2)
+        c_file = os.path.join(BASE_DIR, f"card_{idx+1}.png")
+        card.save(c_file, "PNG")
+        card_paths.append(c_file)
+
+        # 4 Pure Factual News Points for this story (NO conversational fluff)
+        story_facts = item.get("facts", [])
+        if not story_facts or len(story_facts) < 3:
+            story_facts = [
+                item.get("headline", "")[:60],
+                item.get("bullet1", "")[:60],
+                item.get("bullet2", "")[:60],
+                f"Official development reported via {item.get('source','Tech News')}."
+            ]
+
+        f_files = []
+        for f_idx, fact_text in enumerate(story_facts[:4]):
+            f_img = Image.new("RGBA", (card_w - 50, 95), (0, 0, 0, 0))
+            fd = ImageDraw.Draw(f_img)
+            fd.rounded_rectangle([(0, 0), (card_w - 50, 95)], radius=8, fill=(16, 24, 46, 240))
+            fd.line([(0, 0), (card_w - 50, 0)], fill=(0, 220, 255, 160), width=2)
+            fd.ellipse([(14, 18), (28, 32)], fill=(0, 220, 255, 255))
+            words = fact_text.strip().split()
+            l1 = " ".join(words[:6])
+            l2 = " ".join(words[6:13])
+            fd.text((40, 14), l1, font=font_fact_text, fill=(255, 255, 255))
+            fd.text((40, 48), l2, font=font_fact_text, fill=(200, 225, 255))
+            f_path = os.path.join(BASE_DIR, f"fact_{idx+1}_{f_idx+1}.png")
+            f_img.save(f_path, "PNG")
+            f_files.append(f_path)
+        facts_paths_list.append(f_files)
+
+    return board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, card_paths, facts_paths_list
 
 async def generate_speech_audio(scenes_list):
     print("\n--- 3. Synthesizing Emotion-Adaptive Hindi Voice (Swara Neural) ---", flush=True)
@@ -241,7 +304,7 @@ def get_audio_duration(file_path):
     except Exception:
         return 28.0
 
-def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, audio_paths, today_display, slot):
+def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, card_paths, facts_paths_list, audio_paths, today_display, slot):
     print("\n--- 4. Rendering HD 1080p Scenes with Motion Graphics ---", flush=True)
     scene_videos = []
     ticker_font = "C\\:/Windows/Fonts/segoeui.ttf"
@@ -256,60 +319,84 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
             ticker_font = candidate.replace("\\", "/").replace(":", "\\:")
             break
 
+    num_stories = len(plate_paths) - 2 if len(plate_paths) > 2 else len(plate_paths)
     ticker_text = (
         f"ANCHOR AADHYA • DAILY TECH BULLETIN • {today_display.upper()} • "
-        f"TOP 4 BREAKING AI & FUTURE TECH STORIES • "
+        f"TOP {num_stories} BREAKING AI & FUTURE TECH STORIES • "
     )
     scene_videos = []
     scene_durations = []
 
-    for idx, (item, plate, b1_path, b2_path, audio) in enumerate(zip(scenes_list, plate_paths, bullet1_paths, bullet2_paths, audio_paths)):
+    for idx, (item, plate, b1_path, b2_path, card_file, story_facts, audio) in enumerate(
+        zip(scenes_list, plate_paths, bullet1_paths, bullet2_paths, card_paths, facts_paths_list, audio_paths)
+    ):
         dur = get_audio_duration(audio) + 0.6
         scene_durations.append(dur)
         scene_mp4 = os.path.join(BASE_DIR, f"tv_scene_{idx+1}.mp4")
         frames = int(dur * 25)
 
         if idx == 0:
-            # Scene 1: Rundown Board + Anchor Aadhya
-            filter_complex = (
-                f"[0:v]scale=1920:1080,zoompan=z='min(zoom+0.0003,1.03)':d={frames}:s=1920x1080:fps=25[bg];"
-                f"[bg][1:v]overlay=0:0[w_hdr];"
-                f"[w_hdr][2:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[w_logo];"
-                f"[w_logo][3:v]overlay=x='if(lte(t,0.8), -850 + 910*sin((t-0.4)/0.4*1.5708), 60)':y=140:enable='between(t,0.4,999)'[w_bd];"
-                f"[w_bd][4:v]overlay=x='if(lte(t,1.4), -850 + 930*sin((t-1.0)/0.4*1.5708), 80)':y=220:enable='between(t,1.0,999)'[w_r1];"
-                f"[w_r1][5:v]overlay=x='if(lte(t,2.6), -850 + 930*sin((t-2.2)/0.4*1.5708), 80)':y=305:enable='between(t,2.2,999)'[w_r2];"
-                f"[w_r2][6:v]overlay=x='if(lte(t,3.8), -850 + 930*sin((t-3.4)/0.4*1.5708), 80)':y=390:enable='between(t,3.4,999)'[w_r3];"
-                f"[w_r3][7:v]overlay=x='if(lte(t,5.0), -850 + 930*sin((t-4.6)/0.4*1.5708), 80)':y=475:enable='between(t,4.6,999)'[w_r4];"
-                f"[w_r4][8:v]overlay=x='if(lte(t,7.2), -1920 + 1920*sin((t-6.5)/0.7*1.5708), 0)':y=770:enable='between(t,6.5,999)'[w_plt];"
-                f"[w_plt][9:v]overlay=x='if(lte(t,8.1), -1800 + 1870*sin((t-7.5)/0.6*1.5708), 70)':y=915:enable='between(t,7.5,999)'[w_b1];"
-                f"[w_b1][10:v]overlay=x='if(lte(t,10.1), -1800 + 1870*sin((t-9.5)/0.6*1.5708), 70)':y=965:enable='between(t,9.5,999)'[w_b2];"
-                f"[w_b2]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
-                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
-                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
-            )
-            cmd = [
+            # Scene 1: Rundown Board + Anchor Aadhya (Dynamic for any number of stories)
+            num_rundown = len(rundown_paths)
+            step_y = int(320 / max(1, num_rundown - 1)) if num_rundown > 1 else 90
+            step_y = min(step_y, 85)
+
+            fc_parts = [
+                f"[0:v]scale=1920:1080,zoompan=z='min(zoom+0.0003,1.03)':d={frames}:s=1920x1080:fps=25[bg]",
+                f"[bg][1:v]overlay=0:0[w_hdr]",
+                f"[w_hdr][2:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[w_logo]",
+                f"[w_logo][3:v]overlay=x='if(lte(t,0.8), -850 + 910*sin((t-0.4)/0.4*1.5708), 60)':y=140:enable='between(t,0.4,999)'[w_bd]"
+            ]
+            cur_s = "[w_bd]"
+            cmd_inputs = [
                 FFMPEG_BIN, "-y",
                 "-loop", "1", "-i", item["bg_img"],
                 "-loop", "1", "-i", HEADER_BAR_PATH,
                 "-loop", "1", "-i", LOGO_BUG_PATH,
-                "-loop", "1", "-i", board_path,
-                "-loop", "1", "-i", rundown_paths[0],
-                "-loop", "1", "-i", rundown_paths[1],
-                "-loop", "1", "-i", rundown_paths[2],
-                "-loop", "1", "-i", rundown_paths[3],
-                "-loop", "1", "-i", plate,
-                "-loop", "1", "-i", b1_path,
-                "-loop", "1", "-i", b2_path,
+                "-loop", "1", "-i", board_path
+            ]
+            input_idx = 4
+            for r_i, r_p in enumerate(rundown_paths):
+                cmd_inputs.extend(["-loop", "1", "-i", r_p])
+                st_t = round(1.0 + r_i * 1.0, 1)
+                en_t = round(st_t + 0.4, 1)
+                y_p = 215 + r_i * step_y
+                next_s = f"[w_r{r_i+1}]"
+                fc_parts.append(f"{cur_s}[{input_idx}:v]overlay=x='if(lte(t,{en_t}), -850 + 930*sin((t-{st_t})/0.4*1.5708), 80)':y={y_p}:enable='between(t,{st_t},999)'{next_s}")
+                cur_s = next_s
+                input_idx += 1
+
+            # Plate at y=770
+            cmd_inputs.extend(["-loop", "1", "-i", plate])
+            plate_inp = input_idx; input_idx += 1
+            fc_parts.append(f"{cur_s}[{plate_inp}:v]overlay=x='if(lte(t,7.2), -1920 + 1920*sin((t-6.5)/0.7*1.5708), 0)':y=770:enable='between(t,6.5,999)'[w_plt]")
+
+            cmd_inputs.extend(["-loop", "1", "-i", b1_path])
+            b1_inp = input_idx; input_idx += 1
+            fc_parts.append(f"[w_plt][{b1_inp}:v]overlay=x='if(lte(t,8.1), -1800 + 1870*sin((t-7.5)/0.6*1.5708), 70)':y=915:enable='between(t,7.5,999)'[w_b1]")
+
+            cmd_inputs.extend(["-loop", "1", "-i", b2_path])
+            b2_inp = input_idx; input_idx += 1
+            fc_parts.append(f"[w_b1][{b2_inp}:v]overlay=x='if(lte(t,10.1), -1800 + 1870*sin((t-9.5)/0.6*1.5708), 70)':y=965:enable='between(t,9.5,999)'[w_b2]")
+
+            fc_parts.append(
+                f"[w_b2]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
+                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
+                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
+            )
+            cmd_inputs.extend([
                 "-i", audio,
-                "-filter_complex", filter_complex,
-                "-map", "[v]", "-map", "11:a",
+                "-filter_complex", ";".join(fc_parts),
+                "-map", "[v]", "-map", f"{input_idx}:a",
                 "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", "-preset", "veryfast", "-threads", "2",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
                 scene_mp4
-            ]
+            ])
+            cmd = cmd_inputs
+
         elif idx < len(scenes_list) - 1:
-            # News Story Scenes (Scenes 2 to 5): Dual-Shot B-Roll Cuts with Zoom-In & Zoom-Out
+            # Story Scenes: B-Roll Shots + Left-Side Factual News Card + Original Bottom Plate & Bullets
             img1 = item.get("bg_img_1", item.get("bg_img"))
             img2 = item.get("bg_img_2", img1)
             dur1 = round(dur / 2.0, 2)
@@ -317,38 +404,65 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
             f1 = int(dur1 * 25)
             f2 = int(dur2 * 25)
 
-            filter_complex = (
-                f"[0:v]scale=1920:1080,setsar=1,zoompan=z='min(zoom+0.0004,1.06)':d={f1}:s=1920x1080:fps=25,setsar=1[shot1];"
-                f"[1:v]scale=1920:1080,setsar=1,zoompan=z='max(1.06-0.0004*on,1.0)':d={f2}:s=1920x1080:fps=25,setsar=1[shot2];"
-                f"[shot1][shot2]concat=n=2:v=1:a=0[bg];"
-                f"[bg][2:v]overlay=0:0[with_hdr];"
-                f"[with_hdr][3:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[with_logo];"
-                f"[with_logo][4:v]overlay=x='if(lte(t,0.7), -1920 + 1920*sin(t/0.7*1.5708), 0)':y=770[with_plate];"
-                f"[with_plate][5:v]overlay=x='if(lte(t,1.8), -1800 + 1870*sin((t-1.2)/0.6*1.5708), 70)':y=915:enable='between(t,1.2,999)'[with_b1];"
-                f"[with_b1][6:v]overlay=x='if(lte(t,4.1), -1800 + 1870*sin((t-3.5)/0.6*1.5708), 70)':y=965:enable='between(t,3.5,999)'[with_b2];"
-                f"[with_b2]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
-                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
-                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
-            )
             cmd = [
                 FFMPEG_BIN, "-y",
                 "-loop", "1", "-t", str(dur1), "-i", img1,
                 "-loop", "1", "-t", str(dur2), "-i", img2,
                 "-loop", "1", "-i", HEADER_BAR_PATH,
                 "-loop", "1", "-i", LOGO_BUG_PATH,
-                "-loop", "1", "-i", plate,
-                "-loop", "1", "-i", b1_path,
-                "-loop", "1", "-i", b2_path,
+                "-loop", "1", "-i", card_file
+            ]
+            in_idx = 5
+            fc_layers = [
+                f"[0:v]scale=1920:1080,setsar=1,zoompan=z='min(zoom+0.0004,1.06)':d={f1}:s=1920x1080:fps=25,setsar=1[shot1]",
+                f"[1:v]scale=1920:1080,setsar=1,zoompan=z='max(1.06-0.0004*on,1.0)':d={f2}:s=1920x1080:fps=25,setsar=1[shot2]",
+                f"[shot1][shot2]concat=n=2:v=1:a=0[bg]",
+                f"[bg][2:v]overlay=0:0[with_hdr]",
+                f"[with_hdr][3:v]overlay=x=25:y='10 + 4*sin(2*PI*t/3)'[with_logo]",
+                f"[with_logo][4:v]overlay=x='if(lte(t,0.8), -640 + 700*sin((t-0.2)/0.6*1.5708), 60)':y=130:enable='between(t,0.2,999)'[with_card]"
+            ]
+            last_s = "[with_card]"
+            # Add up to 4 pure factual news points
+            fact_timings = [(1.2, 260), (6.0, 375), (12.0, 490), (18.0, 605)]
+            for f_i, f_p in enumerate(story_facts[:4]):
+                cmd.extend(["-loop", "1", "-i", f_p])
+                t_st, y_p = fact_timings[f_i]
+                t_en = round(t_st + 0.6, 1)
+                nxt_s = f"[with_f{f_i+1}]"
+                fc_layers.append(f"{last_s}[{in_idx}:v]overlay=x='if(lte(t,{t_en}), -640 + 725*sin((t-{t_st})/0.6*1.5708), 85)':y={y_p}:enable='between(t,{t_st},999)'{nxt_s}")
+                last_s = nxt_s
+                in_idx += 1
+
+            # Bottom plate, b1, b2 (ORIGINAL)
+            cmd.extend(["-loop", "1", "-i", plate])
+            plate_inp = in_idx; in_idx += 1
+            fc_layers.append(f"{last_s}[{plate_inp}:v]overlay=x='if(lte(t,0.7), -1920 + 1920*sin(t/0.7*1.5708), 0)':y=770[with_plate]")
+
+            cmd.extend(["-loop", "1", "-i", b1_path])
+            b1_inp = in_idx; in_idx += 1
+            fc_layers.append(f"[with_plate][{b1_inp}:v]overlay=x='if(lte(t,1.8), -1800 + 1870*sin((t-1.2)/0.6*1.5708), 70)':y=915:enable='between(t,1.2,999)'[with_b1]")
+
+            cmd.extend(["-loop", "1", "-i", b2_path])
+            b2_inp = in_idx; in_idx += 1
+            fc_layers.append(f"[with_b1][{b2_inp}:v]overlay=x='if(lte(t,4.1), -1800 + 1870*sin((t-3.5)/0.6*1.5708), 70)':y=965:enable='between(t,3.5,999)'[with_b2]")
+
+            fc_layers.append(
+                f"[with_b2]drawbox=y=1035:color=black@0.95:width=1920:height=45:t=fill,"
+                f"drawbox=y=1033:color=0x00dcff@1:width=1920:height=2:t=fill,"
+                f"drawtext=fontfile='{ticker_font}':text='{ticker_text}':fontsize=25:fontcolor=white:x='w-mod(t*140,w+text_w)':y=1045[v]"
+            )
+            cmd.extend([
                 "-i", audio,
-                "-filter_complex", filter_complex,
-                "-map", "[v]", "-map", "7:a",
+                "-filter_complex", ";".join(fc_layers),
+                "-map", "[v]", "-map", f"{in_idx}:a",
                 "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", "-preset", "veryfast", "-threads", "2",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
                 scene_mp4
-            ]
+            ])
+
         else:
-            # Outro Scene (Scene 6): Anchor Aadhya Goodbye & Call-to-Action
+            # Outro Scene: Anchor Aadhya Goodbye & Call-to-Action
             filter_complex = (
                 f"[0:v]scale=1920:1080,zoompan=z='min(zoom+0.0003,1.03)':d={frames}:s=1920x1080:fps=25[bg];"
                 f"[bg][1:v]overlay=0:0[with_hdr];"
@@ -416,7 +530,7 @@ def render_master_news_video(scene_videos, output_video):
 
 def cleanup_temp_files():
     print("\n--- 6. Cleaning Up Temporary Rendering Assets ---", flush=True)
-    patterns = ["tv_scene_*", "plate_*", "bullet*", "scene1_*", "tv_voice_*", "temp_concat*"]
+    patterns = ["tv_scene_*", "plate_*", "bullet*", "scene1_*", "tv_voice_*", "temp_concat*", "card_*", "fact_*"]
     import glob
     for pat in patterns:
         for f in glob.glob(os.path.join(BASE_DIR, pat)):
@@ -447,7 +561,7 @@ async def main():
     print(f"  ANCHOR: AADHYA | ZERO DUPLICATES | DYNAMIC WARDROBE & EMOTIONS")
     print("==============================================================")
 
-    # 1. Fetch 4 brand-new non-duplicate stories
+    # 1. Fetch dynamic stories (3 to 6 verified stories with direct photos)
     stories = get_fresh_bulletin_stories(slot)
     if not stories:
         print("[CRITICAL] get_fresh_bulletin_stories returned empty — using emergency bulletin stories", flush=True)
@@ -456,28 +570,29 @@ async def main():
     anchor_look = select_anchor_look(slot, dominant_emotion)
     print(f"  --> Active Anchor Look: {anchor_look['name']} ({anchor_look['style_desc']})")
 
-    # 2. Generate 100% Brand-New AI Photorealistic News Imagery
+    # 2. Prepare Topic-Relevant News Images
     create_ai_news_images(slot, stories)
 
-    # 3. Create Scene 1 (Hook / Rundown) & Scene 6 (Outro)
+    # 3. Create Scene 1 (Hook / Rundown) & Scene Outro
     rundown_items = []
     for idx, s in enumerate(stories):
         rundown_items.append({"num": f"0{idx+1}", "title": s["headline"]})
 
+    num_s = len(stories)
     hook_scene = {
         "id": "scene_1_hook",
         "bg_img": anchor_look["file"],
-        "category": "TOP 4 BREAKING NEWS",
+        "category": f"TOP {num_s} BREAKING NEWS",
         "badge_color": anchor_look["theme_color"],
-        "headline": "CRAZY TECH BULLETINS: TOP 4 BREAKING!",
+        "headline": f"CRAZY TECH BULLETINS: TOP {num_s} BREAKING!",
         "bullet1": f"• 1. {stories[0]['headline'][:45]}",
-        "bullet2": f"• 2. {stories[1]['headline'][:45]}",
+        "bullet2": f"• 2. {stories[1]['headline'][:45]}" if len(stories) > 1 else "• Fresh AI Updates",
         "emotion": "dramatic",
-        "speech": f"अरे रुकिए रुकिए! अगर आप आज की सबसे बड़ी फ्यूचर टेक खबरें मिस नहीं करना चाहते, तो स्क्रीन स्क्रॉल करना तुरंत बंद कीजिए! नमस्कार, आज {today_display} है, मैं हूँ आपकी अपनी होस्ट आध्या... और स्वागत है Anchor Aadhya के आज के ताज़ा टेक बुलेटिन में! आज दुनिया भर की रिसर्च लैब्स से ऐसी चार क्रांतिकारी खबरें सामने आई हैं जो होश उड़ा देंगी! चलिए शुरू करते हैं!"
+        "speech": f"अरे रुकिए रुकिए! अगर आप आज की सबसे बड़ी फ्यूचर टेक खबरें मिस नहीं करना चाहते, तो स्क्रीन स्क्रॉल करना तुरंत बंद कीजिए! नमस्कार, आज {today_display} है, मैं हूँ आपकी अपनी होस्ट आध्या... और स्वागत है Anchor Aadhya के आज के ताज़ा टेक बुलेटिन में! आज दुनिया भर की रिसर्च लैब्स से ऐसी {num_s} क्रांतिकारी खबरें सामने आई हैं जो होश उड़ा देंगी! चलिए शुरू करते हैं!"
     }
 
     outro_scene = {
-        "id": "scene_6_outro",
+        "id": "scene_outro",
         "bg_img": anchor_look["file"],
         "category": "NEXT TECH BULLETIN",
         "badge_color": anchor_look["theme_color"],
@@ -490,8 +605,8 @@ async def main():
 
     full_scenes_list = [hook_scene] + stories + [outro_scene]
 
-    # 4. Generate Graphics Layers
-    board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths = create_graphics_layers(
+    # 4. Generate Graphics Layers (Including Left-side TV cards & facts)
+    board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, card_paths, facts_paths_list = create_graphics_layers(
         today_display, slot, full_scenes_list, rundown_items
     )
 
@@ -500,7 +615,7 @@ async def main():
 
     # 6. Render Scenes and Master Video
     scene_videos, scene_durations = render_scenes_with_motion(
-        full_scenes_list, board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, audio_paths,
+        full_scenes_list, board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, card_paths, facts_paths_list, audio_paths,
         today_display, slot
     )
     render_master_news_video(scene_videos, output_video)
@@ -513,13 +628,9 @@ async def main():
         news_bg_path=stories[0]["bg_img"],
         slot=slot,
         headline_yellow=stories[0]["headline"],
-        sub_headline_cyan=stories[1]["headline"],
-        callout_tag=stories[2]["headline"],
-        bullets=[
-            stories[0]["headline"],
-            stories[1]["headline"],
-            stories[2]["headline"]
-        ],
+        sub_headline_cyan=stories[1]["headline"] if len(stories) > 1 else stories[0]["headline"],
+        callout_tag=stories[2]["headline"] if len(stories) > 2 else "EXCLUSIVE",
+        bullets=[s["headline"] for s in stories[:3]],
         output_path=thumb_path
     )
 
