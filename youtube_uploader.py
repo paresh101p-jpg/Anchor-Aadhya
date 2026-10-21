@@ -215,6 +215,7 @@ def upload_daily_bulletin(slot=None, force=False):
                 print(f"  [DELETED] Used asset: {os.path.basename(f)}")
             except Exception:
                 pass
+    return True
 
 def upload_direct_video(video_path, meta_path, thumb_path=None):
     if not os.path.exists(video_path):

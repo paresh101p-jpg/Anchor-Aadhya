@@ -55,17 +55,6 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
-          # Create short metadata
-          python -c "
-          import json, os
-          meta = {
-              'title': 'NASA का सबसे बड़ा रहस्य! 😱 Car की चाबी जितनी भी Memory नहीं? #Shorts #TechFacts #AnchorAadhya',
-              'description': 'NASA Voyager 1, Quantum Computers, and James Webb Telescope shocking tech facts presented by Anchor Aadhya!\n\nWebsite: https://krishnavibez.in\n\n#Shorts #TechFacts #ScienceFacts #SpaceFacts #NASA #FactTechz #AnchorAadhya #AIAnchor',
-              'tags': ['Shorts', 'TechFacts', 'NASA', 'Voyager1', 'QuantumComputer', 'JamesWebb', 'FactTechz', 'AnchorAadhya', 'ScienceFacts', 'MindBlowingFacts']
-          }
-          with open('metadata_shorts.json', 'w', encoding='utf-8') as f:
-              json.dump(meta, f, ensure_ascii=False, indent=2)
-          "
           python youtube_uploader.py --video sample_3facts_facttechz_short.mp4 --meta metadata_shorts.json
 
       - name: Commit & Push Upload Tracker

@@ -42,27 +42,68 @@ def fit_to_9_16(im, target_w=1080, target_h=1920):
         im = im.crop((0, off_y, w, off_y + new_h))
     return im.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-def create_blurred_ambient_frame(im, target_w=1080, target_h=1920):
-    """Creates a high-retention blurred background with sharp central uncropped photo"""
+def create_blurred_ambient_frame(im, fact_badge="● FACT 01", headline_line1="NASA VOYAGER-1 MYSTERY!", headline_line2="Car Ki Chabi Jitni Bhi Memory Nahi?!", target_w=1080, target_h=1920):
+    """
+    Creates a high-retention 9:16 vertical frame for each fact:
+    - Ambient blurred background
+    - High-Impact Top Fact Headline Card (y=145 to y=395)
+    - Sharp central uncropped NASA photo with neon cyan glow (y=415 to y=1365)
+    - Clear lower zone for dynamic kinetic subtitles (y=1400+)
+    """
     bg = fit_to_9_16(im.copy(), target_w, target_h)
-    bg = bg.filter(ImageFilter.GaussianBlur(radius=30))
-    overlay = Image.new("RGBA", (target_w, target_h), (5, 8, 18, 160))
+    bg = bg.filter(ImageFilter.GaussianBlur(radius=32))
+    overlay = Image.new("RGBA", (target_w, target_h), (5, 8, 20, 185))
     bg.paste(overlay, (0, 0), overlay)
 
+    draw = ImageDraw.Draw(bg)
+
+    # 1. TOP FACT HEADLINE CARD CONTAINER (y=145 to y=395)
+    draw.rounded_rectangle([(40, 145), (1040, 395)], radius=24, fill=(8, 14, 32, 235), outline=(0, 220, 255, 230), width=3)
+
+    # Fact Badge Pill (Top-left inside card)
+    badge_w = 380
+    draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 220), outline=(255, 80, 100, 255), width=2)
+    # Pulsing red/white dot
+    draw.ellipse([(80, 178), (94, 192)], fill=(255, 255, 255, 255))
+    try:
+        f_badge = ImageFont.truetype(FONT_ARIAL_BOLD, 20)
+    except:
+        f_badge = ImageFont.load_default()
+    draw.text((106, 172), fact_badge, font=f_badge, fill=(255, 255, 255, 255))
+
+    # Line 1: Main Impact Headline (Yellow)
+    try:
+        f_head1 = ImageFont.truetype(FONT_IMPACT, 52)
+        f_head2 = ImageFont.truetype(FONT_ARIAL_BOLD, 32)
+    except:
+        f_head1 = ImageFont.load_default()
+        f_head2 = f_head1
+
+    b1 = draw.textbbox((0, 0), headline_line1, font=f_head1)
+    w1 = b1[2] - b1[0]
+    draw.text(((1080 - w1) // 2, 222), headline_line1, font=f_head1, fill=(255, 230, 0, 255), stroke_width=3, stroke_fill=(0, 0, 0, 255))
+
+    # Line 2: Sub-headline (White)
+    b2 = draw.textbbox((0, 0), headline_line2, font=f_head2)
+    w2 = b2[2] - b2[0]
+    draw.text(((1080 - w2) // 2, 316), headline_line2, font=f_head2, fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(0, 0, 0, 255))
+
+    # 2. CENTRAL NASA PHOTO (Uncropped with Cyan Glow Frame)
     w, h = im.size
     fg_w = 1000
     fg_h = int(h * (fg_w / float(w)))
-    if fg_h > 1150:
-        fg_h = 1150
+    max_h = 940
+    if fg_h > max_h:
+        fg_h = max_h
         fg_w = int(w * (fg_h / float(h)))
     fg = im.resize((fg_w, fg_h), Image.Resampling.LANCZOS)
 
     pos_x = (target_w - fg_w) // 2
-    pos_y = (target_h - fg_h) // 2 - 90
+    pos_y = 415 + (max_h - fg_h) // 2
     bg.paste(fg, (pos_x, pos_y))
 
-    draw = ImageDraw.Draw(bg)
-    draw.rectangle([(pos_x - 3, pos_y - 3), (pos_x + fg_w + 3, pos_y + fg_h + 3)], outline=(0, 220, 255, 220), width=3)
+    # Cyber Neon Border around NASA photo
+    draw.rectangle([(pos_x - 4, pos_y - 4), (pos_x + fg_w + 4, pos_y + fg_h + 4)], outline=(0, 230, 255, 230), width=4)
     return bg
 
 def create_top_corner_logo():
@@ -228,26 +269,44 @@ async def main():
     print("  --> Step 1: Downloading 100% verified authentic NASA images for 3 facts...", flush=True)
     images_data = [
         # Fact 1: Voyager 1 Spacecraft
-        ("fact1_voyager", "https://images-assets.nasa.gov/image/PIA17045/PIA17045~orig.jpg"),
+        (
+            "fact1_voyager",
+            "https://images-assets.nasa.gov/image/PIA17045/PIA17045~orig.jpg",
+            "FACT 01: SPACE MYSTERY",
+            "NASA VOYAGER-1 KA RAHASYA!",
+            "Car Ki Chabi Jitni Bhi Memory Nahi?!"
+        ),
         # Fact 2: Supercomputer / Quantum Cryostat
-        ("fact2_quantum", "https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000492/GSFC_20171208_Archive_e000492~orig.jpg"),
+        (
+            "fact2_quantum",
+            "https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000492/GSFC_20171208_Archive_e000492~orig.jpg",
+            "FACT 02: FUTURE SCIENCE",
+            "DUNIYA KI SABSE THANDI JAGAH!",
+            "Quantum Chip At -273.15 C (100x Colder!)"
+        ),
         # Fact 3: James Webb Space Telescope Carina Nebula
-        ("fact3_jwst", "https://images-assets.nasa.gov/image/PIA25433/PIA25433~orig.jpg")
+        (
+            "fact3_jwst",
+            "https://images-assets.nasa.gov/image/PIA25433/PIA25433~orig.jpg",
+            "FACT 03: COSMIC DISCOVERY",
+            "JAMES WEBB: ASLI TIME MACHINE!",
+            "13.5 Billion Saal Purani Cosmic Light!"
+        )
     ]
 
     fact_frames = []
     headers = {"User-Agent": "Mozilla/5.0"}
-    for name, url in images_data:
+    for name, url, f_badge, h1, h2 in images_data:
         target_f = os.path.join(BASE_DIR, f"{name}.jpg")
         try:
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = resp.read()
             im = Image.open(BytesIO(data)).convert("RGB")
-            frame = create_blurred_ambient_frame(im)
+            frame = create_blurred_ambient_frame(im, fact_badge=f_badge, headline_line1=h1, headline_line2=h2)
             frame.save(target_f, "JPEG", quality=95)
             fact_frames.append(target_f)
-            print(f"  [SUCCESS] Prepared authentic NASA photo for: {name}", flush=True)
+            print(f"  [SUCCESS] Prepared authentic NASA photo & headline card for: {name}", flush=True)
         except Exception as e:
             print(f"  [ERROR] Downloading {name}: {e}", flush=True)
 
@@ -388,8 +447,68 @@ async def main():
     if res.returncode == 0 and os.path.exists(output_short):
         print(f"\n[SUCCESS] 3-FACTS TECH SHORT GENERATED SUCCESSFULLY: {output_short}", flush=True)
         print(f"  File Size: {os.path.getsize(output_short) / (1024*1024):.2f} MB", flush=True)
+
+        # 7. Generate High-Ranking SEO Metadata (100% Anchor Aadhya Only, Zero Krishna Links)
+        meta_file = os.path.join(BASE_DIR, "metadata_shorts.json")
+        generate_shorts_metadata(meta_file)
     else:
         print(f"[ERROR] FFmpeg failed: {res.stderr[-400:]}", flush=True)
+
+def generate_shorts_metadata(meta_path):
+    """
+    Generates Rich High-Ranking YouTube Shorts Metadata:
+    - 100% Pure Anchor Aadhya Branding (No third-party or Krishna links)
+    - Dynamic fact-matched Hindi & Hinglish Search Queries for high algorithm ranking
+    - YouTube Fair Use Section 107 & Synthetic AI Content Policy Compliance
+    """
+    import json
+    meta = {
+        "title": "NASA का सबसे बड़ा रहस्य! 😱 Car की चाबी जितनी भी Memory नहीं? #Shorts #TechFacts #AnchorAadhya",
+        "description": (
+            "दोस्तों! आज के इस एपिसोड में Anchor Aadhya आपके लिए लेकर आई हैं 3 सबसे हैरान कर देने वाले साइंस और फ्यूचर टेक फैक्ट्स! 🚀\n\n"
+            "📌 TOPICS COVERED IN THIS SHORT:\n"
+            "❶ Fact 1: NASA Voyager-1 Spacecraft Memory Mystery (Only 68 KB memory, 24 Billion KM away in Interstellar space!)\n"
+            "❷ Fact 2: Quantum Computer Coldest Temperature (-273.15°C, 100x colder than deep space!)\n"
+            "❸ Fact 3: James Webb Space Telescope (Real Time Machine capturing 13.5 Billion year old cosmic light!)\n\n"
+            "🔍 SEARCHES & TOPICS COVERED:\n"
+            "• voyager 1 mystery in hindi\n"
+            "• nasa spacecraft facts\n"
+            "• quantum computer coldest temperature in universe\n"
+            "• james webb space telescope discovery hindi\n"
+            "• deep space facts hindi\n"
+            "• mind blowing science facts\n"
+            "• anchor aadhya tech facts\n"
+            "• facttechz style tech shorts hindi\n"
+            "• future technology and science\n\n"
+            "⚡ ABOUT ANCHOR AADHYA:\n"
+            "Welcome to Anchor Aadhya - Your daily destination for futuristic tech breakthroughs, AI news, and mind-blowing science mysteries! Presented by India's favorite virtual AI news anchor.\n"
+            "Subscribe now for daily 100% authentic tech facts!\n\n"
+            "⚖️ FAIR USE & CONTENT POLICY:\n"
+            "All imagery sourced from verified NASA public domain archives (17 U.S.C. § 105) and educational public records. This video adds significant transformative value through original emotion-adaptive voice synthesis, cinematic motion graphics, and educational synthesis (Fair Use under Section 107 of Copyright Act 1976).\n"
+            "Synthetic Content Disclosure: Audio and anchor avatar generated using AI neural systems for educational news presentation.\n\n"
+            "#Shorts #TechFacts #ScienceFacts #SpaceFacts #NASA #Voyager1 #QuantumComputer #JamesWebb #FactTechz #AnchorAadhya #FutureTech #MindBlowingFacts #HindiTechFacts"
+        ),
+        "tags": [
+            "Shorts",
+            "TechFacts",
+            "ScienceFacts",
+            "SpaceFacts",
+            "NASA",
+            "Voyager1",
+            "QuantumComputer",
+            "JamesWebb",
+            "FactTechz",
+            "AnchorAadhya",
+            "FutureTech",
+            "MindBlowingFacts",
+            "DeepSpace",
+            "TechnologyInHindi"
+        ]
+    }
+    with open(meta_path, "w", encoding="utf-8") as f:
+        json.dump(meta, f, ensure_ascii=False, indent=2)
+    print(f"  [SUCCESS] Generated High-Ranking SEO Metadata: {meta_path}", flush=True)
+    return meta_path
 
 if __name__ == "__main__":
     asyncio.run(main())
