@@ -205,8 +205,23 @@ def create_hook_intro_card(hook_pill="NASA KA SABSE BADA RAHASYA!", hook_t1="CAR
 
     draw = ImageDraw.Draw(canvas)
     font_badge = get_bold_font(28)
-    font_big1 = get_impact_font(70)
-    font_big2 = get_impact_font(64)
+    # Auto-fit hook_t1 so it never clips on edges
+    f1_size = 68
+    while f1_size > 36:
+        font_big1 = get_impact_font(f1_size)
+        b1 = draw.textbbox((0, 0), hook_t1, font=font_big1)
+        if (b1[2] - b1[0]) <= 980:
+            break
+        f1_size -= 4
+
+    # Auto-fit hook_t2 so it never clips on edges
+    f2_size = 62
+    while f2_size > 32:
+        font_big2 = get_impact_font(f2_size)
+        b2 = draw.textbbox((0, 0), hook_t2, font=font_big2)
+        if (b2[2] - b2[0]) <= 980:
+            break
+        f2_size -= 4
 
     p_box = draw.textbbox((0, 0), hook_pill, font=font_badge)
     pw = p_box[2] - p_box[0] + 60
@@ -438,23 +453,25 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
         print(f"  [VIDEO NOTICE] NASA video fetch notice ({e}) — will use 8K Photo + Motion Zoom fallback.", flush=True)
     return False
 
-def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path):
+def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1):
     headers = {"User-Agent": "Mozilla/5.0"}
+    enc_prompt = urllib.parse.quote(image_prompt)
 
-    # Attempt 1: Pollinations AI Flux (100% Free, Custom 9:16 Visual)
-    try:
-        enc_prompt = urllib.parse.quote(image_prompt)
-        p_url = f"https://image.pollinations.ai/prompt/{enc_prompt}?width=1080&height=1920&nologo=true&model=flux"
-        req = urllib.request.Request(p_url, headers=headers)
-        with urllib.request.urlopen(req, timeout=30) as resp:
-            data = resp.read()
-        if len(data) > 15000:
-            im = Image.open(BytesIO(data)).convert("RGB")
-            im.save(target_path, "JPEG", quality=95)
-            print(f"  [SUCCESS] Pollinations AI generated 9:16 photo: {os.path.basename(target_path)}", flush=True)
-            return True
-    except Exception as e:
-        print(f"  [POLLINATIONS NOTICE] {e} — falling back to NASA/Wikimedia", flush=True)
+    # Attempt 1: Pollinations AI (Flux -> Turbo auto-fallback)
+    for m in ["flux", "turbo"]:
+        try:
+            seed = random.randint(1000, 999999)
+            p_url = f"https://image.pollinations.ai/prompt/{enc_prompt}?width=1080&height=1920&nologo=true&model={m}&seed={seed}"
+            req = urllib.request.Request(p_url, headers=headers)
+            with urllib.request.urlopen(req, timeout=25) as resp:
+                data = resp.read()
+            if len(data) > 15000:
+                im = Image.open(BytesIO(data)).convert("RGB")
+                im.save(target_path, "JPEG", quality=95)
+                print(f"  [SUCCESS] Pollinations AI ({m}) generated 9:16 photo: {os.path.basename(target_path)}", flush=True)
+                return True
+        except Exception as e:
+            pass
 
     # Attempt 2: NASA Public Domain Image Search
     try:
@@ -474,17 +491,18 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path)
     except Exception as e:
         print(f"  [NASA API NOTICE] {e}", flush=True)
 
-    # Attempt 3: Local hero fallback
-    for fallback in [
+    # Attempt 3: Slot-matched local hero fallback
+    heroes = [
         os.path.join(BASE_DIR, "assets", "heroes", "voyager1_hero.jpg"),
         os.path.join(BASE_DIR, "assets", "heroes", "quantum_hero.jpg"),
         os.path.join(BASE_DIR, "assets", "heroes", "jwst_hero.jpg")
-    ]:
-        if os.path.exists(fallback):
-            im = Image.open(fallback).convert("RGB")
-            im.save(target_path, "JPEG", quality=95)
-            print(f"  [FALLBACK] Using verified local space hero: {os.path.basename(fallback)}", flush=True)
-            return True
+    ]
+    target_hero = heroes[(slot_idx - 1) % len(heroes)]
+    if os.path.exists(target_hero):
+        im = Image.open(target_hero).convert("RGB")
+        im.save(target_path, "JPEG", quality=95)
+        print(f"  [FALLBACK] Using verified local space hero: {os.path.basename(target_hero)}", flush=True)
+        return True
 
     return False
 
@@ -554,7 +572,7 @@ STRICT RULES:
     try:
         from google import genai
         client = genai.Client(api_key=api_key)
-        for model in ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash"]:
+        for model in ["gemini-3.8-flash", "gemini-3.7-flash", "gemini-2.5-flash", "gemini-2.0-flash"]:
             try:
                 res = client.models.generate_content(model=model, contents=prompt)
                 t = (res.text or "").strip()
@@ -642,7 +660,8 @@ async def main():
             success = fetch_image_from_pollinations_or_nasa(
                 f.get("image_prompt", f.get("headline_line1")),
                 f.get("image_query", f.get("headline_line1")),
-                raw_img_path
+                raw_img_path,
+                slot_idx=idx+1
             )
             if not success or not os.path.exists(raw_img_path):
                 print(f"[CRITICAL] Could not generate photo for Fact {idx+1}. Halting!", flush=True)
@@ -684,8 +703,22 @@ async def main():
 
     full_script = intro_speech + f1_speech + f2_speech + f3_speech + outro_speech
     voice_path = os.path.join(BASE_DIR, "shorts_3facts_voice.mp3")
-    com = edge_tts.Communicate(full_script, voice="hi-IN-SwaraNeural", rate="+7%", pitch="+1Hz")
-    await com.save(voice_path)
+    for attempt in range(3):
+        try:
+            com = edge_tts.Communicate(full_script, voice="hi-IN-SwaraNeural", rate="+7%", pitch="+1Hz")
+            await com.save(voice_path)
+            break
+        except Exception as ve:
+            print(f"  [TTS RETRY {attempt+1}] {ve}", flush=True)
+            if attempt == 2:
+                # If Swara fails, try Madhur as backup
+                try:
+                    com = edge_tts.Communicate(full_script, voice="hi-IN-MadhurNeural", rate="+7%", pitch="+1Hz")
+                    await com.save(voice_path)
+                    break
+                except Exception:
+                    raise ve
+            await asyncio.sleep(2)
 
     probe_cmd = [FFPROBE_BIN, "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", voice_path]
     res_dur = subprocess.run(probe_cmd, stdout=subprocess.PIPE, text=True)
