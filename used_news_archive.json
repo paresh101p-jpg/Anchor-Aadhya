@@ -207,5 +207,58 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 07:37:40"
+  },
+  {
+    "id": "sam_altman_lawsuit_dismissed",
+    "headline": "SAM ALTMAN KO COURT SE MILI BADI RAHAT",
+    "raw_title": "Judge dismisses Sam Altman’s sister’s sexual abuse lawsuit",
+    "keywords": [
+      "sam",
+      "altman",
+      "lawsuit",
+      "dismissed"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 08:34:05"
+  },
+  {
+    "id": "google_gemini_car_ai_update",
+    "headline": "APKI CAR MEIN AA RAHA HAI GOOGLE GEMINI AI",
+    "raw_title": "Google’s more personalized Gemini AI is heading to your car",
+    "keywords": [
+      "google",
+      "gemini",
+      "car",
+      "ai",
+      "update"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 08:34:05"
+  },
+  {
+    "id": "spacex_starship_catch_attempt",
+    "headline": "SPACEX KARNE WALA HAI HISTORY CREATE, ROCKET HOGA MID-AIR CATCH!",
+    "raw_title": "SpaceX will try catching Starship and its booster for first time, Musk says",
+    "keywords": [
+      "spacex",
+      "starship",
+      "catch",
+      "attempt"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 08:34:05"
+  },
+  {
+    "id": "emergency_ai_breakthrough_12pm",
+    "headline": "NEXT-GEN AI REVOLUTION: AUTONOMOUS TECH SOARS!",
+    "raw_title": "Next-Gen AI Autonomous Breakthrough",
+    "keywords": [
+      "ai",
+      "neural",
+      "chips",
+      "innovation"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 08:34:05"
   }
 ]
