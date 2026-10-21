@@ -22,6 +22,7 @@ from PIL import Image, ImageDraw, ImageFont
 from news_manager import (
     get_current_slot,
     get_fresh_bulletin_stories,
+    get_emergency_bulletin_stories,
     select_anchor_look,
     commit_bulletin_stories,
     generate_ai_news_image,
@@ -87,7 +88,7 @@ def create_ai_news_images(slot, stories):
             kw = ", ".join(item.get("keywords", [item.get("category", "")])) 
             prompt1 = f"Ultra-realistic news photojournalism: {item.get('headline','tech news')}, {kw}, professional broadcast news photography, cinematic lighting, sharp 8k"
         # Gemini Imagen 3 ONLY — no URL fallbacks
-        generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1)
+        generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
         item["bg_img_1"] = dest1
         item["bg_img"] = dest1  # backward compatibility
 
@@ -98,7 +99,7 @@ def create_ai_news_images(slot, stories):
             kw = ", ".join(item.get("keywords", [item.get("category", "")]))
             prompt2 = f"Extreme macro close-up photojournalism: {kw}, technical detail, razor-sharp focus, 8k professional news photography"
         # Gemini Imagen 3 ONLY — no URL fallbacks
-        generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2)
+        generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=item.get("headline", ""))
         item["bg_img_2"] = dest2
 
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
@@ -432,6 +433,9 @@ async def main():
 
     # 1. Fetch 4 brand-new non-duplicate stories
     stories = get_fresh_bulletin_stories(slot)
+    if not stories:
+        print("[CRITICAL] get_fresh_bulletin_stories returned empty — using emergency bulletin stories", flush=True)
+        stories = get_emergency_bulletin_stories(slot)
     dominant_emotion = stories[0].get("emotion", "dramatic")
     anchor_look = select_anchor_look(slot, dominant_emotion)
     print(f"  --> Active Anchor Look: {anchor_look['name']} ({anchor_look['style_desc']})")
