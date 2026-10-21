@@ -112,9 +112,9 @@ def create_youtube_thumbnail(
     output_path=None
 ):
     if not anchor_img_path or not os.path.exists(anchor_img_path):
-        anchor_img_path = os.path.join(BASE_DIR, "anchor_look_1_crimson.jpg")
+        anchor_img_path = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
         if not os.path.exists(anchor_img_path):
-            anchor_img_path = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+            anchor_img_path = os.path.join(BASE_DIR, "anchor_look_1_crimson.jpg")
 
     if news_bg_path and not os.path.exists(news_bg_path):
         news_bg_path = None
@@ -137,59 +137,59 @@ def create_youtube_thumbnail(
     W, H = 1280, 720
     canvas = Image.new("RGB", (W, H), (10, 14, 25))
 
-    # 1. Left Background (News Highlight or High-Tech Gradient)
-    if news_bg_path and os.path.exists(news_bg_path):
-        try:
-            bg = Image.open(news_bg_path).convert("RGB").resize((760, H), Image.Resampling.LANCZOS)
-            enhancer = ImageEnhance.Brightness(bg)
-            bg = enhancer.enhance(0.40)
-            canvas.paste(bg, (0, 0))
-        except Exception as e:
-            print(f"Warning loading news bg: {e}", flush=True)
-    else:
-        draw_bg = ImageDraw.Draw(canvas)
-        for y in range(H):
-            ratio = y / H
-            r = int(12 + ratio * 15); g = int(18 + ratio * 20); b = int(45 + ratio * 40)
-            draw_bg.line([(0, y), (760, y)], fill=(r, g, b))
-
-    # 2. Right Background (Anchor Aadhya - RIGHT SIDE ONLY: x=700 to 1280)
-    target_disp_w, target_disp_h = 580, 720
+    # 1. Base Layer (Anchor Aadhya & Studio Background)
     if os.path.exists(anchor_img_path):
         try:
             anchor = Image.open(anchor_img_path).convert("RGB")
             aw, ah = anchor.size
-            target_ratio = target_disp_w / float(target_disp_h)
-            crop_h = ah
-            crop_w = int(crop_h * target_ratio)
-            x1 = max(0, int((aw - crop_w) * 0.48))
-            y1 = 0
-            x2 = min(aw, x1 + crop_w)
-            y2 = ah
-
-            anchor_cropped = anchor.crop((x1, y1, x2, y2)).resize((target_disp_w, target_disp_h), Image.Resampling.LANCZOS)
-            c_enh = ImageEnhance.Color(anchor_cropped)
-            anchor_cropped = c_enh.enhance(1.15)
-            cnt_enh = ImageEnhance.Contrast(anchor_cropped)
-            anchor_cropped = cnt_enh.enhance(1.08)
-
-            # Placed from x=700 to 1280 (Right half)
-            canvas.paste(anchor_cropped, (W - target_disp_w, 0))
+            aspect = aw / float(ah)
+            if aspect >= 1.4:
+                # 16:9 Broadcast Studio Image (like anchor_aadhya_master.jpg)
+                # The anchor is already composed on the right side with complete body, face, desk & lighting
+                canvas = anchor.resize((W, H), Image.Resampling.LANCZOS)
+                canvas = ImageEnhance.Color(canvas).enhance(1.08)
+                canvas = ImageEnhance.Contrast(canvas).enhance(1.04)
+            else:
+                # Portrait / Square Image - scale to fit H and place on right
+                scale = H / float(ah)
+                disp_w = int(aw * scale)
+                anchor_scaled = anchor.resize((disp_w, H), Image.Resampling.LANCZOS)
+                if disp_w > 640:
+                    crop_left = disp_w - 640
+                    anchor_scaled = anchor_scaled.crop((crop_left, 0, disp_w, H))
+                    disp_w = 640
+                canvas.paste(anchor_scaled, (W - disp_w, 0))
         except Exception as e:
             print(f"Warning loading anchor img: {e}", flush=True)
 
-    # 3. Soft Gradient Overlays (Zero darkness on her face)
+    # 2. Left Background (News Highlight image blended seamlessly)
+    if news_bg_path and os.path.exists(news_bg_path):
+        try:
+            news_w = 660
+            bg = Image.open(news_bg_path).convert("RGB").resize((news_w, H), Image.Resampling.LANCZOS)
+            bg = ImageEnhance.Brightness(bg).enhance(0.38)
+            # Feather mask so news photo smoothly fades into the studio background
+            mask = Image.new("L", (news_w, H), 255)
+            for x in range(news_w - 100, news_w):
+                fade = int(255 * (1 - (x - (news_w - 100)) / 100.0))
+                for y in range(H):
+                    mask.putpixel((x, y), fade)
+            canvas.paste(bg, (0, 0), mask)
+        except Exception as e:
+            print(f"Warning blending news bg: {e}", flush=True)
+
+    # 3. Soft Gradient Overlays for Ultra-High Text Readability (Zero darkness on her face)
     overlay = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     draw_ov = ImageDraw.Draw(overlay)
 
-    # Dark backdrop on the left for text readability (x=0 to 650)
-    for x in range(660):
-        alpha = int(245 * (1 - x / 660 * 0.35))
+    # Solid dark backdrop strictly on the left (x=0 to 600) for text
+    for x in range(600):
+        alpha = int(240 * (1 - x / 600 * 0.25))
         draw_ov.line([(x, 0), (x, H)], fill=(8, 12, 24, alpha))
 
-    # Feather edge before anchor's body (x=640 to 720)
-    for x in range(640, 720):
-        progress = (x - 640) / 80.0
+    # Feather edge before anchor's body (x=600 to 660)
+    for x in range(600, 660):
+        progress = (x - 600) / 60.0
         alpha = int(180 * (1 - progress))
         draw_ov.line([(x, 0), (x, H)], fill=(10, 14, 26, alpha))
 
