@@ -88,20 +88,54 @@ def generate_video_metadata(
         if s.get("speech"):
             desc_insights += f"• आध्या का विश्लेषण: \"{s['speech'][:160]}...\"\n"
 
+    # Dynamic Search Queries Covered (Helps YouTube Search & Suggestion Algorithms)
+    import re
+    searches = []
+    num_s = len(stories)
+    for s in stories[:num_s]:
+        clean_h = s.get("headline", "").title()
+        if clean_h:
+            searches.append(f"{clean_h} news")
+            searches.append(f"{clean_h} update hindi")
+        for kw in s.get("keywords", [])[:2]:
+            if len(kw) > 3:
+                searches.append(f"{kw.title()} latest news")
+    searches.extend(["Today tech news hindi", "Anchor Aadhya tech news", "Latest AI future tech updates"])
+    clean_searches = list(dict.fromkeys(searches))[:8]
+    desc_searches = "\n".join([f"• {q}" for q in clean_searches])
+
+    # Dynamic Story-Specific Hashtags
+    story_hashtags = []
+    for s in stories[:num_s]:
+        cat_clean = re.sub(r"[^a-zA-Z0-9]", "", s.get("category", "")).title()
+        if cat_clean and len(cat_clean) > 3:
+            story_hashtags.append(f"#{cat_clean}")
+        for kw in s.get("keywords", [])[:2]:
+            kw_clean = re.sub(r"[^a-zA-Z0-9]", "", kw).title()
+            if kw_clean and len(kw_clean) > 3:
+                story_hashtags.append(f"#{kw_clean}")
+    story_hashtags = list(dict.fromkeys(story_hashtags))[:6]
+    base_hashtags = ["#TechNews", "#AINews", "#AnchorAadhya", "#FutureTech", "#DailyTechNews", "#TechNewsHindi"]
+    final_hashtags = " ".join(base_hashtags + story_hashtags)
+
     description = f"""{headline_1} और {headline_2}! आज की सबसे बड़ी फ्यूचर टेक्नोलॉजी की खबरें सिर्फ Anchor Aadhya पर! 🚀🤖
 
-Welcome to Anchor Aadhya — आपका अपना 100% भरोसेमंद डेली टेक और AI न्यूज़ बुलेटिन! आज {today_display} के इस विशेष बुलेटिन में जानिए दुनिया भर की रिसर्च लैब्स, टेक कंपनियों और वैज्ञानिकों की वो 4 बड़ी खोजें, जो हमारे कल को हमेशा के लिए बदलने वाली हैं।
+Welcome to Anchor Aadhya — आपका अपना 100% भरोसेमंद डेली टेक और AI न्यूज़ बुलेटिन! आज {today_display} के इस विशेष बुलेटिन में जानिए दुनिया भर की रिसर्च लैब्स, टेक कंपनियों और वैज्ञानिकों की वो बड़ी खोजें, जो हमारे कल को हमेशा के लिए बदलने वाली हैं।
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 TIMESTAMPS / CHAPTERS (खबरों के मुख्य बिंदु):
 {desc_chapters}
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-🔍 आज की 4 बड़ी खबरों का पूरा विश्लेषण (Detailed News Insights):
+🔍 आज की बड़ी खबरों का पूरा विश्लेषण (Detailed News Insights):
 {desc_insights}
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+🔎 Searches & Topics Covered (सर्च में आने वाले मुख्य विषय):
+{desc_searches}
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 💬 आज का सवाल (Question of the Day):
-"दोस्तों, आज की इन 4 खबरों में से कौन सी तकनीक आपको सबसे ज़्यादा हैरान कर देने वाली लगी? नीचे Comments में अपनी राय ज़रूर दीजिए!"
+"दोस्तों, आज की इन खबरों में से कौन सी तकनीक आपको सबसे ज़्यादा हैरान कर देने वाली लगी? नीचे Comments में अपनी राय ज़रूर दीजिए!"
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📺 About Channel — Anchor Aadhya:
@@ -111,26 +145,37 @@ Anchor Aadhya भारत का पहला AI-पावर्ड फ्य�
 👍 अगर आपको आज का बुलेटिन पसंद आया हो तो लाइक और दोस्तों के साथ शेयर ज़रूर करें!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚖️ COPYRIGHT & FAIR USE DISCLAIMER:
+Under Section 107 of the US Copyright Act 1976 & Section 52(1)(a)(iii) of the Indian Copyright Act 1957, allowance is made for 'Fair Use' for purposes such as criticism, commentary, news reporting, teaching, scholarship, and research. Real-world news photos and reports referenced in this bulletin are used strictly under editorial transformative news reporting and public education. All rights belong to their respective original copyright holders.
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━
 ⚙️ AI & SYNTHETIC CONTENT DISCLOSURE:
 In full compliance with YouTube Community Guidelines & Policy:
 This video features AI digital broadcast host 'Anchor Aadhya' presenting real, verified technology news sourced from global research labs, patents, and scientific publications. Voiceover narration and studio visuals are creatively rendered using artificial intelligence tools for educational and news reporting purposes.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-#TechNews #AINews #AnchorAadhya #FutureTech #Robotics #ArtificialIntelligence #TechnologyHindi #DailyTechNews"""
+{final_hashtags}"""
 
-    tags = [
-        "Anchor Aadhya", "AI News Hindi", "Tech News Hindi", "Future Tech 2026",
-        "Artificial Intelligence", "Daily Tech News", "Breaking Tech News",
-        "Technology Updates", "Robotics Hindi", "Latest Tech Inventions",
-        "Daily Tech News Hindi"
-    ]
-    for s in stories[:4]:
-        tags.append(s.get("category", "").title())
-        for kw in s.get("keywords", [])[:2]:
-            tags.append(kw.title())
+    tags = []
+    # 1. Story-Specific Search Tags First (Highest ranking power for exact searches)
+    for s in stories[:num_s]:
+        clean_h = s.get("headline", "").title()
+        if clean_h and len(clean_h) < 45:
+            tags.append(clean_h)
+            tags.append(f"{clean_h} Hindi")
+        for kw in s.get("keywords", [])[:3]:
+            if len(kw) > 3:
+                tags.append(kw.title())
+                tags.append(f"{kw.title()} News")
 
-    # Limit tags list
-    clean_tags = list(dict.fromkeys(tags))[:25]
+    # 2. Channel & High-Traffic Niche Anchor Tags
+    tags.extend([
+        "Anchor Aadhya", "Tech News Hindi", "AI News Hindi",
+        "Today Tech News Hindi", "Daily Tech News", "Breaking Tech News",
+        "Future Tech", "Artificial Intelligence", "Technology Updates",
+        "Latest Tech Inventions", "Tech News 2026", "Aadhya News"
+    ])
+    clean_tags = list(dict.fromkeys(tags))[:28]
 
     meta_dict = {
         "title": title,
