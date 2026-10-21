@@ -35,6 +35,7 @@ pollinations_*
 inspect_*
 Thumbnail_*
 YOUTUBE_METADATA_*
+preview_*
 metadata_*
 trigger_workflow.ps1
 verify_code.py

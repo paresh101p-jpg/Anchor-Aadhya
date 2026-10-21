@@ -93,27 +93,40 @@ def fit_to_9_16(im, target_w=1080, target_h=1920):
         im = im.crop((0, off_y, w, off_y + new_h))
     return im.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-def create_blurred_ambient_frame(im, fact_badge="● FACT 01", headline_line1="NASA VOYAGER-1 MYSTERY!", headline_line2="Car Ki Chabi Jitni Bhi Memory Nahi?!", target_w=1080, target_h=1920):
+def create_fullscreen_fact_frame(im, fact_badge="FACT 01", headline_line1="NASA VOYAGER-1 KA RAHASYA!", headline_line2="Car Ki Chabi Jitni Bhi Memory Nahi?!", target_w=1080, target_h=1920):
     """
-    Creates a high-retention 9:16 vertical frame for each fact:
-    - Ambient blurred background
-    - High-Impact Top Fact Headline Card (y=145 to y=395)
-    - Sharp central uncropped NASA photo with neon cyan glow (y=415 to y=1365)
-    - Clear lower zone for dynamic kinetic subtitles (y=1400+)
+    Creates an immersive FULL-SCREEN 9:16 frame for each fact:
+    - 100% Full-Screen Cinematic Image (1080x1920 with proportional cover fit, zero distortion)
+    - Top Gradient + Fact Headline Card (y=145 to y=385)
+    - Bottom Gradient for kinetic animated subtitles (y=1350+)
     """
-    bg = fit_to_9_16(im.copy(), target_w, target_h)
-    bg = bg.filter(ImageFilter.GaussianBlur(radius=32))
-    overlay = Image.new("RGBA", (target_w, target_h), (5, 8, 20, 185))
-    bg.paste(overlay, (0, 0), overlay)
+    # 1. Proportional Full-Screen Cover Fit
+    canvas = fit_to_9_16(im.copy(), target_w, target_h)
 
-    draw = ImageDraw.Draw(bg)
+    # 2. Top Dark Gradient for Maximum Text Contrast (y=0 to y=480)
+    top_grad = Image.new("RGBA", (target_w, 480), (0, 0, 0, 0))
+    tg_draw = ImageDraw.Draw(top_grad)
+    for y in range(480):
+        alpha = int(240 * (1.0 - (y / 480.0)**1.6))
+        tg_draw.line([(0, y), (target_w, y)], fill=(5, 8, 20, alpha))
+    canvas.paste(top_grad, (0, 0), top_grad)
 
-    # 1. TOP FACT HEADLINE CARD CONTAINER (y=145 to y=395)
-    draw.rounded_rectangle([(40, 145), (1040, 395)], radius=24, fill=(8, 14, 32, 235), outline=(0, 220, 255, 230), width=3)
+    # 3. Bottom Dark Gradient for Captions (y=1350 to y=1920)
+    bot_grad = Image.new("RGBA", (target_w, 570), (0, 0, 0, 0))
+    bg_draw = ImageDraw.Draw(bot_grad)
+    for y in range(570):
+        alpha = int(240 * ((y / 570.0)**1.4))
+        bg_draw.line([(0, y), (target_w, y)], fill=(5, 8, 20, alpha))
+    canvas.paste(bot_grad, (0, 1350), bot_grad)
+
+    draw = ImageDraw.Draw(canvas)
+
+    # 4. TOP FACT HEADLINE CARD CONTAINER (y=145 to y=385)
+    draw.rounded_rectangle([(40, 145), (1040, 385)], radius=24, fill=(8, 14, 32, 215), outline=(0, 220, 255, 230), width=3)
 
     # Fact Badge Pill (Top-left inside card)
     badge_w = 380
-    draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 220), outline=(255, 80, 100, 255), width=2)
+    draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 230), outline=(255, 100, 120, 255), width=2)
     # Pulsing red/white dot
     draw.ellipse([(80, 178), (94, 192)], fill=(255, 255, 255, 255))
     f_badge = get_bold_font(22)
@@ -121,34 +134,17 @@ def create_blurred_ambient_frame(im, fact_badge="● FACT 01", headline_line1="N
 
     # Line 1: Main Impact Headline (Yellow)
     f_head1 = get_impact_font(54)
-    f_head2 = get_bold_font(34)
-
     b1 = draw.textbbox((0, 0), headline_line1, font=f_head1)
     w1 = b1[2] - b1[0]
-    draw.text(((1080 - w1) // 2, 222), headline_line1, font=f_head1, fill=(255, 230, 0, 255), stroke_width=3, stroke_fill=(0, 0, 0, 255))
+    draw.text(((1080 - w1) // 2, 222), headline_line1, font=f_head1, fill=(255, 230, 0, 255), stroke_width=4, stroke_fill=(0, 0, 0, 255))
 
     # Line 2: Sub-headline (White)
+    f_head2 = get_bold_font(34)
     b2 = draw.textbbox((0, 0), headline_line2, font=f_head2)
     w2 = b2[2] - b2[0]
-    draw.text(((1080 - w2) // 2, 316), headline_line2, font=f_head2, fill=(255, 255, 255, 255), stroke_width=2, stroke_fill=(0, 0, 0, 255))
+    draw.text(((1080 - w2) // 2, 314), headline_line2, font=f_head2, fill=(255, 255, 255, 255), stroke_width=3, stroke_fill=(0, 0, 0, 255))
 
-    # 2. CENTRAL NASA PHOTO (Uncropped with Cyan Glow Frame)
-    w, h = im.size
-    fg_w = 1000
-    fg_h = int(h * (fg_w / float(w)))
-    max_h = 940
-    if fg_h > max_h:
-        fg_h = max_h
-        fg_w = int(w * (fg_h / float(h)))
-    fg = im.resize((fg_w, fg_h), Image.Resampling.LANCZOS)
-
-    pos_x = (target_w - fg_w) // 2
-    pos_y = 415 + (max_h - fg_h) // 2
-    bg.paste(fg, (pos_x, pos_y))
-
-    # Cyber Neon Border around NASA photo
-    draw.rectangle([(pos_x - 4, pos_y - 4), (pos_x + fg_w + 4, pos_y + fg_h + 4)], outline=(0, 230, 255, 230), width=4)
-    return bg
+    return canvas
 
 def create_top_corner_logo():
     """Generates a permanent top-left channel branding logo with Anchor Aadhya avatar"""
@@ -289,13 +285,14 @@ async def main():
     print("  CREATING 3-FACTS FACTTECHZ SHORT WITH ANCHOR AADHYA (1-2 MIN SHORT)")
     print("====================================================================")
 
-    # 1. Authentic NASA Verified Public Domain Images for All 3 Facts
-    print("  --> Step 1: Downloading 100% verified authentic NASA images for 3 facts...", flush=True)
+    # 1. Authentic High-Resolution Fact Images for All 3 Facts
+    print("  --> Step 1: Loading authentic fact-matched 8K hero images...", flush=True)
     images_data = [
         # Fact 1: Voyager 1 Spacecraft
         (
             "fact1_voyager",
-            "https://images-assets.nasa.gov/image/PIA17045/PIA17045~orig.jpg",
+            os.path.join(BASE_DIR, "assets", "heroes", "voyager1_hero.jpg"),
+            "https://images-assets.nasa.gov/image/PIA14111/PIA14111~orig.jpg",
             "FACT 01: SPACE MYSTERY",
             "NASA VOYAGER-1 KA RAHASYA!",
             "Car Ki Chabi Jitni Bhi Memory Nahi?!"
@@ -303,15 +300,17 @@ async def main():
         # Fact 2: Supercomputer / Quantum Cryostat
         (
             "fact2_quantum",
-            "https://images-assets.nasa.gov/image/GSFC_20171208_Archive_e000492/GSFC_20171208_Archive_e000492~orig.jpg",
+            os.path.join(BASE_DIR, "assets", "heroes", "quantum_hero.jpg"),
+            "http://images-assets.nasa.gov/image/PIA22563/PIA22563~orig.jpg",
             "FACT 02: FUTURE SCIENCE",
             "DUNIYA KI SABSE THANDI JAGAH!",
             "Quantum Chip At -273.15 C (100x Colder!)"
         ),
-        # Fact 3: James Webb Space Telescope Carina Nebula
+        # Fact 3: James Webb Space Telescope Golden Mirrors
         (
             "fact3_jwst",
-            "https://images-assets.nasa.gov/image/PIA25433/PIA25433~orig.jpg",
+            os.path.join(BASE_DIR, "assets", "heroes", "jwst_hero.jpg"),
+            "http://images-assets.nasa.gov/image/webb_first_deep_field/webb_first_deep_field~large.jpg",
             "FACT 03: COSMIC DISCOVERY",
             "JAMES WEBB: ASLI TIME MACHINE!",
             "13.5 Billion Saal Purani Cosmic Light!"
@@ -320,19 +319,21 @@ async def main():
 
     fact_frames = []
     headers = {"User-Agent": "Mozilla/5.0"}
-    for name, url, f_badge, h1, h2 in images_data:
+    for name, local_hero, fallback_url, f_badge, h1, h2 in images_data:
         target_f = os.path.join(BASE_DIR, f"{name}.jpg")
         try:
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = resp.read()
-            im = Image.open(BytesIO(data)).convert("RGB")
-            frame = create_blurred_ambient_frame(im, fact_badge=f_badge, headline_line1=h1, headline_line2=h2)
+            if os.path.exists(local_hero):
+                im = Image.open(local_hero).convert("RGB")
+            else:
+                req = urllib.request.Request(fallback_url, headers=headers)
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    im = Image.open(BytesIO(resp.read())).convert("RGB")
+            frame = create_fullscreen_fact_frame(im, fact_badge=f_badge, headline_line1=h1, headline_line2=h2)
             frame.save(target_f, "JPEG", quality=95)
             fact_frames.append(target_f)
-            print(f"  [SUCCESS] Prepared authentic NASA photo & headline card for: {name}", flush=True)
+            print(f"  [SUCCESS] Prepared 100% full-screen fact-matched visual for: {name}", flush=True)
         except Exception as e:
-            print(f"  [ERROR] Downloading {name}: {e}", flush=True)
+            print(f"  [ERROR] Preparing image {name}: {e}", flush=True)
 
     # STRICT GUARD: If any fact image fails, do not proceed!
     if len(fact_frames) < 3:
