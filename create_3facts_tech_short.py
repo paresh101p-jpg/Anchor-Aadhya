@@ -25,8 +25,59 @@ if not os.path.exists(FFMPEG_BIN):
     FFMPEG_BIN = "ffmpeg"
 FFPROBE_BIN = FFMPEG_BIN.replace("ffmpeg.exe", "ffprobe.exe")
 
-FONT_IMPACT = r"C:\Windows\Fonts\impact.ttf"
-FONT_ARIAL_BOLD = r"C:\Windows\Fonts\arialbd.ttf"
+FONTS_DIR = os.path.join(BASE_DIR, "fonts")
+LOCAL_IMPACT = os.path.join(FONTS_DIR, "impact.ttf")
+LOCAL_ARIAL = os.path.join(FONTS_DIR, "arialbd.ttf")
+
+def get_bold_font(size):
+    # 1. Bundled repo font
+    if os.path.exists(LOCAL_ARIAL):
+        try:
+            return ImageFont.truetype(LOCAL_ARIAL, size)
+        except Exception:
+            pass
+    # 2. Windows font
+    win_f = r"C:\Windows\Fonts\arialbd.ttf"
+    if os.path.exists(win_f):
+        try:
+            return ImageFont.truetype(win_f, size)
+        except Exception:
+            pass
+    # 3. Linux/Ubuntu standard font paths
+    linux_fonts = [
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/freefont/FreeSansBold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
+    ]
+    for lf in linux_fonts:
+        if os.path.exists(lf):
+            try:
+                return ImageFont.truetype(lf, size)
+            except Exception:
+                pass
+    try:
+        return ImageFont.load_default(size=size)
+    except:
+        return ImageFont.load_default()
+
+def get_impact_font(size):
+    # 1. Bundled repo font
+    if os.path.exists(LOCAL_IMPACT):
+        try:
+            return ImageFont.truetype(LOCAL_IMPACT, size)
+        except Exception:
+            pass
+    # 2. Windows font
+    win_f = r"C:\Windows\Fonts\impact.ttf"
+    if os.path.exists(win_f):
+        try:
+            return ImageFont.truetype(win_f, size)
+        except Exception:
+            pass
+    # 3. Linux fallback
+    return get_bold_font(size)
+
 
 def fit_to_9_16(im, target_w=1080, target_h=1920):
     w, h = im.size
@@ -65,19 +116,12 @@ def create_blurred_ambient_frame(im, fact_badge="● FACT 01", headline_line1="N
     draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 220), outline=(255, 80, 100, 255), width=2)
     # Pulsing red/white dot
     draw.ellipse([(80, 178), (94, 192)], fill=(255, 255, 255, 255))
-    try:
-        f_badge = ImageFont.truetype(FONT_ARIAL_BOLD, 20)
-    except:
-        f_badge = ImageFont.load_default()
+    f_badge = get_bold_font(22)
     draw.text((106, 172), fact_badge, font=f_badge, fill=(255, 255, 255, 255))
 
     # Line 1: Main Impact Headline (Yellow)
-    try:
-        f_head1 = ImageFont.truetype(FONT_IMPACT, 52)
-        f_head2 = ImageFont.truetype(FONT_ARIAL_BOLD, 32)
-    except:
-        f_head1 = ImageFont.load_default()
-        f_head2 = f_head1
+    f_head1 = get_impact_font(54)
+    f_head2 = get_bold_font(34)
 
     b1 = draw.textbbox((0, 0), headline_line1, font=f_head1)
     w1 = b1[2] - b1[0]
@@ -127,12 +171,8 @@ def create_top_corner_logo():
         draw.ellipse([(45, 55), (107, 117)], outline=(0, 240, 255, 255), width=2)
 
     # Text next to avatar
-    try:
-        f_top = ImageFont.truetype(FONT_ARIAL_BOLD, 22)
-        f_sub = ImageFont.truetype(FONT_IMPACT, 18)
-    except:
-        f_top = ImageFont.load_default()
-        f_sub = f_top
+    f_top = get_bold_font(24)
+    f_sub = get_impact_font(18)
 
     draw.text((118, 59), "ANCHOR AADHYA", font=f_top, fill=(255, 255, 255, 255))
     draw.text((118, 86), "MIND-BLOWING TECH", font=f_sub, fill=(255, 230, 0, 255))
@@ -140,20 +180,14 @@ def create_top_corner_logo():
     # Top Right "4K ULTRA" badge
     draw.rounded_rectangle([(870, 56), (1040, 114)], radius=20, fill=(18, 24, 45, 200), outline=(255, 30, 60, 220), width=2)
     draw.ellipse([(888, 77), (904, 93)], fill=(255, 30, 60, 255))
-    try:
-        f_badge = ImageFont.truetype(FONT_ARIAL_BOLD, 18)
-    except:
-        f_badge = f_top
+    f_badge = get_bold_font(18)
     draw.text((915, 73), "4K FACTS", font=f_badge, fill=(255, 255, 255, 255))
 
     # Bottom pill branding (clean, no emoji)
     b_w = 480
     bx = (1080 - b_w) // 2
     draw.rounded_rectangle([(bx, 1820), (bx + b_w, 1870)], radius=22, fill=(12, 18, 35, 210), outline=(255, 215, 0, 160), width=2)
-    try:
-        b_font = ImageFont.truetype(FONT_ARIAL_BOLD, 20)
-    except:
-        b_font = f_top
+    b_font = get_bold_font(20)
     bt = "FACTTECHZ STYLE • TECH SHORTS"
     bb = draw.textbbox((0, 0), bt, font=b_font)
     draw.text(((1080 - (bb[2]-bb[0])) // 2, 1832), bt, font=b_font, fill=(255, 215, 0, 255))
@@ -196,16 +230,10 @@ def create_hook_intro_card():
     canvas.paste(gradient, (0, 0), gradient)
 
     # 2. SINGLE BIG HIGH-CURIOSITY CLICKBAIT FACT HEADLINE
-    try:
-        font_badge = ImageFont.truetype(FONT_ARIAL_BOLD, 28)
-        font_big1 = ImageFont.truetype(FONT_IMPACT, 72)
-        font_big2 = ImageFont.truetype(FONT_IMPACT, 66)
-        font_sub = ImageFont.truetype(FONT_ARIAL_BOLD, 36)
-    except:
-        font_badge = ImageFont.load_default()
-        font_big1 = font_badge
-        font_big2 = font_badge
-        font_sub = font_badge
+    font_badge = get_bold_font(28)
+    font_big1 = get_impact_font(72)
+    font_big2 = get_impact_font(66)
+    font_sub = get_bold_font(36)
 
     # Top Hook Pill (y=160)
     pill_text = "NASA KA SABSE BADA RAHASYA!"
@@ -242,12 +270,8 @@ def create_animated_caption_slide(line1, line2, color1=(255, 230, 0, 255), color
 
     draw.rounded_rectangle([(40, 20), (1040, 260)], radius=24, fill=(5, 8, 20, 230), outline=(0, 220, 255, 220), width=4)
 
-    try:
-        font1 = ImageFont.truetype(FONT_IMPACT, 52)
-        font2 = ImageFont.truetype(FONT_ARIAL_BOLD, 38)
-    except:
-        font1 = ImageFont.load_default()
-        font2 = font1
+    font1 = get_impact_font(54)
+    font2 = get_bold_font(38)
 
     bbox1 = draw.textbbox((0, 0), line1, font=font1)
     w1 = bbox1[2] - bbox1[0]
