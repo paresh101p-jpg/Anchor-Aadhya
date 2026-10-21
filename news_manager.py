@@ -375,7 +375,8 @@ def generate_image_with_imagen(prompt, output_file):
                 predictions = data.get("predictions", [])
                 if predictions and "bytesBase64Encoded" in predictions[0]:
                     img_bytes = base64.b64decode(predictions[0]["bytesBase64Encoded"])
-                    im = Image.open(BytesIO(img_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im = Image.open(BytesIO(img_bytes)).convert("RGB")
+                    im = fit_to_16_9(im)
                     im.save(output_file, "JPEG", quality=95)
                     print(f"  [SUCCESS] Imagen 3 ({model_name}) Saved: {os.path.basename(output_file)}", flush=True)
                     return True
@@ -384,7 +385,33 @@ def generate_image_with_imagen(prompt, output_file):
         except Exception as rest_e:
             print(f"  [IMAGEN REST] {model_name} error: {rest_e}", flush=True)
 
-    # 2. Secondary: SDK fallback
+    # 2. Secondary: Gemini Multimodal Flash Image API (when Billing is active on Google AI Studio)
+    for model_name in ["gemini-2.5-flash-image", "gemini-3.1-flash-image", "gemini-3-pro-image"]:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:generateContent?key={api_key}"
+            payload = {
+                "contents": [{"parts": [{"text": enhanced}]}],
+                "generationConfig": {"responseModalities": ["TEXT", "IMAGE"]}
+            }
+            resp = requests.post(url, json=payload, headers={"Content-Type": "application/json"}, timeout=45)
+            if resp.status_code == 200:
+                data = resp.json()
+                candidates = data.get("candidates", [])
+                if candidates:
+                    for part in candidates[0].get("content", {}).get("parts", []):
+                        if "inlineData" in part:
+                            img_bytes = base64.b64decode(part["inlineData"]["data"])
+                            im = Image.open(BytesIO(img_bytes)).convert("RGB")
+                            im = fit_to_16_9(im)
+                            im.save(output_file, "JPEG", quality=95)
+                            print(f"  [SUCCESS] Gemini AI Image ({model_name}) Saved: {os.path.basename(output_file)}", flush=True)
+                            return True
+            else:
+                print(f"  [GEMINI IMAGE] {model_name} HTTP {resp.status_code}: {resp.text[:140]}", flush=True)
+        except Exception as g_e:
+            print(f"  [GEMINI IMAGE] {model_name} error: {g_e}", flush=True)
+
+    # 3. Tertiary: SDK fallback
     try:
         from google import genai
         from google.genai import types
@@ -403,7 +430,8 @@ def generate_image_with_imagen(prompt, output_file):
                     model=model_name, prompt=enhanced, config=cfg
                 )
                 for gen_img in response.generated_images:
-                    im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB")
+                    im = fit_to_16_9(im)
                     im.save(output_file, "JPEG", quality=95)
                     print(f"  [SUCCESS] Saved: {os.path.basename(output_file)}", flush=True)
                     return True
