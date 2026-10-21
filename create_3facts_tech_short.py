@@ -123,10 +123,11 @@ def create_fact_top_card_overlay(fact_badge="● FACT 01", headline_line1="SHOCK
     draw.rounded_rectangle([(40, 145), (1040, 385)], radius=24, fill=(8, 14, 32, 225), outline=(0, 220, 255, 230), width=3)
 
     # Fact Badge Pill (Top-left inside card)
-    badge_w = 400
+    f_badge = get_bold_font(22)
+    bb_badge = draw.textbbox((0, 0), fact_badge.upper(), font=f_badge)
+    badge_w = max(240, min(600, (bb_badge[2] - bb_badge[0]) + 55))
     draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 235), outline=(255, 100, 120, 255), width=2)
     draw.ellipse([(80, 178), (94, 192)], fill=(255, 255, 255, 255))
-    f_badge = get_bold_font(22)
     draw.text((106, 172), fact_badge.upper(), font=f_badge, fill=(255, 255, 255, 255))
 
     # Line 1: Main Impact Headline (Yellow)
@@ -690,7 +691,7 @@ async def main():
     print("====================================================================")
 
     # Clean stale previous run assets
-    for pat in ["fact1_*.jpg", "fact2_*.jpg", "fact3_*.jpg", "shorts_cap_*.png"]:
+    for pat in ["fact*.*", "shorts_cap_*.png", "temp_fact_*.*", "temp_*.mp3", "test_frame_*.jpg", "shorts_3facts_voice.mp3"]:
         import glob
         for f in glob.glob(os.path.join(BASE_DIR, pat)):
             try: os.remove(f)
@@ -742,16 +743,19 @@ async def main():
             fact_bgs.append((bg_target, False))
             print(f"  --> Fact {idx+1}: Using 8K AI Photo + Motion Zoom fallback!", flush=True)
 
-        # 100% Static Top Fact Headline Card (overlay, NEVER zooms!)
+        # 100% Dynamic Top Fact Headline Card (Strictly FACT 01, FACT 02, FACT 03)
+        cat_clean = f.get("category", "SCIENCE MYSTERY").upper()
+        cat_clean = re.sub(r'FACT\s*\d+\s*:?', '', cat_clean).strip()
+        dynamic_badge = f"FACT 0{idx+1}: {cat_clean}"
         card = create_fact_top_card_overlay(
-            fact_badge=f.get("fact_badge", f"FACT 0{idx+1}"),
+            fact_badge=dynamic_badge,
             headline_line1=f.get("headline_line1", "MIND-BLOWING TECH!"),
             headline_line2=f.get("headline_line2", "Science Ka Asli Chamatkar!")
         )
         card.save(card_target, "PNG")
         fact_cards.append(card_target)
 
-    # 3. First 3.5 Seconds Hook / Thumbnail Card with Anchor Aadhya
+    # 3. First Seconds Hook / Thumbnail Card with Anchor Aadhya
     print("  --> Step 3: Generating Anchor Aadhya Hook / Thumbnail Card...", flush=True)
     hook_frame = create_hook_intro_card(
         hook_pill=facts_data.get("hook_pill", "SCIENCE KA SABSE BADA RAHASYA!"),
@@ -762,41 +766,71 @@ async def main():
     # 4. Corner Logo & Permanent Overlays
     static_overlay = create_top_corner_logo()
 
-    # 5. Build Dynamic Voiceover Script & Synthesize
-    print("  --> Step 4: Generating Hindi Voiceover with Anchor Aadhya...", flush=True)
+    # 5. Build Dynamic Voiceover Script & Measure Exact Segment Lengths for 100% Mouth-Sync
+    print("  --> Step 4: Generating Segmented Hindi Voiceover with Anchor Aadhya...", flush=True)
+
+    def sanitize_narration(raw_text, fact_num):
+        """Strictly enforces that Aadhya's spoken fact number matches the on-screen slot!"""
+        cleaned = re.sub(r'^(और\s*)?फैक्ट\s*नंबर\s*([०-९\d]+|वन|टू|थ्री|एक|दो|तीन)[\s\.\:\,\…\-]*', '', raw_text.strip(), flags=re.IGNORECASE)
+        cleaned = re.sub(r'^(and\s*)?fact\s*(number\s*)?([०-९\d]+|one|two|three)[\s\.\:\,\…\-]*', '', cleaned, flags=re.IGNORECASE)
+        if fact_num == 1:
+            return "फैक्ट नंबर वन... " + cleaned.strip()
+        elif fact_num == 2:
+            return "फैक्ट नंबर टू... " + cleaned.strip()
+        elif fact_num == 3:
+            return "और फैक्ट नंबर थ्री... " + cleaned.strip()
+        return cleaned.strip()
+
     intro_speech = "दोस्तों! आज के ये टॉप थ्री माइंड-ब्लोइंग साइंस फैक्ट्स सुनकर आपके होश उड़ जाएंगे! "
-    f1_speech = facts_list[0].get("narration", "") + " "
-    f2_speech = facts_list[1].get("narration", "") + " "
-    f3_speech = facts_list[2].get("narration", "") + " "
+    f1_speech = sanitize_narration(facts_list[0].get("narration", ""), 1) + " "
+    f2_speech = sanitize_narration(facts_list[1].get("narration", ""), 2) + " "
+    f3_speech = sanitize_narration(facts_list[2].get("narration", ""), 3) + " "
     outro_speech = "कौनसा फैक्ट सबसे शॉकिंग लगा? कमेंट में बताएं और ऐसे ही अमेजिंग फैक्ट्स के लिए Anchor Aadhya को अभी सब्सक्राइब करें!"
 
-    full_script = intro_speech + f1_speech + f2_speech + f3_speech + outro_speech
+    async def get_audio_clip(text, out_path):
+        for attempt in range(3):
+            try:
+                com = edge_tts.Communicate(text, voice="hi-IN-SwaraNeural", rate="+7%", pitch="+1Hz")
+                await com.save(out_path)
+                break
+            except Exception as ve:
+                if attempt == 2:
+                    com = edge_tts.Communicate(text, voice="hi-IN-MadhurNeural", rate="+7%", pitch="+1Hz")
+                    await com.save(out_path)
+                await asyncio.sleep(1.5)
+        p_cmd = [FFPROBE_BIN, "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", out_path]
+        res = subprocess.run(p_cmd, stdout=subprocess.PIPE, text=True)
+        try: return max(1.5, float(res.stdout.strip()))
+        except: return 5.0
+
+    p_intro = os.path.join(BASE_DIR, "temp_intro.mp3")
+    p_f1 = os.path.join(BASE_DIR, "temp_f1.mp3")
+    p_f2 = os.path.join(BASE_DIR, "temp_f2.mp3")
+    p_f3 = os.path.join(BASE_DIR, "temp_f3.mp3")
+    p_outro = os.path.join(BASE_DIR, "temp_outro.mp3")
+
+    d_intro = await get_audio_clip(intro_speech, p_intro)
+    d_f1 = await get_audio_clip(f1_speech, p_f1)
+    d_f2 = await get_audio_clip(f2_speech, p_f2)
+    d_f3 = await get_audio_clip(f3_speech, p_f3)
+    d_outro = await get_audio_clip(outro_speech, p_outro)
+
     voice_path = os.path.join(BASE_DIR, "shorts_3facts_voice.mp3")
-    for attempt in range(3):
-        try:
-            com = edge_tts.Communicate(full_script, voice="hi-IN-SwaraNeural", rate="+7%", pitch="+1Hz")
-            await com.save(voice_path)
-            break
-        except Exception as ve:
-            print(f"  [TTS RETRY {attempt+1}] {ve}", flush=True)
-            if attempt == 2:
-                # If Swara fails, try Madhur as backup
-                try:
-                    com = edge_tts.Communicate(full_script, voice="hi-IN-MadhurNeural", rate="+7%", pitch="+1Hz")
-                    await com.save(voice_path)
-                    break
-                except Exception:
-                    raise ve
-            await asyncio.sleep(2)
+    concat_list = os.path.join(BASE_DIR, "temp_concat_audio.txt")
+    with open(concat_list, "w", encoding="utf-8") as f_cl:
+        for p in [p_intro, p_f1, p_f2, p_f3, p_outro]:
+            f_cl.write(f"file '{p.replace(os.sep, '/')}'\n")
+    subprocess.run([
+        FFMPEG_BIN, "-y", "-f", "concat", "-safe", "0",
+        "-i", concat_list, "-c", "copy", voice_path
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    probe_cmd = [FFPROBE_BIN, "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", voice_path]
-    res_dur = subprocess.run(probe_cmd, stdout=subprocess.PIPE, text=True)
-    try: total_dur = float(res_dur.stdout.strip())
-    except: total_dur = 65.0
-    print(f"  --> Voice Duration: {total_dur:.2f} seconds", flush=True)
+    total_dur = d_intro + d_f1 + d_f2 + d_f3 + d_outro
+    print(f"  --> Exact Audio Sync: Intro={d_intro:.2f}s | Fact1={d_f1:.2f}s | Fact2={d_f2:.2f}s | Fact3={d_f3:.2f}s | Outro={d_outro:.2f}s", flush=True)
+    print(f"  --> Total Voice Duration: {total_dur:.2f} seconds", flush=True)
 
-    # 6. Generate Kinetic Animated Caption Slides
-    print("  --> Step 5: Generating Kinetic Hinglish Subtitles...", flush=True)
+    # 6. Generate Kinetic Animated Caption Slides (Numbered strictly 1, 2, 3)
+    print("  --> Step 5: Generating Kinetic Hinglish Subtitles (Strictly Numbered)...", flush=True)
     c1a, c1b = facts_list[0].get("caption_slide1", ["FACT 1!", "Detail 1"])
     c2a, c2b = facts_list[0].get("caption_slide2", ["FACT 1 PUNCH!", "Detail 2"])
     c3a, c3b = facts_list[1].get("caption_slide1", ["FACT 2!", "Detail 1"])
@@ -804,10 +838,17 @@ async def main():
     c5a, c5b = facts_list[2].get("caption_slide1", ["FACT 3!", "Detail 1"])
     c6a, c6b = facts_list[2].get("caption_slide2", ["FACT 3 PUNCH!", "Detail 2"])
 
+    def clean_cap_badge(text, fact_num):
+        t = re.sub(r'^(AND\s*)?FACT\s*([0-9]+|ONE|TWO|THREE)[\s\:\-\.\!]*', '', str(text).strip(), flags=re.IGNORECASE)
+        return f"FACT {fact_num}: {t}"
+
     captions = [
-        (c1a, c1b), (c2a, c2b),
-        (c3a, c3b), (c4a, c4b),
-        (c5a, c5b), (c6a, c6b),
+        (clean_cap_badge(c1a, 1), c1b),
+        (c2a, c2b),
+        (clean_cap_badge(c3a, 2), c3b),
+        (c4a, c4b),
+        (clean_cap_badge(c5a, 3), c5b),
+        (c6a, c6b),
         ("SUBSCRIBE TO ANCHOR AADHYA!", "Daily Mind-Blowing Tech Shorts!")
     ]
 
@@ -818,12 +859,22 @@ async def main():
         cap_img.save(cf, "PNG")
         cap_files.append(cf)
 
-    # 7. Render Master Video with FFmpeg
+    # 7. Render Master Video with FFmpeg (100% Audio Synchronized Transitions)
     output_short = os.path.join(BASE_DIR, "sample_3facts_facttechz_short.mp4")
     print(f"\n--- Step 6: Encoding 1080x1920 Short ({total_dur:.1f}s) to: {output_short} ---", flush=True)
 
+    t_hook = d_intro
+    t_f1 = d_f1
+    t_f2 = d_f2
+    t_f3 = d_f3 + d_outro
+
+    off_1 = max(1.0, round(t_hook - 0.3, 2))
+    off_2 = round(off_1 + t_f1, 2)
+    off_3 = round(off_2 + t_f2, 2)
+
     fc = []
     # Build Fact 1, Fact 2, Fact 3 background + card streams
+    durs = [round(t_f1 + 2.0, 2), round(t_f2 + 2.0, 2), round(t_f3 + 2.5, 2)]
     for i in range(3):
         bg_path, is_vid = fact_bgs[i]
         in_idx = 1 + i
@@ -836,57 +887,55 @@ async def main():
             fc.append(f"{v_prep}[{card_idx}:v]overlay=0:0{out_stream}")
         else:
             z_bg = f"[z_bg{i+1}]"
-            dur_frames = 520 if i == 0 else (500 if i == 1 else 350)
+            dur_frames = int(durs[i] * 25) + 15
             fc.append(f"[{in_idx}:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d={dur_frames}:s=1080x1920:fps=25{z_bg}")
             fc.append(f"{z_bg}[{card_idx}:v]overlay=0:0{out_stream}")
 
-    # Scene Transitions
+    # Dynamic Scene Transitions Exactly as Aadhya Announces Fact 1, 2, 3!
     fc.extend([
         "[0:v]scale=1080:1920[v_hook]",
-        "[v_hook][v_f1]xfade=transition=circlecrop:duration=0.5:offset=3.2[s1]",
-        "[s1][v_f2]xfade=transition=slideright:duration=0.5:offset=23.7[s2]",
-        "[s2][v_f3]xfade=transition=slideleft:duration=0.5:offset=43.7[s3]",
+        f"[v_hook][v_f1]xfade=transition=circlecrop:duration=0.5:offset={off_1}[s1]",
+        f"[s1][v_f2]xfade=transition=slideright:duration=0.5:offset={off_2}[s2]",
+        f"[s2][v_f3]xfade=transition=slideleft:duration=0.5:offset={off_3}[s3]",
         "[s3][7:v]overlay=0:0[with_logo]"
     ])
 
+    # Dynamic Slide Timings directly linked to Voice audio
     slide_times = [
-        (3.5, 13.5),
-        (13.5, 24.0),
-        (24.0, 34.0),
-        (34.0, 44.0),
-        (44.0, 51.0),
-        (51.0, 58.0),
-        (58.0, round(total_dur + 0.5, 1))
+        (round(t_hook, 2), round(t_hook + t_f1 * 0.48, 2)),
+        (round(t_hook + t_f1 * 0.48, 2), round(t_hook + t_f1, 2)),
+        (round(t_hook + t_f1, 2), round(t_hook + t_f1 + t_f2 * 0.48, 2)),
+        (round(t_hook + t_f1 + t_f2 * 0.48, 2), round(t_hook + t_f1 + t_f2, 2)),
+        (round(t_hook + t_f1 + t_f2, 2), round(t_hook + t_f1 + t_f2 + d_f3 * 0.5, 2)),
+        (round(t_hook + t_f1 + t_f2 + d_f3 * 0.5, 2), round(t_hook + t_f1 + t_f2 + d_f3, 2)),
+        (round(t_hook + t_f1 + t_f2 + d_f3, 2), round(total_dur + 0.5, 2))
     ]
 
     prev_stream = "[with_logo]"
     for i, (st, et) in enumerate(slide_times):
         cap_in = f"[{8 + i}:v]"
         faded_cap = f"[fcap_{i}]"
-        # Fade in over 0.25s, fade out over 0.20s
-        fc.append(f"{cap_in}format=yuva420p,fade=t=in:st={st}:d=0.25:alpha=1,fade=t=out:st={et-0.2}:d=0.2:alpha=1{faded_cap}")
+        fc.append(f"{cap_in}format=yuva420p,fade=t=in:st={st}:d=0.20:alpha=1,fade=t=out:st={et-0.15}:d=0.15:alpha=1{faded_cap}")
         next_stream = f"[c_{i+1}]" if i < len(slide_times) - 1 else "[final_v]"
-        # Overlay exactly at 0:0 (caption box is pre-positioned perfectly at y=1380-1420)
         fc.append(f"{prev_stream}{faded_cap}overlay=0:0:enable='between(t,{st},{et})'{next_stream}")
         prev_stream = next_stream
 
     cmd = [
         FFMPEG_BIN, "-y",
-        "-loop", "1", "-t", "4.0", "-i", hook_frame, # 0: Hook
+        "-loop", "1", "-t", str(round(t_hook + 1.0, 2)), "-i", hook_frame, # 0: Hook
     ]
-    # Inputs 1, 2, 3: Backgrounds (loop video or loop image)
+    # Inputs 1, 2, 3: Backgrounds with exact duration
     for i in range(3):
         bg_path, is_vid = fact_bgs[i]
-        dur = "22.0" if i < 2 else "16.0"
+        d_str = str(durs[i])
         if is_vid:
-            cmd.extend(["-stream_loop", "-1", "-t", dur, "-i", bg_path])
+            cmd.extend(["-stream_loop", "-1", "-t", d_str, "-i", bg_path])
         else:
-            cmd.extend(["-loop", "1", "-t", dur, "-i", bg_path])
+            cmd.extend(["-loop", "1", "-t", d_str, "-i", bg_path])
 
-    # Inputs 4, 5, 6: Static Cards (never zooms)
+    # Inputs 4, 5, 6: Static Cards with exact duration
     for i in range(3):
-        dur = "22.0" if i < 2 else "16.0"
-        cmd.extend(["-loop", "1", "-t", dur, "-i", fact_cards[i]])
+        cmd.extend(["-loop", "1", "-t", str(durs[i]), "-i", fact_cards[i]])
 
     # Input 7: Branding logo
     cmd.extend(["-loop", "1", "-t", str(total_dur + 1.0), "-i", static_overlay])
