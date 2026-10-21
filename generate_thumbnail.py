@@ -16,6 +16,36 @@ from PIL import Image, ImageDraw, ImageFont, ImageEnhance
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 
+def get_font(size, bold=True):
+    font_paths = [
+        # Windows Fonts
+        r"C:\Windows\Fonts\segoeuib.ttf",
+        r"C:\Windows\Fonts\arialbd.ttf",
+        r"C:\Windows\Fonts\impact.ttf",
+        # Ubuntu / Linux Fonts with full Latin / Hinglish / Symbol support
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Bold.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Bold.ttf"
+    ] if bold else [
+        # Windows Fonts
+        r"C:\Windows\Fonts\segoeui.ttf",
+        r"C:\Windows\Fonts\arial.ttf",
+        # Ubuntu / Linux Fonts with full Latin / Hinglish / Symbol support
+        "/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf",
+        "/usr/share/fonts/truetype/liberation/LiberationSans-Regular.ttf",
+        "/usr/share/fonts/truetype/noto/NotoSans-Regular.ttf"
+    ]
+    for p in font_paths:
+        if os.path.exists(p):
+            try:
+                return ImageFont.truetype(p, size)
+            except Exception:
+                continue
+    try:
+        return ImageFont.load_default()
+    except Exception:
+        return None
+
 def get_text_width(draw, text, font):
     try:
         bbox = draw.textbbox((0, 0), text, font=font)

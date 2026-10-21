@@ -5,7 +5,7 @@ News & Wardrobe Asset Manager for Anchor Aadhya Channel
 LIVE RSS NEWS + GEMINI IMAGEN 3 ONLY — no stock photos, no URLs, zero copyright.
 """
 
-import os, re, json, random, urllib.request, xml.etree.ElementTree as ET
+import os, re, json, random, base64, requests, urllib.request, xml.etree.ElementTree as ET
 from datetime import datetime, date
 from io import BytesIO
 from PIL import Image, ImageDraw
@@ -290,11 +290,38 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
         f"textures, no watermarks, no logos, no text overlays, no cartoon, no CGI art — "
         f"genuine real-world photograph by a professional photojournalist"
     )
+    # 1. Primary: Direct Google Developer API REST Endpoint for Imagen 3
+    # (Bypasses SDK Enterprise Agent Platform restrictions on standard AI Studio API keys)
+    for model_name in ["imagen-3.0-generate-002", "imagen-3.0-generate-001", "imagen-3.0-fast-generate-001"]:
+        try:
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:predict"
+            headers = {"x-goog-api-key": api_key, "Content-Type": "application/json"}
+            payload = {
+                "instances": [{"prompt": enhanced}],
+                "parameters": {"sampleCount": 1, "aspectRatio": "16:9", "personGeneration": "ALLOW_ADULT"}
+            }
+            resp = requests.post(url, json=payload, headers=headers, timeout=45)
+            if resp.status_code == 200:
+                data = resp.json()
+                predictions = data.get("predictions", [])
+                if predictions and "bytesBase64Encoded" in predictions[0]:
+                    img_bytes = base64.b64decode(predictions[0]["bytesBase64Encoded"])
+                    im = Image.open(BytesIO(img_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im.save(output_file, "JPEG", quality=95)
+                    append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
+                    print(f"  [SUCCESS] Imagen 3 ({model_name}) Saved: {os.path.basename(output_file)}", flush=True)
+                    return True
+            else:
+                print(f"  [IMAGEN REST] {model_name} HTTP {resp.status_code}: {resp.text[:140]}", flush=True)
+        except Exception as rest_e:
+            print(f"  [IMAGEN REST] {model_name} error: {rest_e}", flush=True)
+
+    # 2. Secondary: SDK fallback
     try:
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key)
-        for model_name in ["imagen-3.0-generate-002","imagen-3.0-generate-001"]:
+        for model_name in ["imagen-3.0-generate-002", "imagen-3.0-generate-001"]:
             try:
                 cfg = None
                 if hasattr(types, "GenerateImagesConfig"):
@@ -308,15 +335,16 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
                     model=model_name, prompt=enhanced, config=cfg
                 )
                 for gen_img in response.generated_images:
-                    im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920,1080),Image.Resampling.LANCZOS)
-                    im.save(output_file,"JPEG",quality=95)
+                    im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                    im.save(output_file, "JPEG", quality=95)
                     append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
                     print(f"  [SUCCESS] Saved: {os.path.basename(output_file)}", flush=True)
                     return True
             except Exception as img_e:
-                print(f"  [IMAGEN] {model_name}: {img_e}", flush=True)
+                print(f"  [IMAGEN SDK] {model_name}: {img_e}", flush=True)
     except Exception as e:
-        print(f"  [ERROR] Imagen fatal: {e}", flush=True)
+        print(f"  [ERROR] Imagen SDK: {e}", flush=True)
+
     print(f"  [FALLBACK] Procedural tech visual (zero copyright)", flush=True)
     _dark_gradient(output_file, headline_text=headline_text, shot_idx=shot_idx)
     return True
