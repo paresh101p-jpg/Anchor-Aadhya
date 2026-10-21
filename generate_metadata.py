@@ -21,7 +21,7 @@ def generate_video_metadata(
 ):
     today_display = datetime.now().strftime("%d %B %Y")
     today_slug = datetime.now().strftime("%Y-%m-%d")
-    edition_label = "12 PM Special" if slot == "12PM" else "5 PM Prime"
+    edition_label = "Daily Special"
 
     if not video_filename:
         video_filename = f"Anchor_Aadhya_News_{today_slug}_{slot}.mp4"
@@ -65,7 +65,7 @@ def generate_video_metadata(
 
     description = f"""{headline_1} और {headline_2}! आज की सबसे बड़ी फ्यूचर टेक्नोलॉजी की खबरें सिर्फ Anchor Aadhya पर! 🚀🤖
 
-Welcome to Anchor Aadhya — आपका अपना 100% भरोसेमंद डेली टेक और AI न्यूज़ बुलेटिन! आज {today_display} के इस {edition_label} में जानिए दुनिया भर की रिसर्च लैब्स, टेक कंपनियों और वैज्ञानिकों की वो 4 बड़ी खोजें, जो हमारे कल को हमेशा के लिए बदलने वाली हैं।
+Welcome to Anchor Aadhya — आपका अपना 100% भरोसेमंद डेली टेक और AI न्यूज़ बुलेटिन! आज {today_display} के इस विशेष बुलेटिन में जानिए दुनिया भर की रिसर्च लैब्स, टेक कंपनियों और वैज्ञानिकों की वो 4 बड़ी खोजें, जो हमारे कल को हमेशा के लिए बदलने वाली हैं।
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📌 TIMESTAMPS / CHAPTERS (खबरों के मुख्य बिंदु):
@@ -80,9 +80,9 @@ Welcome to Anchor Aadhya — आपका अपना 100% भरोसेम�
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
 📺 About Channel — Anchor Aadhya:
-Anchor Aadhya भारत का पहला AI-पावर्ड फ्यूचर टेक और साइंस न्यूज़ बुलेटिन है, जहाँ आपको हर रोज़ दोपहर 12:00 बजे और शाम 5:00 बजे दुनिया भर की सबसे ताज़ा और प्रामाणिक टेक्नोलॉजी की खबरें हिंदी में मिलती हैं। चाहे वो Artificial Intelligence हो, Robotics, Space Tech, Electric Vehicles या Quantum Computing — सबसे पहले और सबसे सटीक विश्लेषण सिर्फ यहाँ!
+Anchor Aadhya भारत का पहला AI-पावर्ड फ्यूचर टेक और साइंस न्यूज़ बुलेटिन है, जहाँ आपको हर रोज़ दुनिया भर की सबसे ताज़ा और प्रामाणिक टेक्नोलॉजी की खबरें हिंदी में मिलती हैं। चाहे वो Artificial Intelligence हो, Robotics, Space Tech, Electric Vehicles या Quantum Computing — सबसे पहले और सबसे सटीक विश्लेषण सिर्फ यहाँ!
 
-🔔 रोज़ाना दोपहर 12 बजे और शाम 5 बजे नया वीडियो देखने के लिए तुरंत सब्सक्राइब करें और Bell Icon दबाएं!
+🔔 रोज़ाना नया वीडियो देखने के लिए तुरंत सब्सक्राइब करें और Bell Icon दबाएं!
 👍 अगर आपको आज का बुलेटिन पसंद आया हो तो लाइक और दोस्तों के साथ शेयर ज़रूर करें!
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -91,13 +91,13 @@ In full compliance with YouTube Community Guidelines & Policy:
 This video features AI digital broadcast host 'Anchor Aadhya' presenting real, verified technology news sourced from global research labs, patents, and scientific publications. Voiceover narration and studio visuals are creatively rendered using artificial intelligence tools for educational and news reporting purposes.
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━
-#TechNews #AINews #AnchorAadhya #FutureTech #Robotics #ArtificialIntelligence #TechnologyHindi #DailyTechNews #{slot}News"""
+#TechNews #AINews #AnchorAadhya #FutureTech #Robotics #ArtificialIntelligence #TechnologyHindi #DailyTechNews"""
 
     tags = [
         "Anchor Aadhya", "AI News Hindi", "Tech News Hindi", "Future Tech 2026",
         "Artificial Intelligence", "Daily Tech News", "Breaking Tech News",
         "Technology Updates", "Robotics Hindi", "Latest Tech Inventions",
-        f"Tech News {slot}"
+        "Daily Tech News Hindi"
     ]
     for s in stories[:4]:
         tags.append(s.get("category", "").title())

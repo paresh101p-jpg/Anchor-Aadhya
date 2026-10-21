@@ -239,7 +239,7 @@ def create_youtube_thumbnail(
     draw.line([(0, 668), (W, 668)], fill=(0, 220, 255), width=2)
     font_brand = get_font(23, bold=True)
     draw.text((40, 680), "ANCHOR AADHYA", font=font_brand, fill=(255, 255, 255))
-    slot_text = "•  ROZ DOPAHAR 12 BAJE SPECIAL" if slot == "12PM" else "•  ROZ SHAAM 5 BAJE PRIME TECH"
+    slot_text = "•  DAILY BREAKING TECH BULLETIN"
     draw.text((250, 680), slot_text, font=font_brand, fill=(0, 220, 255))
     draw.text((1120, 680), "FULL HD", font=font_brand, fill=(255, 215, 0))
 

@@ -215,9 +215,9 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
   "bullet1": "Key fact 1 Hinglish max 12 words",
   "bullet2": "Key fact 2 Hinglish max 12 words",
   "emotion": "dramatic or funny_masti or serious_caution or inspirational_joy",
-  "speech": "120-160 word Hindi/Hinglish anchor broadcast script, natural conversational tone, audience engagement question at end",
-  "ai_image_prompt": "SHOT 1 WIDE: Highly specific Gemini Imagen 3 English prompt — describe EXACT real-world scene from THIS story (exact colors, object/machine/device appearance, environment, action). Photojournalism cinematic lighting. NO text, NO watermarks.",
-  "ai_image_prompt_2": "SHOT 2 MACRO: Extreme close-up Imagen 3 English prompt of the most interesting technical detail from THIS story. Photorealistic macro photography. NO text.",
+  "speech": "120-160 word Hindi/Hinglish anchor broadcast script, natural conversational tone, audience engagement question at end. CRITICAL RULE: NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
+  "ai_image_prompt": "SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3. Describe the real-world scene, vehicle, device, hardware, lab, or setting from this story in vivid detail. NEVER use real celebrity or politician names (use generic terms like 'tech CEO', 'engineer', 'investor') to prevent safety blocks. Photojournalism cinematic lighting, sharp 8k. NO text, NO watermarks.",
+  "ai_image_prompt_2": "SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of the technical hardware, chip, mechanism or screen detail from this story. Photorealistic macro photography. NO text.",
   "badge_color": [R, G, B, 255]
 }}"""
     try:
