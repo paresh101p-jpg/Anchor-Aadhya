@@ -312,5 +312,60 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 09:22:57"
+  },
+  {
+    "id": "social_media_posting_rule_limit",
+    "headline": "SOCIAL MEDIA PAR DIN MEIN SIRF TEEN POSTS",
+    "raw_title": "Demi Adejuyigbe Thinks You Should Only Post 3 Times a Day",
+    "keywords": [
+      "social",
+      "media",
+      "posting",
+      "rule",
+      "limit"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 12:11:50"
+  },
+  {
+    "id": "ram_shortage_till_2028",
+    "headline": "RAM KI BHARI SHORTAGE 2028 TAK RAHEGI JAARI",
+    "raw_title": "Memory executives expect RAM shortage to continue through 2028",
+    "keywords": [
+      "ram",
+      "shortage",
+      "till",
+      "2028"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 12:11:50"
+  },
+  {
+    "id": "dea_crypto_detective_family_case",
+    "headline": "DEA CRYPTO DETECTIVE KE CASE MEIN BADA DHAMAKA",
+    "raw_title": "She Was the DEA’s Premier Crypto Detective. The Clues Led Straight to Her Own Family",
+    "keywords": [
+      "dea",
+      "crypto",
+      "detective",
+      "family",
+      "case"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 12:11:50"
+  },
+  {
+    "id": "pentagon_data_breach_hack_2024",
+    "headline": "US PENTAGON SE 20 LAKH LOGON KA SENSITIVE DATA LEAK",
+    "raw_title": "Hacks of 2 federal agencies in a month have spilled a bonanza of sensitive data",
+    "keywords": [
+      "pentagon",
+      "data",
+      "breach",
+      "hack",
+      "2024"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 12:11:50"
   }
 ]
