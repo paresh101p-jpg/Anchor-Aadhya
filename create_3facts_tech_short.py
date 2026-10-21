@@ -80,12 +80,12 @@ def fit_to_9_16(im, target_w=1080, target_h=1920):
         im = im.crop((0, off_y, w, off_y + new_h))
     return im.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-def create_fullscreen_fact_frame(im, fact_badge="● FACT 01", headline_line1="SHOCKING TECH FACT!", headline_line2="Ye Sunkar Hosh Ud Jayenge?!", target_w=1080, target_h=1920):
+def create_fullscreen_fact_bg(im, target_w=1080, target_h=1920):
     """
-    Creates an immersive FULL-SCREEN 9:16 frame for each fact:
-    - 100% Full-Screen Cinematic Image (1080x1920 with proportional cover fit, zero distortion)
-    - Top Gradient + Fact Headline Card (y=145 to y=385)
-    - Bottom Gradient for kinetic animated subtitles (y=1350+)
+    Creates clean 1080x1920 full-screen background for ZOOMPAN:
+    - Zero text/badges baked in so text NEVER zooms or shakes!
+    - Proportional cover fit (zero stretch)
+    - Top & Bottom cinematic contrast gradients
     """
     canvas = fit_to_9_16(im.copy(), target_w, target_h)
 
@@ -105,14 +105,24 @@ def create_fullscreen_fact_frame(im, fact_badge="● FACT 01", headline_line1="S
         bg_draw.line([(0, y), (target_w, y)], fill=(5, 8, 20, alpha))
     canvas.paste(bot_grad, (0, 1350), bot_grad)
 
-    draw = ImageDraw.Draw(canvas)
+    return canvas
+
+def create_fact_top_card_overlay(fact_badge="● FACT 01", headline_line1="SHOCKING TECH FACT!", headline_line2="Ye Sunkar Hosh Ud Jayenge?!", target_w=1080, target_h=1920):
+    """
+    Creates 100% STATIC Top Fact Headline Card (transparent PNG overlay, NEVER zooms or shifts!):
+    - Red pill badge
+    - Big Yellow Bold Impact Headline
+    - Crisp White Sub-headline
+    """
+    card = Image.new("RGBA", (target_w, target_h), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(card)
 
     # Top Fact Headline Card Container (y=145 to y=385)
-    draw.rounded_rectangle([(40, 145), (1040, 385)], radius=24, fill=(8, 14, 32, 215), outline=(0, 220, 255, 230), width=3)
+    draw.rounded_rectangle([(40, 145), (1040, 385)], radius=24, fill=(8, 14, 32, 225), outline=(0, 220, 255, 230), width=3)
 
     # Fact Badge Pill (Top-left inside card)
     badge_w = 400
-    draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 230), outline=(255, 100, 120, 255), width=2)
+    draw.rounded_rectangle([(65, 162), (65 + badge_w, 210)], radius=14, fill=(255, 30, 60, 235), outline=(255, 100, 120, 255), width=2)
     draw.ellipse([(80, 178), (94, 192)], fill=(255, 255, 255, 255))
     f_badge = get_bold_font(22)
     draw.text((106, 172), fact_badge.upper(), font=f_badge, fill=(255, 255, 255, 255))
@@ -129,7 +139,7 @@ def create_fullscreen_fact_frame(im, fact_badge="● FACT 01", headline_line1="S
     w2 = b2[2] - b2[0]
     draw.text(((1080 - w2) // 2, 314), headline_line2, font=f_head2, fill=(255, 255, 255, 255), stroke_width=3, stroke_fill=(0, 0, 0, 255))
 
-    return canvas
+    return card
 
 def create_top_corner_logo():
     """Generates permanent top-left channel branding logo with Anchor Aadhya avatar"""
@@ -545,12 +555,14 @@ async def main():
     for idx, f in enumerate(facts_list):
         print(f"    Fact {idx+1}: {f.get('headline_line1')} ({f.get('slug')})", flush=True)
 
-    # 2. Download / Generate Fact-Matched 9:16 Full-Screen Visuals
-    print("  --> Step 2: Generating 100% full-screen visuals for all 3 facts...", flush=True)
-    fact_frames = []
+    # 2. Download / Generate Fact-Matched 9:16 Full-Screen Visuals (Background + Static Card)
+    print("  --> Step 2: Generating 100% full-screen visuals (Zooming BG + Static Cards)...", flush=True)
+    fact_bgs = []
+    fact_cards = []
     for idx, f in enumerate(facts_list):
         raw_img_path = os.path.join(BASE_DIR, f"temp_fact_{idx+1}_raw.jpg")
-        frame_target = os.path.join(BASE_DIR, f"fact{idx+1}_fullscreen_frame.jpg")
+        bg_target = os.path.join(BASE_DIR, f"fact{idx+1}_bg.jpg")
+        card_target = os.path.join(BASE_DIR, f"fact{idx+1}_card.png")
 
         success = fetch_image_from_pollinations_or_nasa(
             f.get("image_prompt", f.get("headline_line1")),
@@ -562,14 +574,19 @@ async def main():
             return
 
         im = Image.open(raw_img_path).convert("RGB")
-        frame = create_fullscreen_fact_frame(
-            im,
+        # 1. Clean background image (for zoompan Ken Burns effect)
+        bg = create_fullscreen_fact_bg(im)
+        bg.save(bg_target, "JPEG", quality=95)
+        fact_bgs.append(bg_target)
+
+        # 2. 100% Static Top Fact Headline Card (overlay, NEVER zooms!)
+        card = create_fact_top_card_overlay(
             fact_badge=f.get("fact_badge", f"FACT 0{idx+1}"),
             headline_line1=f.get("headline_line1", "MIND-BLOWING TECH!"),
             headline_line2=f.get("headline_line2", "Science Ka Asli Chamatkar!")
         )
-        frame.save(frame_target, "JPEG", quality=95)
-        fact_frames.append(frame_target)
+        card.save(card_target, "PNG")
+        fact_cards.append(card_target)
 
     # 3. First 3.5 Seconds Hook / Thumbnail Card with Anchor Aadhya
     print("  --> Step 3: Generating Anchor Aadhya Hook / Thumbnail Card...", flush=True)
@@ -629,14 +646,24 @@ async def main():
     print(f"\n--- Step 6: Encoding 1080x1920 Short ({total_dur:.1f}s) to: {output_short} ---", flush=True)
 
     fc = [
-        "[0:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.04)':d=88:s=1080x1920:fps=25[v_hook]",
-        "[1:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=520:s=1080x1920:fps=25[v_f1]",
-        "[2:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=500:s=1080x1920:fps=25[v_f2]",
-        "[3:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=350:s=1080x1920:fps=25[v_f3]",
+        # Zoom ONLY background photos (Top headline cards are NOT in these inputs!)
+        "[1:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=520:s=1080x1920:fps=25[z_bg1]",
+        "[z_bg1][4:v]overlay=0:0[v_f1]", # Overlay Static Headline Card 1 on top of zoomed bg 1!
+
+        "[2:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=500:s=1080x1920:fps=25[z_bg2]",
+        "[z_bg2][5:v]overlay=0:0[v_f2]", # Overlay Static Headline Card 2 on top of zoomed bg 2!
+
+        "[3:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=350:s=1080x1920:fps=25[z_bg3]",
+        "[z_bg3][6:v]overlay=0:0[v_f3]", # Overlay Static Headline Card 3 on top of zoomed bg 3!
+
+        # Scene Transitions
+        "[0:v]scale=1080:1920[v_hook]",
         "[v_hook][v_f1]xfade=transition=circlecrop:duration=0.5:offset=3.2[s1]",
         "[s1][v_f2]xfade=transition=slideright:duration=0.5:offset=23.7[s2]",
         "[s2][v_f3]xfade=transition=slideleft:duration=0.5:offset=43.7[s3]",
-        "[s3][4:v]overlay=0:0[with_logo]"
+
+        # Permanent Channel Branding Overlay (Avatar + 4K badge)
+        "[s3][7:v]overlay=0:0[with_logo]"
     ]
 
     slide_times = [
@@ -651,30 +678,34 @@ async def main():
 
     prev_stream = "[with_logo]"
     for i, (st, et) in enumerate(slide_times):
-        cap_in = f"[{5 + i}:v]"
+        cap_in = f"[{8 + i}:v]"
         faded_cap = f"[fcap_{i}]"
-        fc.append(f"{cap_in}format=yuva420p,fade=t=in:st={st}:d=0.3:alpha=1,fade=t=out:st={et-0.25}:d=0.25:alpha=1{faded_cap}")
-        y_motion = f"'1380 + max(0, 140 * (1 - (t - {st}) / 0.35))'"
+        # Fade in over 0.25s, fade out over 0.20s
+        fc.append(f"{cap_in}format=yuva420p,fade=t=in:st={st}:d=0.25:alpha=1,fade=t=out:st={et-0.2}:d=0.2:alpha=1{faded_cap}")
         next_stream = f"[c_{i+1}]" if i < len(slide_times) - 1 else "[final_v]"
-        fc.append(f"{prev_stream}{faded_cap}overlay=x=0:y={y_motion}:enable='between(t,{st},{et})'{next_stream}")
+        # Overlay exactly at 0:0 (caption box is pre-positioned perfectly at y=1380-1420)
+        fc.append(f"{prev_stream}{faded_cap}overlay=0:0:enable='between(t,{st},{et})'{next_stream}")
         prev_stream = next_stream
 
     cmd = [
         FFMPEG_BIN, "-y",
-        "-loop", "1", "-t", "4.0", "-i", hook_frame,
-        "-loop", "1", "-t", "22.0", "-i", fact_frames[0],
-        "-loop", "1", "-t", "22.0", "-i", fact_frames[1],
-        "-loop", "1", "-t", "16.0", "-i", fact_frames[2],
-        "-loop", "1", "-t", str(total_dur + 1.0), "-i", static_overlay,
+        "-loop", "1", "-t", "4.0", "-i", hook_frame,       # 0: Hook
+        "-loop", "1", "-t", "22.0", "-i", fact_bgs[0],     # 1: Fact 1 BG (zooms)
+        "-loop", "1", "-t", "22.0", "-i", fact_bgs[1],     # 2: Fact 2 BG (zooms)
+        "-loop", "1", "-t", "16.0", "-i", fact_bgs[2],     # 3: Fact 3 BG (zooms)
+        "-loop", "1", "-t", "22.0", "-i", fact_cards[0],   # 4: Fact 1 Static Top Card (never zooms)
+        "-loop", "1", "-t", "22.0", "-i", fact_cards[1],   # 5: Fact 2 Static Top Card (never zooms)
+        "-loop", "1", "-t", "16.0", "-i", fact_cards[2],   # 6: Fact 3 Static Top Card (never zooms)
+        "-loop", "1", "-t", str(total_dur + 1.0), "-i", static_overlay, # 7: Branding logo
     ]
     for cf in cap_files:
-        cmd.extend(["-loop", "1", "-t", str(total_dur + 1.0), "-i", cf])
+        cmd.extend(["-loop", "1", "-t", str(total_dur + 1.0), "-i", cf]) # 8..14: Captions
 
     cmd.extend([
-        "-i", voice_path,
+        "-i", voice_path, # 15: Voice
         "-filter_complex", ";".join(fc),
         "-map", "[final_v]",
-        "-map", f"{5 + len(cap_files)}:a",
+        "-map", f"{8 + len(cap_files)}:a",
         "-c:v", "libx264", "-preset", "fast", "-crf", "20", "-pix_fmt", "yuv420p",
         "-c:a", "aac", "-b:a", "192k",
         "-t", str(total_dur + 0.6),
