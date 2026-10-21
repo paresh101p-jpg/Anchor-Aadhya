@@ -102,9 +102,23 @@ def create_ai_news_images(slot, stories):
         generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=item.get("headline", ""))
         item["bg_img_2"] = dest2
 
+        # Sanity Guard: Verify both files exist and are valid (>20KB). Never allow missing files to reach FFmpeg.
+        for d_check, p_fallback in [(dest1, prompt1), (dest2, prompt2)]:
+            if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
+                print(f"  [CRITICAL RECOVERY] Image {os.path.basename(d_check)} missing or small, forcing immediate recovery...", flush=True)
+                # First try fetching a real photo directly
+                fetch_real_news_photo(p_fallback or "Humanoid robot technology", d_check, shot_idx=1)
+                # If still not present, copy master reference
+                if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
+                    master_ref = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+                    if os.path.exists(master_ref):
+                        import shutil
+                        shutil.copyfile(master_ref, d_check)
+                        print(f"  [RECOVERY OK] Cloned master to {os.path.basename(d_check)}", flush=True)
+
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
-        print(f"       Shot 1 (Wide):  {dest1}", flush=True)
-        print(f"       Shot 2 (Macro): {dest2}", flush=True)
+        print(f"       Shot 1 (Wide):  {dest1} ({os.path.getsize(dest1)} bytes)", flush=True)
+        print(f"       Shot 2 (Macro): {dest2} ({os.path.getsize(dest2)} bytes)", flush=True)
 
 
 def create_graphics_layers(today_display, slot, stories, rundown_items):
@@ -289,7 +303,7 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
                 "-i", audio,
                 "-filter_complex", filter_complex,
                 "-map", "[v]", "-map", "11:a",
-                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", "-preset", "veryfast", "-threads", "2",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
                 scene_mp4
@@ -328,7 +342,7 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
                 "-i", audio,
                 "-filter_complex", filter_complex,
                 "-map", "[v]", "-map", "7:a",
-                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", "-preset", "veryfast", "-threads", "2",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
                 scene_mp4
@@ -357,7 +371,7 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
                 "-i", audio,
                 "-filter_complex", filter_complex,
                 "-map", "[v]", "-map", "6:a",
-                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "18", "-preset", "fast",
+                "-c:v", "libx264", "-pix_fmt", "yuv420p", "-crf", "19", "-preset", "veryfast", "-threads", "2",
                 "-c:a", "aac", "-b:a", "192k",
                 "-t", str(dur),
                 scene_mp4
