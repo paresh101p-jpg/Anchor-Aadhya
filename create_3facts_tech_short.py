@@ -376,6 +376,66 @@ FACTS_VAULT = [
     }
 ]
 
+def fetch_free_fact_video(query, target_path, max_sec=25.0):
+    """
+    100% Free, Public Domain Space & Science Video fetcher from NASA Video Library API.
+    Returns True if an authentic .mp4 video is successfully downloaded, False otherwise.
+    """
+    headers = {"User-Agent": "Mozilla/5.0"}
+    try:
+        clean_q = re.sub(r'[^a-zA-Z0-9\s]', ' ', query).strip()
+        search_terms = " ".join(clean_q.split()[:4])
+        if not search_terms:
+            return False
+        url = f"https://images-api.nasa.gov/search?q={urllib.parse.quote(search_terms)}&media_type=video"
+        req = urllib.request.Request(url, headers=headers)
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            data = json.loads(resp.read().decode())
+        items = data.get("collection", {}).get("items", [])
+        if not items:
+            return False
+
+        for it in items[:3]:
+            col_url = it.get("href", "")
+            if not col_url.endswith("collection.json"):
+                continue
+            req_col = urllib.request.Request(col_url, headers=headers)
+            with urllib.request.urlopen(req_col, timeout=10) as c_resp:
+                files = json.loads(c_resp.read().decode())
+            mp4_candidates = [f for f in files if isinstance(f, str) and f.endswith(".mp4")]
+            chosen = None
+            for pref in ["~medium.mp4", "~mobile.mp4", "~orig.mp4", ".mp4"]:
+                for c in mp4_candidates:
+                    if pref in c.lower():
+                        chosen = c
+                        break
+                if chosen:
+                    break
+
+            if chosen:
+                print(f"  [NASA VIDEO] Found authentic video URL: {chosen}", flush=True)
+                raw_temp = target_path + ".raw.mp4"
+                urllib.request.urlretrieve(chosen, raw_temp)
+                if os.path.exists(raw_temp) and os.path.getsize(raw_temp) > 80000:
+                    conv_cmd = [
+                        FFMPEG_BIN, "-y",
+                        "-i", raw_temp,
+                        "-t", str(max_sec),
+                        "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=25",
+                        "-an",
+                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+                        target_path
+                    ]
+                    subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                    try: os.remove(raw_temp)
+                    except: pass
+                    if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
+                        print(f"  [SUCCESS] Converted & fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
+                        return True
+    except Exception as e:
+        print(f"  [VIDEO NOTICE] NASA video fetch notice ({e}) — will use 8K Photo + Motion Zoom fallback.", flush=True)
+    return False
+
 def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path):
     headers = {"User-Agent": "Mozilla/5.0"}
 
@@ -555,31 +615,44 @@ async def main():
     for idx, f in enumerate(facts_list):
         print(f"    Fact {idx+1}: {f.get('headline_line1')} ({f.get('slug')})", flush=True)
 
-    # 2. Download / Generate Fact-Matched 9:16 Full-Screen Visuals (Background + Static Card)
-    print("  --> Step 2: Generating 100% full-screen visuals (Zooming BG + Static Cards)...", flush=True)
-    fact_bgs = []
+    # 2. Download / Generate Fact-Matched 9:16 Full-Screen Visuals (Muted Video / Zooming BG + Static Cards)
+    print("  --> Step 2: Generating 100% full-screen visuals (Muted Video / Zooming BG + Static Cards)...", flush=True)
+    fact_bgs = [] # list of (path, is_video)
     fact_cards = []
     for idx, f in enumerate(facts_list):
-        raw_img_path = os.path.join(BASE_DIR, f"temp_fact_{idx+1}_raw.jpg")
+        video_target = os.path.join(BASE_DIR, f"fact{idx+1}_bg.mp4")
         bg_target = os.path.join(BASE_DIR, f"fact{idx+1}_bg.jpg")
         card_target = os.path.join(BASE_DIR, f"fact{idx+1}_card.png")
 
-        success = fetch_image_from_pollinations_or_nasa(
-            f.get("image_prompt", f.get("headline_line1")),
+        # 1. First Attempt: Download 100% Free & Copyright-Safe Video from NASA
+        video_success = fetch_free_fact_video(
             f.get("image_query", f.get("headline_line1")),
-            raw_img_path
+            video_target,
+            max_sec=25.0
         )
-        if not success or not os.path.exists(raw_img_path):
-            print(f"[CRITICAL] Could not generate photo for Fact {idx+1}. Halting!", flush=True)
-            return
 
-        im = Image.open(raw_img_path).convert("RGB")
-        # 1. Clean background image (for zoompan Ken Burns effect)
-        bg = create_fullscreen_fact_bg(im)
-        bg.save(bg_target, "JPEG", quality=95)
-        fact_bgs.append(bg_target)
+        if video_success and os.path.exists(video_target):
+            fact_bgs.append((video_target, True))
+            print(f"  --> Fact {idx+1}: Using REAL MUTED VIDEO background!", flush=True)
+        else:
+            # 2. Fallback: 100% Fact-Matched 8K AI Photo + Motion Zoom
+            raw_img_path = os.path.join(BASE_DIR, f"temp_fact_{idx+1}_raw.jpg")
+            success = fetch_image_from_pollinations_or_nasa(
+                f.get("image_prompt", f.get("headline_line1")),
+                f.get("image_query", f.get("headline_line1")),
+                raw_img_path
+            )
+            if not success or not os.path.exists(raw_img_path):
+                print(f"[CRITICAL] Could not generate photo for Fact {idx+1}. Halting!", flush=True)
+                return
 
-        # 2. 100% Static Top Fact Headline Card (overlay, NEVER zooms!)
+            im = Image.open(raw_img_path).convert("RGB")
+            bg = create_fullscreen_fact_bg(im)
+            bg.save(bg_target, "JPEG", quality=95)
+            fact_bgs.append((bg_target, False))
+            print(f"  --> Fact {idx+1}: Using 8K AI Photo + Motion Zoom fallback!", flush=True)
+
+        # 100% Static Top Fact Headline Card (overlay, NEVER zooms!)
         card = create_fact_top_card_overlay(
             fact_badge=f.get("fact_badge", f"FACT 0{idx+1}"),
             headline_line1=f.get("headline_line1", "MIND-BLOWING TECH!"),
@@ -645,26 +718,32 @@ async def main():
     output_short = os.path.join(BASE_DIR, "sample_3facts_facttechz_short.mp4")
     print(f"\n--- Step 6: Encoding 1080x1920 Short ({total_dur:.1f}s) to: {output_short} ---", flush=True)
 
-    fc = [
-        # Zoom ONLY background photos (Top headline cards are NOT in these inputs!)
-        "[1:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=520:s=1080x1920:fps=25[z_bg1]",
-        "[z_bg1][4:v]overlay=0:0[v_f1]", # Overlay Static Headline Card 1 on top of zoomed bg 1!
+    fc = []
+    # Build Fact 1, Fact 2, Fact 3 background + card streams
+    for i in range(3):
+        bg_path, is_vid = fact_bgs[i]
+        in_idx = 1 + i
+        card_idx = 4 + i
+        out_stream = f"[v_f{i+1}]"
 
-        "[2:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=500:s=1080x1920:fps=25[z_bg2]",
-        "[z_bg2][5:v]overlay=0:0[v_f2]", # Overlay Static Headline Card 2 on top of zoomed bg 2!
+        if is_vid:
+            v_prep = f"[v_prep_{i+1}]"
+            fc.append(f"[{in_idx}:v]scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=25{v_prep}")
+            fc.append(f"{v_prep}[{card_idx}:v]overlay=0:0{out_stream}")
+        else:
+            z_bg = f"[z_bg{i+1}]"
+            dur_frames = 520 if i == 0 else (500 if i == 1 else 350)
+            fc.append(f"[{in_idx}:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d={dur_frames}:s=1080x1920:fps=25{z_bg}")
+            fc.append(f"{z_bg}[{card_idx}:v]overlay=0:0{out_stream}")
 
-        "[3:v]scale=1080:1920,zoompan=z='min(zoom+0.0003,1.06)':d=350:s=1080x1920:fps=25[z_bg3]",
-        "[z_bg3][6:v]overlay=0:0[v_f3]", # Overlay Static Headline Card 3 on top of zoomed bg 3!
-
-        # Scene Transitions
+    # Scene Transitions
+    fc.extend([
         "[0:v]scale=1080:1920[v_hook]",
         "[v_hook][v_f1]xfade=transition=circlecrop:duration=0.5:offset=3.2[s1]",
         "[s1][v_f2]xfade=transition=slideright:duration=0.5:offset=23.7[s2]",
         "[s2][v_f3]xfade=transition=slideleft:duration=0.5:offset=43.7[s3]",
-
-        # Permanent Channel Branding Overlay (Avatar + 4K badge)
         "[s3][7:v]overlay=0:0[with_logo]"
-    ]
+    ])
 
     slide_times = [
         (3.5, 13.5),
@@ -689,15 +768,25 @@ async def main():
 
     cmd = [
         FFMPEG_BIN, "-y",
-        "-loop", "1", "-t", "4.0", "-i", hook_frame,       # 0: Hook
-        "-loop", "1", "-t", "22.0", "-i", fact_bgs[0],     # 1: Fact 1 BG (zooms)
-        "-loop", "1", "-t", "22.0", "-i", fact_bgs[1],     # 2: Fact 2 BG (zooms)
-        "-loop", "1", "-t", "16.0", "-i", fact_bgs[2],     # 3: Fact 3 BG (zooms)
-        "-loop", "1", "-t", "22.0", "-i", fact_cards[0],   # 4: Fact 1 Static Top Card (never zooms)
-        "-loop", "1", "-t", "22.0", "-i", fact_cards[1],   # 5: Fact 2 Static Top Card (never zooms)
-        "-loop", "1", "-t", "16.0", "-i", fact_cards[2],   # 6: Fact 3 Static Top Card (never zooms)
-        "-loop", "1", "-t", str(total_dur + 1.0), "-i", static_overlay, # 7: Branding logo
+        "-loop", "1", "-t", "4.0", "-i", hook_frame, # 0: Hook
     ]
+    # Inputs 1, 2, 3: Backgrounds (loop video or loop image)
+    for i in range(3):
+        bg_path, is_vid = fact_bgs[i]
+        dur = "22.0" if i < 2 else "16.0"
+        if is_vid:
+            cmd.extend(["-stream_loop", "-1", "-t", dur, "-i", bg_path])
+        else:
+            cmd.extend(["-loop", "1", "-t", dur, "-i", bg_path])
+
+    # Inputs 4, 5, 6: Static Cards (never zooms)
+    for i in range(3):
+        dur = "22.0" if i < 2 else "16.0"
+        cmd.extend(["-loop", "1", "-t", dur, "-i", fact_cards[i]])
+
+    # Input 7: Branding logo
+    cmd.extend(["-loop", "1", "-t", str(total_dur + 1.0), "-i", static_overlay])
+
     for cf in cap_files:
         cmd.extend(["-loop", "1", "-t", str(total_dur + 1.0), "-i", cf]) # 8..14: Captions
 
