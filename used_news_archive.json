@@ -48,5 +48,57 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 03:40:33"
+  },
+  {
+    "id": "youtube_dislike_hidden_test",
+    "headline": "YOUTUBE DISLIKE BUTTON HIDDEN? AB KYA HOGA?",
+    "raw_title": "YouTube might be testing hiding the dislike button",
+    "keywords": [
+      "youtube",
+      "dislike",
+      "hidden",
+      "test"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 04:46:45"
+  },
+  {
+    "id": "netflix_viewing_less_monetization",
+    "headline": "NETFLIX: VIEWING GHATA, PAR PAISA ZAROORI!",
+    "raw_title": "Netflix is telling investors not to worry, even though you&#8217;re watching less and less",
+    "keywords": [
+      "netflix",
+      "viewing",
+      "less",
+      "monetization"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 04:46:45"
+  },
+  {
+    "id": "spacex_ai_revenue_jump",
+    "headline": "SPACEX KA DHAMAKA! AI NE BADHAI REVENUE!",
+    "raw_title": "SpaceX says big AI growth fueled revenue jump",
+    "keywords": [
+      "spacex",
+      "ai",
+      "revenue",
+      "jump"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 04:46:45"
+  },
+  {
+    "id": "trump_fraud_bounty_program",
+    "headline": "TRUMP KA FRAUD PAR BIG ACTION: $25 MILLION KA BOUNTY!",
+    "raw_title": "Trump is giving Nick Shirley $10,000 and launching a $25 million fraud bounty program",
+    "keywords": [
+      "trump",
+      "fraud",
+      "bounty",
+      "program"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 04:46:45"
   }
 ]
