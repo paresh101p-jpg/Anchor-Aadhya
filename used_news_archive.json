@@ -153,5 +153,59 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 05:03:26"
+  },
+  {
+    "id": "netflix_monetization_viewing_time_drop",
+    "headline": "NETFLIX PE WATCH TIME KAM PHIR BHI PROFIT",
+    "raw_title": "Netflix is telling investors not to worry, even though you&#8217;re watching less and less",
+    "keywords": [
+      "netflix",
+      "monetization",
+      "viewing",
+      "time",
+      "drop"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 07:37:40"
+  },
+  {
+    "id": "spacex_starship_booster_catch_attempt",
+    "headline": "SPACEX KA DARING PLAN STARSHIP KO HAWA MEIN PAKDENGE",
+    "raw_title": "SpaceX will try catching Starship and its booster for first time, Musk says",
+    "keywords": [
+      "spacex",
+      "starship",
+      "booster",
+      "catch",
+      "attempt"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 07:37:40"
+  },
+  {
+    "id": "tesla_spacex_merger_talks",
+    "headline": "TESLA AUR SPACEX KA MERGER? MUSK KA BADA PLAN",
+    "raw_title": "Tesla and SpaceX are discussing a possible merger, Musk says",
+    "keywords": [
+      "tesla",
+      "spacex",
+      "merger",
+      "talks"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 07:37:40"
+  },
+  {
+    "id": "emergency_ai_breakthrough_12pm",
+    "headline": "NEXT-GEN AI REVOLUTION: AUTONOMOUS TECH SOARS!",
+    "raw_title": "Next-Gen AI Autonomous Breakthrough",
+    "keywords": [
+      "ai",
+      "neural",
+      "chips",
+      "innovation"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 07:37:40"
   }
 ]
