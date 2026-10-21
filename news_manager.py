@@ -296,9 +296,16 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
         client = genai.Client(api_key=api_key)
         for model_name in ["imagen-3.0-generate-002","imagen-3.0-generate-001"]:
             try:
+                cfg = None
+                if hasattr(types, "GenerateImagesConfig"):
+                    cfg = types.GenerateImagesConfig(number_of_images=1, output_mime_type="image/jpeg", aspect_ratio="16:9")
+                elif hasattr(types, "GenerateImageConfig"):
+                    cfg = types.GenerateImageConfig(number_of_images=1, output_mime_type="image/jpeg", aspect_ratio="16:9")
+                else:
+                    cfg = {"number_of_images": 1, "output_mime_type": "image/jpeg", "aspect_ratio": "16:9"}
+
                 response = client.models.generate_images(
-                    model=model_name, prompt=enhanced,
-                    config=types.GenerateImageConfig(number_of_images=1,output_mime_type="image/jpeg",aspect_ratio="16:9")
+                    model=model_name, prompt=enhanced, config=cfg
                 )
                 for gen_img in response.generated_images:
                     im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920,1080),Image.Resampling.LANCZOS)

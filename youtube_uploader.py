@@ -71,8 +71,10 @@ def mark_as_uploaded(video_name, video_id, url):
     with open(TRACKER_FILE, "a", encoding="utf-8") as f:
         f.write(f"{datetime.now().strftime('%Y-%m-%d %H:%M:%S')} | {video_name} | {video_id} | {url}\n")
 
-def upload_daily_bulletin(slot=None):
+def upload_daily_bulletin(slot=None, force=False):
     today_slug = datetime.now().strftime("%Y-%m-%d")
+    if not force:
+        force = os.environ.get("FORCE_UPLOAD", "").strip().lower() in ["true", "1", "yes"]
 
     candidates = []
     if slot:
@@ -110,7 +112,7 @@ def upload_daily_bulletin(slot=None):
             if os.path.exists(legacy_t):
                 t_path = legacy_t
 
-        if os.path.exists(v_path) and not is_already_uploaded(os.path.basename(v_path)):
+        if os.path.exists(v_path) and (force or not is_already_uploaded(os.path.basename(v_path))):
             target_video = v_path
             target_meta = m_path
             target_thumb = t_path
@@ -118,7 +120,7 @@ def upload_daily_bulletin(slot=None):
             break
 
     if not target_video:
-        print(f"[SKIP] No pending new video found to upload for {today_slug}.")
+        print(f"[SKIP] No pending new video found to upload for {today_slug}. (Use --force to force upload)", flush=True)
         return False
 
     print("\n==============================================================")
@@ -134,6 +136,7 @@ def upload_daily_bulletin(slot=None):
 
     youtube = get_authenticated_service()
     if not youtube:
+        print("[CRITICAL] YouTube authentication failed! Check YOUTUBE_CLIENT_ID, YOUTUBE_CLIENT_SECRET, and YOUTUBE_REFRESH_TOKEN in GitHub Repository Secrets.", flush=True)
         return False
 
     body = {
@@ -203,5 +206,8 @@ def upload_daily_bulletin(slot=None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--slot", choices=["12PM", "5PM"], default=None, help="Specific slot to upload")
+    parser.add_argument("--force", action="store_true", help="Force upload even if already tracked")
     args = parser.parse_args()
-    upload_daily_bulletin(args.slot)
+    ok = upload_daily_bulletin(args.slot, force=args.force)
+    if not ok:
+        sys.exit(1)
