@@ -197,6 +197,25 @@ def upload_daily_bulletin(slot=None, force=False):
             print(f"  Notice uploading thumbnail: {e}")
 
     mark_as_uploaded(os.path.basename(target_video), video_id, video_url)
+
+    # Automatically delete posted video footage, thumbnail, and story images after successful upload
+    print("\n--- Cleaning Up Posted Video Footage & Images ---")
+    for f_del in [target_video, target_thumb]:
+        if os.path.exists(f_del):
+            try:
+                os.remove(f_del)
+                print(f"  [DELETED] Posted media: {os.path.basename(f_del)}")
+            except Exception as e:
+                pass
+    import glob
+    for pat in ["news_*_shot*.jpg", "anchor_aadhya_*_ai.jpg", "tv_scene_*.mp4", "temp_concat*", "Thumbnail_*.jpg", "Anchor_Aadhya_News_*.mp4"]:
+        for f in glob.glob(os.path.join(BASE_DIR, pat)):
+            try:
+                os.remove(f)
+                print(f"  [DELETED] Used asset: {os.path.basename(f)}")
+            except Exception:
+                pass
+
     print("==============================================================")
     print(f"🎉 {target_slot} NEWS BULLETIN IS NOW LIVE ON YOUTUBE!")
     print(f"   URL: {video_url}")
