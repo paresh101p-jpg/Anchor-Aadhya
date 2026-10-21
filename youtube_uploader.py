@@ -216,17 +216,78 @@ def upload_daily_bulletin(slot=None, force=False):
             except Exception:
                 pass
 
-    print("==============================================================")
-    print(f"🎉 {target_slot} NEWS BULLETIN IS NOW LIVE ON YOUTUBE!")
-    print(f"   URL: {video_url}")
-    print("==============================================================")
+def upload_direct_video(video_path, meta_path, thumb_path=None):
+    if not os.path.exists(video_path):
+        print(f"[ERROR] Video file not found: {video_path}")
+        return False
+    if not os.path.exists(meta_path):
+        print(f"[ERROR] Metadata file not found: {meta_path}")
+        return False
+
+    with open(meta_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+
+    youtube = get_authenticated_service()
+    if not youtube:
+        print("[CRITICAL] YouTube authentication failed! Check GitHub Secrets.", flush=True)
+        return False
+
+    body = {
+        "snippet": {
+            "title": meta.get("title", "Anchor Aadhya Tech Short #Shorts"),
+            "description": meta.get("description", ""),
+            "tags": meta.get("tags", ["Shorts", "TechShorts", "AnchorAadhya"]),
+            "categoryId": "28",  # Science & Technology
+            "defaultLanguage": "hi",
+            "defaultAudioLanguage": "hi"
+        },
+        "status": {
+            "privacyStatus": "public",
+            "selfDeclaredMadeForKids": False,
+            "embeddable": True
+        }
+    }
+
+    print(f"  --> Title: {body['snippet']['title']}")
+    print(f"  --> Video File: {video_path} ({os.path.getsize(video_path)/(1024*1024):.2f} MB)")
+    print("  --> Uploading video stream to YouTube...")
+
+    media = MediaFileUpload(video_path, mimetype="video/mp4", chunksize=1024*1024*4, resumable=True)
+    request = youtube.videos().insert(part="snippet,status", body=body, media_body=media)
+    response = None
+    while response is None:
+        status, response = request.next_chunk()
+        if status:
+            print(f"  --> Upload Progress: {int(status.progress() * 100)}%", flush=True)
+
+    video_id = response.get("id")
+    video_url = f"https://www.youtube.com/watch?v={video_id}"
+    print(f"\n[SUCCESS] VIDEO UPLOADED! Video ID: {video_id}")
+    print(f"  --> Live URL: {video_url}")
+
+    if thumb_path and os.path.exists(thumb_path):
+        try:
+            youtube.thumbnails().set(videoId=video_id, media_body=MediaFileUpload(thumb_path, mimetype="image/jpeg")).execute()
+            print("  --> [SUCCESS] Custom Thumbnail Attached!")
+        except Exception as e:
+            print(f"  [WARNING] Thumbnail upload failed: {e}")
+
+    mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
     return True
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--slot", choices=["12PM", "5PM"], default=None, help="Specific slot to upload")
     parser.add_argument("--force", action="store_true", help="Force upload even if already tracked")
+    parser.add_argument("--video", default=None, help="Direct video file to upload")
+    parser.add_argument("--meta", default=None, help="Direct metadata JSON file to upload")
+    parser.add_argument("--thumb", default=None, help="Optional thumbnail file to attach")
     args = parser.parse_args()
-    ok = upload_daily_bulletin(args.slot, force=args.force)
+
+    if args.video and args.meta:
+        ok = upload_direct_video(args.video, args.meta, thumb_path=args.thumb)
+    else:
+        ok = upload_daily_bulletin(args.slot, force=args.force)
+
     if not ok:
         sys.exit(1)

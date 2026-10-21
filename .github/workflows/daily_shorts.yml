@@ -1,0 +1,77 @@
+name: Anchor Aadhya Daily Tech Shorts (FactTechz Style)
+
+on:
+  schedule:
+    # 09:30 AM IST (09:30 IST) is 04:00 AM UTC
+    - cron: '0 4 * * *'
+    # 07:30 PM IST (19:30 IST) is 02:00 PM UTC
+    - cron: '0 14 * * *'
+  repository_dispatch:
+    # Triggered externally via cron-job.org with exact-minute precision!
+    types: [daily_shorts_trigger]
+  workflow_dispatch:
+    # Manual 1-click trigger from GitHub Actions UI
+
+concurrency:
+  group: anchor-aadhya-shorts
+  cancel-in-progress: false
+
+jobs:
+  create_and_upload_short:
+    name: Generate 3-Facts Short & Upload
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 30
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install System Dependencies (FFmpeg & Fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation fonts-noto-core fonts-indic
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests
+
+      - name: Generate 3-Facts Tech Short Video
+        run: |
+          python create_3facts_tech_short.py
+
+      - name: Upload Tech Short to YouTube Channel (Anchor Aadhya)
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          # Create short metadata
+          python -c "
+          import json, os
+          meta = {
+              'title': 'NASA का सबसे बड़ा रहस्य! 😱 Car की चाबी जितनी भी Memory नहीं? #Shorts #TechFacts #AnchorAadhya',
+              'description': 'NASA Voyager 1, Quantum Computers, and James Webb Telescope shocking tech facts presented by Anchor Aadhya!\n\nWebsite: https://krishnavibez.in\n\n#Shorts #TechFacts #ScienceFacts #SpaceFacts #NASA #FactTechz #AnchorAadhya #AIAnchor',
+              'tags': ['Shorts', 'TechFacts', 'NASA', 'Voyager1', 'QuantumComputer', 'JamesWebb', 'FactTechz', 'AnchorAadhya', 'ScienceFacts', 'MindBlowingFacts']
+          }
+          with open('metadata_shorts.json', 'w', encoding='utf-8') as f:
+              json.dump(meta, f, ensure_ascii=False, indent=2)
+          "
+          python youtube_uploader.py --video sample_3facts_facttechz_short.mp4 --meta metadata_shorts.json
+
+      - name: Commit & Push Upload Tracker
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Anchor Aadhya Cloud Bot"
+          git add uploaded_bulletins_tracker.txt
+          git commit -m "chore: record shorts upload $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+          git push origin HEAD:${{ github.ref_name }} || echo "Push skipped or up-to-date"
