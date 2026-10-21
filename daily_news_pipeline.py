@@ -70,109 +70,13 @@ def get_font(size, bold=True):
                 continue
     return ImageFont.load_default()
 
-TOPIC_STOCK_URLS = {
-    "drone": {
-        1: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1920&q=85"
-    },
-    "robot": {
-        1: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=85"
-    },
-    "quantum": {
-        1: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85"
-    },
-    "neuralink": {
-        1: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1920&q=85"
-    },
-    "fusion": {
-        1: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=1920&q=85"
-    },
-    "flying": {
-        1: "https://images.unsplash.com/photo-1559087867-ce4c91325525?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85"
-    },
-    "car": {
-        1: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=85"
-    },
-    "medicine": {
-        1: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=85"
-    },
-    "tech": {
-        1: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=1920&q=85"
-    }
-}
-
-def get_topic_matching_fallback(story, shot_idx=1, dest_file=None):
-    """
-    Intelligently download fresh, topic-matching 1080p visual on-the-fly via high-speed CDN.
-    Shot 1 = Wide/Action view, Shot 2 = Close-up / Macro / Alternative angle.
-    NEVER reuses old static images, and NEVER uses a car image for non-car stories!
-    """
-    if dest_file and os.path.exists(dest_file) and os.path.getsize(dest_file) > 10000:
-        return dest_file
-
-    cat = (story.get("category", "") + " " + story.get("headline", "") + " " + " ".join(story.get("keywords", []))).lower()
-    
-    selected_topic = "tech"
-    if any(k in cat for k in ["drone", "racing", "aerial", "aviation"]):
-        selected_topic = "drone"
-    elif any(k in cat for k in ["robot", "humanoid", "factory", "assembly", "figure", "bipedal", "chef"]):
-        selected_topic = "robot"
-    elif any(k in cat for k in ["quantum", "crystal", "chip", "computing", "hacker", "cyber"]):
-        selected_topic = "quantum"
-    elif any(k in cat for k in ["neuralink", "brain", "mind", "telepathy", "paralysis"]):
-        selected_topic = "neuralink"
-    elif any(k in cat for k in ["fusion", "sun", "reactor", "tokamak", "energy", "solar"]):
-        selected_topic = "fusion"
-    elif any(k in cat for k in ["flying car", "evtol", "air taxi", "flying"]):
-        selected_topic = "flying"
-    elif any(k in cat for k in ["car", "tesla", "roadster", "thruster", "vehicle"]):
-        selected_topic = "car"
-    elif any(k in cat for k in ["medicine", "health", "cancer", "cure", "dna", "biology", "vision", "bionic"]):
-        selected_topic = "medicine"
-
-    url = TOPIC_STOCK_URLS[selected_topic].get(shot_idx, TOPIC_STOCK_URLS[selected_topic][1])
-    
-    if not dest_file:
-        today_slug = datetime.now().strftime("%Y-%m-%d")
-        dest_file = os.path.join(BASE_DIR, f"dynamic_fallback_{today_slug}_{selected_topic}_shot{shot_idx}.jpg")
-    
-    print(f"  --> [ON-THE-FLY TOPIC VISUAL] Fetching {selected_topic.upper()} Shot {shot_idx}...", flush=True)
-    temp_dl = dest_file + ".tmp.jpg"
-    curl_cmd = [
-        "curl", "-s", "-L", "-f", "-m", "15",
-        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-        url, "-o", temp_dl
-    ]
-    try:
-        res = subprocess.run(curl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
-        if res.returncode == 0 and os.path.exists(temp_dl) and os.path.getsize(temp_dl) > 10000:
-            im = Image.open(temp_dl).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-            im.save(dest_file, "JPEG", quality=95)
-            if os.path.exists(temp_dl):
-                os.remove(temp_dl)
-            return dest_file
-    except Exception as e:
-        print(f"  [WARN] Fallback download error: {e}", flush=True)
-    finally:
-        if os.path.exists(temp_dl):
-            try: os.remove(temp_dl)
-            except Exception: pass
-
-    # If curl failed completely, create an elegant dark cyber gradient image
-    im = Image.new("RGB", (1920, 1080), (12, 18, 38))
-    im.save(dest_file, "JPEG", quality=90)
-    return dest_file
 
 def create_ai_news_images(slot, stories):
-    print("\n--- 1. Generating 100% Brand-New AI Photorealistic News Imagery (Dual-Shot B-Roll) ---", flush=True)
+    """
+    Generates ALL news images using ONLY Gemini Imagen 3.
+    Zero stock photos, zero Unsplash URLs, zero copyright risk.
+    """
+    print("\n--- 1. Generating AI Photorealistic News Images (Gemini Imagen 3 ONLY) ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
 
     for idx, item in enumerate(stories):
@@ -180,28 +84,26 @@ def create_ai_news_images(slot, stories):
         dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
         prompt1 = item.get("ai_image_prompt")
         if not prompt1:
-            kw = ", ".join(item.get("keywords", [item.get("category", "")]))
-            prompt1 = f"Ultra-realistic news photojournalism of {item['headline']}, {kw}, high-tech authentic photography, sharp details, 8k"
-        ok1 = generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1)
-        if not ok1 or not os.path.exists(dest1):
-            dest1 = get_topic_matching_fallback(item, shot_idx=1, dest_file=dest1)
+            kw = ", ".join(item.get("keywords", [item.get("category", "")])) 
+            prompt1 = f"Ultra-realistic news photojournalism: {item.get('headline','tech news')}, {kw}, professional broadcast news photography, cinematic lighting, sharp 8k"
+        # Gemini Imagen 3 ONLY — no URL fallbacks
+        generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1)
         item["bg_img_1"] = dest1
-        item["bg_img"] = dest1  # Backwards compatibility (for thumbnails & metadata)
+        item["bg_img"] = dest1  # backward compatibility
 
-        # Shot 2: Dynamic Macro / High-Tech Close-up Perspective
+        # Shot 2: Dynamic Macro / Close-up Perspective
         dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
         prompt2 = item.get("ai_image_prompt_2")
         if not prompt2:
             kw = ", ".join(item.get("keywords", [item.get("category", "")]))
-            prompt2 = f"Extreme macro close-up photography of {kw}, detailed technical mechanism and textures, razor-sharp focus, 8k"
-        ok2 = generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2)
-        if not ok2 or not os.path.exists(dest2):
-            dest2 = get_topic_matching_fallback(item, shot_idx=2, dest_file=dest2)
+            prompt2 = f"Extreme macro close-up photojournalism: {kw}, technical detail, razor-sharp focus, 8k professional news photography"
+        # Gemini Imagen 3 ONLY — no URL fallbacks
+        generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2)
         item["bg_img_2"] = dest2
 
-        print(f"  --> [AI DUAL SHOTS READY] Story {idx+1}:", flush=True)
-        print(f"       • Shot 1 (Wide): {dest1}", flush=True)
-        print(f"       • Shot 2 (Macro): {dest2}", flush=True)
+        print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
+        print(f"       Shot 1 (Wide):  {dest1}", flush=True)
+        print(f"       Shot 2 (Macro): {dest2}", flush=True)
 
 
 def create_graphics_layers(today_display, slot, stories, rundown_items):

@@ -1,567 +1,279 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 News & Wardrobe Asset Manager for Anchor Aadhya Channel
-- Live Global Trending News Fetcher: Ingests verified breaking news from top world sources
-  (Techmeme, Google News World Tech, Reuters, Bloomberg, MIT Technology Review, TechCrunch)
-- AI-Generated News Imagery: Generates 100% unique, copyright-free photorealistic AI images
-  matching each news story (NEVER uploads raw copyrighted photos directly)
-- Strict Deduplication Engine: Guarantees NO duplicate news is EVER repeated
-- Emotion-Adaptive Voice Modulation (Dramatic, Funny/Masti, Serious/Caution, Inspirational)
-- Dynamic Anchor Wardrobe Rotation across 5 Broadcast-Grade Looks
-- Multi-Slot Support: 12:00 PM (Afternoon Special) and 05:00 PM (Prime Evening Bulletin)
+========================================================
+LIVE RSS NEWS + GEMINI IMAGEN 3 ONLY — no stock photos, no URLs, zero copyright.
 """
 
-import os
-import sys
-import json
-import random
-import subprocess
-import urllib.request
-import urllib.parse
-import xml.etree.ElementTree as ET
-from datetime import datetime
+import os, re, json, random, urllib.request, xml.etree.ElementTree as ET
+from datetime import datetime, date
 from io import BytesIO
-from PIL import Image
+from PIL import Image, ImageDraw
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE_NEWS_FILE = os.path.join(BASE_DIR, "used_news_archive.json")
 ARCHIVE_IMAGES_FILE = os.path.join(BASE_DIR, "used_images_archive.txt")
 
-# Master Anchor Wardrobe Collection (5 Distinct Professional Looks)
 ANCHOR_LOOKS = [
-    {
-        "id": "look_1_crimson",
-        "name": "Crimson Power Blazer",
-        "file": os.path.join(BASE_DIR, "anchor_look_1_crimson.jpg"),
-        "theme_color": (255, 30, 86, 255),
-        "style_desc": "Classic Prime Time Anchor with Radiant Confident Smile"
-    },
-    {
-        "id": "look_2_blue",
-        "name": "Royal Sapphire Blue Blazer",
-        "file": os.path.join(BASE_DIR, "anchor_look_2_blue.jpg"),
-        "theme_color": (0, 150, 255, 255),
-        "style_desc": "Thoughtful, Focused Senior Tech Analyst & In-Depth Reporting"
-    },
-    {
-        "id": "look_3_emerald",
-        "name": "Emerald Teal Modern Blazer",
-        "file": os.path.join(BASE_DIR, "anchor_look_3_emerald.jpg"),
-        "theme_color": (16, 185, 129, 255),
-        "style_desc": "Modern Innovation Host with Open Warm Smile & Engaging Energy"
-    },
-    {
-        "id": "look_4_black_gold",
-        "name": "Luxury Black & Gold Lapel Blazer",
-        "file": os.path.join(BASE_DIR, "anchor_look_4_black_gold.jpg"),
-        "theme_color": (245, 158, 11, 255),
-        "style_desc": "Dramatic Breaking News Presentation with High Urgency"
-    },
-    {
-        "id": "look_5_lilac",
-        "name": "Chic Lavender Lilac Blazer",
-        "file": os.path.join(BASE_DIR, "anchor_look_5_lilac.jpg"),
-        "theme_color": (168, 85, 247, 255),
-        "style_desc": "Playful, Cheerful & Humorous Tech Storytelling"
-    }
+    {"id":"look_1_crimson","name":"Crimson Power Blazer","file":os.path.join(BASE_DIR,"anchor_look_1_crimson.jpg"),"theme_color":(255,30,86,255),"style_desc":"Classic Prime Time Anchor"},
+    {"id":"look_2_blue","name":"Royal Sapphire Blue","file":os.path.join(BASE_DIR,"anchor_look_2_blue.jpg"),"theme_color":(0,150,255,255),"style_desc":"Thoughtful Senior Tech Analyst"},
+    {"id":"look_3_emerald","name":"Emerald Teal Blazer","file":os.path.join(BASE_DIR,"anchor_look_3_emerald.jpg"),"theme_color":(16,185,129,255),"style_desc":"Modern Innovation Host"},
+    {"id":"look_4_black_gold","name":"Black Gold Blazer","file":os.path.join(BASE_DIR,"anchor_look_4_black_gold.jpg"),"theme_color":(245,158,11,255),"style_desc":"Dramatic Breaking News"},
+    {"id":"look_5_lilac","name":"Lavender Lilac Blazer","file":os.path.join(BASE_DIR,"anchor_look_5_lilac.jpg"),"theme_color":(168,85,247,255),"style_desc":"Playful Humorous Tech"},
 ]
 
-# Voice Modulation Profiles (Rate & Pitch adjustments for Edge-TTS)
 VOICE_PROFILES = {
-    "dramatic": {
-        "rate": "+4%",
-        "pitch": "+1Hz",
-        "desc": "Thrilling, high-energy breaking tech breakthrough"
-    },
-    "funny_masti": {
-        "rate": "+2%",
-        "pitch": "+3Hz",
-        "desc": "Playful, witty, laughing/masti conversational delivery"
-    },
-    "serious_caution": {
-        "rate": "-5%",
-        "pitch": "-2Hz",
-        "desc": "Calm, thoughtful, dignified and serious alert"
-    },
-    "inspirational_joy": {
-        "rate": "+0%",
-        "pitch": "+1Hz",
-        "desc": "Warm, inspiring, smiling and uplifting news"
-    }
+    "dramatic":{"rate":"+4%","pitch":"+1Hz","desc":"Thrilling breaking tech"},
+    "funny_masti":{"rate":"+2%","pitch":"+3Hz","desc":"Playful masti delivery"},
+    "serious_caution":{"rate":"-5%","pitch":"-2Hz","desc":"Calm serious alert"},
+    "inspirational_joy":{"rate":"+0%","pitch":"+1Hz","desc":"Warm inspiring news"},
 }
 
 def load_news_archive():
     if os.path.exists(ARCHIVE_NEWS_FILE):
         try:
-            with open(ARCHIVE_NEWS_FILE, "r", encoding="utf-8") as f:
-                return json.load(f)
-        except Exception:
-            return []
+            with open(ARCHIVE_NEWS_FILE,"r",encoding="utf-8") as f: return json.load(f)
+        except: return []
     return []
 
 def save_news_archive(archive):
-    with open(ARCHIVE_NEWS_FILE, "w", encoding="utf-8") as f:
-        json.dump(archive, f, ensure_ascii=False, indent=2)
+    with open(ARCHIVE_NEWS_FILE,"w",encoding="utf-8") as f:
+        json.dump(archive,f,ensure_ascii=False,indent=2)
 
 def load_images_archive():
     if os.path.exists(ARCHIVE_IMAGES_FILE):
         try:
-            with open(ARCHIVE_IMAGES_FILE, "r", encoding="utf-8") as f:
-                return set(line.strip() for line in f if line.strip())
-        except Exception:
-            return set()
+            with open(ARCHIVE_IMAGES_FILE,"r",encoding="utf-8") as f:
+                return set(l.strip() for l in f if l.strip())
+        except: return set()
     return set()
 
-def append_image_archive(url_or_prompt):
-    with open(ARCHIVE_IMAGES_FILE, "a", encoding="utf-8") as f:
-        f.write(f"{url_or_prompt}\n")
-
-def is_story_duplicate(candidate, archive):
-    cand_id = candidate.get("id", "").lower()
-    cand_keywords = set(k.lower() for k in candidate.get("keywords", []))
-    
-    for item in archive:
-        if item.get("id", "").lower() == cand_id:
-            return True
-        past_keywords = set(k.lower() for k in item.get("keywords", []))
-        overlap = cand_keywords.intersection(past_keywords)
-        if len(overlap) >= 2 and not candidate.get("is_fresh_update", False):
-            return True
-    return False
+def append_image_archive(note):
+    with open(ARCHIVE_IMAGES_FILE,"a",encoding="utf-8") as f: f.write(f"{note}\n")
 
 def get_current_slot(explicit_slot=None):
-    if explicit_slot in ["12PM", "5PM"]:
-        return explicit_slot
-    hour = datetime.now().hour
-    return "12PM" if hour < 14 else "5PM"
+    if explicit_slot in ["12PM","5PM"]: return explicit_slot
+    return "12PM" if datetime.now().hour < 14 else "5PM"
 
 def select_anchor_look(slot, dominant_emotion=None):
     day_num = datetime.now().toordinal()
-    if dominant_emotion == "funny_masti":
-        return ANCHOR_LOOKS[4] # Lilac — always for funny/masti emotion
-    # Rotate through ALL 5 looks in a 5-day cycle (different look every day)
-    # 12PM slot: cycles through looks 1,2,3,4,5
-    # 5PM slot: cycles through looks offset by 2 so it differs from 12PM
-    if slot == "12PM":
-        return ANCHOR_LOOKS[day_num % 5]
-    else:
-        return ANCHOR_LOOKS[(day_num + 2) % 5]
+    if dominant_emotion == "funny_masti": return ANCHOR_LOOKS[4]
+    return ANCHOR_LOOKS[day_num % 5] if slot == "12PM" else ANCHOR_LOOKS[(day_num+2) % 5]
 
-CURATED_CATEGORY_VISUALS = {
-    "delft_ai_drone_racing_champion": {
-        1: "https://images.unsplash.com/photo-1527977966376-1c8408f9f108?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1920&q=85"
-    },
-    "tesla_roadster_spacex_thrusters": {
-        1: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=85"
-    },
-    "factory_humanoid_robots_10000": {
-        1: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?w=1920&q=85"
-    },
-    "max_planck_quantum_unhackable_internet": {
-        1: "https://images.unsplash.com/photo-1635070041078-e363dbe005cb?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85"
-    },
-    "neuralink_brain_chip_telepathy_world": {
-        1: "https://images.unsplash.com/photo-1559757175-5700dde675bc?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1507413245164-6160d8298b31?w=1920&q=85"
-    },
-    "evtol_flying_car_certified_commercial": {
-        1: "https://images.unsplash.com/photo-1559087867-ce4c91325525?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85"
-    },
-    "artificial_sun_nuclear_fusion_record": {
-        1: "https://images.unsplash.com/photo-1509391365360-2e959784a276?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1513836279014-a89f7a76ae86?w=1920&q=85"
-    },
-    "robotic_chef_masti_household_cooking": {
-        1: "https://images.unsplash.com/photo-1556911220-e15b29be8c8f?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=85"
-    },
-    "supersonic_passenger_jet_boom_overture": {
-        1: "https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1519074069444-1ba4ea16e6f1?w=1920&q=85"
-    },
-    "bionic_eye_restores_vision_breakthrough": {
-        1: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1532187863486-abf9dbad1b69?w=1920&q=85"
-    },
-    "robot_dog_guard_patrol_funny": {
-        1: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85"
-    }
-}
+RSS_FEEDS = [
+    "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
+    "https://techcrunch.com/feed/",
+    "https://www.theverge.com/rss/index.xml",
+    "https://www.technologyreview.com/feed/",
+    "https://feeds.arstechnica.com/arstechnica/technology-lab",
+    "https://www.wired.com/feed/rss",
+]
 
-def generate_nano_banana_image(prompt, output_file):
+def _clean_html(text):
+    if not text: return ""
+    text = re.sub(r"<[^>]+>"," ",text)
+    for ent,ch in [("&amp;","&"),("&lt;","<"),("&gt;",">"),("&quot;",'"'),("&#39;","'"),("&nbsp;"," ")]:
+        text = text.replace(ent,ch)
+    return re.sub(r"\s+"," ",text).strip()[:500]
+
+def fetch_live_top_news():
+    articles, seen = [], set()
+    for feed_url in RSS_FEEDS:
+        try:
+            req = urllib.request.Request(feed_url, headers={"User-Agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+            with urllib.request.urlopen(req, timeout=15) as resp: content = resp.read()
+            try: root = ET.fromstring(content)
+            except ET.ParseError:
+                content = content.decode("utf-8",errors="replace").encode("utf-8")
+                root = ET.fromstring(content)
+            src = feed_url.split("/")[2].replace("www.","").replace("feeds.","")
+            items = list(root.iter("item")) or list(root.iter("{http://www.w3.org/2005/Atom}entry"))
+            for item in items:
+                te = item.find("title") or item.find("{http://www.w3.org/2005/Atom}title")
+                title = (te.text or "").strip() if te is not None else ""
+                if not title or len(title) < 15: continue
+                norm = title.lower()[:60]
+                if norm in seen: continue
+                seen.add(norm)
+                de = item.find("description") or item.find("{http://www.w3.org/2005/Atom}summary")
+                desc = _clean_html(de.text if de is not None else "")
+                le = item.find("link") or item.find("{http://www.w3.org/2005/Atom}link")
+                link = ((le.text or le.get("href","")) if le is not None else "").strip()
+                articles.append({"title":title,"description":desc,"link":link,"source":src})
+                if len(articles) >= 60: break
+        except Exception as e:
+            print(f"  [RSS] Skipped ({feed_url[:50]}): {e}", flush=True)
+    print(f"  [RSS] {len(articles)} live articles fetched", flush=True)
+    return articles
+
+def generate_story_metadata_with_gemini(article):
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key: return None
+    prompt = f"""You are a Hindi/Hinglish tech news scriptwriter for "Anchor Aadhya" YouTube channel.
+Convert this REAL tech news article into a structured Hinglish bulletin story.
+
+Article Title: {article['title']}
+Article Summary: {article.get('description','N/A')}
+Source: {article.get('source','Tech News')}
+
+OUTPUT ONLY raw JSON (no markdown, no code block):
+{{
+  "id": "short_unique_slug_underscores_max5words",
+  "headline": "CATCHY HINGLISH HEADLINE ALL CAPS MAX 9 WORDS",
+  "category": "CATEGORY 2-3 WORDS CAPS",
+  "bullet1": "Key fact 1 Hinglish max 12 words",
+  "bullet2": "Key fact 2 Hinglish max 12 words",
+  "emotion": "dramatic or funny_masti or serious_caution or inspirational_joy",
+  "speech": "120-160 word Hindi/Hinglish anchor broadcast script, natural conversational tone, audience engagement question at end",
+  "ai_image_prompt": "SHOT 1 WIDE: Highly specific Gemini Imagen 3 English prompt — describe EXACT real-world scene from THIS story (exact colors, object/machine/device appearance, environment, action). Photojournalism cinematic lighting. NO text, NO watermarks.",
+  "ai_image_prompt_2": "SHOT 2 MACRO: Extreme close-up Imagen 3 English prompt of the most interesting technical detail from THIS story. Photorealistic macro photography. NO text.",
+  "badge_color": [R, G, B, 255]
+}}"""
+    try:
+        from google import genai
+        client = genai.Client(api_key=api_key)
+        for model_name in ["gemini-2.0-flash","gemini-1.5-flash","gemini-1.5-pro"]:
+            try:
+                response = client.models.generate_content(model=model_name, contents=prompt)
+                text = response.text.strip()
+                if "```json" in text: text = text.split("```json")[1].split("```")[0].strip()
+                elif "```" in text: text = text.split("```")[1].split("```")[0].strip()
+                s,e = text.find("{"), text.rfind("}")+1
+                if s >= 0 and e > s: text = text[s:e]
+                story = json.loads(text)
+                bc = story.get("badge_color",[220,38,38,255])
+                story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
+                story["keywords"] = story.get("id","").replace("_"," ").split()
+                print(f"  [GEMINI] '{story.get('headline','?')}' via {model_name}", flush=True)
+                return story
+            except json.JSONDecodeError as je:
+                print(f"  [GEMINI] JSON error {model_name}: {je}", flush=True)
+            except Exception as me:
+                print(f"  [GEMINI] {model_name}: {me}", flush=True)
+    except Exception as e:
+        print(f"  [GEMINI] Fatal: {e}", flush=True)
+    return None
+
+def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1):
     """
-    Generate image using Google's Imagen 3 / Nano Banana engine via Gemini API.
-    Used automatically whenever GEMINI_API_KEY is present in environment/secrets.
+    ONLY Gemini Imagen 3 — zero stock photos, zero Unsplash, zero copyright risk.
+    Fallback: dark tech gradient (not an external URL).
     """
+    print(f"  --> [IMAGEN 3 | Shot {shot_idx}] \"{prompt[:70]}...\"", flush=True)
+    if os.path.exists(output_file) and os.path.getsize(output_file) > 20000:
+        print(f"  [SKIP] Exists: {os.path.basename(output_file)}", flush=True)
+        return True
     api_key = os.environ.get("GEMINI_API_KEY")
     if not api_key:
-        return False
+        print("  [WARN] No GEMINI_API_KEY — dark gradient fallback", flush=True)
+        _dark_gradient(output_file); return True
+    enhanced = (
+        f"Authentic editorial news photojournalism. {prompt}. "
+        f"100% physically accurate real-world representation. Ultra-detailed commercial "
+        f"photography, razor-sharp 8k focus, cinematic broadcast news lighting, natural "
+        f"textures, no watermarks, no logos, no text overlays, no cartoon, no CGI art — "
+        f"genuine real-world photograph by a professional photojournalist"
+    )
     try:
         from google import genai
         from google.genai import types
         client = genai.Client(api_key=api_key)
-        enhanced_prompt = (
-            f"Authentic editorial news photojournalism. {prompt}. "
-            f"100% physically accurate representation of the exact model, vehicle, robot, or device described. "
-            f"Ultra-detailed real-world commercial photography, sharp 8k focus, cinematic broadcast news studio lighting, "
-            f"natural textures and reflections, no cartoon, no CGI render art, no watermark, no digital overlays"
-        )
-        response = client.models.generate_images(
-            model="imagen-3.0-generate-002",
-            prompt=enhanced_prompt,
-            config=types.GenerateImageConfig(
-                number_of_images=1,
-                output_mime_type="image/jpeg",
-                aspect_ratio="16:9"
-            )
-        )
-        for gen_img in response.generated_images:
-            im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-            im.save(output_file, "JPEG", quality=95)
-            append_image_archive(f"Nano Banana: {prompt}")
-            print(f"  [SUCCESS] Nano Banana (Google Imagen 3) Created: {output_file}", flush=True)
-            return True
+        for model_name in ["imagen-3.0-generate-002","imagen-3.0-generate-001"]:
+            try:
+                response = client.models.generate_images(
+                    model=model_name, prompt=enhanced,
+                    config=types.GenerateImageConfig(number_of_images=1,output_mime_type="image/jpeg",aspect_ratio="16:9")
+                )
+                for gen_img in response.generated_images:
+                    im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920,1080),Image.Resampling.LANCZOS)
+                    im.save(output_file,"JPEG",quality=95)
+                    append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
+                    print(f"  [SUCCESS] Saved: {os.path.basename(output_file)}", flush=True)
+                    return True
+            except Exception as img_e:
+                print(f"  [IMAGEN] {model_name}: {img_e}", flush=True)
     except Exception as e:
-        print(f"  [NOTICE] Nano Banana generation: {e}", flush=True)
-    return False
+        print(f"  [ERROR] Imagen fatal: {e}", flush=True)
+    print(f"  [FALLBACK] Dark gradient (zero copyright)", flush=True)
+    _dark_gradient(output_file)
+    return True
 
-# Generate a 100% Brand-New AI Photorealistic Image for each news story
-# (Never uploads raw copyrighted internet photos directly!)
-def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1):
-    print(f"  --> Generating Brand-New AI News Image: \"{prompt[:60]}...\"", flush=True)
-    
-    # 1. Primary: Nano Banana (Google Imagen 3 via Gemini API)
-    if generate_nano_banana_image(prompt, output_file):
-        return True
-
-    seed = random.randint(10000, 9999999)
-    clean_prompt = f"Photojournalism documentary style, ultra-realistic commercial photograph, {prompt}, sharp details, 8k resolution, cinematic professional news lighting, no watermarks, no logos, no text"
-    encoded = urllib.parse.quote(clean_prompt)
-    url = f"https://image.pollinations.ai/prompt/{encoded}?width=1280&height=720&nologo=true&seed={seed}"
-    temp_download = output_file + ".tmp.jpg"
-    
-    # 1. Primary: Native curl (fast, HTTP/2 & modern TLS 1.3 to pass Cloudflare)
-    curl_cmd = [
-        "curl", "-s", "-L", "-f", "-m", "15",
-        "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
-        url, "-o", temp_download
-    ]
+def _dark_gradient(output_file):
     try:
-        res = subprocess.run(curl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
-        if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
-            im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-            im.save(output_file, "JPEG", quality=95)
-            if os.path.exists(temp_download):
-                os.remove(temp_download)
-            append_image_archive(clean_prompt)
-            print(f"  [SUCCESS] 100% Unique AI News Photo Created: {output_file}", flush=True)
-            return True
-    except Exception:
-        pass
-    finally:
-        if os.path.exists(temp_download):
-            try: os.remove(temp_download)
-            except Exception: pass
+        im = Image.new("RGB",(1920,1080))
+        draw = ImageDraw.Draw(im)
+        for y in range(1080):
+            r = int(5+(y/1080)*15); g = int(10+(y/1080)*35); b = int(30+(y/1080)*80)
+            draw.line([(0,y),(1920,y)],fill=(r,g,b))
+        im.save(output_file,"JPEG",quality=88)
+    except: Image.new("RGB",(1920,1080),(10,15,35)).save(output_file,"JPEG")
 
-    # 2. Secondary: If Pollinations times out or fails, fetch curated high-res topic-specific visual
-    if story_id and story_id in CURATED_CATEGORY_VISUALS:
-        stock_url = CURATED_CATEGORY_VISUALS[story_id].get(shot_idx, CURATED_CATEGORY_VISUALS[story_id].get(1))
-        if stock_url:
-            print(f"  --> Fetching Curated High-Res Category Visual: {stock_url[:50]}...", flush=True)
-            dl_cmd = [
-                "curl", "-s", "-L", "-f", "-m", "15",
-                "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                stock_url, "-o", temp_download
-            ]
-            try:
-                res = subprocess.run(dl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
-                if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
-                    im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-                    im.save(output_file, "JPEG", quality=95)
-                    if os.path.exists(temp_download):
-                        os.remove(temp_download)
-                    append_image_archive(stock_url)
-                    print(f"  [SUCCESS] Curated 1080p Story Visual Loaded: {output_file}", flush=True)
-                    return True
-            except Exception as e:
-                print(f"  [WARN] Stock visual download failed: {e}", flush=True)
-            finally:
-                if os.path.exists(temp_download):
-                    try: os.remove(temp_download)
-                    except Exception: pass
+_STOP = {"the","a","an","is","are","was","were","in","on","at","to","for","of","and","or",
+         "but","with","by","from","as","it","its","be","been","being","has","have","had",
+         "do","does","did","will","would","can","could","may","might","new","now","just","also"}
 
-    # 3. Tertiary: Topic-keyword matched visual
-    prompt_lower = (prompt + " " + str(story_id or "")).lower()
-    match_cat = "max_planck_quantum_unhackable_internet"
-    if any(k in prompt_lower for k in ["drone", "racing", "aerial"]):
-        match_cat = "delft_ai_drone_racing_champion"
-    elif any(k in prompt_lower for k in ["robot", "humanoid", "factory"]):
-        match_cat = "factory_humanoid_robots_10000"
-    elif any(k in prompt_lower for k in ["quantum", "crystal", "computing", "chip"]):
-        match_cat = "max_planck_quantum_unhackable_internet"
-    elif any(k in prompt_lower for k in ["neuralink", "brain", "telepathy"]):
-        match_cat = "neuralink_brain_chip_telepathy_world"
-    elif any(k in prompt_lower for k in ["sun", "fusion", "reactor", "tokamak"]):
-        match_cat = "artificial_sun_nuclear_fusion_record"
-    elif any(k in prompt_lower for k in ["flying car", "evtol", "air taxi"]):
-        match_cat = "evtol_flying_car_certified_commercial"
-    elif any(k in prompt_lower for k in ["car", "tesla", "roadster"]):
-        match_cat = "tesla_roadster_spacex_thrusters"
-    elif any(k in prompt_lower for k in ["bionic", "eye", "vision", "medicine", "health"]):
-        match_cat = "bionic_eye_restores_vision_breakthrough"
-    elif any(k in prompt_lower for k in ["chef", "cooking"]):
-        match_cat = "robotic_chef_masti_household_cooking"
-    elif any(k in prompt_lower for k in ["jet", "supersonic", "boom"]):
-        match_cat = "supersonic_passenger_jet_boom_overture"
+def _kw(text):
+    words = re.sub(r"[^\w\s]","",text.lower()).split()
+    return set(w for w in words if w not in _STOP and len(w)>2)
 
-    if match_cat in CURATED_CATEGORY_VISUALS:
-        stock_url = CURATED_CATEGORY_VISUALS[match_cat].get(shot_idx, CURATED_CATEGORY_VISUALS[match_cat].get(1))
-        if stock_url:
-            dl_cmd = [
-                "curl", "-s", "-L", "-f", "-m", "15",
-                "-A", "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
-                stock_url, "-o", temp_download
-            ]
-            try:
-                res = subprocess.run(dl_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, timeout=20)
-                if res.returncode == 0 and os.path.exists(temp_download) and os.path.getsize(temp_download) > 15000:
-                    im = Image.open(temp_download).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
-                    im.save(output_file, "JPEG", quality=95)
-                    if os.path.exists(temp_download):
-                        os.remove(temp_download)
-                    append_image_archive(stock_url)
-                    print(f"  [SUCCESS] Category Fallback Visual Loaded: {output_file}", flush=True)
-                    return True
-            except Exception:
-                pass
-            finally:
-                if os.path.exists(temp_download):
-                    try: os.remove(temp_download)
-                    except Exception: pass
-
+def is_raw_article_duplicate(title, archive):
+    tw = _kw(title)
+    for e in archive:
+        if len(tw & _kw(e.get("raw_title",e.get("headline","")))) >= 3: return True
     return False
 
-# Master Curated Stories Bank with AI Generation Prompts & Diverse Emotions
-MASTER_STORIES_POOL = [
-    {
-        "id": "delft_ai_drone_racing_champion",
-        "keywords": ["delft", "ai drone", "drone racing", "human champion"],
-        "category": "AI DRONE RACING",
-        "badge_color": (0, 190, 255, 255),
-        "headline": "AI DRONE NE WORLD CHAMPION KO HARAYA!",
-        "bullet1": "• 100 KM/H speed bina GPS ke self-pilot navigation",
-        "bullet2": "• Human champion pilots ko race mein piche chhoda!",
-        "emotion": "dramatic",
-        "speech": "पहली बड़ी खबर: दुनिया के सबसे तेज़ इंसानी ड्रोन रेसर्स को एक एआई ड्रोन ने धूल चटा दी है! डेल्फ़्ट यूनिवर्सिटी के 'मोनो-रेस' एआई ने बिना किसी जीपीएस या मैप के, सिर्फ एक कैमरे की मदद से सौ किलोमीटर प्रति घंटे की रफ़्तार से उड़ते हुए वर्ल्ड चैंपियन पायलट को हरा दिया! मतलब अब आसमान में उड़ने की रेस में भी इंसान कंप्यूटर से हार गया! अब आप ही बताइए... क्या इंसान कभी एआई से जीत पाएगा? या फिर हमें अपनी हार मान लेनी चाहिए? कमेंट में अपनी राय ज़रूर दीजिए!",
-        "ai_image_prompt": "Delft autonomous AI quadcopter racing drone with high-speed spinning carbon-fiber propellers flying aggressively at 100 km/h through glowing neon-cyan illuminated obstacle gate in indoor stadium drone racing tournament, front camera lens glinting, motion blur background, razor-sharp focus on racing drone, 8k editorial sports photo",
-        "ai_image_prompt_2": "Extreme macro close-up photograph of carbon-fiber racing drone chassis showing high-speed brushless motors, four spinning aerodynamic blades, miniature high-speed AI optical camera sensor and copper cooling heatsink, technical journalism photography, 8k"
-    },
-    {
-        "id": "tesla_roadster_spacex_thrusters",
-        "keywords": ["tesla roadster", "spacex", "rocket thruster", "elon musk", "hypercar"],
-        "category": "TESLA ROADSTER",
-        "badge_color": (245, 158, 11, 255),
-        "headline": "TESLA ROADSTER MEIN ROCKET THRUSTERS!",
-        "bullet1": "• SpaceX cold-gas thrusters se hawa mein uregi car",
-        "bullet2": "• 0 se 100 km/h sirf 1 second se kam mein!",
-        "emotion": "dramatic",
-        "speech": "दूसरी होश उड़ाने वाली खबर एलन मस्क की टेस्ला से आई है! टेस्ला की नई रोडस्टर स्पोर्ट्स कार में स्पेस-एक्स के असली रॉकेट थ्रस्टर्स लगा दिए गए हैं! जी हाँ, ये लाल रंग की सुपरकार सिर्फ ज़मीन पर दौड़ेगी नहीं, बल्कि रॉकेट की ताकत से हवा में उड़ती हुई छलाँग भी लगाएगी! शून्य से सौ की रफ़्तार एक सेकंड से भी कम समय में! ज़रा सोचिए, अगर किसी दिन मैं आपको इस उड़ती हुई टेस्ला रोडस्टर में अपने साथ लॉन्ग ड्राइव पर ले चलूँ, तो आपका दिल कितनी तेज़ी से धड़केगा? सीट बेल्ट कसकर बाँध लेना, क्योंकि झटका बहुत ज़ोर का लगने वाला है!",
-        "ai_image_prompt": "Official crimson red next-generation Tesla Roadster sports car equipped with SpaceX rocket package, high-pressure cold-gas thruster nozzles mounted on the rear diffuser, accelerating violently on modern asphalt test track at sunset, glowing red horizontal LED taillight bar, authentic aerodynamic Tesla sports car curves, 8k commercial photography",
-        "ai_image_prompt_2": "Extreme macro close-up photograph of the rear carbon-fiber diffuser of a red Tesla Roadster, focusing on the aerospace cold-gas rocket thruster nozzle actively venting supersonic vapor thrust, official Tesla emblem badge, razor-sharp mechanical detail, 8k"
-    },
-    {
-        "id": "factory_humanoid_robots_10000",
-        "keywords": ["humanoid robot", "auto factory", "assembly line", "figure"],
-        "category": "HUMANOID FACTORY",
-        "badge_color": (168, 85, 247, 255),
-        "headline": "FACTORIES MEIN 10,000 ROBOTS DEPLOYED!",
-        "bullet1": "• Touch aur sound sensory AI se assembling shuru",
-        "bullet2": "• 9-minute ultra-fast charge aur 20 ghante continuous duty!",
-        "emotion": "funny_masti",
-        "speech": "तीसरी खबर उन सभी के लिए है जो अपने ऑफिस के काम से थक जाते हैं! दुनिया की बड़ी ऑटोमोबाइल कंपनियों ने अपनी फैक्ट्रियों में दस हज़ार से ज़्यादा ह्यूमनॉइड रोबोट्स तैनात कर दिए हैं! इनमें इंसानों की तरह छूने और आवाज़ सुनने वाले सेंसर्स लगे हैं... और सबसे कमाल की बात? ये सिर्फ नौ मिनट में चार्ज हो जाते हैं और पूरे बीस घंटे बिना रुके भारी-भरकम कारें असेंबल करते हैं! ना लंच ब्रेक, ना छुट्टी! अब अगर ये रोबोट हमारे घरों में आ गए, तो घर के सारे काम कौन करेगा? ज़ाहिर सी बात है रोबोट! तो आलसी पतियों, अब तुम्हारी खैर नहीं!",
-        "ai_image_prompt": "sleek white futuristic humanoid bipedal robot assembling car chassis on high-tech automotive manufacturing assembly line, glowing industrial lighting",
-        "ai_image_prompt_2": "macro detail of white robotic humanoid five-finger dexterity hand precisely soldering delicate electronics on assembly line, 8k"
-    },
-    {
-        "id": "max_planck_quantum_unhackable_internet",
-        "keywords": ["max planck", "quantum internet", "unhackable", "cryptography", "crystal"],
-        "category": "QUANTUM LEAP",
-        "badge_color": (34, 197, 94, 255),
-        "headline": "QUANTUM INTERNET KA NAYA WORLD RECORD!",
-        "bullet1": "• Max Planck Institute ne achieve kiya fundamental limit",
-        "bullet2": "• Unhackable super-fast quantum communication network!",
-        "emotion": "serious_caution",
-        "speech": "चौथी वैज्ञानिक खबर क्वांटम फिजिक्स से है! मैक्स प्लैंक इंस्टीट्यूट के वैज्ञानिकों ने क्वांटम दुनिया की सबसे बड़ी रुकावट को पार कर लिया है! उन्होंने एक ऐसा क्रिस्टल तैयार किया है जिससे अनहैकेबल क्वांटम इंटरनेट और सुपर-फास्ट क्वांटम कंप्यूटिंग हकीकत बनने जा रही है! यानी भविष्य में आपका डेटा और पासवर्ड दुनिया का कोई भी हैकर कभी चुरा नहीं पाएगा! क्योंकि आपकी प्राइवेसी और सुरक्षा की चिंता आपसे ज़्यादा मुझे रहती है!",
-        "ai_image_prompt": "luminous glowing quantum optical crystal in high-tech dark physics laboratory with blue and emerald laser beams passing through it, macro photography",
-        "ai_image_prompt_2": "macro optical quantum crystal glowing with neon blue and emerald laser beams refracting through glass prism, 8k"
-    },
-    {
-        "id": "neuralink_brain_chip_telepathy_world",
-        "keywords": ["neuralink", "brain chip", "telepathy", "mind control", "bci"],
-        "category": "BRAIN INTERFACE",
-        "badge_color": (236, 72, 153, 255),
-        "headline": "DIMAG KI SOCH SE COMPUTER CONTROL HOGA!",
-        "bullet1": "• Neuralink chip se bina haath lagaye typing aur gaming",
-        "bullet2": "• Lakhon paralysis mareezon ko mila naya jeevan!",
-        "emotion": "inspirational_joy",
-        "speech": "आज की अगली खबर सीधे आपके दिमाग की शक्ति से जुड़ी है! न्यूरालिंक ब्रेन चिप ने एक और अविश्वसनीय कारनामा कर दिखाया है! अब मरीज सिर्फ अपनी सोच की ताकत से कंप्यूटर चला रहे हैं, गेम खेल रहे हैं और सोशल मीडिया पर पोस्ट कर रहे हैं, वो भी बिना हाथ हिलाए! ज़रा सोचिए, अगर किसी दिन आपका मोबाइल आपकी आँखों के इशारे और सिर्फ सोचने भर से चलने लगे, तो ज़िंदगी कितनी आसान और जादुई हो जाएगी! विज्ञान ने उन लोगों को आवाज़ और गति दी है जिन्होंने उम्मीद छोड़ दी थी। ये है असली फ्यूचर!",
-        "ai_image_prompt": "futuristic brain-computer interface concept, transparent glowing neural chip with illuminated fiber optic brain synapses, medical technology photography",
-        "ai_image_prompt_2": "extreme macro close-up of bio-compatible micro-electrode array threads interfacing with glowing neural circuits on silicon wafer, 8k"
-    },
-    {
-        "id": "evtol_flying_car_certified_commercial",
-        "keywords": ["flying car", "evtol", "air taxi", "aviation", "traffic"],
-        "category": "FLYING CARS",
-        "badge_color": (14, 165, 233, 255),
-        "headline": "FLYING CAR KO MILI OFFICIAL PERMISSION!",
-        "bullet1": "• Traffic jam ki chhutti: Hawa mein uregi personal car",
-        "bullet2": "• 100% electric vertical takeoff bina runway ke!",
-        "emotion": "dramatic",
-        "speech": "सड़कों के लंबे-लंबे ट्रैफिक जाम से परेशान लोगों के लिए एक बहुत बड़ी खुशखबरी! दुनिया की पहली कमर्शियल फ्लाइंग कार को आधिकारिक उड़ान का लाइसेंस मिल चुका है! ये कार सड़क पर आम गाड़ी की तरह दौड़ेगी, और जैसे ही भारी जाम दिखेगा, सीधे बटन दबाते ही हेलिकॉप्टर की तरह वर्टिकल टेकऑफ़ करके आसमान में उड़ जाएगी! ना कोई रनवे चाहिए, ना कोई लंबा इंतज़ार! अब बताइए, अगर शाम को ऑफिस से सीधे उड़कर घर पहुँचने का मौका मिले, तो कौन नहीं चाहेगा? कमेंट्स में बताइए क्या आप इसमें बैठना चाहेंगे?",
-        "ai_image_prompt": "modern futuristic electric flying car eVTOL lifting off vertically above city skyscrapers at sunset, illuminated windows, sleek aeronautical design",
-        "ai_image_prompt_2": "close-up cockpit view of modern flying car showing holographic glass touch navigation flight instruments and rotating tilt-rotor engine, 8k"
-    },
-    {
-        "id": "artificial_sun_nuclear_fusion_record",
-        "keywords": ["artificial sun", "nuclear fusion", "unlimited energy", "plasma", "clean energy"],
-        "category": "CLEAN ENERGY",
-        "badge_color": (234, 88, 12, 255),
-        "headline": "NAKLI SURAJ NE BANAYA UNLIMITED POWER!",
-        "bullet1": "• 100 million degree celsius plasma par record hold",
-        "bullet2": "• Zero pollution aur hamesha ke liye bijli ka crisis khatam!",
-        "emotion": "inspirational_joy",
-        "speech": "ऊर्जा की दुनिया में एक बहुत बड़ा चमत्कार हुआ है! वैज्ञानिकों के 'आर्टिफिशियल सन' यानी कृत्रिम सूर्य ने दस करोड़ डिग्री सेल्सियस के खौलते तापमान को एक हज़ार सेकंड तक लगातार स्थिर रखकर नया वर्ल्ड रिकॉर्ड बना दिया है! ये तापमान हमारे असली सूरज के केंद्र से भी छह गुना ज़्यादा गर्म है! इसका सीधा मतलब यह है कि आने वाले सालों में धरती से बिजली का बिल और प्रदूषण हमेशा-हमेशा के लिए खत्म हो जाएगा! इंसानों ने तारे की ऊर्जा को धरती पर उतार लिया है!",
-        "ai_image_prompt": "massive glowing tokamak fusion reactor interior with swirling purple and golden superheated plasma ring, scientific engineering breakthrough, 8k",
-        "ai_image_prompt_2": "blinding intense magnetic plasma arc inside fusion chamber reactor walls with glowing amber magnetic field coils, 8k"
-    },
-    {
-        "id": "robotic_chef_masti_household_cooking",
-        "keywords": ["robotic chef", "ai cooking", "smart kitchen", "dosa robot", "household"],
-        "category": "AI SMART KITCHEN",
-        "badge_color": (168, 85, 247, 255),
-        "headline": "ROBOT NE BANAYA CRUNCHY CRISPY DOSA!",
-        "bullet1": "• 100 Michelin-star recipes self-cook karta hai robot",
-        "bullet2": "• Roti se lekar pizza tak har dish ready sirf 5 minute mein!",
-        "emotion": "funny_masti",
-        "speech": "अब ज़रा थोड़ा मुस्कुराइए, क्योंकि ये खबर आपको बहुत हंसाने वाली है! एक ऐसी रोबोटिक रसोई आ चुकी है जो सिर्फ आपकी आवाज़ सुनकर गरमा-गरम क्रिस्पी डोसा, चाय और पचास तरह के व्यंजन अपने आप बना देती है! चम्मच हिलाने से लेकर प्लेट में परोसने तक, सारा काम ये रोबोटिक हाथ करते हैं! अब बताइए, अगर ये रोबोट आपके घर आ गया, तो फिर मम्मी या बीवी के गुस्से से कौन बचाएगा? और होटल वालों का क्या होगा? वैसे जो भी हो, मुझे तो ऐसा शेफ बहुत पसंद आएगा जो बिना नखरे दिखाए गरमा-गरम खाना खिलाए!",
-        "ai_image_prompt": "friendly modern robotic kitchen assistant with dual mechanical hands flipping a golden crispy dosa on sleek induction pan in luxury smart kitchen",
-        "ai_image_prompt_2": "close-up action shot of precision robotic spatula flipping golden steaming crispy dosa in modern futuristic illuminated kitchen, 8k"
-    },
-    {
-        "id": "ai_voice_clone_deepfake_security_alert",
-        "keywords": ["voice clone", "deepfake", "cyber security", "ai scam", "biometric"],
-        "category": "CYBER ALERT",
-        "badge_color": (220, 38, 38, 255),
-        "headline": "3 SECOND KI AUDIO SE VOICE CLONING SCAM!",
-        "bullet1": "• AI se kisi ki bhi aawaz 100% duplicate ho rahi hai",
-        "bullet2": "• Cyber police ne family safety code use karne ki advisory di!",
-        "emotion": "serious_caution",
-        "speech": "अब ध्यान से सुनिए, ये खबर आपकी सुरक्षा और सतर्कता के लिए बहुत ज़रूरी है! साइबर एक्सपर्ट्स ने चेतावनी दी है कि नया एआई टूल सिर्फ तीन सेकंड की ऑडियो रिकॉर्डिंग सुनकर किसी भी इंसान की असली आवाज़ हूबहू क्लोन कर लेता है! यहां तक कि बैंक और रिश्तेदार भी धोखा खा सकते हैं! इसलिए मेरी आप सभी से गुज़ारिश है — किसी भी अनजान नंबर से कॉल आने पर अपने परिवार का सीक्रेट कोड ज़रूर पूछें और तुरंत पैसे ट्रांसफर ना करें! तकनीक जितनी खूबसूरत है, उतनी ही सतर्कता की मांग भी करती है!",
-        "ai_image_prompt": "digital cyber security concept with glowing biometric sound waves transforming into holographic digital identity wireframe in dark security operations center",
-        "ai_image_prompt_2": "macro close-up of biometric voice wave frequency spectrum visualizer displaying unauthorized clone wave match on dark digital monitor, 8k"
-    },
-    {
-        "id": "supersonic_passenger_jet_boom_overture",
-        "keywords": ["supersonic jet", "overture", "mach 1.7", "flight time", "concorde"],
-        "category": "SUPERSONIC FLIGHT",
-        "badge_color": (59, 130, 246, 255),
-        "headline": "DELHI SE LONDON SIRF 4 GHANTE MEIN!",
-        "bullet1": "• Mach 1.7 speed par supersonic passenger flight test pass",
-        "bullet2": "• 100% sustainable aviation fuel bina carbon emission!",
-        "emotion": "dramatic",
-        "speech": "हवाई यात्रा के शौकीनों के लिए ऐतिहासिक खबर! कॉनकॉर्ड के बीस साल बाद, नई पीढ़ी के सुपरसोनिक यात्री विमान ने अपना हाई-स्पीड टेस्ट सफलतापूर्वक पूरा कर लिया है! ये विमान आवाज़ की रफ़्तार से भी पौने दो गुना तेज़ उड़ता है! यानी दिल्ली से लंदन का बारह घंटे का थकाऊ सफ़र अब सिर्फ चार घंटे में पूरा हो जाएगा! नाश्ता दिल्ली में और लंच सीधे लंदन में! क्या बात है! तैयार हो जाइए भविष्य की इस सुपर-फास्ट उड़ान के लिए!",
-        "ai_image_prompt": "ultra-sleek white supersonic passenger commercial airliner breaking through sound barrier clouds in bright blue stratosphere at sunset, razor-sharp details",
-        "ai_image_prompt_2": "dramatic angle of supersonic jet delta wing and supersonic air intake engine with condensation vapor shockwaves at sunrise, 8k"
-    },
-    {
-        "id": "bionic_eye_restores_vision_breakthrough",
-        "keywords": ["bionic eye", "vision restoration", "retinal implant", "blindness cure", "biotech"],
-        "category": "MEDICAL MIRACLE",
-        "badge_color": (16, 185, 129, 255),
-        "headline": "BIONIC AANKHON SE ANDHEPAN KA KHATMA!",
-        "bullet1": "• Microchip implant se brain cortex ko mil rahe signals",
-        "bullet2": "• 100 se zyada mareezon ne pehli baar dekhi roshni!",
-        "emotion": "inspirational_joy",
-        "speech": "मेडिकल साइंस से आई इस खबर को सुनकर आपका सीना गर्व से चौड़ा हो जाएगा! वैज्ञानिकों ने एक ऐसा बायोनिक आई इम्प्लांट तैयार किया है जिसने जन्म से दृष्टिहीन लोगों को भी दुनिया देखने की शक्ति दे दी है! चश्मे में लगा कैमरा सीधे दिमाग की ऑप्टिक नसों में डिजिटल सिग्नल भेजता है, जिससे मरीज अपने बच्चों के चेहरे और रोशनी को साफ़ देख पा रहे हैं! ये सिर्फ तकनीक नहीं, बल्कि इंसानियत के लिए किसी ईश्वरीय वरदान से कम नहीं है!",
-        "ai_image_prompt": "futuristic biometric bionic human eye with delicate micro-circuits and gentle glowing iris lens, macro clinical medical photography",
-        "ai_image_prompt_2": "extreme macro photography of high-tech retinal bionic implant microchip with glowing gold nano-wires under microscope, 8k"
-    },
-    {
-        "id": "robot_dog_guard_patrol_funny",
-        "keywords": ["robot dog", "cyberdog", "unitree", "guard dog", "pet"],
-        "category": "ROBOTIC PETS",
-        "badge_color": (245, 158, 11, 255),
-        "headline": "ROBOT DOG NE CHOR KO BHAJAYA!",
-        "bullet1": "• 360-degree night vision aur AI voice siren se security",
-        "bullet2": "• Na khana mangta hai, na bimaar hota hai, sirf 24 ghante pehra!",
-        "emotion": "funny_masti",
-        "speech": "और अब एक मज़ेदार खबर रोबोटिक पालतू जानवरों की दुनिया से! चार पैरों वाले नए एआई रोबोट डॉग अब कॉलोनियों और घरों में असली पहरेदारी कर रहे हैं! ये रोबोट डॉग ना तो रोटी मांगते हैं, ना बीमार होते हैं, और रात के अंधेरे में भी तीन सौ साठ डिग्री घूमकर चोरों को देखकर ज़ोरदार सायरन बजा देते हैं! मोहल्ले के असली कुत्ते तो इन्हें देखकर हैरान हैं कि ये कौन सा अजीब रिश्तेदार आ गया! लेकिन घर की सुरक्षा के लिए ये वाकई एक ज़बरदस्त गैजेट बन चुका है!",
-        "ai_image_prompt": "sleek yellow and black robotic quadruped dog with 360 cameras standing alert on night city residential street, realistic commercial tech photography",
-        "ai_image_prompt_2": "close-up macro of quadruped robot dog mechanical head with glowing optical radar sensors and carbon fiber legs, 8k"
-    }
-]
+def is_story_duplicate(story_id, headline, archive):
+    sid = story_id.lower(); hw = _kw(headline)
+    for e in archive:
+        if e.get("id","").lower() == sid: return True
+        if len(hw & _kw(e.get("headline",""))) >= 3: return True
+    return False
 
-# Fetch 4 Unique, Non-Duplicate Stories for the Current Bulletin
 def get_fresh_bulletin_stories(slot):
+    """
+    Full pipeline: live RSS → dedup → Gemini metadata → 4 fresh daily stories.
+    All images will be Gemini Imagen 3 generated (called separately by pipeline).
+    """
     archive = load_news_archive()
-    
-    # Auto-reset: If all stories in the pool have been used, clear the archive
-    # so the cycle starts fresh (prevents stale/repeated stories indefinitely)
-    used_ids = set(e.get("id", "") for e in archive)
-    all_ids = set(s["id"] for s in MASTER_STORIES_POOL)
-    if all_ids.issubset(used_ids):
-        print("[ARCHIVE] Full story cycle complete — auto-resetting archive for fresh rotation.", flush=True)
-        save_news_archive([])
-        archive = []
-    
-    # Shuffle pool daily so different combinations appear (day-seeded for reproducibility)
-    day_seed = datetime.now().toordinal()
-    pool = list(MASTER_STORIES_POOL)
-    random.seed(day_seed)
-    random.shuffle(pool)
-    
-    selected = []
-    for candidate in pool:
-        if not is_story_duplicate(candidate, archive):
-            selected.append(dict(candidate))
-            if len(selected) == 4:
-                break
-    
-    # Fallback if pool is running low (only partially exhausted)
-    if len(selected) < 4:
-        for candidate in pool:
-            if not any(s["id"] == candidate["id"] for s in selected):
-                selected.append(dict(candidate))
-                if len(selected) == 4:
-                    break
-                    
+    print(f"\n[NEWS] Archive: {len(archive)} past stories", flush=True)
+    # 30-day auto-reset
+    if archive:
+        try:
+            oldest = min(e.get("timestamp","9999") for e in archive)
+            if (date.today() - date.fromisoformat(oldest[:10])).days > 30:
+                print("[ARCHIVE] 30-day reset — fresh cycle starting", flush=True)
+                save_news_archive([]); archive = []
+        except: pass
+    print("\n[LIVE RSS] Fetching today's top tech news...", flush=True)
+    raw = fetch_live_top_news()
+    if not raw:
+        print("[WARN] No live articles — check internet", flush=True)
+        return []
+    fresh = [a for a in raw if not is_raw_article_duplicate(a["title"], archive)]
+    print(f"[DEDUP] {len(fresh)} fresh articles from {len(raw)} fetched", flush=True)
+    random.shuffle(fresh)
+    selected, used_ids = [], set()
+    for article in fresh:
+        if len(selected) >= 4: break
+        print(f"\n  [PROCESSING] {article['title'][:75]}", flush=True)
+        story = generate_story_metadata_with_gemini(article)
+        if not story: continue
+        sid = story.get("id",""); headline = story.get("headline","")
+        if sid in used_ids or is_story_duplicate(sid, headline, archive):
+            print(f"  [SKIP] Duplicate: {sid}", flush=True); continue
+        story["raw_title"] = article["title"]
+        story["source"] = article.get("source","")
+        selected.append(story); used_ids.add(sid)
+        print(f"  [ADDED] {len(selected)}/4: {headline}", flush=True)
+    print(f"\n[DONE] {len(selected)} fresh stories ready", flush=True)
     return selected
 
 def commit_bulletin_stories(slot, stories):
     archive = load_news_archive()
     today_str = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    
     for s in stories:
-        archive.append({
-            "id": s["id"],
-            "headline": s["headline"],
-            "keywords": s["keywords"],
-            "slot": slot,
-            "timestamp": today_str
-        })
-            
+        archive.append({"id":s.get("id",""),"headline":s.get("headline",""),
+                        "raw_title":s.get("raw_title",""),"keywords":s.get("keywords",[]),
+                        "slot":slot,"timestamp":today_str})
     save_news_archive(archive)
-    print(f"[ARCHIVE] Successfully recorded {len(stories)} stories to {ARCHIVE_NEWS_FILE}", flush=True)
-
-if __name__ == "__main__":
-    slot = get_current_slot()
-    stories = get_fresh_bulletin_stories(slot)
-    print(f"Selected {len(stories)} stories for {slot}:")
-    for s in stories:
-        print(f"  • [{s['emotion'].upper()}] {s['headline']} -> Prompt: {s['ai_image_prompt'][:50]}...")
+    print(f"[ARCHIVE] Committed {len(stories)} stories — total: {len(archive)}", flush=True)
