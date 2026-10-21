@@ -86,7 +86,6 @@ def create_youtube_thumbnail(
             print(f"Warning loading news bg: {e}", flush=True)
     else:
         # High-tech cyber gradient background
-        from PIL import ImageDraw
         draw_bg = ImageDraw.Draw(canvas)
         for y in range(H):
             ratio = y / H
