@@ -141,6 +141,16 @@ def _is_image_url_valid(url):
     except Exception:
         return False
 
+def _get_rss_child(elem, tag_name):
+    """
+    Robust XML child lookup that matches tag names regardless of namespaces (e.g. {http://...}title)
+    """
+    for c in elem:
+        t = c.tag.lower()
+        if t == tag_name or t.endswith("}" + tag_name) or t.endswith(":" + tag_name):
+            return c
+    return None
+
 def fetch_live_top_news():
     """
     Fetches real-time tech news articles with a STRICT requirement:
@@ -159,7 +169,7 @@ def fetch_live_top_news():
             src = feed_url.split("/")[2].replace("www.","").replace("feeds.","")
             items = list(root.iter("item")) or list(root.iter("{http://www.w3.org/2005/Atom}entry"))
             for item in items:
-                te = item.find("title") or item.find("{http://www.w3.org/2005/Atom}title")
+                te = _get_rss_child(item, "title")
                 title = (te.text or "").strip() if te is not None else ""
                 if not title or len(title) < 15: continue
                 norm = title.lower()[:60]
@@ -176,9 +186,10 @@ def fetch_live_top_news():
                             break
 
                 # 2. Check description HTML for <img> tag fallback
-                de_raw = item.find("description")
-                if not img_url and de_raw is not None and de_raw.text:
-                    img_match = re.search(r'<img[^>]+src=["\']([^"\']+\.(?:jpg|jpeg|png|webp)[^"\']*)["\']', de_raw.text, re.IGNORECASE)
+                de_elem = _get_rss_child(item, "description") or _get_rss_child(item, "summary") or _get_rss_child(item, "encoded")
+                de_raw = de_elem.text if de_elem is not None else ""
+                if not img_url and de_raw:
+                    img_match = re.search(r'<img[^>]+src=["\']([^"\']+\.(?:jpg|jpeg|png|webp)[^"\']*)["\']', de_raw, re.IGNORECASE)
                     if img_match:
                         img_url = img_match.group(1)
 
@@ -187,9 +198,8 @@ def fetch_live_top_news():
                     continue
 
                 seen.add(norm)
-                de = item.find("description") or item.find("{http://www.w3.org/2005/Atom}summary")
-                desc = _clean_html(de.text if de is not None else "")
-                le = item.find("link") or item.find("{http://www.w3.org/2005/Atom}link")
+                desc = _clean_html(de_raw)
+                le = _get_rss_child(item, "link")
                 link = ((le.text or le.get("href","")) if le is not None else "").strip()
                 articles.append({
                     "title": title,
@@ -367,12 +377,12 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
             except Exception:
                 ACTIVE_GEMINI_MODEL = None
 
-        # 2. Modern active models (prioritizing gemini-flash-latest and gemini-3.8-flash)
+        # 2. Modern active models (prioritizing gemini-3.8-flash)
         models_to_try = [
-            "gemini-flash-latest",
             "gemini-3.8-flash",
+            "gemini-flash-latest",
             "gemini-3.7-flash",
-            "gemini-2.5-flash",
+            "gemini-3.6-flash",
             "gemini-flash"
         ]
         for model_name in models_to_try:
