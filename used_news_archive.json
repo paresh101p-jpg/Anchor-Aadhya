@@ -367,5 +367,57 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 12:11:50"
+  },
+  {
+    "id": "best_hearing_aids_2026",
+    "headline": "2026 KE BEST HEARING AIDS: APPLE SE LEKAR JABRA TAK",
+    "raw_title": "The Best Hearing Aids I’ve Tested (2026): Jabra, Resound, Apple, and More",
+    "keywords": [
+      "best",
+      "hearing",
+      "aids",
+      "2026"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-21 16:11:13"
+  },
+  {
+    "id": "france_supermarket_fridge_hack",
+    "headline": "FRANCE KE SUPERMARKETS MEIN FRIDGE HACK SE LAKHO KA NUKSAN",
+    "raw_title": "Fridge hack costing millions and sparking fires stemmed from poor security",
+    "keywords": [
+      "france",
+      "supermarket",
+      "fridge",
+      "hack"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-21 16:11:13"
+  },
+  {
+    "id": "spot_white_label_gadgets",
+    "headline": "KYA AAP BHI FAKE BRANDING KA SHIKAAR HO RAHE HAIN?",
+    "raw_title": "How to spot a white label gadget, and why that's important",
+    "keywords": [
+      "spot",
+      "white",
+      "label",
+      "gadgets"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-21 16:11:13"
+  },
+  {
+    "id": "apple_iphone_duo_review",
+    "headline": "APPLE IPHONE DUO KA NAYA REVIEW AAPKE LIYE",
+    "raw_title": "Apple iPhone Duo Review: Is It Worth It?",
+    "keywords": [
+      "apple",
+      "iphone",
+      "duo",
+      "review"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-21 16:11:13"
   }
 ]
