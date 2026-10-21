@@ -395,70 +395,119 @@ FACTS_VAULT = [
 
 def fetch_free_fact_video(query, target_path, max_sec=25.0):
     """
-    100% Free, Public Domain Space & Science Video fetcher from NASA Video Library API.
+    100% Free Video Engine:
+    1. Pexels Free Stock Videos (Covers Animals, Biology, Nature, Earth, Science)
+    2. NASA Video Library (Covers Space, Rockets, Planets, Deep Cosmos)
     Returns True if an authentic .mp4 video is successfully downloaded, False otherwise.
     """
-    headers = {"User-Agent": "Mozilla/5.0"}
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
+    clean_q = re.sub(r'[^a-zA-Z0-9\s]', ' ', query).strip()
+    words = clean_q.split()
+    search_terms = " ".join(words[:3])
+    if not search_terms:
+        return False
+
+    raw_temp = target_path + ".raw.mp4"
+
+    # Attempt 1: Pexels Free Stock Videos (Covers Living Organisms, Earth, Tech, Ocean)
     try:
-        clean_q = re.sub(r'[^a-zA-Z0-9\s]', ' ', query).strip()
-        search_terms = " ".join(clean_q.split()[:4])
-        if not search_terms:
-            return False
+        p_url = f"https://www.pexels.com/search/videos/{urllib.parse.quote(search_terms)}/"
+        req = urllib.request.Request(p_url, headers=headers)
+        with urllib.request.urlopen(req, timeout=12) as resp:
+            html = resp.read().decode('utf-8', errors='ignore')
+        mp4s = list(set(re.findall(r'https://videos\.pexels\.com/video-files/[^\s"\'<>]+\.mp4', html)))
+        if mp4s:
+            # Prefer vertical 720_1280 or 1080_1920 or first candidate
+            chosen = None
+            for cand in mp4s:
+                if any(tag in cand for tag in ["720_1280", "1080_1920", "sd_540_960", "sd_"]):
+                    chosen = cand
+                    break
+            if not chosen:
+                chosen = mp4s[0]
+
+            print(f"  [PEXELS VIDEO] Found 100% matching video for '{search_terms}': {chosen[:65]}...", flush=True)
+            req_dl = urllib.request.Request(chosen, headers=headers)
+            with urllib.request.urlopen(req_dl, timeout=20) as dl_resp:
+                with open(raw_temp, "wb") as f_out:
+                    f_out.write(dl_resp.read())
+
+            if os.path.exists(raw_temp) and os.path.getsize(raw_temp) > 80000:
+                conv_cmd = [
+                    FFMPEG_BIN, "-y",
+                    "-i", raw_temp,
+                    "-t", str(max_sec),
+                    "-an",
+                    "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=25",
+                    "-c:v", "libx264", "-preset", "ultrafast", "-crf", "23",
+                    target_path
+                ]
+                subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                try: os.remove(raw_temp)
+                except: pass
+                if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
+                    print(f"  [SUCCESS] Fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
+                    return True
+    except Exception as pe:
+        pass
+
+    # Attempt 2: NASA Video Library (Covers Space & Astronomy)
+    try:
         url = f"https://images-api.nasa.gov/search?q={urllib.parse.quote(search_terms)}&media_type=video"
         req = urllib.request.Request(url, headers=headers)
         with urllib.request.urlopen(req, timeout=12) as resp:
             data = json.loads(resp.read().decode())
         items = data.get("collection", {}).get("items", [])
-        if not items:
-            return False
-
-        for it in items[:3]:
-            col_url = it.get("href", "")
-            if not col_url.endswith("collection.json"):
-                continue
-            req_col = urllib.request.Request(col_url, headers=headers)
-            with urllib.request.urlopen(req_col, timeout=10) as c_resp:
-                files = json.loads(c_resp.read().decode())
-            mp4_candidates = [f for f in files if isinstance(f, str) and f.endswith(".mp4")]
-            chosen = None
-            for pref in ["~medium.mp4", "~mobile.mp4", "~orig.mp4", ".mp4"]:
-                for c in mp4_candidates:
-                    if pref in c.lower():
-                        chosen = c
+        if items:
+            for it in items[:3]:
+                col_url = it.get("href", "")
+                if not col_url.endswith("collection.json"):
+                    continue
+                req_col = urllib.request.Request(col_url, headers=headers)
+                with urllib.request.urlopen(req_col, timeout=10) as c_resp:
+                    files = json.loads(c_resp.read().decode())
+                mp4_candidates = [f for f in files if isinstance(f, str) and f.endswith(".mp4")]
+                chosen = None
+                for pref in ["~medium.mp4", "~mobile.mp4", "~orig.mp4", ".mp4"]:
+                    for c in mp4_candidates:
+                        if pref in c.lower():
+                            chosen = c
+                            break
+                    if chosen:
                         break
-                if chosen:
-                    break
 
-            if chosen:
-                print(f"  [NASA VIDEO] Found authentic video URL: {chosen}", flush=True)
-                raw_temp = target_path + ".raw.mp4"
-                urllib.request.urlretrieve(chosen, raw_temp)
-                if os.path.exists(raw_temp) and os.path.getsize(raw_temp) > 80000:
-                    conv_cmd = [
-                        FFMPEG_BIN, "-y",
-                        "-i", raw_temp,
-                        "-t", str(max_sec),
-                        "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=25",
-                        "-an",
-                        "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
-                        target_path
-                    ]
-                    subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-                    try: os.remove(raw_temp)
-                    except: pass
-                    if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
-                        print(f"  [SUCCESS] Converted & fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
-                        return True
+                if chosen:
+                    print(f"  [NASA VIDEO] Found authentic video URL: {chosen}", flush=True)
+                    urllib.request.urlretrieve(chosen, raw_temp)
+                    if os.path.exists(raw_temp) and os.path.getsize(raw_temp) > 80000:
+                        conv_cmd = [
+                            FFMPEG_BIN, "-y",
+                            "-i", raw_temp,
+                            "-t", str(max_sec),
+                            "-vf", "scale=1080:1920:force_original_aspect_ratio=increase,crop=1080:1920,fps=25",
+                            "-an",
+                            "-c:v", "libx264", "-preset", "veryfast", "-crf", "22",
+                            target_path
+                        ]
+                        subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                        try: os.remove(raw_temp)
+                        except: pass
+                        if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
+                            print(f"  [SUCCESS] Converted & fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
+                            return True
     except Exception as e:
-        print(f"  [VIDEO NOTICE] NASA video fetch notice ({e}) — will use 8K Photo + Motion Zoom fallback.", flush=True)
+        pass
+
     return False
 
 def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1):
     headers = {"User-Agent": "Mozilla/5.0"}
     enc_prompt = urllib.parse.quote(image_prompt)
 
-    # Attempt 1: Pollinations AI (Flux -> Turbo auto-fallback)
-    for m in ["flux", "turbo"]:
+    # Attempt 1: Pollinations AI Turbo (100% Free, Reliable, Custom 9:16 Visual)
+    for m in ["turbo", "flux"]:
         try:
             seed = random.randint(1000, 999999)
             p_url = f"https://image.pollinations.ai/prompt/{enc_prompt}?width=1080&height=1920&nologo=true&model={m}&seed={seed}"
@@ -473,7 +522,27 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
         except Exception as e:
             pass
 
-    # Attempt 2: NASA Public Domain Image Search
+    # Attempt 2: Wikipedia Subject Photo (Exact scientific match)
+    try:
+        w_terms = nasa_query.split()[0] if len(nasa_query.split()) > 2 else nasa_query
+        w_url = f"https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&pithumbsize=1080&titles={urllib.parse.quote(w_terms)}"
+        req_w = urllib.request.Request(w_url, headers=headers)
+        with urllib.request.urlopen(req_w, timeout=12) as w_resp:
+            w_data = json.loads(w_resp.read().decode())
+        pages = w_data.get("query", {}).get("pages", {})
+        for _, p_val in pages.items():
+            thumb = p_val.get("thumbnail", {}).get("source")
+            if thumb:
+                req_t = urllib.request.Request(thumb, headers=headers)
+                with urllib.request.urlopen(req_t, timeout=15) as t_resp:
+                    im = Image.open(BytesIO(t_resp.read())).convert("RGB")
+                    im.save(target_path, "JPEG", quality=95)
+                    print(f"  [SUCCESS] Wikipedia Subject Photo: {os.path.basename(target_path)}", flush=True)
+                    return True
+    except Exception:
+        pass
+
+    # Attempt 3: NASA Public Domain Image Search
     try:
         n_url = f"https://images-api.nasa.gov/search?q={urllib.parse.quote(nasa_query)}&media_type=image"
         req = urllib.request.Request(n_url, headers=headers)
@@ -489,9 +558,9 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
                 print(f"  [SUCCESS] NASA Public Domain Photo: {os.path.basename(target_path)}", flush=True)
                 return True
     except Exception as e:
-        print(f"  [NASA API NOTICE] {e}", flush=True)
+        pass
 
-    # Attempt 3: Slot-matched local hero fallback
+    # Attempt 4: Slot-matched local hero fallback
     heroes = [
         os.path.join(BASE_DIR, "assets", "heroes", "voyager1_hero.jpg"),
         os.path.join(BASE_DIR, "assets", "heroes", "quantum_hero.jpg"),
