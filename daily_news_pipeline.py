@@ -142,8 +142,8 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
     bar_line_color = (0, 180, 255, 255) if slot == "12PM" else (255, 30, 86, 255)
     hd.line([(0, 63), (1920, 63)], fill=bar_line_color, width=3)
     font_header = get_font(24, bold=True)
-    hd.text((180, 18), f"ANCHOR AADHYA  |  DAILY TECH BULLETIN • {today_display.upper()}", font=font_header, fill=(255, 255, 255))
-    hd.text((1480, 18), edition_label, font=font_header, fill=(0, 220, 255))
+    hd.text((180, 18), f"ANCHOR AADHYA  |  AAJ KA TAZA TECH BULLETIN • {today_display.upper()}", font=font_header, fill=(255, 255, 255))
+    hd.text((1480, 18), "TAZA BREAKING TECH", font=font_header, fill=(0, 220, 255))
     header.save(HEADER_BAR_PATH, "PNG")
 
     # Scene 1 Rundown Board
@@ -154,7 +154,7 @@ def create_graphics_layers(today_display, slot, stories, rundown_items):
     bd.rectangle([(0, 0), (840, board_h)], fill=(10, 15, 28, 230))
     bd.rectangle([(0, 0), (840, 65)], fill=(220, 20, 60, 255))
     font_board_title = get_font(30, bold=True)
-    bd.text((25, 16), f"TOP {num_items} TECH HEADLINES", font=font_board_title, fill=(255, 255, 255))
+    bd.text((25, 16), f"AAJ KI TOP {num_items} BADI KHABREIN", font=font_board_title, fill=(255, 255, 255))
     board_path = os.path.join(BASE_DIR, "scene1_board.png")
     board.save(board_path, "PNG")
 
@@ -321,8 +321,8 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
 
     num_stories = len(plate_paths) - 2 if len(plate_paths) > 2 else len(plate_paths)
     ticker_text = (
-        f"ANCHOR AADHYA • DAILY TECH BULLETIN • {today_display.upper()} • "
-        f"TOP {num_stories} BREAKING AI & FUTURE TECH STORIES • "
+        f"ANCHOR AADHYA • AAJ KA TAZA TECH BULLETIN • {today_display.upper()} • "
+        f"TOP {num_stories} BADI TECH KHABREIN • AI AUR FUTURE TECH UPDATES • "
     )
     scene_videos = []
     scene_durations = []

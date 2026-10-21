@@ -321,8 +321,21 @@ def generate_story_metadata_with_gemini(article):
     if not api_key:
         print("  [GEMINI] No GEMINI_API_KEY in env — using smart RSS synthesis", flush=True)
         return None
-    prompt = f"""You are a Hindi/Hinglish tech news scriptwriter for "Anchor Aadhya" YouTube channel.
+    prompt = f"""You are a Hindi/Hinglish broadcast tech journalist and scriptwriter for "Anchor Aadhya" YouTube channel.
 Convert this REAL tech news article into a structured Hinglish bulletin story.
+
+CRITICAL REQUIREMENT — 100% ON-SCREEN HINGLISH:
+ALL written text (headline, category, bullet1, bullet2, and all 4 facts) MUST BE WRITTEN IN NATURAL HINGLISH (Hindi spoken language written using English alphabet). NEVER output pure English sentences for on-screen text!
+Examples of required Hinglish style:
+- headline: "TESLA AUR SPACEX KA MEGA PLAN SHURU" or "SUBARU AB BANAYEGA SIRF ELECTRIC CARS"
+- bullet1: "• Elon Musk ne merger par ki nayi pushti"
+- bullet2: "• Dono companies ke beech special committee bani"
+- facts: [
+    "Subaru ab gas cars band karke EVs par focus karega.",
+    "2027 tak European market mein sirf electric models aayenge.",
+    "Global auto market mein green energy ki taraf bada kadam.",
+    "Official company report ke mutabiq nayi strategy par kaam shuru."
+  ]
 
 Article Title: {article['title']}
 Article Summary: {article.get('description','N/A')}
@@ -332,17 +345,17 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
 {{
   "id": "short_unique_slug_underscores_max5words",
   "headline": "CATCHY HINGLISH HEADLINE ALL CAPS MAX 9 WORDS",
-  "category": "CATEGORY 2-3 WORDS CAPS",
-  "bullet1": "Key fact 1 Hinglish max 12 words",
-  "bullet2": "Key fact 2 Hinglish max 12 words",
+  "category": "CATEGORY IN HINGLISH CAPS 2-3 WORDS (e.g. AI AUR INNOVATION, SPACE TECH, NAYI MOBILITY, CHIP TECH)",
+  "bullet1": "Key fact 1 in natural Hinglish max 12 words",
+  "bullet2": "Key fact 2 in natural Hinglish max 12 words",
   "facts": [
-    "Serious factual news point 1 (What happened, max 14 words)",
-    "Serious factual news point 2 (Technical feature/detail, max 14 words)",
-    "Serious factual news point 3 (Significance/industry milestone, max 14 words)",
-    "Serious factual news point 4 (Official confirmation or rollout, max 14 words)"
+    "Pure serious news fact 1 in Hinglish (What happened, max 14 words)",
+    "Pure serious news fact 2 in Hinglish (Key technical feature/detail, max 14 words)",
+    "Pure serious news fact 3 in Hinglish (Industry impact/significance, max 14 words)",
+    "Pure serious news fact 4 in Hinglish (Official rollout/confirmation, max 14 words)"
   ],
   "emotion": "dramatic or funny_masti or serious_caution or inspirational_joy",
-  "speech": "120-160 word Hindi/Hinglish anchor broadcast script, natural conversational tone, audience engagement question at end. CRITICAL RULE: NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
+  "speech": "120-160 word natural Hindi/Hinglish anchor broadcast script, natural conversational tone, engaging audience question at end. CRITICAL RULE: NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
   "ai_image_prompt": "SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3. Describe the real-world scene, vehicle, device, hardware, lab, or setting from this story in vivid detail. NEVER use real celebrity or politician names (use generic terms like 'tech CEO', 'engineer', 'investor') to prevent safety blocks. Photojournalism cinematic lighting, sharp 8k. NO text, NO watermarks.",
   "ai_image_prompt_2": "SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of the technical hardware, chip, mechanism or screen detail from this story. Photorealistic macro photography. NO text.",
   "badge_color": [R, G, B, 255]
