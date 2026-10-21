@@ -19,3 +19,23 @@ __pycache__/
 # Sensitive Local OAuth Credentials (Use GitHub Secrets in Cloud!)
 client_secret.json
 youtube_token.json
+
+# Temporary Test Scripts & Sample Renders
+test_*
+check_*
+get_*
+sample_*
+short_*
+shorts_*
+fact1_*
+fact2_*
+fact3_*
+anchor_crop_*
+pollinations_*
+inspect_*
+Thumbnail_*
+YOUTUBE_METADATA_*
+metadata_*
+trigger_workflow.ps1
+verify_code.py
+list_models.py
