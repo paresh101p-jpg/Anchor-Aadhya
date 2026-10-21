@@ -195,7 +195,10 @@ def _synthesize_story_from_article(article):
         "source": source
     }
 
+ACTIVE_GEMINI_MODEL = None
+
 def generate_story_metadata_with_gemini(article):
+    global ACTIVE_GEMINI_MODEL
     api_key = _get_gemini_api_key()
     if not api_key:
         print("  [GEMINI] No GEMINI_API_KEY in env — using smart RSS synthesis", flush=True)
@@ -223,7 +226,33 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
     try:
         from google import genai
         client = genai.Client(api_key=api_key)
-        models_to_try = ["gemini-2.5-flash", "gemini-2.0-flash", "gemini-1.5-flash", "gemini-1.5-pro"]
+
+        # 1. Fast Cache: If a working model is already known, use it immediately
+        if ACTIVE_GEMINI_MODEL:
+            try:
+                response = client.models.generate_content(model=ACTIVE_GEMINI_MODEL, contents=prompt)
+                text = (response.text or "").strip()
+                if "```json" in text: text = text.split("```json")[1].split("```")[0].strip()
+                elif "```" in text: text = text.split("```")[1].split("```")[0].strip()
+                s,e = text.find("{"), text.rfind("}")+1
+                if s >= 0 and e > s: text = text[s:e]
+                story = json.loads(text)
+                bc = story.get("badge_color",[220,38,38,255])
+                story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
+                story["keywords"] = story.get("id","").replace("_"," ").split()
+                print(f"  [GEMINI] '{story.get('headline','?')}' via {ACTIVE_GEMINI_MODEL}", flush=True)
+                return story
+            except Exception:
+                ACTIVE_GEMINI_MODEL = None
+
+        # 2. Modern active models (prioritizing gemini-flash-latest and gemini-3.8-flash)
+        models_to_try = [
+            "gemini-flash-latest",
+            "gemini-3.8-flash",
+            "gemini-3.7-flash",
+            "gemini-2.5-flash",
+            "gemini-flash"
+        ]
         for model_name in models_to_try:
             try:
                 response = client.models.generate_content(model=model_name, contents=prompt)
@@ -237,16 +266,20 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                 story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                 story["keywords"] = story.get("id","").replace("_"," ").split()
                 print(f"  [GEMINI] '{story.get('headline','?')}' via {model_name}", flush=True)
+                ACTIVE_GEMINI_MODEL = model_name
                 return story
             except json.JSONDecodeError as je:
                 print(f"  [GEMINI] JSON decode error {model_name}: {je}", flush=True)
             except Exception as me:
                 print(f"  [GEMINI] {model_name}: {me}", flush=True)
-        # Dynamic fallback
+
+        # 3. Dynamic fallback (ignoring audio-only, vision-only, and tts models)
         try:
             for dyn_m in client.models.list():
                 m_name = dyn_m.name.replace("models/", "") if hasattr(dyn_m, "name") and dyn_m.name else ""
-                if m_name and m_name not in models_to_try and "flash" in m_name.lower():
+                if not m_name or m_name in models_to_try: continue
+                if any(x in m_name.lower() for x in ["-tts", "-image", "embed", "imagen"]): continue
+                if "flash" in m_name.lower() or "gemini" in m_name.lower():
                     try:
                         print(f"  [GEMINI] Trying dynamic model: {m_name}...", flush=True)
                         response = client.models.generate_content(model=m_name, contents=prompt)
@@ -260,6 +293,7 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                         story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                         story["keywords"] = story.get("id","").replace("_"," ").split()
                         print(f"  [GEMINI] '{story.get('headline','?')}' via {m_name}", flush=True)
+                        ACTIVE_GEMINI_MODEL = m_name
                         return story
                     except Exception as dyn_err:
                         print(f"  [GEMINI] {m_name}: {dyn_err}", flush=True)
