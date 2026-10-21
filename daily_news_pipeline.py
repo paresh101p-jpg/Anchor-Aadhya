@@ -96,8 +96,8 @@ TOPIC_STOCK_URLS = {
         2: "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?w=1920&q=85"
     },
     "car": {
-        1: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=85"
+        1: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=85"
     },
     "medicine": {
         1: "https://images.unsplash.com/photo-1579684385127-1ef15d508118?w=1920&q=85",

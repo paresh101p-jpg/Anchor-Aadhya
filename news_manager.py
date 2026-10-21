@@ -138,11 +138,14 @@ def get_current_slot(explicit_slot=None):
 def select_anchor_look(slot, dominant_emotion=None):
     day_num = datetime.now().toordinal()
     if dominant_emotion == "funny_masti":
-        return ANCHOR_LOOKS[4] # Lilac
+        return ANCHOR_LOOKS[4] # Lilac — always for funny/masti emotion
+    # Rotate through ALL 5 looks in a 5-day cycle (different look every day)
+    # 12PM slot: cycles through looks 1,2,3,4,5
+    # 5PM slot: cycles through looks offset by 2 so it differs from 12PM
     if slot == "12PM":
-        return ANCHOR_LOOKS[1] if (day_num % 2 == 0) else ANCHOR_LOOKS[2]
+        return ANCHOR_LOOKS[day_num % 5]
     else:
-        return ANCHOR_LOOKS[0] if (day_num % 2 == 0) else ANCHOR_LOOKS[3]
+        return ANCHOR_LOOKS[(day_num + 2) % 5]
 
 CURATED_CATEGORY_VISUALS = {
     "delft_ai_drone_racing_champion": {
@@ -150,8 +153,8 @@ CURATED_CATEGORY_VISUALS = {
         2: "https://images.unsplash.com/photo-1508614589041-895b88991e3e?w=1920&q=85"
     },
     "tesla_roadster_spacex_thrusters": {
-        1: "https://images.unsplash.com/photo-1542282088-72c9c27ed0cd?w=1920&q=85",
-        2: "https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=1920&q=85"
+        1: "https://images.unsplash.com/photo-1617788138017-80ad40651399?w=1920&q=85",
+        2: "https://images.unsplash.com/photo-1568605117036-5fe5e7bab0b7?w=1920&q=85"
     },
     "factory_humanoid_robots_10000": {
         1: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=1920&q=85",
@@ -507,18 +510,33 @@ MASTER_STORIES_POOL = [
 # Fetch 4 Unique, Non-Duplicate Stories for the Current Bulletin
 def get_fresh_bulletin_stories(slot):
     archive = load_news_archive()
-    selected = []
     
-    for candidate in MASTER_STORIES_POOL:
+    # Auto-reset: If all stories in the pool have been used, clear the archive
+    # so the cycle starts fresh (prevents stale/repeated stories indefinitely)
+    used_ids = set(e.get("id", "") for e in archive)
+    all_ids = set(s["id"] for s in MASTER_STORIES_POOL)
+    if all_ids.issubset(used_ids):
+        print("[ARCHIVE] Full story cycle complete — auto-resetting archive for fresh rotation.", flush=True)
+        save_news_archive([])
+        archive = []
+    
+    # Shuffle pool daily so different combinations appear (day-seeded for reproducibility)
+    day_seed = datetime.now().toordinal()
+    pool = list(MASTER_STORIES_POOL)
+    random.seed(day_seed)
+    random.shuffle(pool)
+    
+    selected = []
+    for candidate in pool:
         if not is_story_duplicate(candidate, archive):
             selected.append(dict(candidate))
             if len(selected) == 4:
                 break
     
-    # Fallback if pool is running low
+    # Fallback if pool is running low (only partially exhausted)
     if len(selected) < 4:
-        for candidate in MASTER_STORIES_POOL:
-            if candidate not in selected:
+        for candidate in pool:
+            if not any(s["id"] == candidate["id"] for s in selected):
                 selected.append(dict(candidate))
                 if len(selected) == 4:
                     break
