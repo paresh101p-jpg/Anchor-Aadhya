@@ -43,9 +43,11 @@ jobs:
       - name: Install Python Dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests
+          pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests google-genai
 
       - name: Generate 3-Facts Tech Short Video
+        env:
+          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
         run: |
           python create_3facts_tech_short.py
 
@@ -61,6 +63,6 @@ jobs:
         run: |
           git config --local user.email "actions@github.com"
           git config --local user.name "Anchor Aadhya Cloud Bot"
-          git add uploaded_bulletins_tracker.txt
+          git add uploaded_bulletins_tracker.txt used_shorts_facts.json
           git commit -m "chore: record shorts upload $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
           git push origin HEAD:${{ github.ref_name }} || echo "Push skipped or up-to-date"
