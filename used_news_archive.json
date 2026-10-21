@@ -100,5 +100,58 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 04:46:45"
+  },
+  {
+    "id": "gemini_car_ai_personal",
+    "headline": "GEMINI AI AB AAPKI GAADI MEIN ZYADA SMART",
+    "raw_title": "Google’s more personalized Gemini AI is heading to your car",
+    "keywords": [
+      "gemini",
+      "car",
+      "ai",
+      "personal"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 05:03:26"
+  },
+  {
+    "id": "snap_rdj_specs_ar",
+    "headline": "IRON MAN BANE SNAP KE AR GLASSES KA CHEF!",
+    "raw_title": "Snap is paying Robert Downey Jr. to do the Iron Man thing",
+    "keywords": [
+      "snap",
+      "rdj",
+      "specs",
+      "ar"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 05:03:26"
+  },
+  {
+    "id": "sam_altman_sister_lawsuit_dismissed",
+    "headline": "SAM ALTMAN KI BEHEN KA LAWSUIT DISMISS!",
+    "raw_title": "Judge dismisses Sam Altman’s sister’s sexual abuse lawsuit",
+    "keywords": [
+      "sam",
+      "altman",
+      "sister",
+      "lawsuit",
+      "dismissed"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 05:03:26"
+  },
+  {
+    "id": "oura_cardio_new_features",
+    "headline": "OURA SMART RINGS AB DIL KA RAKHENGE KHAYAL!",
+    "raw_title": "Oura adds two new cardiovascular health tracking features to its smart rings",
+    "keywords": [
+      "oura",
+      "cardio",
+      "new",
+      "features"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 05:03:26"
   }
 ]
