@@ -260,5 +260,57 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-21 08:34:05"
+  },
+  {
+    "id": "emergency_ai_breakthrough_12pm",
+    "headline": "NEXT-GEN AI REVOLUTION: AUTONOMOUS TECH SOARS!",
+    "raw_title": "Next-Gen AI Autonomous Breakthrough",
+    "keywords": [
+      "ai",
+      "neural",
+      "chips",
+      "innovation"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 09:22:57"
+  },
+  {
+    "id": "emergency_space_propulsion_12pm",
+    "headline": "DEEP SPACE PROPULSION: NEXT-GEN ENGINES TESTED!",
+    "raw_title": "Deep Space Propulsion Engine Tests",
+    "keywords": [
+      "space",
+      "rocket",
+      "starship",
+      "propulsion"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 09:22:57"
+  },
+  {
+    "id": "emergency_quantum_computing_12pm",
+    "headline": "QUANTUM SUPREMACY: ROOM-TEMP CHIPS REVEALED!",
+    "raw_title": "Quantum Computing Ambient Breakthrough",
+    "keywords": [
+      "quantum",
+      "chips",
+      "qubits",
+      "cyber"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 09:22:57"
+  },
+  {
+    "id": "emergency_future_mobility_12pm",
+    "headline": "NEXT-GEN EV BATTERIES: 1000 KM ON SINGLE CHARGE!",
+    "raw_title": "Next-Gen Solid State EV Battery",
+    "keywords": [
+      "ev",
+      "battery",
+      "mobility",
+      "solidstate"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-21 09:22:57"
   }
 ]
