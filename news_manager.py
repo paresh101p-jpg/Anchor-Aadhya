@@ -14,51 +14,64 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ARCHIVE_NEWS_FILE = os.path.join(BASE_DIR, "used_news_archive.json")
 ARCHIVE_IMAGES_FILE = os.path.join(BASE_DIR, "used_images_archive.txt")
 
-ANCHOR_LOOKS = [
-    {"id":"look_1_crimson","name":"Crimson Power Blazer","file":os.path.join(BASE_DIR,"anchor_look_1_crimson.jpg"),"theme_color":(255,30,86,255),"style_desc":"Classic Prime Time Anchor"},
-    {"id":"look_2_blue","name":"Royal Sapphire Blue","file":os.path.join(BASE_DIR,"anchor_look_2_blue.jpg"),"theme_color":(0,150,255,255),"style_desc":"Thoughtful Senior Tech Analyst"},
-    {"id":"look_3_emerald","name":"Emerald Teal Blazer","file":os.path.join(BASE_DIR,"anchor_look_3_emerald.jpg"),"theme_color":(16,185,129,255),"style_desc":"Modern Innovation Host"},
-    {"id":"look_4_black_gold","name":"Black Gold Blazer","file":os.path.join(BASE_DIR,"anchor_look_4_black_gold.jpg"),"theme_color":(245,158,11,255),"style_desc":"Dramatic Breaking News"},
-    {"id":"look_5_lilac","name":"Lavender Lilac Blazer","file":os.path.join(BASE_DIR,"anchor_look_5_lilac.jpg"),"theme_color":(168,85,247,255),"style_desc":"Playful Humorous Tech"},
+DYNAMIC_ANCHOR_STYLES = [
+    {"name":"Crimson Velvet Power Blazer","outfit":"luxurious tailored crimson red velvet blazer with minimalist gold buttons and crisp black inner formal top","theme_color":(255,30,86,255),"lighting":"cinematic broadcast studio lighting with warm golden edge lights"},
+    {"name":"Emerald Silk Executive Suit","outfit":"sharp modern emerald green structured blazer with satin lapels and silk ivory blouse","theme_color":(16,185,129,255),"lighting":"futuristic studio lighting with vibrant teal and soft white studio glow"},
+    {"name":"Midnight Indigo Tech Blazer","outfit":"contemporary midnight royal blue designer blazer with sharp modern collar","theme_color":(0,150,255,255),"lighting":"sleek cyan and electric blue studio backlights"},
+    {"name":"Obsidian Gold Tuxedo Blazer","outfit":"glamorous black formal blazer with subtle metallic gold trim and modern tech lapel pin","theme_color":(245,158,11,255),"lighting":"dramatic broadcast key lighting with warm amber rim lights"},
+    {"name":"Amethyst Violet Chic Suit","outfit":"chic tailored royal purple blazer with crisp modern cuts and elegant styling","theme_color":(168,85,247,255),"lighting":"high-tech futuristic purple and neon cyan ambient LED screens"},
+    {"name":"Ivory Pearl High-Tech Blazer","outfit":"clean minimalist pearl white tailored power blazer with sleek metallic accents","theme_color":(0,220,255,255),"lighting":"bright, crystal-clear 8k studio illumination with soft blue depth"},
+    {"name":"Burgundy Wine Structured Blazer","outfit":"regal deep burgundy wine tailored blazer with sharp shoulders and formal black top","theme_color":(220,38,38,255),"lighting":"sophisticated studio lighting with subtle warm highlights"},
+    {"name":"Sapphire Teal Innovation Suit","outfit":"modern deep teal business blazer with stylish contemporary silhouette","theme_color":(6,182,212,255),"lighting":"crisp tech-conference studio lighting with holographic display ambiance"},
+    {"name":"Champagne Gold Executive Blazer","outfit":"luxurious champagne amber formal blazer with textured fabric and premium finish","theme_color":(245,180,50,255),"lighting":"warm studio glamour lighting with soft golden glow"},
+    {"name":"Cyber Slate Minimalist Blazer","outfit":"ultra-modern charcoal slate structured blazer with futuristic clean lines","theme_color":(100,116,139,255),"lighting":"futuristic AI studio with curved digital world map displays in background"}
 ]
 
-VOICE_PROFILES = {
-    "dramatic":{"rate":"+4%","pitch":"+1Hz","desc":"Thrilling breaking tech"},
-    "funny_masti":{"rate":"+2%","pitch":"+3Hz","desc":"Playful masti delivery"},
-    "serious_caution":{"rate":"-5%","pitch":"-2Hz","desc":"Calm serious alert"},
-    "inspirational_joy":{"rate":"+0%","pitch":"+1Hz","desc":"Warm inspiring news"},
-}
+# Backward compatibility reference
+ANCHOR_LOOKS = [
+    {"id":"look_1_crimson","name":"Crimson Power Blazer","file":os.path.join(BASE_DIR,"anchor_look_1_crimson.jpg"),"theme_color":(255,30,86,255),"style_desc":"Classic Prime Time Anchor"},
+    {"id":"look_2_blue","name":"Royal Sapphire Blue","file":os.path.join(BASE_DIR,"anchor_look_2_blue.jpg"),"theme_color":(0,150,255,255),"style_desc":"Thoughtful Senior Tech Analyst"}
+]
 
-def load_news_archive():
-    if os.path.exists(ARCHIVE_NEWS_FILE):
-        try:
-            with open(ARCHIVE_NEWS_FILE,"r",encoding="utf-8") as f: return json.load(f)
-        except: return []
-    return []
+def generate_ai_anchor_look(slot, dominant_emotion=None):
+    """
+    Generates a 100% BRAND NEW photorealistic AI image of Anchor Aadhya for EVERY video.
+    Zero static looks. Every single video generates a unique AI image with dynamic wardrobe,
+    styling, and futuristic studio lighting.
+    """
+    today_slug = datetime.now().strftime("%Y-%m-%d")
+    rnd_suffix = random.randint(1000, 9999)
+    dest_file = os.path.join(BASE_DIR, f"anchor_aadhya_{today_slug}_{slot}_{rnd_suffix}_ai.jpg")
+    style = random.choice(DYNAMIC_ANCHOR_STYLES)
 
-def save_news_archive(archive):
-    with open(ARCHIVE_NEWS_FILE,"w",encoding="utf-8") as f:
-        json.dump(archive,f,ensure_ascii=False,indent=2)
+    print(f"\n--- [AI ANCHOR] Generating Brand-New AI Look for Anchor Aadhya: {style['name']} ---", flush=True)
 
-def load_images_archive():
-    if os.path.exists(ARCHIVE_IMAGES_FILE):
-        try:
-            with open(ARCHIVE_IMAGES_FILE,"r",encoding="utf-8") as f:
-                return set(l.strip() for l in f if l.strip())
-        except: return set()
-    return set()
+    prompt = (
+        f"A stunning, ultra-realistic commercial broadcast news photograph of Anchor Aadhya, "
+        f"a gorgeous 26-year-old Indian female TV news anchor with expressive intelligent eyes, "
+        f"charming confident smile, and sleek professional hair. She is wearing a {style['outfit']}, "
+        f"standing naturally with charismatic professional poise facing the camera. Background is a "
+        f"state-of-the-art futuristic AI and future-tech television newsroom studio with subtle curved "
+        f"holographic LED displays, soft depth of field, and {style['lighting']}. Medium close-up broadcast "
+        f"composition, razor-sharp 8k focus, realistic natural skin texture with micro-details, authentic "
+        f"real-world television photography, 16:9 widescreen — no cartoon, no CGI, no 3D animation, no plastic skin."
+    )
 
-def append_image_archive(note):
-    with open(ARCHIVE_IMAGES_FILE,"a",encoding="utf-8") as f: f.write(f"{note}\n")
+    ok = generate_image_with_imagen(prompt, dest_file)
+    if not ok or not os.path.exists(dest_file):
+        print("  [WARN] Anchor AI generation failed, falling back to master reference", flush=True)
+        dest_file = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
 
-def get_current_slot(explicit_slot=None):
-    if explicit_slot in ["12PM","5PM"]: return explicit_slot
-    return "12PM" if datetime.now().hour < 14 else "5PM"
+    return {
+        "id": f"ai_anchor_{today_slug}_{slot}_{rnd_suffix}",
+        "name": f"AI Anchor Aadhya ({style['name']})",
+        "file": dest_file,
+        "theme_color": style["theme_color"],
+        "style_desc": style["outfit"]
+    }
 
-def select_anchor_look(slot, dominant_emotion=None):
-    day_num = datetime.now().toordinal()
-    if dominant_emotion == "funny_masti": return ANCHOR_LOOKS[4]
-    return ANCHOR_LOOKS[day_num % 5] if slot == "12PM" else ANCHOR_LOOKS[(day_num+2) % 5]
+# Dynamic alias: select_anchor_look now generates brand new AI images every single run
+select_anchor_look = generate_ai_anchor_look
 
 RSS_FEEDS = [
     "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en",
@@ -303,20 +316,10 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
         print(f"  [GEMINI] Fatal: {e}", flush=True)
     return None
 
-def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headline_text=""):
-    """
-    ONLY Gemini Imagen 3 — zero stock photos, zero Unsplash, zero copyright risk.
-    Fallback: procedural high-tech broadcast visual (100% local PIL, never external URL).
-    """
-    print(f"  --> [IMAGEN 3 | Shot {shot_idx}] \"{prompt[:70]}...\"", flush=True)
-    if os.path.exists(output_file) and os.path.getsize(output_file) > 20000:
-        print(f"  [SKIP] Exists: {os.path.basename(output_file)}", flush=True)
-        return True
+def generate_image_with_imagen(prompt, output_file):
     api_key = _get_gemini_api_key()
     if not api_key:
-        print("  [WARN] No GEMINI_API_KEY — using procedural tech visual (zero copyright)", flush=True)
-        _dark_gradient(output_file, headline_text=headline_text, shot_idx=shot_idx)
-        return True
+        return False
     enhanced = (
         f"Authentic editorial news photojournalism. {prompt}. "
         f"100% physically accurate real-world representation. Ultra-detailed commercial "
@@ -325,7 +328,6 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
         f"genuine real-world photograph by a professional photojournalist"
     )
     # 1. Primary: Direct Google Developer API REST Endpoint for Imagen 3
-    # (Bypasses SDK Enterprise Agent Platform restrictions on standard AI Studio API keys)
     for model_name in ["imagen-3.0-generate-002", "imagen-3.0-generate-001", "imagen-3.0-fast-generate-001"]:
         try:
             url = f"https://generativelanguage.googleapis.com/v1beta/models/{model_name}:predict"
@@ -342,7 +344,6 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
                     img_bytes = base64.b64decode(predictions[0]["bytesBase64Encoded"])
                     im = Image.open(BytesIO(img_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
                     im.save(output_file, "JPEG", quality=95)
-                    append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
                     print(f"  [SUCCESS] Imagen 3 ({model_name}) Saved: {os.path.basename(output_file)}", flush=True)
                     return True
             else:
@@ -371,13 +372,28 @@ def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headl
                 for gen_img in response.generated_images:
                     im = Image.open(BytesIO(gen_img.image.image_bytes)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
                     im.save(output_file, "JPEG", quality=95)
-                    append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
                     print(f"  [SUCCESS] Saved: {os.path.basename(output_file)}", flush=True)
                     return True
             except Exception as img_e:
                 print(f"  [IMAGEN SDK] {model_name}: {img_e}", flush=True)
     except Exception as e:
         print(f"  [ERROR] Imagen SDK: {e}", flush=True)
+
+    return False
+
+def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headline_text=""):
+    """
+    ONLY Gemini Imagen 3 — zero stock photos, zero Unsplash, zero copyright risk.
+    Fallback: procedural high-tech broadcast visual (100% local PIL, never external URL).
+    """
+    print(f"  --> [IMAGEN 3 | Shot {shot_idx}] \"{prompt[:70]}...\"", flush=True)
+    if os.path.exists(output_file) and os.path.getsize(output_file) > 20000:
+        print(f"  [SKIP] Exists: {os.path.basename(output_file)}", flush=True)
+        return True
+
+    if generate_image_with_imagen(prompt, output_file):
+        append_image_archive(f"[Imagen3|Shot{shot_idx}] {prompt[:100]}")
+        return True
 
     print(f"  [FALLBACK] Procedural tech visual (zero copyright)", flush=True)
     _dark_gradient(output_file, headline_text=headline_text, shot_idx=shot_idx)

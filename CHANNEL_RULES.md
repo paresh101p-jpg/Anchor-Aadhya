@@ -33,13 +33,11 @@
 
 ---
 
-## 5. Dynamic Anchor Wardrobe Rotation across 5 Broadcast-Grade Looks
-Anchor Aadhya rotates across 5 broadcast-grade looks with identical facial identity:
-1. `anchor_look_1_crimson.jpg`: Crimson Power Blazer (Prime Time Headline Host)
-2. `anchor_look_2_blue.jpg`: Royal Sapphire Blue Blazer (Senior Tech Analyst, Serious & In-Depth)
-3. `anchor_look_3_emerald.jpg`: Emerald Teal Modern Blazer (Innovation Host with Warm Open Smile)
-4. `anchor_look_4_black_gold.jpg`: Luxury Black & Gold Lapel Blazer (Dramatic Breaking News Presentation)
-5. `anchor_look_5_lilac.jpg`: Chic Lavender Lilac Blazer (Playful, Cheerful & Humorous Masti Tech)
+## 5. Dynamic Anchor Wardrobe — 100% Brand-New AI Generation on EVERY Video
+* **Rule**: Zero static pre-saved looks. Anchor Aadhya's image MUST be generated fresh by Gemini AI for EVERY single bulletin video run.
+* **Dynamic AI Prompting**: Every video automatically crafts a brand-new high-fashion designer broadcast wardrobe (Crimson Velvet, Emerald Silk, Midnight Indigo, Obsidian Gold, Amethyst Violet, Pearl White, Burgundy Wine, Sapphire Teal, Champagne Amber, Cyber Slate) and high-tech TV studio lighting.
+* **Consistency**: Retains identical character identity (26-year-old gorgeous Indian female TV news anchor with expressive intelligent eyes, charming confident smile, sleek professional styling in 8k broadcast studio).
+* **Applied Everywhere**: The newly generated AI image is applied dynamically to Scene 1 (Hook), Scene 6 (Outro), and the YouTube Thumbnail.
 
 ---
 
