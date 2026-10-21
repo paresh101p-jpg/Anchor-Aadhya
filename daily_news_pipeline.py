@@ -245,11 +245,13 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
     ticker_text = (
         f"ANCHOR AADHYA • DAILY TECH BULLETIN • {today_display.upper()} • "
         f"TOP 4 BREAKING AI & FUTURE TECH STORIES • "
-        f"STAY TUNED FOR NEXT UPDATE • SUBSCRIBE TO ANCHOR AADHYA • "
     )
+    scene_videos = []
+    scene_durations = []
 
     for idx, (item, plate, b1_path, b2_path, audio) in enumerate(zip(scenes_list, plate_paths, bullet1_paths, bullet2_paths, audio_paths)):
         dur = get_audio_duration(audio) + 0.6
+        scene_durations.append(dur)
         scene_mp4 = os.path.join(BASE_DIR, f"tv_scene_{idx+1}.mp4")
         frames = int(dur * 25)
 
@@ -368,7 +370,7 @@ def render_scenes_with_motion(scenes_list, board_path, rundown_paths, plate_path
         scene_videos.append(scene_mp4)
         print(f"  --> Rendered Motion Scene {idx+1} ({dur:.1f}s): {scene_mp4}", flush=True)
 
-    return scene_videos
+    return scene_videos, scene_durations
 
 def render_master_news_video(scene_videos, output_video):
     print(f"\n--- 5. Combining Scenes with Studio News Ambient Audio ---", flush=True)
@@ -483,7 +485,7 @@ async def main():
     audio_paths = await generate_speech_audio(full_scenes_list)
 
     # 6. Render Scenes and Master Video
-    scene_videos = render_scenes_with_motion(
+    scene_videos, scene_durations = render_scenes_with_motion(
         full_scenes_list, board_path, rundown_paths, plate_paths, bullet1_paths, bullet2_paths, audio_paths,
         today_display, slot
     )
@@ -511,7 +513,8 @@ async def main():
         slot=slot,
         stories=stories,
         video_filename=os.path.basename(output_video),
-        thumbnail_filename=os.path.basename(thumb_path)
+        thumbnail_filename=os.path.basename(thumb_path),
+        scene_durations=scene_durations
     )
 
     # 8. Commit Stories & Images to Permanent Archive

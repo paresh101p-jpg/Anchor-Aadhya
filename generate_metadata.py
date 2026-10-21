@@ -17,7 +17,8 @@ def generate_video_metadata(
     slot="5PM",
     stories=None,
     video_filename=None,
-    thumbnail_filename=None
+    thumbnail_filename=None,
+    scene_durations=None
 ):
     today_display = datetime.now().strftime("%d %B %Y")
     today_slug = datetime.now().strftime("%Y-%m-%d")
@@ -46,13 +47,37 @@ def generate_video_metadata(
     if len(title) > 100:
         title = f"{headline_1[:45]} 🚀 {headline_2[:30]} | Tech News {today_display[:6]}"
 
-    # Format Chapters / Timestamps
-    desc_chapters = f"""00:00 - आज की टॉप 4 हेडलाइंस (Today's Top 4 Tech Rundown)
-00:38 - {stories[0]['headline']} ({stories[0]['category']})
-01:20 - {stories[1]['headline']} ({stories[1]['category']})
-02:05 - {stories[2]['headline']} ({stories[2]['category']})
-02:50 - {stories[3]['headline']} ({stories[3]['category']})
-03:30 - Anchor Aadhya Outro (Like & Subscribe!)"""
+    # Format Chapters / Timestamps (Clickable in YouTube Player)
+    def format_ts(sec):
+        m = int(sec) // 60
+        s = int(sec) % 60
+        return f"{m:02d}:{s:02d}"
+
+    if scene_durations and len(scene_durations) >= 5:
+        t0 = 0.0
+        t1 = scene_durations[0]
+        t2 = t1 + scene_durations[1]
+        t3 = t2 + scene_durations[2]
+        t4 = t3 + scene_durations[3]
+        t5 = t4 + (scene_durations[4] if len(scene_durations) > 4 else 70.0)
+
+        desc_chapters = (
+            f"00:00 - आज की टॉप 4 हेडलाइंस (Top 4 Tech Headlines)\n"
+            f"{format_ts(t1)} - 1. {stories[0]['headline']} ({stories[0]['category']})\n"
+            f"{format_ts(t2)} - 2. {stories[1]['headline']} ({stories[1]['category']})\n"
+            f"{format_ts(t3)} - 3. {stories[2]['headline']} ({stories[2]['category']})\n"
+            f"{format_ts(t4)} - 4. {stories[3]['headline']} ({stories[3]['category']})\n"
+            f"{format_ts(t5)} - आउट्रो (Like, Share & Subscribe!)"
+        )
+    else:
+        desc_chapters = (
+            f"00:00 - आज की टॉप 4 हेडलाइंस (Today's Top 4 Tech Rundown)\n"
+            f"00:35 - 1. {stories[0]['headline']} ({stories[0]['category']})\n"
+            f"01:45 - 2. {stories[1]['headline']} ({stories[1]['category']})\n"
+            f"03:00 - 3. {stories[2]['headline']} ({stories[2]['category']})\n"
+            f"04:15 - 4. {stories[3]['headline']} ({stories[3]['category']})\n"
+            f"05:30 - आउट्रो (Like & Subscribe!)"
+        )
 
     # In-Depth Story Analysis
     desc_insights = ""
