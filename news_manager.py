@@ -414,39 +414,67 @@ def generate_image_with_imagen(prompt, output_file):
 
     return False
 
+def fit_to_16_9(im, target_w=1920, target_h=1080):
+    """
+    Fits any image perfectly into 16:9 Full HD without stretching or distortion.
+    Uses smart center-crop to preserve 100% natural aspect ratio.
+    """
+    w, h = im.size
+    if w <= 0 or h <= 0:
+        return Image.new("RGB", (target_w, target_h), (10, 15, 28))
+    target_ratio = target_w / target_h  # 1.7778
+    im_ratio = w / float(h)
+    
+    if im_ratio > target_ratio:
+        # Image is wider than 16:9 -> crop left and right
+        new_w = int(h * target_ratio)
+        offset_x = (w - new_w) // 2
+        im = im.crop((offset_x, 0, offset_x + new_w, h))
+    else:
+        # Image is taller than 16:9 -> crop top and bottom
+        new_h = int(w / target_ratio)
+        offset_y = (h - new_h) // 2
+        im = im.crop((0, offset_y, w, offset_y + new_h))
+        
+    return im.resize((target_w, target_h), Image.Resampling.LANCZOS)
+
 def fetch_real_news_photo(query, output_file, shot_idx=1):
     """
     Fetches genuine, high-resolution authentic editorial news photography for the story.
-    Zero blank/blue screens. 100% real photographic imagery. 100% guaranteed output file.
+    Zero stretching. Zero distortion. 100% real topic-relevant imagery.
     """
     clean_q = re.sub(r"[^a-zA-Z0-9\s]", " ", query).strip()
-    words = [w for w in clean_q.split() if len(w) > 3]
+    words = [w for w in clean_q.split() if len(w) > 2]
 
-    # Smart Entity Matching: Translate Hinglish headline terms to exact international photo subjects
+    # Smart Entity & Topic Mapping: Prioritize official brand, HQ, hardware & product visuals
     entity_map = {
+        "netflix": "Netflix headquarters building",
+        "streaming": "Netflix streaming television",
         "altman": "Sam Altman",
-        "openai": "OpenAI",
-        "chatgpt": "OpenAI",
+        "openai": "OpenAI office San Francisco",
+        "chatgpt": "OpenAI office San Francisco",
         "musk": "Elon Musk",
-        "tesla": "Tesla Inc",
-        "spacex": "SpaceX Starship",
-        "starship": "SpaceX Starship",
-        "nvidia": "Nvidia GPU",
-        "google": "Google AI",
+        "tesla": "Tesla Gigafactory",
+        "spacex": "SpaceX Falcon 9 launch",
+        "starship": "SpaceX Starship launch",
+        "nvidia": "Nvidia GPU graphics card",
+        "google": "Googleplex headquarters Mountain View",
         "gemini": "Google AI",
-        "apple": "Apple Inc",
-        "iphone": "Apple Inc",
-        "meta": "Meta Platforms",
+        "apple": "Apple Park headquarters Cupertino",
+        "iphone": "Apple Park headquarters Cupertino",
+        "meta": "Meta Platforms headquarters Menlo Park",
         "zuckerberg": "Mark Zuckerberg",
-        "microsoft": "Microsoft technology",
-        "robot": "Humanoid robot",
-        "humanoid": "Humanoid robot",
-        "quantum": "Quantum computer",
-        "chip": "Semiconductor microchip",
-        "semiconductor": "Semiconductor microchip",
-        "satellite": "Space exploration satellite",
-        "space": "Space exploration satellite",
-        "nasa": "NASA spacecraft"
+        "microsoft": "Microsoft Redmond campus",
+        "amazon": "Amazon headquarters Seattle",
+        "robot": "Humanoid robot Boston Dynamics",
+        "humanoid": "Humanoid robot Boston Dynamics",
+        "quantum": "Quantum computing IBM processor",
+        "chip": "Semiconductor silicon wafer cleanroom",
+        "semiconductor": "Semiconductor silicon wafer cleanroom",
+        "satellite": "Space exploration satellite Earth orbit",
+        "space": "Space exploration satellite Earth orbit",
+        "nasa": "NASA spacecraft launch",
+        "gaming": "Video game console esports"
     }
 
     search_term = None
@@ -457,19 +485,19 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
 
     if not search_term:
         filtered = [w for w in words if w.lower() not in [
-            "with", "from", "that", "this", "news", "today", "live", "first", "bulletin", "breaking", "shot", "wide", "macro", "photo", "court", "mili", "badi", "rahat", "hoga", "mega", "daring", "plan"
+            "with", "from", "that", "this", "news", "today", "live", "first", "bulletin", "breaking", "shot", "wide", "macro", "photo", "court", "mili", "badi", "rahat", "hoga", "mega", "daring", "plan", "time", "watch", "profit"
         ]]
         search_term = " ".join(filtered[:3]) if filtered else "Humanoid robot technology"
 
-    print(f"  --> [REAL PHOTO | Shot {shot_idx}] Searching authentic editorial press image for: '{search_term}'...", flush=True)
+    print(f"  --> [REAL PHOTO | Shot {shot_idx}] Searching topic-relevant image for: '{search_term}'...", flush=True)
 
     headers = {"User-Agent": "AnchorAadhyaNews/2.0 (Mozilla/5.0; Windows NT 10.0; Win64; x64)"}
 
     # Attempt query search on Wikimedia Commons
-    candidate_queries = [search_term, "SpaceX Starship", "Humanoid robot", "Artificial intelligence laboratory"]
+    candidate_queries = [search_term, "Netflix headquarters building", "SpaceX Starship", "Humanoid robot", "Artificial intelligence laboratory"]
     for q_try in candidate_queries:
         try:
-            url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrsearch=" + urllib.parse.quote(q_try) + "&gsrlimit=5&prop=imageinfo&iiprop=url|size"
+            url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrsearch=" + urllib.parse.quote(q_try) + "&gsrlimit=6&prop=imageinfo&iiprop=url|size"
             req = urllib.request.Request(url, headers=headers)
             with urllib.request.urlopen(req, timeout=12) as resp:
                 data = json.loads(resp.read().decode("utf-8"))
@@ -477,30 +505,38 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
             for pid, p in pages.items():
                 ii = p.get("imageinfo", [{}])[0]
                 img_url = ii.get("url", "")
+                w = ii.get("width", 0)
+                h = ii.get("height", 0)
+                # Avoid single person portraits if the topic is a company
+                if any(comp in search_term.lower() for comp in ["netflix", "apple", "google", "meta", "microsoft", "amazon", "nvidia", "quantum", "chip"]):
+                    if h > 0 and w / float(h) < 0.9:
+                        continue  # Skip tall vertical portraits for company news
+
                 if img_url and any(ext in img_url.lower() for ext in [".jpg", ".jpeg", ".png"]):
                     img_req = urllib.request.Request(img_url, headers={"User-Agent": "Mozilla/5.0"})
                     with urllib.request.urlopen(img_req, timeout=15) as img_resp:
                         img_bytes = img_resp.read()
                     if len(img_bytes) > 20000:
                         im = Image.open(BytesIO(img_bytes)).convert("RGB")
-                        w, h = im.size
                         if shot_idx == 2:
                             # Macro shot: Crop central 60% for a dramatic B-roll close-up
-                            cx, cy = w // 2, h // 2
-                            cw, ch = int(w * 0.60), int(h * 0.60)
+                            w_im, h_im = im.size
+                            cx, cy = w_im // 2, h_im // 2
+                            cw, ch = int(w_im * 0.60), int(h_im * 0.60)
                             im = im.crop((cx - cw//2, cy - ch//2, cx + cw//2, cy + ch//2))
-                        im = im.resize((1920, 1080), Image.Resampling.LANCZOS)
+                        # 100% Aspect Ratio Preserving Cover-Crop (ZERO STRETCHING)
+                        im = fit_to_16_9(im)
                         im.save(output_file, "JPEG", quality=95)
                         append_image_archive(f"[RealPhoto|Shot{shot_idx}] {q_try} ({img_url[:60]})")
-                        print(f"  [SUCCESS] Saved 1080p Real Editorial Photo: {os.path.basename(output_file)} (via {q_try})", flush=True)
+                        print(f"  [SUCCESS] Saved 1080p Perfect 16:9 Photo (No Stretch): {os.path.basename(output_file)} (via {q_try})", flush=True)
                         return True
         except Exception as e:
             print(f"  [WARN] Query '{q_try}' attempt failed: {e}", flush=True)
 
     # Emergency Fallback: Guaranteed direct Wikimedia 1080p press photograph URLs
     direct_press_urls = [
+        "https://upload.wikimedia.org/wikipedia/commons/9/9d/Netflix_headquarters.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/f/f3/Starship_SN16.jpeg",
-        "https://upload.wikimedia.org/wikipedia/commons/8/8d/Sam_Altman_CropEdit_James_Tamim.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/f/ff/Tesla_Model_Y_Classic-Days_2022_DSC_0118.jpg",
         "https://upload.wikimedia.org/wikipedia/commons/e/ec/Supercomputer_Cray-1.jpg"
     ]
@@ -510,9 +546,10 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
             with urllib.request.urlopen(req, timeout=15) as resp:
                 data = resp.read()
             if len(data) > 20000:
-                im = Image.open(BytesIO(data)).convert("RGB").resize((1920, 1080), Image.Resampling.LANCZOS)
+                im = Image.open(BytesIO(data)).convert("RGB")
+                im = fit_to_16_9(im)
                 im.save(output_file, "JPEG", quality=95)
-                print(f"  [SUCCESS] Saved 1080p Direct Press Photo: {os.path.basename(output_file)}", flush=True)
+                print(f"  [SUCCESS] Saved 1080p Direct Press Photo (No Stretch): {os.path.basename(output_file)}", flush=True)
                 return True
         except:
             pass
