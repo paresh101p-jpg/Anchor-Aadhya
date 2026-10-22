@@ -531,5 +531,60 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-22 12:16:38"
+  },
+  {
+    "id": "ai_minister_govt_vulnerabilities",
+    "headline": "GOVERNMENT SYSTEMS MEIN AI MINISTER NE KHUJLAAI SECURITY",
+    "raw_title": "'500 new vulnerabilities' found in government, says AI minister",
+    "keywords": [
+      "ai",
+      "minister",
+      "govt",
+      "vulnerabilities"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-22 16:16:53"
+  },
+  {
+    "id": "oppo_find_x10_pro_max",
+    "headline": "OPPO FIND X10 PRO MAX KA NAYA CAMERA DHAMAKA",
+    "raw_title": "Oppo Find X10 Pro Max hands-on: Triple 200-megapixel cameras but few surprises",
+    "keywords": [
+      "oppo",
+      "find",
+      "x10",
+      "pro",
+      "max"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-22 16:16:53"
+  },
+  {
+    "id": "supernatural_vr_meta_launch",
+    "headline": "SUPERNATURAL VR EXERCISE APP META HEADSETS PAR WAPIS",
+    "raw_title": "Supernatural's VR exercise app has relaunched on Meta VR headsets",
+    "keywords": [
+      "supernatural",
+      "vr",
+      "meta",
+      "launch"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-22 16:16:53"
+  },
+  {
+    "id": "jensen_huang_europe_plug_in_datacenter",
+    "headline": "JENSEN HUANG KA EUROPE KE LIYE MEGA AI PLAN",
+    "raw_title": "Jensen Huang’s Vision for Europe Runs on Plug-In Data Centers",
+    "keywords": [
+      "jensen",
+      "huang",
+      "europe",
+      "plug",
+      "in",
+      "datacenter"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-22 16:16:53"
   }
 ]
