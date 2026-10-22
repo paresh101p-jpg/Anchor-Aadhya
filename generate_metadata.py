@@ -114,9 +114,9 @@ def generate_video_metadata(
             kw_clean = re.sub(r"[^a-zA-Z0-9]", "", kw).title()
             if kw_clean and len(kw_clean) > 3:
                 story_hashtags.append(f"#{kw_clean}")
-    story_hashtags = list(dict.fromkeys(story_hashtags))[:6]
-    base_hashtags = ["#TechNews", "#AINews", "#AnchorAadhya", "#FutureTech", "#DailyTechNews", "#TechNewsHindi"]
-    final_hashtags = " ".join(base_hashtags + story_hashtags)
+    story_hashtags = list(dict.fromkeys(story_hashtags))[:5]
+    base_hashtags = ["#TechNews", "#AINews", "#AnchorAadhya", "#FutureTech", "#DailyTechNews"]
+    final_hashtags = " ".join((base_hashtags + story_hashtags)[:10])
 
     description = f"""{headline_1} और {headline_2}! आज की सबसे बड़ी फ्यूचर टेक्नोलॉजी की खबरें सिर्फ Anchor Aadhya पर! 🚀🤖
 

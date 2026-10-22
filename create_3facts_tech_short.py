@@ -963,8 +963,11 @@ async def main():
         meta_file = os.path.join(BASE_DIR, "metadata_shorts.json")
         generate_dynamic_metadata(meta_file, facts_data)
 
-        # 9. Record used facts so they are NEVER repeated
-        record_used_facts(facts_list)
+        # 9. Save pending facts (will be permanently committed upon confirmed YouTube upload)
+        pending_facts_file = os.path.join(BASE_DIR, "pending_shorts_facts.json")
+        with open(pending_facts_file, "w", encoding="utf-8") as pf:
+            json.dump(facts_list, pf, ensure_ascii=False, indent=2)
+        print(f"  [PENDING] Saved {len(facts_list)} facts to {pending_facts_file} (awaiting confirmed upload)", flush=True)
     else:
         print(f"[ERROR] FFmpeg failed: {res.stderr[-400:]}", flush=True)
 

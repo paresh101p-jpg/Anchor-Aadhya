@@ -642,8 +642,12 @@ async def main():
         scene_durations=scene_durations
     )
 
-    # 8. Commit Stories & Images to Permanent Archive
-    commit_bulletin_stories(slot, stories)
+    # 8. Save pending stories (will be permanently committed upon confirmed YouTube upload)
+    import json
+    pending_stories_file = os.path.join(BASE_DIR, "pending_bulletin_stories.json")
+    with open(pending_stories_file, "w", encoding="utf-8") as pf:
+        json.dump({"slot": slot, "stories": stories}, pf, ensure_ascii=False, indent=2)
+    print(f"  [PENDING] Saved {len(stories)} stories to {pending_stories_file} (awaiting confirmed upload)", flush=True)
     print("\n[COMPLETE] 100% AUTONOMOUS NEWS PIPELINE EXECUTION FINISHED!", flush=True)
 
 if __name__ == "__main__":

@@ -183,7 +183,7 @@ def upload_daily_bulletin(slot=None, force=False):
             print("\n[WARNING] YOUTUBE DAILY UPLOAD LIMIT EXCEEDED (uploadLimitExceeded)!")
             print("  --> YouTube restricts the number of videos uploaded per 24 hours (10-12 videos limit).")
             print("  --> The channel has reached today's limit. Next upload will resume when quota resets.")
-            return True
+            return False
         else:
             raise e
 
@@ -206,6 +206,19 @@ def upload_daily_bulletin(slot=None, force=False):
             print(f"  Notice uploading thumbnail: {e}")
 
     mark_as_uploaded(os.path.basename(target_video), video_id, video_url)
+
+    # Archive pending stories upon confirmed YouTube upload
+    pending_stories_file = os.path.join(BASE_DIR, "pending_bulletin_stories.json")
+    if os.path.exists(pending_stories_file):
+        try:
+            with open(pending_stories_file, "r", encoding="utf-8") as pf:
+                p_data = json.load(pf)
+            from news_manager import commit_bulletin_stories
+            commit_bulletin_stories(p_data.get("slot"), p_data.get("stories"))
+            os.remove(pending_stories_file)
+            print("  --> [ARCHIVE] Successfully recorded news stories to used_news_archive.json!")
+        except Exception as arc_err:
+            print(f"  Notice archiving pending stories: {arc_err}")
 
     # Automatically delete posted video footage, thumbnail, and story images after successful upload
     print("\n--- Cleaning Up Posted Video Footage & Images ---")
@@ -275,7 +288,7 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
             print("\n[WARNING] YOUTUBE DAILY UPLOAD LIMIT EXCEEDED (uploadLimitExceeded)!")
             print("  --> YouTube restricts the number of videos uploaded per 24 hours (10-12 videos limit).")
             print("  --> The channel has reached today's limit. Next upload will resume when quota resets.")
-            return True
+            return False
         else:
             raise e
 
@@ -292,6 +305,19 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
             print(f"  [WARNING] Thumbnail upload failed: {e}")
 
     mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
+
+    # Archive pending shorts facts upon confirmed YouTube upload
+    pending_facts_file = os.path.join(BASE_DIR, "pending_shorts_facts.json")
+    if os.path.exists(pending_facts_file):
+        try:
+            with open(pending_facts_file, "r", encoding="utf-8") as pf:
+                p_facts = json.load(pf)
+            from create_3facts_tech_short import record_used_facts
+            record_used_facts(p_facts)
+            os.remove(pending_facts_file)
+            print("  --> [ARCHIVE] Successfully recorded shorts facts to used_shorts_facts.json!")
+        except Exception as arc_err:
+            print(f"  Notice archiving pending facts: {arc_err}")
 
     # Automatically delete video, metadata, and all temporary shorts assets after successful upload
     print("\n--- Cleaning Up Posted Shorts Video & Temporary Assets ---", flush=True)
