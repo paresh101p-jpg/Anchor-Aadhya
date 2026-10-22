@@ -419,5 +419,60 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-21 16:11:13"
+  },
+  {
+    "id": "ai_agent_mcp_security_risk",
+    "headline": "AI AGENTS KA NAYA PROTOCOL BANA BADA KHATRA",
+    "raw_title": "MCP for agent-to-agent comms may be the riskiest protocol you've never heard of",
+    "keywords": [
+      "ai",
+      "agent",
+      "mcp",
+      "security",
+      "risk"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-22 11:48:11"
+  },
+  {
+    "id": "xbox_cloud_gaming_paid_preview",
+    "headline": "XBOX CLOUD GAMING AB BINA GAME PASS BHI MILEGA",
+    "raw_title": "Xbox is previewing paid cloud gaming for players without Game Pass",
+    "keywords": [
+      "xbox",
+      "cloud",
+      "gaming",
+      "paid",
+      "preview"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-22 11:48:11"
+  },
+  {
+    "id": "sony_playstation_pulse_headset_launch",
+    "headline": "SONY PLAYSTATION PULSE HEADSET KI LAUNCH DATE AAYI",
+    "raw_title": "Sony's PlayStation Pulse headset arrives on November 19 for $100",
+    "keywords": [
+      "sony",
+      "playstation",
+      "pulse",
+      "headset",
+      "launch"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-22 11:48:11"
+  },
+  {
+    "id": "reactos_ntfs_support_milestone",
+    "headline": "REACTOS MEIN AAYA BADA UPDATE NTFS SUPPORT SHURU",
+    "raw_title": "ReactOS reaches major milestone with NTFS install support",
+    "keywords": [
+      "reactos",
+      "ntfs",
+      "support",
+      "milestone"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-22 11:48:11"
   }
 ]
