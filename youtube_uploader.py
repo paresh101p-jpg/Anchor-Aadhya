@@ -22,6 +22,35 @@ from googleapiclient.http import MediaFileUpload
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
+
+def sanitize_youtube_tags(raw_tags, max_chars=420):
+    """
+    Sanitizes tags to strictly comply with YouTube Data API v3 requirements:
+    - Max total length <= 420 chars (strictly under YouTube's 500-char limit)
+    - Strips disallowed characters (<, >, commas, quotes, emojis)
+    - Rejects empty or single-character tags
+    """
+    if not raw_tags:
+        return ["Tech News", "AI News", "Anchor Aadhya"]
+    clean = []
+    total_len = 0
+    for t in raw_tags:
+        if not t:
+            continue
+        s = re.sub(r"[<>,;"'
+]", " ", str(t))
+        s = re.sub(r"[^\w\s\-\#\.]", "", s).strip()
+        s = re.sub(r"\s+", " ", s)
+        if len(s) < 2 or len(s) > 80:
+            continue
+        add_len = len(s) + (1 if clean else 0)
+        if total_len + add_len > max_chars:
+            break
+        if s.lower() not in [x.lower() for x in clean]:
+            clean.append(s)
+            total_len += add_len
+    return clean or ["Tech News", "AI News", "Anchor Aadhya"]
+
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TOKEN_FILE = os.path.join(BASE_DIR, "youtube_token.json")
 TRACKER_FILE = os.path.join(BASE_DIR, "uploaded_bulletins_tracker.txt")
@@ -143,7 +172,7 @@ def upload_daily_bulletin(slot=None, force=False):
         "snippet": {
             "title": meta.get("title", f"Anchor Aadhya Tech News {today_slug} ({target_slot})"),
             "description": meta.get("description", ""),
-            "tags": meta.get("tags", ["AI News", "Tech News", "Anchor Aadhya"]),
+            "tags": sanitize_youtube_tags(meta.get("tags", [])),
             "categoryId": "28",  # Science & Technology
             "defaultLanguage": "hi",
             "defaultAudioLanguage": "hi"
@@ -259,7 +288,7 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
         "snippet": {
             "title": meta.get("title", "Anchor Aadhya Tech Short #Shorts"),
             "description": meta.get("description", ""),
-            "tags": meta.get("tags", ["Shorts", "TechShorts", "AnchorAadhya"]),
+            "tags": sanitize_youtube_tags(meta.get("tags", [])),
             "categoryId": "28",  # Science & Technology
             "defaultLanguage": "hi",
             "defaultAudioLanguage": "hi"
