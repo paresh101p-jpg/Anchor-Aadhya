@@ -278,7 +278,7 @@ def _synthesize_story_from_article(article):
 
     speech_body = desc if len(desc) > 30 else f"{clean_title}. Tech industry mein is nayi vikas par sabhi experts ki nigahein bani hui hain."
     speech = (
-        f"Dosto, aaj ki badi tech khabar! {clean_title}. "
+        f"Ab aage badhte hain agle bade update ki taraf! {clean_title}. "
         f"{speech_body} "
         f"Yeh mahatvapurna update {source} dwara report kiya gaya hai. "
         f"Is nayi tech development par aapki kya rai hai? Hume comment karke zaroor batayein!"
@@ -314,6 +314,28 @@ def _synthesize_story_from_article(article):
     }
 
 ACTIVE_GEMINI_MODEL = None
+
+def sanitize_story_speech(speech):
+    """
+    Ensures Anchor Aadhya NEVER repeats 'Namaskar dosto' or 'Anchor Aadhya mein aapka swagat hai'
+    inside individual story segments. The greeting is strictly reserved for the video's opening hook scene.
+    """
+    if not speech:
+        return speech
+    import re
+    cleaned = speech.strip()
+    # Strip common Devanagari intro phrases at start
+    cleaned = re.sub(r'^\s*नमस्कार\s*(?:दोस्तों|दर्शकों|साथियों)?[!,।\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^\s*(?:(?:एंकर\s*)?आध्या\s*में\s*)?(?:आपका\s*)?स्वागत\s*है[!,।\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    # Strip common Hinglish intro phrases at start
+    cleaned = re.sub(r'^\s*namaskar\s*(?:dosto|dost|viewers|saathiyo)?[!,\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^\s*(?:welcome\s*to\s*)?anchor\s*aadhya\s*(?:mein|me)?\s*(?:aapka\s*)?swagat\s*(?:hai|he)[!,\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^\s*welcome\s*(?:back\s*)?(?:to\s*)?(?:anchor\s*)?aadhya[!,\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^\s*hello\s*(?:friends|dosto|viewers)?[!,\.\s]*', '', cleaned, flags=re.IGNORECASE)
+    cleaned = re.sub(r'^\s*(?:dosto|dost)\s*[,!]\s*(?:(?:welcome\s*to\s*)?anchor\s*aadhya\s*(?:mein|me)?\s*(?:aapka\s*)?swagat\s*(?:hai|he)[!,\.\s]*)?', '', cleaned, flags=re.IGNORECASE)
+    # Clean up any leftover punctuation or whitespace at the beginning
+    cleaned = re.sub(r'^[,\.!:\-–—।\s]+', '', cleaned).strip()
+    return cleaned
 
 def generate_story_metadata_with_gemini(article):
     global ACTIVE_GEMINI_MODEL
@@ -355,7 +377,7 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
     "Pure serious news fact 4 in Hinglish (Official rollout/confirmation, max 14 words)"
   ],
   "emotion": "dramatic or funny_masti or serious_caution or inspirational_joy",
-  "speech": "120-160 word natural Hindi/Hinglish anchor broadcast script, natural conversational tone, engaging audience question at end. CRITICAL RULE: NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
+  "speech": "120-160 word natural Hindi/Hinglish anchor broadcast story script, engaging audience question at end. CRITICAL RULES: 1. STRICTLY NO INTRO GREETINGS: NEVER say 'Namaskar dosto', 'Anchor Aadhya mein aapka swagat hai', 'Hello friends', etc. because the video ALREADY has an opening greeting in the first scene! Start directly with the story or a natural transition (e.g. 'Ab badhte hain agli badi khabar ki taraf...', 'AI research lab se ek hairan karne wali report samne aayi hai...'). 2. NEVER mention 12 baje, 5 baje, dopahar, shaam, or any time slot in the speech.",
   "ai_image_prompt": "SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3. Describe the real-world scene, vehicle, device, hardware, lab, or setting from this story in vivid detail. NEVER use real celebrity or politician names (use generic terms like 'tech CEO', 'engineer', 'investor') to prevent safety blocks. Photojournalism cinematic lighting, sharp 8k. NO text, NO watermarks.",
   "ai_image_prompt_2": "SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of the technical hardware, chip, mechanism or screen detail from this story. Photorealistic macro photography. NO text.",
   "badge_color": [R, G, B, 255]
@@ -374,6 +396,7 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                 s,e = text.find("{"), text.rfind("}")+1
                 if s >= 0 and e > s: text = text[s:e]
                 story = json.loads(text)
+                story["speech"] = sanitize_story_speech(story.get("speech", ""))
                 bc = story.get("badge_color",[220,38,38,255])
                 story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                 story["keywords"] = story.get("id","").replace("_"," ").split()
@@ -407,6 +430,7 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                 s,e = text.find("{"), text.rfind("}")+1
                 if s >= 0 and e > s: text = text[s:e]
                 story = json.loads(text)
+                story["speech"] = sanitize_story_speech(story.get("speech", ""))
                 bc = story.get("badge_color",[220,38,38,255])
                 story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                 story["keywords"] = story.get("id","").replace("_"," ").split()
@@ -434,6 +458,7 @@ OUTPUT ONLY raw JSON (no markdown, no code block):
                         s,e = text.find("{"), text.rfind("}")+1
                         if s >= 0 and e > s: text = text[s:e]
                         story = json.loads(text)
+                        story["speech"] = sanitize_story_speech(story.get("speech", ""))
                         bc = story.get("badge_color",[220,38,38,255])
                         story["badge_color"] = tuple(bc) if isinstance(bc,list) else (220,38,38,255)
                         story["keywords"] = story.get("id","").replace("_"," ").split()

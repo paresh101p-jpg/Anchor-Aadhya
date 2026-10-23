@@ -28,7 +28,8 @@ from news_manager import (
     generate_ai_news_image,
     VOICE_PROFILES,
     append_image_archive,
-    load_images_archive
+    load_images_archive,
+    sanitize_story_speech
 )
 from generate_thumbnail import create_youtube_thumbnail
 from generate_metadata import generate_video_metadata
@@ -281,9 +282,15 @@ async def generate_speech_audio(scenes_list):
         if not pitch_val.startswith(("+", "-")):
             pitch_val = f"+{pitch_val}"
 
+        # Ensure only Scene 1 (index 0) has the channel intro, while all story segments are sanitized
+        speech_text = item.get("speech", "")
+        if idx > 0 and idx < len(scenes_list) - 1:
+            speech_text = sanitize_story_speech(speech_text)
+            item["speech"] = speech_text
+
         print(f"  --> Voice {idx+1} Emotion [{emotion.upper()}]: Rate={rate_val}, Pitch={pitch_val}", flush=True)
         communicate = edge_tts.Communicate(
-            item["speech"],
+            speech_text,
             voice=voice,
             rate=rate_val,
             pitch=pitch_val
