@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+﻿# -*- coding: utf-8 -*-
 """
 Automated YouTube Video & Thumbnail Uploader for Anchor Aadhya News Channel
 - 100% Autonomous: Uploads today's Full HD 1080p News Bulletin Video
@@ -34,13 +34,15 @@ def sanitize_youtube_tags(raw_tags, max_chars=420):
         return ["Tech News", "AI News", "Anchor Aadhya"]
     clean = []
     total_len = 0
+    disallowed = '<>,;\'"\\\r\n'
     for t in raw_tags:
         if not t:
             continue
-        s = re.sub(r"[<>,;"'
-]", " ", str(t))
-        s = re.sub(r"[^\w\s\-\#\.]", "", s).strip()
-        s = re.sub(r"\s+", " ", s)
+        s = str(t)
+        for ch in disallowed:
+            s = s.replace(ch, " ")
+        s = "".join([c for c in s if c.isalnum() or c in " -#."]).strip()
+        s = " ".join(s.split())
         if len(s) < 2 or len(s) > 80:
             continue
         add_len = len(s) + (1 if clean else 0)
