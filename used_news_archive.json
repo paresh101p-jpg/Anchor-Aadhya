@@ -642,5 +642,74 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-23 06:38:11"
+  },
+  {
+    "id": "plex_server_security_patch_alert",
+    "headline": "PLEX MEDIA SERVER USERS PAR BADA CYBER ATTACK THREAT",
+    "raw_title": "PSA: Patch your Plex media server before someone hacks it",
+    "keywords": [
+      "plex",
+      "server",
+      "security",
+      "patch",
+      "alert"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-23 16:04:49"
+  },
+  {
+    "id": "dating_app_chivalry_mode_genz",
+    "headline": "GEN Z KO SHADI KE LIYE MANAYEGA NAYA DATING APP",
+    "raw_title": "A Dating App Is Offering ‘Chivalry Mode’ and ‘Marriage Timeline’ to Get Gen Z Married",
+    "keywords": [
+      "dating",
+      "app",
+      "chivalry",
+      "mode",
+      "genz"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-23 16:04:49"
+  },
+  {
+    "id": "gm_car_chores_automation",
+    "headline": "AB AAPKI GAADI BHI KAREGI GHAR KE KAAM",
+    "raw_title": "GM Wants Your Car to Do Your Chores",
+    "keywords": [
+      "gm",
+      "car",
+      "chores",
+      "automation"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-23 16:04:49"
+  },
+  {
+    "id": "best_microsoft_surface_laptop_2026",
+    "headline": "MICROSOFT SURFACE LAPTOP 2026: KAUNSA MODEL KHARIDEIN AUR KAUNSA CHHODEIN",
+    "raw_title": "Best Microsoft Surface Laptop (2026): Which Models to Buy and Avoid",
+    "keywords": [
+      "best",
+      "microsoft",
+      "surface",
+      "laptop",
+      "2026"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-23 16:04:49"
+  },
+  {
+    "id": "iphone_duo_eight_things_wired",
+    "headline": "IPHONE DUO KI NAYI KHABAR AUR 8 BADI BAATEIN",
+    "raw_title": "8 Things to Know About the iPhone Duo",
+    "keywords": [
+      "iphone",
+      "duo",
+      "eight",
+      "things",
+      "wired"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-23 16:04:49"
   }
 ]
