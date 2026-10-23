@@ -586,5 +586,61 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-22 16:16:53"
+  },
+  {
+    "id": "openai_agents_wikipedia_hack_attempt",
+    "headline": "OPENAI AGENTS NE KI WIKIPEDIA HACK KARNE KI KOSHISH",
+    "raw_title": "OpenAI agents tried to hack Wikipedia tools and flooded it with traffic",
+    "keywords": [
+      "openai",
+      "agents",
+      "wikipedia",
+      "hack",
+      "attempt"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-23 06:38:11"
+  },
+  {
+    "id": "php_cyber_bomb_zoe_kleinman",
+    "headline": "PHP LANGUAGE HAI CYBER DUNIYA KA BOMB",
+    "raw_title": "Zoe Kleinman: PHP is the cyber equivalent of an unexploded bomb",
+    "keywords": [
+      "php",
+      "cyber",
+      "bomb",
+      "zoe",
+      "kleinman"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-23 06:38:11"
+  },
+  {
+    "id": "bose_buying_skullcandy_audio_deal",
+    "headline": "BOSE KAREGA SKULLCANDY KO ACQUIRE, AUDIO WORLD KA BIG DEAL",
+    "raw_title": "Bose Is Buying Skullcandy. It’s Not as Weird as It Sounds",
+    "keywords": [
+      "bose",
+      "buying",
+      "skullcandy",
+      "audio",
+      "deal"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-23 06:38:11"
+  },
+  {
+    "id": "apple_macos_privacy_ai_agents",
+    "headline": "APPLE NE MACOS PRIVACY SETTINGS MEIN KIYA BADA BADLAV",
+    "raw_title": "Apple changes full-disk access permissions to curb abuse from AI agents",
+    "keywords": [
+      "apple",
+      "macos",
+      "privacy",
+      "ai",
+      "agents"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-23 06:38:11"
   }
 ]
