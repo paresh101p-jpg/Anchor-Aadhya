@@ -22,7 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-    timeout-minutes: 30
+    timeout-minutes: 45
 
     steps:
       - name: Check out repository
@@ -37,8 +37,9 @@ jobs:
 
       - name: Install System Dependencies (FFmpeg & Fonts)
         run: |
-          sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-dejavu-core fonts-liberation fonts-noto-core fonts-indic
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation
 
       - name: Install Python Dependencies
         run: |
@@ -65,4 +66,7 @@ jobs:
           git config --local user.name "Anchor Aadhya Cloud Bot"
           git add uploaded_bulletins_tracker.txt used_shorts_facts.json
           git commit -m "chore: record shorts upload $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
-          git push origin HEAD:${{ github.ref_name }} || echo "Push skipped or up-to-date"
+          for i in 1 2 3; do
+            git pull --rebase origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }} && break || sleep 3
+          done
