@@ -79,3 +79,19 @@ Every news story is categorized by emotion, and the script + voiceover dynamical
   * Animated Bullets: Like, share, subscribe, and next bulletin timing.
   * Scrolling Bottom Ticker Tape with schedule and subscribe callout.
 * `uploaded_bulletins_tracker.txt`: Permanent history log preventing duplicate uploads.
+
+---
+
+## 9. Strict Fact Shorts Architecture & Media Hierarchy
+1. **Always Fresh & Live Research (Zero Fact Duplication)**:
+   - Every Short is curated through **Live Daily Science & Space Discovery Research** (Google News RSS & Space science feeds).
+   - `used_shorts_facts.json` permanently logs every slug, title, and timestamp.
+   - Any fact or topic previously covered is strictly skipped. Never recycle or reuse old facts.
+2. **Strict Media Selection Hierarchy**:
+   - **Priority 1 (Free Real Video)**: If a free public domain video exists (NASA Video Library, Pexels CC0), it MUST be used as the moving video background.
+   - **Priority 2 (Free Real Photo)**: If video is unavailable, fetch free real photos from NASA Public Domain, Wikimedia Commons, or Wikipedia.
+   - **Priority 3 (AI Generated Photo from Real Fact)**: If the real photo is copyrighted or not free, generate a 100% brand-new photorealistic 9:16 AI image matching the exact fact via Flux AI.
+3. **Zero Cross-Story Image Sharing in Bulletins**:
+   - Every news story in a bulletin MUST have its own independent photograph.
+   - Fallback cloning (copying another story's image or master reference) is 100% forbidden.
+

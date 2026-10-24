@@ -685,43 +685,25 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
         except Exception as e:
             print(f"  [WARN] Query '{q_try}' attempt failed: {e}", flush=True)
 
-    # If Wikimedia search for specific query failed, try generic tech photojournalism queries
-    generic_tech_queries = ["Artificial intelligence laboratory", "High tech microchip cleanroom", "Supercomputer data center"]
-    for g_q in generic_tech_queries:
-        try:
-            url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrsearch=" + urllib.parse.quote(g_q) + "&gsrlimit=3&prop=imageinfo&iiprop=url|size"
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=10) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            pages = data.get("query", {}).get("pages", {})
-            for pid, p in pages.items():
-                ii = p.get("imageinfo", [{}])[0]
-                img_url = ii.get("url", "")
-                if img_url and any(ext in img_url.lower() for ext in [".jpg", ".jpeg", ".png"]):
-                    img_req = urllib.request.Request(img_url, headers={"User-Agent": "Mozilla/5.0"})
-                    with urllib.request.urlopen(img_req, timeout=12) as img_resp:
-                        img_bytes = img_resp.read()
-                    if len(img_bytes) > 20000:
-                        im = Image.open(BytesIO(img_bytes)).convert("RGB")
-                        im = fit_to_16_9(im)
-                        im.save(output_file, "JPEG", quality=95)
-                        print(f"  [SUCCESS] Saved 1080p Generic Tech Photo: {os.path.basename(output_file)}", flush=True)
-                        return True
-        except:
-            pass
-
-    # Ultimate Safety: Clone master reference or existing jpg so output_file ALWAYS exists
+    # If specific Wikimedia query returned no results, generate unique AI editorial visual for this story
     try:
-        master_img = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
-        if os.path.exists(master_img):
-            import shutil
-            shutil.copyfile(master_img, output_file)
-            print(f"  [SAFETY CLONE] Output file guaranteed from master reference: {os.path.basename(output_file)}", flush=True)
+        import urllib.parse
+        enc = urllib.parse.quote(f"Editorial news photograph of {search_term}, 8k photorealistic journalism, 16:9 widescreen, cinematic lighting, sharp detail")
+        seed = random.randint(1000, 999999)
+        p_url = f"https://image.pollinations.ai/prompt/{enc}?width=1920&height=1080&nologo=true&model=flux&seed={seed}"
+        p_req = urllib.request.Request(p_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(p_req, timeout=18) as p_resp:
+            p_data = p_resp.read()
+        if len(p_data) > 20000:
+            im = Image.open(BytesIO(p_data)).convert("RGB")
+            im = fit_to_16_9(im)
+            im.save(output_file, "JPEG", quality=95)
+            print(f"  [SUCCESS] Generated Unique AI Photo (No Clones): {os.path.basename(output_file)} for '{search_term}'", flush=True)
             return True
-    except:
-        pass
+    except Exception as pe:
+        print(f"  [WARN] Pollinations fallback failed: {pe}", flush=True)
 
-    return True
+    return False
 
 def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headline_text=""):
     """

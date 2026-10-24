@@ -119,13 +119,11 @@ def create_ai_news_images(slot, stories):
         item["bg_img_2"] = dest2
         item["bg_img"] = dest1
 
-        # Sanity Guard: Verify both files exist and are valid (>15KB)
+        # Sanity Guard: Verify both files exist and are valid (>15KB), generate unique AI visual if missing
         for d_check in [dest1, dest2]:
             if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
-                master_ref = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
-                if os.path.exists(master_ref):
-                    import shutil
-                    shutil.copyfile(master_ref, d_check)
+                print(f"  [RE-FETCH] Generating distinct visual for {os.path.basename(d_check)}...", flush=True)
+                generate_ai_news_image(item.get("headline", "advanced technology"), d_check, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
 
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
         print(f"       Shot 1 (Wide):  {dest1} ({os.path.getsize(dest1)} bytes)", flush=True)
