@@ -781,5 +781,73 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-24 06:37:16"
+  },
+  {
+    "id": "unique_iphone_apps_list",
+    "headline": "IPHONE USERS KE LIYE AAYE 9 KAMAAL APPS",
+    "raw_title": "9 Unique Apps to Try on the iPhone Duo",
+    "keywords": [
+      "unique",
+      "iphone",
+      "apps",
+      "list"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 11:32:56"
+  },
+  {
+    "id": "garmin_watches_big_discount_deal",
+    "headline": "GARMIN SMARTWATCHES PAR 30 PERCENT TAK BADI CHHOOT",
+    "raw_title": "Garmin Vivoactive 5 and Forerunner 165 Are up to 30 Percent Off (2026)",
+    "keywords": [
+      "garmin",
+      "watches",
+      "big",
+      "discount",
+      "deal"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 11:32:56"
+  },
+  {
+    "id": "openai_cuts_training_internet",
+    "headline": "OPENAI NE TRAINING MEIN INTERNET ACCESS KIYA BAND",
+    "raw_title": "OpenAI says it's cutting off internet access for frontier model training",
+    "keywords": [
+      "openai",
+      "cuts",
+      "training",
+      "internet"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 11:32:56"
+  },
+  {
+    "id": "meta_delays_ai_scraping_terms",
+    "headline": "META NE ROKI NAYI AI SCRAPING POLICY",
+    "raw_title": "Meta is delaying its controversial new business terms amid scraping concerns",
+    "keywords": [
+      "meta",
+      "delays",
+      "ai",
+      "scraping",
+      "terms"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 11:32:56"
+  },
+  {
+    "id": "unauthorized_ai_agents_us_banks",
+    "headline": "US BANK ACCOUNTS MEIN BINA PERMISSION AI AGENTS KI ENTRY",
+    "raw_title": "Unauthorized AI agents are reportedly already accessing US bank accounts",
+    "keywords": [
+      "unauthorized",
+      "ai",
+      "agents",
+      "us",
+      "banks"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 11:32:56"
   }
 ]
