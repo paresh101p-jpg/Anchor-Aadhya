@@ -711,5 +711,75 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-23 16:04:49"
+  },
+  {
+    "id": "tesla_cybertruck_aus_nz_cancelled",
+    "headline": "TESLA CYBERTRUCK AUSTRALIA AUR NEW ZEALAND MEIN CANCEL",
+    "raw_title": "Tesla says it will no longer release the Cybertruck in Australia and New Zealand",
+    "keywords": [
+      "tesla",
+      "cybertruck",
+      "aus",
+      "nz",
+      "cancelled"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 06:37:16"
+  },
+  {
+    "id": "emudhra_quits_tls_security_business",
+    "headline": "EMUDHRA NE BAND KIYA APNA TLS BUSINESS",
+    "raw_title": "Disgraced eMudhra drops out of TLS business after using cert private key of 4",
+    "keywords": [
+      "emudhra",
+      "quits",
+      "tls",
+      "security",
+      "business"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 06:37:16"
+  },
+  {
+    "id": "meta_muse_link_privacy_leak",
+    "headline": "META MUSE SHARE LINKS SE PRIVATE CHATS LEAK",
+    "raw_title": "A Design Flaw in Share Links Exposes Users’ Personal Conversations With Meta’s Muse",
+    "keywords": [
+      "meta",
+      "muse",
+      "link",
+      "privacy",
+      "leak"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 06:37:16"
+  },
+  {
+    "id": "anker_soundcore_space2_lowest_price",
+    "headline": "ANKER SOUNDCORE SPACE 2 MIL RAHE HAIN LOWEST PRICE PAR",
+    "raw_title": "Anker Soundcore Space 2 Are at Their Lowest Price Ever",
+    "keywords": [
+      "anker",
+      "soundcore",
+      "space2",
+      "lowest",
+      "price"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 06:37:16"
+  },
+  {
+    "id": "oura_sues_ultrahuman_ring_pro",
+    "headline": "OURA NE ULTRAHUMAN PAR PHIR KIYA LAWSUIT",
+    "raw_title": "Oura sues Ultrahuman (again) to block its latest smart ring from the US market",
+    "keywords": [
+      "oura",
+      "sues",
+      "ultrahuman",
+      "ring",
+      "pro"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-24 06:37:16"
   }
 ]
