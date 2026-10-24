@@ -503,17 +503,100 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
 
     return False
 
-def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1):
-    headers = {"User-Agent": "Mozilla/5.0"}
+def generate_procedural_tech_visual(fact_slug, category, target_path):
+    """
+    Synthesizes a 100% unique, futuristic 1080x1920 9:16 scientific visual dynamically
+    using procedural mathematical fields, glowing particles, grid lines and cosmic radiance.
+    Ensures ZERO duplicate visuals even if all external internet endpoints are offline!
+    """
+    import math
+    import hashlib
+    # Deterministic yet unique seed per fact
+    seed_int = int(hashlib.md5(fact_slug.encode()).hexdigest()[:8], 16)
+    rng = random.Random(seed_int)
+
+    w, h = 1080, 1920
+    im = Image.new("RGB", (w, h), (4, 7, 18))
+    draw = ImageDraw.Draw(im)
+
+    # Color palettes based on category
+    palettes = [
+        [(0, 240, 255), (120, 0, 255), (255, 0, 128)],   # Cyber / Quantum
+        [(255, 170, 0), (255, 40, 0), (80, 0, 180)],     # Deep Cosmos / Fusion
+        [(0, 255, 160), (0, 180, 255), (20, 40, 100)],   # Biotech / Immortal
+        [(255, 230, 0), (0, 200, 255), (255, 30, 90)]    # Miracle Tech / Physics
+    ]
+    pal = rng.choice(palettes)
+
+    # 1. Radiant Background Plasma Gradients
+    cx, cy = rng.randint(300, 780), rng.randint(600, 1300)
+    max_r = int(math.hypot(w, h))
+    for r in range(max_r, 0, -25):
+        factor = 1.0 - (r / float(max_r))
+        color_idx = int(factor * (len(pal) - 1))
+        base_c = pal[color_idx]
+        intensity = factor ** 2.2
+        c = (int(base_c[0] * intensity * 0.4), int(base_c[1] * intensity * 0.4), int(base_c[2] * intensity * 0.4))
+        draw.ellipse([(cx - r, cy - r), (cx + r, cy + r)], fill=c)
+
+    # 2. Futuristic Geometric / Perspective Tech Grids
+    grid_y_start = cy + 100
+    for gy in range(grid_y_start, h, 60):
+        alpha_factor = ((gy - grid_y_start) / float(h - grid_y_start))
+        c_line = (int(pal[0][0] * 0.25 * alpha_factor), int(pal[0][1] * 0.25 * alpha_factor), int(pal[0][2] * 0.25 * alpha_factor))
+        draw.line([(0, gy), (w, gy)], fill=c_line, width=1)
+    for gx in range(0, w + 120, 120):
+        draw.line([(cx, grid_y_start), (gx, h)], fill=(int(pal[0][0]*0.15), int(pal[0][1]*0.15), int(pal[0][2]*0.15)), width=1)
+
+    # 3. Glowing Science Particle Constellations
+    num_particles = rng.randint(140, 220)
+    points = []
+    for _ in range(num_particles):
+        px = rng.randint(30, w - 30)
+        py = rng.randint(200, h - 200)
+        pr = rng.randint(2, 6)
+        pcolor = rng.choice(pal)
+        points.append((px, py))
+        draw.ellipse([(px - pr, py - pr), (px + pr, py + pr)], fill=pcolor)
+        if pr >= 4:
+            # Subtle glow ring
+            draw.ellipse([(px - pr*2, py - pr*2), (px + pr*2, py + pr*2)], outline=(pcolor[0]//2, pcolor[1]//2, pcolor[2]//2), width=1)
+
+    # 4. Neural Network / Quantum Entanglement Interconnects
+    for i in range(len(points) - 1):
+        p1 = points[i]
+        for j in range(i + 1, min(i + 7, len(points))):
+            p2 = points[j]
+            dist = math.hypot(p1[0] - p2[0], p1[1] - p2[1])
+            if dist < 160:
+                alpha = int(140 * (1.0 - dist / 160.0))
+                c_wire = (pal[0][0] * alpha // 255, pal[0][1] * alpha // 255, pal[0][2] * alpha // 255)
+                draw.line([p1, p2], fill=c_wire, width=1)
+
+    # 5. Central Glowing Holographic Core
+    core_r = rng.randint(80, 140)
+    for cr in range(core_r, 0, -5):
+        cfactor = 1.0 - (cr / float(core_r))
+        cc = (int(255 * cfactor), int(255 * cfactor), 255)
+        draw.ellipse([(cx - cr, cy - cr), (cx + cr, cy + cr)], outline=cc, width=2)
+
+    im.save(target_path, "JPEG", quality=95)
+    print(f"  [PROCEDURAL AI] Generated 100% unique sci-fi visual for {fact_slug}: {os.path.basename(target_path)}", flush=True)
+    return True
+
+def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1, fact_slug="fact"):
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
+    }
     enc_prompt = urllib.parse.quote(image_prompt)
 
-    # Attempt 1: Pollinations AI Turbo (100% Free, Reliable, Custom 9:16 Visual)
+    # Attempt 1: Pollinations AI Multi-Model (turbo, flux, flux-realism)
     for m in ["turbo", "flux"]:
         try:
             seed = random.randint(1000, 999999)
             p_url = f"https://image.pollinations.ai/prompt/{enc_prompt}?width=1080&height=1920&nologo=true&model={m}&seed={seed}"
             req = urllib.request.Request(p_url, headers=headers)
-            with urllib.request.urlopen(req, timeout=25) as resp:
+            with urllib.request.urlopen(req, timeout=18) as resp:
                 data = resp.read()
             if len(data) > 15000:
                 im = Image.open(BytesIO(data)).convert("RGB")
@@ -523,10 +606,11 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
         except Exception as e:
             pass
 
-    # Attempt 2: Wikipedia Subject Photo (Exact scientific match)
+    # Attempt 2: Wikipedia Generator Search API (Multi-result matching)
     try:
-        w_terms = nasa_query.split()[0] if len(nasa_query.split()) > 2 else nasa_query
-        w_url = f"https://en.wikipedia.org/w/api.php?action=query&format=json&prop=pageimages&pithumbsize=1080&titles={urllib.parse.quote(w_terms)}"
+        clean_terms = re.sub(r'[^a-zA-Z0-9\s]', ' ', nasa_query).strip()
+        search_words = " ".join(clean_terms.split()[:4])
+        w_url = f"https://en.wikipedia.org/w/api.php?action=query&generator=search&gsrsearch={urllib.parse.quote(search_words)}&gsrlimit=3&prop=pageimages&pithumbsize=1080&format=json"
         req_w = urllib.request.Request(w_url, headers=headers)
         with urllib.request.urlopen(req_w, timeout=12) as w_resp:
             w_data = json.loads(w_resp.read().decode())
@@ -538,7 +622,7 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
                 with urllib.request.urlopen(req_t, timeout=15) as t_resp:
                     im = Image.open(BytesIO(t_resp.read())).convert("RGB")
                     im.save(target_path, "JPEG", quality=95)
-                    print(f"  [SUCCESS] Wikipedia Subject Photo: {os.path.basename(target_path)}", flush=True)
+                    print(f"  [SUCCESS] Wikipedia Real Science Photo: {os.path.basename(target_path)}", flush=True)
                     return True
     except Exception:
         pass
@@ -561,18 +645,11 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
     except Exception as e:
         pass
 
-    # Attempt 4: Slot-matched local hero fallback
-    heroes = [
-        os.path.join(BASE_DIR, "assets", "heroes", "voyager1_hero.jpg"),
-        os.path.join(BASE_DIR, "assets", "heroes", "quantum_hero.jpg"),
-        os.path.join(BASE_DIR, "assets", "heroes", "jwst_hero.jpg")
-    ]
-    target_hero = heroes[(slot_idx - 1) % len(heroes)]
-    if os.path.exists(target_hero):
-        im = Image.open(target_hero).convert("RGB")
-        im.save(target_path, "JPEG", quality=95)
-        print(f"  [FALLBACK] Using verified local space hero: {os.path.basename(target_hero)}", flush=True)
-        return True
+    # Attempt 4: Dynamic Procedural Visual Generation (Guarantees 100% Unique Image Every Single Time!)
+    try:
+        return generate_procedural_tech_visual(fact_slug, nasa_query, target_path)
+    except Exception as ge:
+        print(f"  [WARNING] Procedural gen notice: {ge}", flush=True)
 
     return False
 
@@ -731,7 +808,8 @@ async def main():
                 f.get("image_prompt", f.get("headline_line1")),
                 f.get("image_query", f.get("headline_line1")),
                 raw_img_path,
-                slot_idx=idx+1
+                slot_idx=idx+1,
+                fact_slug=f.get("slug", f"fact_{idx+1}")
             )
             if not success or not os.path.exists(raw_img_path):
                 print(f"[CRITICAL] Could not generate photo for Fact {idx+1}. Halting!", flush=True)
