@@ -849,5 +849,47 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-24 11:32:56"
+  },
+  {
+    "id": "enterprise_ai_serving_harness_tech",
+    "headline": "AI MODELS NAHI AB SERVING INFRASTRUCTURE BANEGA KING",
+    "raw_title": "Designing an AI serving harness built to last",
+    "keywords": [
+      "enterprise",
+      "ai",
+      "serving",
+      "harness",
+      "tech"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-25 11:41:43"
+  },
+  {
+    "id": "meta_europe_ad_sales_drop",
+    "headline": "EUROPE MEIN META KO BADA JHATKA AD SALES GIRE",
+    "raw_title": "Meta’s Ad Sales Are Suffering Now That Europeans Can Pick Less Personalization",
+    "keywords": [
+      "meta",
+      "europe",
+      "ad",
+      "sales",
+      "drop"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-25 11:41:43"
+  },
+  {
+    "id": "cr2032_battery_testing_guide_tips",
+    "headline": "CR2032 BATTERY TEST KARNE KA AASAN TAREEKA",
+    "raw_title": "Here's how to test a CR2032 battery to see if it's good",
+    "keywords": [
+      "cr2032",
+      "battery",
+      "testing",
+      "guide",
+      "tips"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-25 11:41:43"
   }
 ]
