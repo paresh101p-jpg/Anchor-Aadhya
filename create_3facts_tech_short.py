@@ -676,7 +676,13 @@ STRICT RULES:
 3. Language:
    - On-Screen Headlines & Captions: Impactful, high-curiosity HINGLISH in ALL CAPS (English alphabet).
    - Narration: High-energy mystery Hindi delivery with pauses (...).
-4. Output ONLY valid raw JSON with this exact structure:
+4. CRITICAL NARRATION CONTENT RULE (ZERO HOLLOW TITLES! EXPLAIN DETAILS & IMPACT):
+   - NEVER just repeat the name or headline! NEVER use empty filler like 'duniya me tahalka macha diya' without explaining the science!
+   - Every fact's narration (40-50 words) MUST explain THREE things clearly:
+     (a) खोज असल में क्या है (What is the discovery / technology?)
+     (b) वैज्ञानिकों ने क्या पाया और यह कैसे काम करती है (How it works or was discovered)
+     (c) इससे क्या होगा / भविष्य में क्या बदलेगा (Real-world consequences and mind-blowing impact)
+5. Output ONLY valid raw JSON with this exact structure:
 
 {{
   "hook_pill": "CURIOSITY HOOK PILL (e.g. SPACE KA SABSE BADA RAHASYA!)",
@@ -811,17 +817,12 @@ def get_or_create_daily_facts():
     used = load_used_facts()
     used_slugs = [x.get("slug", "") for x in used]
 
-    # 1. Primary: Live Trending Science Research (Fresh Breaking Space/Science RSS)
-    live_data = fetch_live_trending_science_facts(used_slugs)
-    if live_data and len(live_data.get("facts", [])) == 3:
-        return live_data
-
-    # 2. Secondary: Dynamic Gemini AI Generation with strict anti-duplicate check
+    # 1. Primary: Dynamic Gemini AI Storytelling (Deep details: What it is, how it works, what will happen)
     ai_data = generate_daily_facts_with_gemini(used_slugs)
     if ai_data and len(ai_data.get("facts", [])) == 3:
         return ai_data
 
-    # 3. Unused Facts from Vault (NEVER pick already used facts)
+    # 2. Secondary: Unused Deep Facts from Curated Vault (Rich explanations with consequences)
     available = [f for f in FACTS_VAULT if f["slug"] not in used_slugs]
     if len(available) >= 3:
         selected = available[:3]
@@ -831,6 +832,11 @@ def get_or_create_daily_facts():
             "hook_t2": selected[0].get("hook_t2", selected[0]["headline_line2"]),
             "facts": selected
         }
+
+    # 3. Tertiary Fallback: Live Trending Science Research
+    live_data = fetch_live_trending_science_facts(used_slugs)
+    if live_data and len(live_data.get("facts", [])) == 3:
+        return live_data
 
     # If vault is exhausted, create fresh timestamps so duplicates NEVER collide
     selected = []

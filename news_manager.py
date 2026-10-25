@@ -5,7 +5,7 @@ News & Wardrobe Asset Manager for Anchor Aadhya Channel
 LIVE RSS NEWS + GEMINI IMAGEN 3 ONLY — no stock photos, no URLs, zero copyright.
 """
 
-import os, re, json, random, base64, requests, urllib.request, xml.etree.ElementTree as ET
+import os, re, json, random, base64, requests, urllib.request, urllib.parse, xml.etree.ElementTree as ET
 from datetime import datetime, date
 from io import BytesIO
 from PIL import Image, ImageDraw
@@ -687,7 +687,6 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
 
     # If specific Wikimedia query returned no results, generate unique AI editorial visual for this story
     try:
-        import urllib.parse
         enc = urllib.parse.quote(f"Editorial news photograph of {search_term}, 8k photorealistic journalism, 16:9 widescreen, cinematic lighting, sharp detail")
         seed = random.randint(1000, 999999)
         p_url = f"https://image.pollinations.ai/prompt/{enc}?width=1920&height=1080&nologo=true&model=flux&seed={seed}"
@@ -702,6 +701,17 @@ def fetch_real_news_photo(query, output_file, shot_idx=1):
             return True
     except Exception as pe:
         print(f"  [WARN] Pollinations fallback failed: {pe}", flush=True)
+
+    # Bulletproof Safety Guard: Output file must always exist (>20KB) so video render never crashes
+    try:
+        master_img = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+        if os.path.exists(master_img) and not os.path.exists(output_file):
+            import shutil
+            shutil.copyfile(master_img, output_file)
+            print(f"  [SAFETY BACKUP] Guaranteed output file: {os.path.basename(output_file)}", flush=True)
+            return True
+    except Exception:
+        pass
 
     return False
 
