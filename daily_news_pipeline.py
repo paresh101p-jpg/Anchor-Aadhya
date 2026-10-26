@@ -14,6 +14,7 @@ import sys
 import asyncio
 import subprocess
 import urllib.request
+from io import BytesIO
 import argparse
 from datetime import datetime
 import edge_tts

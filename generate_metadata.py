@@ -175,6 +175,17 @@ This video features AI digital broadcast host 'Anchor Aadhya' presenting real, v
         "Future Tech", "Artificial Intelligence", "Technology Updates",
         "Latest Tech Inventions", "Tech News 2026", "Aadhya News"
     ])
+
+    # Deduplicate and cap tags to YouTube 480 chars limit
+    clean_tags = []
+    total_len = 0
+    for t in tags:
+        t_clean = str(t).replace(",", "").strip()
+        if t_clean and t_clean.lower() not in [x.lower() for x in clean_tags]:
+            if total_len + len(t_clean) + 1 <= 480:
+                clean_tags.append(t_clean)
+                total_len += len(t_clean) + 1
+
     # Sanitize title and description for YouTube Data API v3 compliance
     title = str(title).replace("<", "").replace(">", "").strip()[:95]
     description = str(description).replace("<", "").replace(">", "").strip()
