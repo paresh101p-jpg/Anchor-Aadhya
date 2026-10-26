@@ -206,7 +206,8 @@ def upload_daily_bulletin(slot=None, force=False):
         "status": {
             "privacyStatus": "public",
             "selfDeclaredMadeForKids": False,
-            "embeddable": True
+            "embeddable": True,
+            "containsSyntheticMedia": True
         }
     }
 
@@ -322,7 +323,8 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
         "status": {
             "privacyStatus": "public",
             "selfDeclaredMadeForKids": False,
-            "embeddable": True
+            "embeddable": True,
+            "containsSyntheticMedia": True
         }
     }
 
