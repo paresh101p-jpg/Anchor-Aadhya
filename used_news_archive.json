@@ -891,5 +891,74 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-25 11:41:43"
+  },
+  {
+    "id": "tsa_airtag_luggage_rules_explained",
+    "headline": "CHECKED LUGGAGE MEIN AIRTAG PERMITTED HAI YA NAHI",
+    "raw_title": "Does TSA actually allow AirTags in your luggage? Here's what the rules say",
+    "keywords": [
+      "tsa",
+      "airtag",
+      "luggage",
+      "rules",
+      "explained"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-26 11:51:34"
+  },
+  {
+    "id": "airpods_with_samsung_phone_features",
+    "headline": "SAMSUNG PHONE PAR AIRPODS CHALANE KE BADE NUKSAAN",
+    "raw_title": "What features do you lose if you use Apple AirPods with a Samsung Galaxy phone?",
+    "keywords": [
+      "airpods",
+      "with",
+      "samsung",
+      "phone",
+      "features"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-26 11:51:34"
+  },
+  {
+    "id": "zero_click_ads_malware_attack",
+    "headline": "NAYE CYBER ATTACK MEIN BINA CLICK KIYE INSTALL HUA MALWARE",
+    "raw_title": "Targeted ads delivered 0-click exploits to install mercenary malware",
+    "keywords": [
+      "zero",
+      "click",
+      "ads",
+      "malware",
+      "attack"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-26 11:51:34"
+  },
+  {
+    "id": "windows_desktop_feature_underused",
+    "headline": "WINDOWS KA YE POWERFUL FEATURE AAP USE NAHI KAR RAHE",
+    "raw_title": "Most Windows users are seriously underusing this powerful desktop feature",
+    "keywords": [
+      "windows",
+      "desktop",
+      "feature",
+      "underused"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-26 11:51:34"
+  },
+  {
+    "id": "james_webb_little_red_dots",
+    "headline": "JAMES WEBB TELESCOPE KE 'LITTLE RED DOTS' PAR BADA VIVAD",
+    "raw_title": "Inside the Supermassive Debate Over the James Webb Telescope’s ‘Little Red Dots’",
+    "keywords": [
+      "james",
+      "webb",
+      "little",
+      "red",
+      "dots"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-26 11:51:34"
   }
 ]
