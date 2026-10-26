@@ -175,7 +175,11 @@ This video features AI digital broadcast host 'Anchor Aadhya' presenting real, v
         "Future Tech", "Artificial Intelligence", "Technology Updates",
         "Latest Tech Inventions", "Tech News 2026", "Aadhya News"
     ])
-    clean_tags = list(dict.fromkeys(tags))[:28]
+    # Sanitize title and description for YouTube Data API v3 compliance
+    title = str(title).replace("<", "").replace(">", "").strip()[:95]
+    description = str(description).replace("<", "").replace(">", "").strip()
+    if len(description) > 4900:
+        description = description[:4900]
 
     meta_dict = {
         "title": title,

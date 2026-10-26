@@ -1,4 +1,4 @@
-﻿# -*- coding: utf-8 -*-
+# -*- coding: utf-8 -*-
 """
 Automated YouTube Video & Thumbnail Uploader for Anchor Aadhya News Channel
 - 100% Autonomous: Uploads today's Full HD 1080p News Bulletin Video
@@ -22,6 +22,30 @@ from googleapiclient.http import MediaFileUpload
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
+
+def sanitize_youtube_title(raw_title, max_chars=95):
+    """
+    Sanitizes title to strictly comply with YouTube Data API v3 requirements:
+    - Max length <= 95 chars (strictly under YouTube's 100-char limit)
+    - Strips disallowed angle brackets (<, >)
+    """
+    if not raw_title:
+        return "Anchor Aadhya Tech News"
+    clean = str(raw_title).replace("<", "").replace(">", "").strip()
+    return clean[:max_chars]
+
+def sanitize_youtube_description(raw_desc, max_chars=4900):
+    """
+    Sanitizes description to strictly comply with YouTube Data API v3 requirements:
+    - Strips disallowed angle brackets (<, >) which trigger HTTP 400 invalidDescription
+    - Enforces length <= 4900 chars (strictly under YouTube's 5000-char limit)
+    """
+    if not raw_desc:
+        return ""
+    clean = str(raw_desc).replace("<", "").replace(">", "").strip()
+    if len(clean) > max_chars:
+        clean = clean[:max_chars]
+    return clean
 
 def sanitize_youtube_tags(raw_tags, max_chars=420):
     """
@@ -172,8 +196,8 @@ def upload_daily_bulletin(slot=None, force=False):
 
     body = {
         "snippet": {
-            "title": meta.get("title", f"Anchor Aadhya Tech News {today_slug} ({target_slot})"),
-            "description": meta.get("description", ""),
+            "title": sanitize_youtube_title(meta.get("title", f"Anchor Aadhya Tech News {today_slug} ({target_slot})")),
+            "description": sanitize_youtube_description(meta.get("description", "")),
             "tags": sanitize_youtube_tags(meta.get("tags", [])),
             "categoryId": "28",  # Science & Technology
             "defaultLanguage": "hi",
@@ -288,8 +312,8 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
 
     body = {
         "snippet": {
-            "title": meta.get("title", "Anchor Aadhya Tech Short #Shorts"),
-            "description": meta.get("description", ""),
+            "title": sanitize_youtube_title(meta.get("title", "Anchor Aadhya Tech Short #Shorts")),
+            "description": sanitize_youtube_description(meta.get("description", "")),
             "tags": sanitize_youtube_tags(meta.get("tags", [])),
             "categoryId": "28",  # Science & Technology
             "defaultLanguage": "hi",
