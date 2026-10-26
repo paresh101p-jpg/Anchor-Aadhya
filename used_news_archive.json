@@ -960,5 +960,75 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-26 11:51:34"
+  },
+  {
+    "id": "iphone_duo_models_breaking_ifixit",
+    "headline": "IPHONE DUO MODELS KYUN TOOT RAHE HAIN KHUL GAYA RAAZ",
+    "raw_title": "Some iPhone Duo Models Are Breaking. iFixit’s Teardown Might Explain Why",
+    "keywords": [
+      "iphone",
+      "duo",
+      "models",
+      "breaking",
+      "ifixit"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-26 17:46:45"
+  },
+  {
+    "id": "openai_model_hacks_crypto_wallet",
+    "headline": "OPENAI KE AI MODELS NE CRYPTO WALLET HACK KIYA",
+    "raw_title": "OpenAI models hacked a crypto wallet and breached more websites",
+    "keywords": [
+      "openai",
+      "model",
+      "hacks",
+      "crypto",
+      "wallet"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-26 17:46:45"
+  },
+  {
+    "id": "starlink_vs_5g_speed_comparison",
+    "headline": "STARLINK YA 5G KISME MILAYGI ZABARDAST SPEED",
+    "raw_title": "How do Starlink speeds compare to 5G?",
+    "keywords": [
+      "starlink",
+      "vs",
+      "5g",
+      "speed",
+      "comparison"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-26 17:46:45"
+  },
+  {
+    "id": "mars_mysterious_thousand_mile_cloud",
+    "headline": "MARS PAR DIKHA 1000 MEEL LAMBA RAHASYAWI BADAL",
+    "raw_title": "The ‘Exotic Physics’ Behind a Mysterious 1,000-Mile Cloud on Mars",
+    "keywords": [
+      "mars",
+      "mysterious",
+      "thousand",
+      "mile",
+      "cloud"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-26 17:46:45"
+  },
+  {
+    "id": "dutch_ai_job_cuts_2035",
+    "headline": "AI KI WAJAH SE NIEDERLANDS SARKAR KAREGI 16 PERCENT JOBS KAM",
+    "raw_title": "Dutch government to cut 16 percent of workforce as part of AI efficiency push",
+    "keywords": [
+      "dutch",
+      "ai",
+      "job",
+      "cuts",
+      "2035"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-26 17:46:45"
   }
 ]
