@@ -1030,5 +1030,59 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-26 17:46:45"
+  },
+  {
+    "id": "ai_agents_real_journalists_tech",
+    "headline": "AI AGENTS AB BANENGE ASLI JOURNALIST",
+    "raw_title": "Meet the AI Agents Trying to Be Real-Life Journalists",
+    "keywords": [
+      "ai",
+      "agents",
+      "real",
+      "journalists",
+      "tech"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-27 06:45:35"
+  },
+  {
+    "id": "apple_siri_ai_updates_out",
+    "headline": "APPLE NE NAYE UPDATES MEIN JODE DUMDAAR SIRI AI TOOLS",
+    "raw_title": "Apple adds more Siri AI tools in its 27.2 system updates, out today",
+    "keywords": [
+      "apple",
+      "siri",
+      "ai",
+      "updates",
+      "out"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-27 06:45:35"
+  },
+  {
+    "id": "enterprises_waste_software_upgrades",
+    "headline": "COMPANIES BEKAR SOFTWARE UPGRADES PAR KHARCH RAHI ARBON",
+    "raw_title": "Enterprises keep buying software upgrades that IT thinks will make things worse",
+    "keywords": [
+      "enterprises",
+      "waste",
+      "software",
+      "upgrades"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-27 06:45:35"
+  },
+  {
+    "id": "scalable_ai_foundation_emtech",
+    "headline": "FUTURE AI SYSTEMS KE LIYE NAYA FOUNDATION TAIYAR",
+    "raw_title": "The Foundations of Scalable AI",
+    "keywords": [
+      "scalable",
+      "ai",
+      "foundation",
+      "emtech"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-27 06:45:35"
   }
 ]
