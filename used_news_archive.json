@@ -1084,5 +1084,46 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-27 06:45:35"
+  },
+  {
+    "id": "indian_workers_filming_ai_training",
+    "headline": "INDIAN WORKERS AB VIDEO BANAKAR SIKHAYENGE AI",
+    "raw_title": "The Indian workers filming their work to train AI",
+    "keywords": [
+      "indian",
+      "workers",
+      "filming",
+      "ai",
+      "training"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 07:59:14"
+  },
+  {
+    "id": "how_to_spot_ai_glasses",
+    "headline": "AI GLASSES PEHNE LOGON KO KAISE PEHCHANEIN",
+    "raw_title": "The best ways to tell if someone is using AI glasses",
+    "keywords": [
+      "how",
+      "to",
+      "spot",
+      "ai",
+      "glasses"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 07:59:14"
+  },
+  {
+    "id": "industrial_ai_manufacturing_growth",
+    "headline": "MANUFACTURING MEIN AI AUR INDUSTRIAL INTELLIGENCE KA NAYA ERA",
+    "raw_title": "Industrial Intelligence: The next growth opportunity for manufacturing",
+    "keywords": [
+      "industrial",
+      "ai",
+      "manufacturing",
+      "growth"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 07:59:14"
   }
 ]
