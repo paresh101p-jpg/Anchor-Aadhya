@@ -1125,5 +1125,70 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-28 07:59:14"
+  },
+  {
+    "id": "volunteers_ice_polls_tech",
+    "headline": "POLLING BOOTHS PAR DIGITAL MONITORING KI BADI TAIYARI",
+    "raw_title": "Massive Groups of Volunteers Are Ready to Face Down ICE at the Polls",
+    "keywords": [
+      "volunteers",
+      "ice",
+      "polls",
+      "tech"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 11:48:16"
+  },
+  {
+    "id": "purana_nokia_ai_upgrade",
+    "headline": "PURANE NOKIA PHONE KO MILA NAYA AI AVATAR",
+    "raw_title": "This old Nokia phone got an AI Upgrade it was never designed for",
+    "keywords": [
+      "purana",
+      "nokia",
+      "ai",
+      "upgrade"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 11:48:16"
+  },
+  {
+    "id": "instagram_streaming_service_update",
+    "headline": "INSTAGRAM AB BAN GAYA HAI EK STREAMING SERVICE",
+    "raw_title": "Instagram Is a Streaming Service Now",
+    "keywords": [
+      "instagram",
+      "streaming",
+      "service",
+      "update"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 11:48:16"
+  },
+  {
+    "id": "foundations_of_scalable_ai",
+    "headline": "SCALABLE AI KE LIYE MAZBOOT FOUNDATION HAI ZAROORI",
+    "raw_title": "The Foundations of Scalable AI",
+    "keywords": [
+      "foundations",
+      "of",
+      "scalable",
+      "ai"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 11:48:16"
+  },
+  {
+    "id": "best_ai_agents_tested",
+    "headline": "HAR MAJOR AI AGENT KA EK DIN TEST",
+    "raw_title": "I Tested Every Major AI Agent for a Day. Here’s the Best One",
+    "keywords": [
+      "best",
+      "ai",
+      "agents",
+      "tested"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-28 11:48:16"
   }
 ]
