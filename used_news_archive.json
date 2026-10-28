@@ -1190,5 +1190,63 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-28 11:48:16"
+  },
+  {
+    "id": "ny_ai_chatbot_child_safety_law",
+    "headline": "NEW YORK MEIN AI CHATBOTS PAR BANA NAYA KANOON",
+    "raw_title": "New York governor signs AI chatbot child safety law",
+    "keywords": [
+      "ny",
+      "ai",
+      "chatbot",
+      "child",
+      "safety",
+      "law"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-28 17:22:45"
+  },
+  {
+    "id": "php_emergency_patches_security_alert",
+    "headline": "PHP SECURITY ALERT: DO EMERGENCY PATCHES JALD AAYENGE",
+    "raw_title": "PHP warns it plans to release 2 emergency patches imminently",
+    "keywords": [
+      "php",
+      "emergency",
+      "patches",
+      "security",
+      "alert"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-28 17:22:45"
+  },
+  {
+    "id": "dead_startups_fueling_ai_data",
+    "headline": "MARI HUI STARTUPS SE AI TRAINING KA NAYA TREND",
+    "raw_title": "The Download: dead startups fueling AI and interspecies communication",
+    "keywords": [
+      "dead",
+      "startups",
+      "fueling",
+      "ai",
+      "data"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-28 17:22:45"
+  },
+  {
+    "id": "samsung_galaxy_buds_on_clip_on",
+    "headline": "SAMSUNG KE PEHLE CLIP-ON OPEN-EAR WIRELESS BUDS LAUNCH",
+    "raw_title": "Samsung's Galaxy Buds On are its first clip-on, open-ear wireless earbuds",
+    "keywords": [
+      "samsung",
+      "galaxy",
+      "buds",
+      "on",
+      "clip",
+      "on"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-28 17:22:45"
   }
 ]
