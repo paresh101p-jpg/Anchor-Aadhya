@@ -1,3 +1,4 @@
+from media_verifier import verify_image_matches, verify_video_matches, generate_ai_photorealistic_image
 # -*- coding: utf-8 -*-
 """
 FactTechz-Style Dynamic 3-Facts Tech Short Generator for Anchor Aadhya
@@ -394,12 +395,14 @@ FACTS_VAULT = [
     }
 ]
 
-def fetch_free_fact_video(query, target_path, max_sec=25.0):
+def fetch_free_fact_video(query, target_path, max_sec=25.0, fact_title="", fact_details=""):
     """
-    100% Free Video Engine:
-    1. Pexels Free Stock Videos (Covers Animals, Biology, Nature, Earth, Science)
-    2. NASA Video Library (Covers Space, Rockets, Planets, Deep Cosmos)
-    Returns True if an authentic .mp4 video is successfully downloaded, False otherwise.
+    100% Free Video Engine with Strict Gemini Vision Matching:
+    1. Pexels Free Stock Videos
+    2. NASA Video Library
+    STRICT USER RULE: Candidate video MUST be verified to match the fact using Gemini Vision.
+    If it does not match -> REJECT AND DISCARD.
+    Returns True if an authentic matching .mp4 video is successfully verified, False otherwise.
     """
     headers = {
         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36"
@@ -412,7 +415,7 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
 
     raw_temp = target_path + ".raw.mp4"
 
-    # Attempt 1: Pexels Free Stock Videos (Covers Living Organisms, Earth, Tech, Ocean)
+    # Attempt 1: Pexels Free Stock Videos
     try:
         p_url = f"https://www.pexels.com/search/videos/{urllib.parse.quote(search_terms)}/"
         req = urllib.request.Request(p_url, headers=headers)
@@ -420,7 +423,6 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
             html = resp.read().decode('utf-8', errors='ignore')
         mp4s = list(set(re.findall(r'https://videos\.pexels\.com/video-files/[^\s"\'<>]+\.mp4', html)))
         if mp4s:
-            # Prefer vertical 720_1280 or 1080_1920 or first candidate
             chosen = None
             for cand in mp4s:
                 if any(tag in cand for tag in ["720_1280", "1080_1920", "sd_540_960", "sd_"]):
@@ -429,7 +431,7 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
             if not chosen:
                 chosen = mp4s[0]
 
-            print(f"  [PEXELS VIDEO] Found 100% matching video for '{search_terms}': {chosen[:65]}...", flush=True)
+            print(f"  [PEXELS VIDEO CANDIDATE] Found video for '{search_terms}': {chosen[:65]}...", flush=True)
             req_dl = urllib.request.Request(chosen, headers=headers)
             with urllib.request.urlopen(req_dl, timeout=20) as dl_resp:
                 with open(raw_temp, "wb") as f_out:
@@ -448,9 +450,18 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
                 subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                 try: os.remove(raw_temp)
                 except: pass
+
                 if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
-                    print(f"  [SUCCESS] Fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
-                    return True
+                    # STRICT GEMINI VISION VERIFICATION OF CANDIDATE VIDEO
+                    v_title = fact_title or query
+                    matches, reason, subject = verify_video_matches(target_path, v_title, fact_details)
+                    if matches:
+                        print(f"  [VERIFIED MATCHING VIDEO - PEXELS] Fact '{v_title[:35]}': {subject}", flush=True)
+                        return True
+                    else:
+                        print(f"  [REJECTED STOCK VIDEO] Video content does not match fact! {reason} (Subject: {subject})", flush=True)
+                        try: os.remove(target_path)
+                        except: pass
     except Exception as pe:
         pass
 
@@ -480,7 +491,7 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
                         break
 
                 if chosen:
-                    print(f"  [NASA VIDEO] Found authentic video URL: {chosen}", flush=True)
+                    print(f"  [NASA VIDEO CANDIDATE] Found video URL: {chosen}", flush=True)
                     urllib.request.urlretrieve(chosen, raw_temp)
                     if os.path.exists(raw_temp) and os.path.getsize(raw_temp) > 80000:
                         conv_cmd = [
@@ -495,14 +506,21 @@ def fetch_free_fact_video(query, target_path, max_sec=25.0):
                         subprocess.run(conv_cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
                         try: os.remove(raw_temp)
                         except: pass
+
                         if os.path.exists(target_path) and os.path.getsize(target_path) > 50000:
-                            print(f"  [SUCCESS] Converted & fitted 9:16 muted video: {os.path.basename(target_path)}", flush=True)
-                            return True
+                            v_title = fact_title or query
+                            matches, reason, subject = verify_video_matches(target_path, v_title, fact_details)
+                            if matches:
+                                print(f"  [VERIFIED MATCHING VIDEO - NASA] Fact '{v_title[:35]}': {subject}", flush=True)
+                                return True
+                            else:
+                                print(f"  [REJECTED NASA VIDEO] Video does not match fact! {reason} (Subject: {subject})", flush=True)
+                                try: os.remove(target_path)
+                                except: pass
     except Exception as e:
         pass
 
     return False
-
 def generate_procedural_tech_visual(fact_slug, category, target_path):
     """
     Synthesizes a 100% unique, futuristic 1080x1920 9:16 scientific visual dynamically
@@ -584,18 +602,19 @@ def generate_procedural_tech_visual(fact_slug, category, target_path):
     print(f"  [PROCEDURAL AI] Generated 100% unique sci-fi visual for {fact_slug}: {os.path.basename(target_path)}", flush=True)
     return True
 
-def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1, fact_slug="fact"):
+def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path, slot_idx=1, fact_slug="fact", fact_title="", fact_details=""):
     """
-    STRICT USER MEDIA HIERARCHY:
-    1. Check for Free Public Domain / Real Scientific Photo (NASA, Wikimedia Commons, Wikipedia)
-    2. If real photo is not free or unavailable -> Generate 100% Brand-New AI Photo matching the exact fact
-    3. Procedural mathematical visual fallback
+    STRICT USER MEDIA PIPELINE:
+    1. Check for Free Public Domain Photo (NASA, Wikipedia) -> STRICTLY VERIFIED with Gemini Vision.
+       If it does not match -> REJECT AND DISCARD.
+    2. If not verified/found -> Generate 100% Brand-New AI Photo matching the exact analyzed fact!
     """
     headers = {
         "User-Agent": "AnchorAadhyaScience/2.0 (Mozilla/5.0; Windows NT 10.0; Win64; x64)"
     }
+    v_title = fact_title or nasa_query
 
-    # --- PRIORITY 2A: NASA Public Domain Free Photo Archive ---
+    # --- PRIORITY 1A: NASA Public Domain Free Photo Archive (Strictly Verified) ---
     try:
         n_url = f"https://images-api.nasa.gov/search?q={urllib.parse.quote(nasa_query)}&media_type=image"
         req = urllib.request.Request(n_url, headers=headers)
@@ -608,12 +627,19 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
             with urllib.request.urlopen(req_img, timeout=15) as img_resp:
                 im = Image.open(BytesIO(img_resp.read())).convert("RGB")
                 im.save(target_path, "JPEG", quality=95)
-                print(f"  [PRIORITY 2: FREE REAL PHOTO - NASA] {os.path.basename(target_path)}", flush=True)
-                return True
+                # Verify match
+                matches, reason, subject = verify_image_matches(target_path, v_title, fact_details)
+                if matches:
+                    print(f"  [VERIFIED REAL PHOTO - NASA] Fact '{v_title[:35]}': {subject}", flush=True)
+                    return True
+                else:
+                    print(f"  [REJECTED NASA PHOTO] Photo does not match fact! {reason} (Subject: {subject})", flush=True)
+                    try: os.remove(target_path)
+                    except: pass
     except Exception:
         pass
 
-    # --- PRIORITY 2B: Wikipedia / Wikimedia Commons Free Real Science Photo ---
+    # --- PRIORITY 1B: Wikipedia Free Real Science Photo (Strictly Verified) ---
     try:
         clean_terms = re.sub(r'[^a-zA-Z0-9\s]', ' ', nasa_query).strip()
         search_words = " ".join(clean_terms.split()[:4])
@@ -629,36 +655,26 @@ def fetch_image_from_pollinations_or_nasa(image_prompt, nasa_query, target_path,
                 with urllib.request.urlopen(req_t, timeout=15) as t_resp:
                     im = Image.open(BytesIO(t_resp.read())).convert("RGB")
                     im.save(target_path, "JPEG", quality=95)
-                    print(f"  [PRIORITY 2: FREE REAL PHOTO - WIKIPEDIA] {os.path.basename(target_path)}", flush=True)
-                    return True
+                    # Verify match
+                    matches, reason, subject = verify_image_matches(target_path, v_title, fact_details)
+                    if matches:
+                        print(f"  [VERIFIED REAL PHOTO - WIKIPEDIA] Fact '{v_title[:35]}': {subject}", flush=True)
+                        return True
+                    else:
+                        print(f"  [REJECTED WIKIPEDIA PHOTO] Photo does not match fact! {reason} (Subject: {subject})", flush=True)
+                        try: os.remove(target_path)
+                        except: pass
     except Exception:
         pass
 
-    # --- PRIORITY 3: Real Photo Not Free/Found -> Generate AI Visual Matching the Fact ---
-    enc_prompt = urllib.parse.quote(image_prompt)
-    for m in ["flux", "turbo"]:
-        try:
-            seed = random.randint(1000, 999999)
-            p_url = f"https://image.pollinations.ai/prompt/{enc_prompt}?width=1080&height=1920&nologo=true&model={m}&seed={seed}"
-            req = urllib.request.Request(p_url, headers=headers)
-            with urllib.request.urlopen(req, timeout=18) as resp:
-                data = resp.read()
-            if len(data) > 15000:
-                im = Image.open(BytesIO(data)).convert("RGB")
-                im.save(target_path, "JPEG", quality=95)
-                print(f"  [PRIORITY 3: AI GENERATED PHOTO - {m.upper()}] {os.path.basename(target_path)}", flush=True)
-                return True
-        except Exception:
-            pass
-
-    # Attempt 4: Dynamic Procedural Visual Generation (Guarantees 100% Unique Image Every Single Time!)
-    try:
-        return generate_procedural_tech_visual(fact_slug, nasa_query, target_path)
-    except Exception as ge:
-        print(f"  [WARNING] Procedural gen notice: {ge}", flush=True)
+    # --- PRIORITY 2: Photo not matched/found -> Deep Analysis of Fact & Generate 100% Matched AI Photo ---
+    print(f"  [AI GENERATION ENGINE] Generating 9:16 vertical image tailored to: {v_title[:55]}", flush=True)
+    clean_prompt = image_prompt or f"Cinematic 9:16 vertical photograph of {v_title}"
+    if generate_ai_photorealistic_image(clean_prompt, target_path, width=1080, height=1920):
+        print(f"  [SUCCESS 100% FACT-MATCHED AI PHOTO] Saved 9:16: {os.path.basename(target_path)}", flush=True)
+        return True
 
     return False
-
 def generate_daily_facts_with_gemini(used_slugs):
     """Dynamically generates 3 brand-new, never-repeated facts via Gemini AI"""
     api_key = _get_gemini_api_key()
@@ -881,16 +897,21 @@ async def main():
         bg_target = os.path.join(BASE_DIR, f"fact{idx+1}_bg.jpg")
         card_target = os.path.join(BASE_DIR, f"fact{idx+1}_card.png")
 
-        # 1. First Attempt: Download 100% Free & Copyright-Safe Video from NASA
+        fact_title = f.get("headline_line1", "")
+        fact_details = f.get("narration", "") + " " + f.get("headline_line2", "")
+
+        # 1. First Attempt: Download Video & Verify with Gemini Vision
         video_success = fetch_free_fact_video(
             f.get("image_query", f.get("headline_line1")),
             video_target,
-            max_sec=25.0
+            max_sec=25.0,
+            fact_title=fact_title,
+            fact_details=fact_details
         )
 
         if video_success and os.path.exists(video_target):
             fact_bgs.append((video_target, True))
-            print(f"  --> Fact {idx+1}: Using REAL MUTED VIDEO background!", flush=True)
+            print(f"  --> Fact {idx+1}: Using VERIFIED REAL VIDEO background!", flush=True)
         else:
             # 2. Fallback: 100% Fact-Matched 8K AI Photo + Motion Zoom
             raw_img_path = os.path.join(BASE_DIR, f"temp_fact_{idx+1}_raw.jpg")
@@ -899,7 +920,9 @@ async def main():
                 f.get("image_query", f.get("headline_line1")),
                 raw_img_path,
                 slot_idx=idx+1,
-                fact_slug=f.get("slug", f"fact_{idx+1}")
+                fact_slug=f.get("slug", f"fact_{idx+1}"),
+                fact_title=fact_title,
+                fact_details=fact_details
             )
             if not success or not os.path.exists(raw_img_path):
                 print(f"[CRITICAL] Could not generate photo for Fact {idx+1}. Halting!", flush=True)

@@ -1,3 +1,4 @@
+from media_verifier import verify_image_matches, generate_ai_photorealistic_image
 # -*- coding: utf-8 -*-
 """
 Anchor Aadhya - Autonomous Daily AI & Future Tech News Video Generator
@@ -77,7 +78,10 @@ def get_font(size, bold=True):
 def create_ai_news_images(slot, stories):
     """
     Downloads/Generates authentic, high-resolution 16:9 images for each story.
-    STRICT USER RULE: Only images directly relevant to the news are used.
+    STRICT USER RULE:
+    1. News context must be analyzed.
+    2. Article image must be verified with Gemini Vision. If it does not match -> REJECT AND DISCARD.
+    3. If rejected or missing -> Generate 100% matched AI image specifically for the analyzed story.
     """
     print("\n--- 1. Generating & Preparing Topic-Relevant 16:9 News Images ---", flush=True)
     today_slug = datetime.now().strftime("%Y-%m-%d")
@@ -85,52 +89,70 @@ def create_ai_news_images(slot, stories):
     for idx, item in enumerate(stories):
         dest1 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot1.jpg")
         dest2 = os.path.join(BASE_DIR, f"news_{today_slug}_{slot}_ai_story_{idx+1}_shot2.jpg")
+        topic_title = item.get("headline", item.get("raw_title", "Tech News"))
+        topic_context = item.get("speech", "") + " " + " ".join(item.get("facts", []))
 
-        # 1. Direct Journalist Image from Article
+        # 1. Direct Journalist Image from Article (Strictly Verified)
         direct_url = item.get("direct_image_url")
         saved_direct = False
         if direct_url:
+            temp_cand = os.path.join(BASE_DIR, f"temp_check_story_{idx+1}.jpg")
             try:
                 req = urllib.request.Request(direct_url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
                 with urllib.request.urlopen(req, timeout=12) as resp:
                     data = resp.read()
                 if len(data) > 15000:
-                    im = Image.open(BytesIO(data)).convert("RGB")
-                    im1 = fit_to_16_9(im)
-                    im1.save(dest1, "JPEG", quality=95)
-                    # Shot 2: Dramatic Macro / Hardware Close-up Crop of the SAME photo
-                    w_im, h_im = im.size
-                    cx, cy = w_im // 2, h_im // 2
-                    cw, ch = int(w_im * 0.65), int(h_im * 0.65)
-                    im2 = im.crop((cx - cw//2, cy - ch//2, cx + cw//2, cy + ch//2))
-                    im2 = fit_to_16_9(im2)
-                    im2.save(dest2, "JPEG", quality=95)
-                    saved_direct = True
-                    print(f"  [SUCCESS] Story {idx+1}: Saved authentic article photo: {os.path.basename(dest1)}", flush=True)
-            except Exception as e:
-                print(f"  [WARN] Direct photo download failed ({direct_url[:50]}): {e}", flush=True)
+                    with open(temp_cand, "wb") as f_tmp:
+                        f_tmp.write(data)
 
+                    # STRICT GEMINI VISION VERIFICATION
+                    matches, reason, subject = verify_image_matches(temp_cand, topic_title, topic_context)
+                    if matches:
+                        im = Image.open(temp_cand).convert("RGB")
+                        im1 = fit_to_16_9(im)
+                        im1.save(dest1, "JPEG", quality=95)
+                        # Shot 2: Dramatic Macro / Hardware Close-up Crop of the SAME photo
+                        w_im, h_im = im.size
+                        cx, cy = w_im // 2, h_im // 2
+                        cw, ch = int(w_im * 0.65), int(h_im * 0.65)
+                        im2 = im.crop((cx - cw//2, cy - ch//2, cx + cw//2, cy + ch//2))
+                        im2 = fit_to_16_9(im2)
+                        im2.save(dest2, "JPEG", quality=95)
+                        saved_direct = True
+                        print(f"  [VERIFIED ARTICLE PHOTO] Story {idx+1}: Authentic visual matches news: {subject}", flush=True)
+                    else:
+                        print(f"  [REJECTED ARTICLE PHOTO] Story {idx+1}: Image does NOT match news! {reason} (Subject: {subject})", flush=True)
+            except Exception as e:
+                print(f"  [WARN] Direct photo check failed ({direct_url[:50]}): {e}", flush=True)
+            finally:
+                if os.path.exists(temp_cand):
+                    try: os.remove(temp_cand)
+                    except: pass
+
+        # 2. If article image was rejected or missing: Check full news details & generate 100% matched AI image
         if not saved_direct:
-            prompt1 = item.get("ai_image_prompt") or f"Commercial broadcast news photography of {item.get('headline','tech news')}"
-            generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
-            prompt2 = item.get("ai_image_prompt_2") or f"Close up technical detail of {item.get('headline','tech news')}"
-            generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=item.get("headline", ""))
+            print(f"  [AI GENERATION ENGINE] Generating custom 16:9 images tailored to: {topic_title[:60]}", flush=True)
+            prompt1 = item.get("ai_image_prompt") or f"Commercial broadcast news photography of {topic_title}"
+            prompt2 = item.get("ai_image_prompt_2") or f"Close up technical hardware detail of {topic_title}"
+
+            generate_ai_news_image(prompt1, dest1, story_id=item.get("id"), shot_idx=1, headline_text=topic_title, topic_details=topic_context)
+            generate_ai_news_image(prompt2, dest2, story_id=item.get("id"), shot_idx=2, headline_text=topic_title, topic_details=topic_context)
 
         item["bg_img_1"] = dest1
         item["bg_img_2"] = dest2
         item["bg_img"] = dest1
 
-        # Sanity Guard: Verify both files exist and are valid (>15KB), generate unique AI visual if missing
-        for d_check in [dest1, dest2]:
+        # Sanity Guard: Verify both files exist and are valid (>15KB)
+        prompt1 = item.get("ai_image_prompt") or f"Commercial broadcast news photography of {topic_title}"
+        prompt2 = item.get("ai_image_prompt_2") or f"Close up technical hardware detail of {topic_title}"
+        for d_idx, (d_check, p_check) in enumerate([(dest1, prompt1), (dest2, prompt2)]):
             if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
-                print(f"  [RE-FETCH] Generating distinct visual for {os.path.basename(d_check)}...", flush=True)
-                generate_ai_news_image(item.get("headline", "advanced technology"), d_check, story_id=item.get("id"), shot_idx=1, headline_text=item.get("headline", ""))
+                print(f"  [RE-FETCH] Generating AI visual for {os.path.basename(d_check)}...", flush=True)
+                generate_ai_news_image(p_check, d_check, story_id=item.get("id"), shot_idx=d_idx+1, headline_text=topic_title, topic_details=topic_context)
 
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
         print(f"       Shot 1 (Wide):  {dest1} ({os.path.getsize(dest1)} bytes)", flush=True)
         print(f"       Shot 2 (Macro): {dest2} ({os.path.getsize(dest2)} bytes)", flush=True)
-
-
 def create_graphics_layers(today_display, slot, stories, rundown_items):
     print("\n--- 2. Generating Modern TV Broadcast Motion Overlays ---", flush=True)
     edition_label = "LATEST BREAKING TECH"

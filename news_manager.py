@@ -590,149 +590,64 @@ def fit_to_16_9(im, target_w=1920, target_h=1080):
         
     return im.resize((target_w, target_h), Image.Resampling.LANCZOS)
 
-def fetch_real_news_photo(query, output_file, shot_idx=1):
+def fetch_real_news_photo(query, output_file, shot_idx=1, topic_details=""):
     """
     Fetches genuine, high-resolution authentic editorial news photography for the story.
-    Zero stretching. Zero distortion. 100% real topic-relevant imagery.
+    STRICT USER RULE: Only images verified to match the specific news story are accepted.
+    Zero stretching. Zero unrelated fallbacks.
     """
+    from media_verifier import (
+        verify_image_matches,
+        generate_ai_photorealistic_image,
+        search_and_verify_editorial_photo
+    )
     clean_q = re.sub(r"[^a-zA-Z0-9\s]", " ", query).strip()
     words = [w for w in clean_q.split() if len(w) > 2]
+    filtered = [w for w in words if w.lower() not in [
+        "with", "from", "that", "this", "news", "today", "live", "first", "bulletin", "breaking",
+        "shot", "wide", "macro", "photo", "court", "mili", "badi", "rahat", "hoga", "mega",
+        "daring", "plan", "time", "watch", "profit"
+    ]]
+    search_term = " ".join(filtered[:4]) if filtered else query[:40]
 
-    # Smart Entity & Topic Mapping: Prioritize official brand, HQ, hardware & product visuals
-    entity_map = {
-        "netflix": "Netflix headquarters building",
-        "streaming": "Netflix streaming television",
-        "altman": "Sam Altman",
-        "openai": "OpenAI office San Francisco",
-        "chatgpt": "OpenAI office San Francisco",
-        "musk": "Elon Musk",
-        "tesla": "Tesla Gigafactory",
-        "spacex": "SpaceX Falcon 9 launch",
-        "starship": "SpaceX Starship launch",
-        "nvidia": "Nvidia GPU graphics card",
-        "google": "Googleplex headquarters Mountain View",
-        "gemini": "Google AI",
-        "apple": "Apple Park headquarters Cupertino",
-        "iphone": "Apple Park headquarters Cupertino",
-        "meta": "Meta Platforms headquarters Menlo Park",
-        "zuckerberg": "Mark Zuckerberg",
-        "microsoft": "Microsoft Redmond campus",
-        "amazon": "Amazon headquarters Seattle",
-        "robot": "Humanoid robot Boston Dynamics",
-        "humanoid": "Humanoid robot Boston Dynamics",
-        "quantum": "Quantum computing IBM processor",
-        "chip": "Semiconductor silicon wafer cleanroom",
-        "semiconductor": "Semiconductor silicon wafer cleanroom",
-        "satellite": "Space exploration satellite Earth orbit",
-        "space": "Space exploration satellite Earth orbit",
-        "nasa": "NASA spacecraft launch",
-        "gaming": "Video game console esports"
-    }
+    # Search and verify authentic editorial photo specifically for this topic
+    if search_and_verify_editorial_photo(search_term, output_file, topic_title=query, topic_details=topic_details, target_w=1920, target_h=1080, shot_idx=shot_idx):
+        append_image_archive(f"[VerifiedEditorial|Shot{shot_idx}] {search_term}")
+        return True
 
-    search_term = None
-    for k, v in entity_map.items():
-        if any(k in w.lower() for w in words):
-            search_term = v
-            break
-
-    if not search_term:
-        filtered = [w for w in words if w.lower() not in [
-            "with", "from", "that", "this", "news", "today", "live", "first", "bulletin", "breaking", "shot", "wide", "macro", "photo", "court", "mili", "badi", "rahat", "hoga", "mega", "daring", "plan", "time", "watch", "profit"
-        ]]
-        search_term = " ".join(filtered[:3]) if filtered else "Humanoid robot technology"
-
-    print(f"  --> [REAL PHOTO | Shot {shot_idx}] Searching topic-relevant image for: '{search_term}'...", flush=True)
-
-    headers = {"User-Agent": "AnchorAadhyaNews/2.0 (Mozilla/5.0; Windows NT 10.0; Win64; x64)"}
-
-    # Attempt query search on Wikimedia Commons
-    candidate_queries = [search_term, "Netflix headquarters building", "SpaceX Starship", "Humanoid robot", "Artificial intelligence laboratory"]
-    for q_try in candidate_queries:
-        try:
-            url = "https://commons.wikimedia.org/w/api.php?action=query&format=json&generator=search&gsrnamespace=6&gsrsearch=" + urllib.parse.quote(q_try) + "&gsrlimit=6&prop=imageinfo&iiprop=url|size"
-            req = urllib.request.Request(url, headers=headers)
-            with urllib.request.urlopen(req, timeout=12) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-            pages = data.get("query", {}).get("pages", {})
-            for pid, p in pages.items():
-                ii = p.get("imageinfo", [{}])[0]
-                img_url = ii.get("url", "")
-                w = ii.get("width", 0)
-                h = ii.get("height", 0)
-                # Avoid single person portraits if the topic is a company
-                if any(comp in search_term.lower() for comp in ["netflix", "apple", "google", "meta", "microsoft", "amazon", "nvidia", "quantum", "chip"]):
-                    if h > 0 and w / float(h) < 0.9:
-                        continue  # Skip tall vertical portraits for company news
-
-                if img_url and any(ext in img_url.lower() for ext in [".jpg", ".jpeg", ".png"]):
-                    img_req = urllib.request.Request(img_url, headers={"User-Agent": "Mozilla/5.0"})
-                    with urllib.request.urlopen(img_req, timeout=15) as img_resp:
-                        img_bytes = img_resp.read()
-                    if len(img_bytes) > 20000:
-                        im = Image.open(BytesIO(img_bytes)).convert("RGB")
-                        if shot_idx == 2:
-                            # Macro shot: Crop central 60% for a dramatic B-roll close-up
-                            w_im, h_im = im.size
-                            cx, cy = w_im // 2, h_im // 2
-                            cw, ch = int(w_im * 0.60), int(h_im * 0.60)
-                            im = im.crop((cx - cw//2, cy - ch//2, cx + cw//2, cy + ch//2))
-                        # 100% Aspect Ratio Preserving Cover-Crop (ZERO STRETCHING)
-                        im = fit_to_16_9(im)
-                        im.save(output_file, "JPEG", quality=95)
-                        append_image_archive(f"[RealPhoto|Shot{shot_idx}] {q_try} ({img_url[:60]})")
-                        print(f"  [SUCCESS] Saved 1080p Perfect 16:9 Photo (No Stretch): {os.path.basename(output_file)} (via {q_try})", flush=True)
-                        return True
-        except Exception as e:
-            print(f"  [WARN] Query '{q_try}' attempt failed: {e}", flush=True)
-
-    # If specific Wikimedia query returned no results, generate unique AI editorial visual for this story
-    try:
-        enc = urllib.parse.quote(f"Editorial news photograph of {search_term}, 8k photorealistic journalism, 16:9 widescreen, cinematic lighting, sharp detail")
-        seed = random.randint(1000, 999999)
-        p_url = f"https://image.pollinations.ai/prompt/{enc}?width=1920&height=1080&nologo=true&model=flux&seed={seed}"
-        p_req = urllib.request.Request(p_url, headers={"User-Agent": "Mozilla/5.0"})
-        with urllib.request.urlopen(p_req, timeout=18) as p_resp:
-            p_data = p_resp.read()
-        if len(p_data) > 20000:
-            im = Image.open(BytesIO(p_data)).convert("RGB")
-            im = fit_to_16_9(im)
-            im.save(output_file, "JPEG", quality=95)
-            print(f"  [SUCCESS] Generated Unique AI Photo (No Clones): {os.path.basename(output_file)} for '{search_term}'", flush=True)
-            return True
-    except Exception as pe:
-        print(f"  [WARN] Pollinations fallback failed: {pe}", flush=True)
-
-    # Bulletproof Safety Guard: Output file must always exist (>20KB) so video render never crashes
-    try:
-        master_img = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
-        if os.path.exists(master_img) and not os.path.exists(output_file):
-            import shutil
-            shutil.copyfile(master_img, output_file)
-            print(f"  [SAFETY BACKUP] Guaranteed output file: {os.path.basename(output_file)}", flush=True)
-            return True
-    except Exception:
-        pass
+    # If no verified editorial photo found, generate 100% matched AI image for this specific topic
+    ai_prompt = (
+        f"Commercial broadcast photography of {query}. Real-world tech environment, "
+        f"photorealistic 8k sharp focus, cinematic lighting. No text, no logos."
+    ) if shot_idx == 1 else (
+        f"Close up macro photography of technical hardware component for {query}. "
+        f"Razor sharp focus, cinematic broadcast lighting. No text, no logos."
+    )
+    if generate_ai_photorealistic_image(ai_prompt, output_file, width=1920, height=1080):
+        append_image_archive(f"[AIPhoto|Shot{shot_idx}] {query[:60]}")
+        return True
 
     return False
 
-def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headline_text=""):
+def generate_ai_news_image(prompt, output_file, story_id=None, shot_idx=1, headline_text="", topic_details=""):
     """
-    Generates genuine, high-resolution editorial photography for each news story.
-    Zero blank screens. Zero blue gradient fallbacks.
+    Generates genuine, high-resolution photography specifically matched to each news story.
+    STRICT USER RULE: Never add unrelated images.
     """
+    from media_verifier import generate_ai_photorealistic_image
     print(f"  --> [IMAGE GENERATOR | Shot {shot_idx}] \"{prompt[:70]}...\"", flush=True)
     if os.path.exists(output_file) and os.path.getsize(output_file) > 20000:
         print(f"  [SKIP] Exists: {os.path.basename(output_file)}", flush=True)
         return True
 
-    # 1. Primary: AI image generation
-    if generate_image_with_imagen(prompt, output_file):
+    # 1. Primary: 100% topic-matched photorealistic AI image
+    if generate_ai_photorealistic_image(prompt, output_file, width=1920, height=1080):
         append_image_archive(f"[AIImage|Shot{shot_idx}] {prompt[:100]}")
         return True
 
-    # 2. Secondary: Authentic Editorial Press Photograph (100% Real Image, Never Blue Grid)
+    # 2. Secondary: Search and verify authentic editorial photo matching the topic
     query = headline_text or prompt
-    if fetch_real_news_photo(query, output_file, shot_idx=shot_idx):
+    if fetch_real_news_photo(query, output_file, shot_idx=shot_idx, topic_details=topic_details):
         return True
 
     return True
