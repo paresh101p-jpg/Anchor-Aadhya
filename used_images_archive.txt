@@ -182,3 +182,13 @@ https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85
 [AIPhoto|Shot2] TESLA ROADSTER KE LIYE 50 HAZAR DOLLAR ADVANCE BOOKING
 [AIImage|Shot1] Editorial news photograph of a modern sleek futuristic smart glasses device sitting on a high-tech g
 [AIPhoto|Shot2] XREAL AURA SMARTGLASSES DISCOUNT PRICE PAR LAUNCH
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a modern tech delivery warehouse and logistics hub. Delive
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photography of a smartphone screen displaying a digital map rou
+[AIPhoto|Shot1] UK MEIN BANEGA DUNIYA KA PEHLA AI BIOSECURITY LAB
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up of a high-tech biometric security scanner processing complex DNA stra
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a modern minimalist tech workspace with a sleek laptop sho
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt of a high-resolution laptop screen surface with subtle t
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3. A person relaxing on a comfortabl
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of an e-reader screen glowing softly in a d
+[AIPhoto|Shot1] ENGADGET KAR RAHA HAI NAYE TECH WRITERS KI HIRING
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photograph of mechanical keyboard keys typing an article on a g

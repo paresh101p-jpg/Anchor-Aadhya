@@ -1383,5 +1383,70 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-29 12:08:51"
+  },
+  {
+    "id": "doordash_acquires_instacart_deal",
+    "headline": "DOORDASH NE INSTACART KO 17 BILLION DOLLAR MEIN KHARIDA",
+    "raw_title": "DoorDash acquires Instacart in $17 billion delivery service merger",
+    "keywords": [
+      "doordash",
+      "acquires",
+      "instacart",
+      "deal"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-29 17:52:25"
+  },
+  {
+    "id": "uk_ai_biosecurity_lab",
+    "headline": "UK MEIN BANEGA DUNIYA KA PEHLA AI BIOSECURITY LAB",
+    "raw_title": "UK to invest £100m in 'world first' AI Biosecurity Lab",
+    "keywords": [
+      "uk",
+      "ai",
+      "biosecurity",
+      "lab"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-29 17:52:25"
+  },
+  {
+    "id": "apple_touch_display_mac",
+    "headline": "APPLE MACBOOK MEIN PEHLI BAAR AAYEGA TOUCH DISPLAY",
+    "raw_title": "The Inside Story of Why Apple Finally Brought a Touch Display to the Mac",
+    "keywords": [
+      "apple",
+      "touch",
+      "display",
+      "mac"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-29 17:52:25"
+  },
+  {
+    "id": "best_kindle_accessories_2026",
+    "headline": "KINDLE READING EXPERIENCE KO BANAYE AUR BHI BEHTAR",
+    "raw_title": "The Kindle Accessories I Never Want to Read Without (2026)",
+    "keywords": [
+      "best",
+      "kindle",
+      "accessories",
+      "2026"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-29 17:52:25"
+  },
+  {
+    "id": "engadget_hiring_freelance_writers",
+    "headline": "ENGADGET KAR RAHA HAI NAYE TECH WRITERS KI HIRING",
+    "raw_title": "Engadget is hiring writers!",
+    "keywords": [
+      "engadget",
+      "hiring",
+      "freelance",
+      "writers"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-29 17:52:25"
   }
 ]
