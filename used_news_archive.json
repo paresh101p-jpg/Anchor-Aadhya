@@ -1248,5 +1248,73 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-28 17:22:45"
+  },
+  {
+    "id": "data_centre_backlash_ai_boom",
+    "headline": "AI DATA CENTRES KE KHILAF BADHTA PROTEST",
+    "raw_title": "Big, noisy and coming to a town near you - why the data centre backlash is growing",
+    "keywords": [
+      "data",
+      "centre",
+      "backlash",
+      "ai",
+      "boom"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-29 06:48:18"
+  },
+  {
+    "id": "dr_oz_election_investigation",
+    "headline": "DR OZ PAR SENATORS KA BADA KHULASA MAANGA",
+    "raw_title": "Senators Demand to Know if Dr. Oz Collaborated With Election Denial Groups",
+    "keywords": [
+      "dr",
+      "oz",
+      "election",
+      "investigation"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-29 06:48:18"
+  },
+  {
+    "id": "ps5_final_sony_bluray_player",
+    "headline": "PLAYSTATION 5 HO SAKTA HAI SONY KA AAKHIRI BLU RAY PLAYER",
+    "raw_title": "The PlayStation 5 just might be Sony's final Blu-Ray player",
+    "keywords": [
+      "ps5",
+      "final",
+      "sony",
+      "bluray",
+      "player"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-29 06:48:18"
+  },
+  {
+    "id": "sony_transparent_dualsense_ps5_covers",
+    "headline": "SONY NAYE SEE THROUGH DUALSENSE CONTROLLERS LAYA",
+    "raw_title": "Sony's new see-through DualSense controllers let you game like its 1999",
+    "keywords": [
+      "sony",
+      "transparent",
+      "dualsense",
+      "ps5",
+      "covers"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-29 06:48:18"
+  },
+  {
+    "id": "topgolf_vmware_vergeio_savings",
+    "headline": "VMWARE CHHODKAR TOPGOLF NE BACHAYE 94 CRORE RUPEE",
+    "raw_title": "Topgolf saved over $11.3 million after leaving VMware",
+    "keywords": [
+      "topgolf",
+      "vmware",
+      "vergeio",
+      "savings"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-29 06:48:18"
   }
 ]
