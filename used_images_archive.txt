@@ -172,3 +172,13 @@ https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85
 [AIImage|Shot2] Extreme macro close-up photograph of the internal circuit board, rumble motors, and transparent clea
 [AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a modern high-tech enterprise data center server room. Row
 [AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photography of a high-performance server motherboard inside a d
+[AIImage|Shot1] Editorial studio photograph of various modern Amazon Kindle e-readers neatly arranged on a wooden li
+[AIImage|Shot2] Extreme macro close-up of a high-resolution e-ink digital paper screen showing textured typography a
+[AIImage|Shot1] SHOT 1 WIDE: Editorial photojournalism shot of a modern corporate publisher boardroom with leftover 
+[AIImage|Shot2] SHOT 2 MACRO: Extreme macro photography of a modern laptop keyboard with glowing backlit keys next t
+[AIImage|Shot1] SHOT 1 WIDE: Cinematic newsroom editorial shot of a dark cybersecurity operations center with cybers
+[AIImage|Shot2] SHOT 2 MACRO: Extreme macro close-up of a server rack motherboard and RJ45 Ethernet cables with blin
+[AIImage|Shot1] Editorial news photograph of a sleek crimson red futuristic electric sports supercar parked inside a
+[AIPhoto|Shot2] TESLA ROADSTER KE LIYE 50 HAZAR DOLLAR ADVANCE BOOKING
+[AIImage|Shot1] Editorial news photograph of a modern sleek futuristic smart glasses device sitting on a high-tech g
+[AIPhoto|Shot2] XREAL AURA SMARTGLASSES DISCOUNT PRICE PAR LAUNCH
