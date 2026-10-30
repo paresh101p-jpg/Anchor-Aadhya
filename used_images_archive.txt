@@ -202,3 +202,11 @@ https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85
 [AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photograph of a high-performance server motherboard showing cir
 [AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a futuristic control room with multiple holographic displa
 [AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of a glowing digital processor chip with so
+[AIImage|Shot1] SHOT 1 WIDE: Editorial photograph of a modern, sleek indoor electric food composter sitting on a min
+[AIImage|Shot2] SHOT 2 MACRO: Macro close-up shot of organic compost soil inside a high-tech electric composter cham
+[AIImage|Shot1] Editorial news photograph of a clean Apple store counter where a customer is showing a smartphone wi
+[AIImage|Shot2] Extreme close-up macro photograph of a smartphone OLED screen glass displaying light pixels and subt
+[AIImage|Shot1] A wide editorial photo of a modern high-tech financial trading room with large glowing holographic s
+[AIImage|Shot2] Extreme macro close-up photograph of a physical golden cryptocurrency coin with intricate circuit bo
+[VerifiedEditorial|Shot1] NVIDIA CEO JENSEN HUANG
+[VerifiedEditorial|Shot2] NVIDIA CEO JENSEN HUANG

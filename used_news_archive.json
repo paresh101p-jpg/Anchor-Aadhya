@@ -1515,5 +1515,60 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-30 06:44:30"
+  },
+  {
+    "id": "reencle_essential_composter_review",
+    "headline": "REENCLE NE LAUNCH KIYA SASTA FOOD COMPOSTER",
+    "raw_title": "Reencle Essential Review: Same Scraps, Lower Price",
+    "keywords": [
+      "reencle",
+      "essential",
+      "composter",
+      "review"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 13:26:39"
+  },
+  {
+    "id": "apple_iphone_duo_screen_replace",
+    "headline": "APPLE KAREGA SCREEN PROBLEMS WALE IPHONES FREE REPLACE",
+    "raw_title": "Apple to replace iPhone Duos affected by screen problem",
+    "keywords": [
+      "apple",
+      "iphone",
+      "duo",
+      "screen",
+      "replace"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 13:26:39"
+  },
+  {
+    "id": "crypto_terms_and_meanings_explained",
+    "headline": "CRYPTO KI DUNIYA AUR ZAROORI TERMS KA MATLAB",
+    "raw_title": "From Bitcoin to Binance: Crypto terms and what they mean",
+    "keywords": [
+      "crypto",
+      "terms",
+      "and",
+      "meanings",
+      "explained"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 13:26:39"
+  },
+  {
+    "id": "nvidia_ceo_chinese_spy_allegation",
+    "headline": "NVIDIA CEO JENSEN HUANG PAR CHINESE SPY KI NAZAR",
+    "raw_title": "NVIDIA CEO Jensen Huang may have been the target of a Chinese government spy",
+    "keywords": [
+      "nvidia",
+      "ceo",
+      "chinese",
+      "spy",
+      "allegation"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 13:26:39"
   }
 ]
