@@ -1570,5 +1570,73 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-30 13:26:39"
+  },
+  {
+    "id": "musk_texas_politics_ties",
+    "headline": "ELON MUSK KE TEXAS POLITICS SE GEHRE RISHTE",
+    "raw_title": "Elon Musk’s Ties to Texas Republicans Go Much Deeper Than the Midterms",
+    "keywords": [
+      "musk",
+      "texas",
+      "politics",
+      "ties"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-30 17:22:20"
+  },
+  {
+    "id": "nayi_dwarf_planet_ki_khoj",
+    "headline": "HAMARE SOLAR SYSTEM MEIN MILA NAYA DWARF PLANET",
+    "raw_title": "Astronomers Discover a Possible New Dwarf Planet in Our Solar System",
+    "keywords": [
+      "nayi",
+      "dwarf",
+      "planet",
+      "ki",
+      "khoj"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-30 17:22:20"
+  },
+  {
+    "id": "google_ai_search_ad_crisis",
+    "headline": "GOOGLE KO LAGA 500 BILLION DOLLAR KA JHATKA",
+    "raw_title": "Google value plunges by $500bn as its own AI search hits ad sales",
+    "keywords": [
+      "google",
+      "ai",
+      "search",
+      "ad",
+      "crisis"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-30 17:22:20"
+  },
+  {
+    "id": "black_friday_mattress_deals_2026",
+    "headline": "BLACK FRIDAY SE PEHLE MATTRESS DEALS PAR BARI BACHAT",
+    "raw_title": "Mattress Deals: Save Over $600 Before Black Friday 2026",
+    "keywords": [
+      "black",
+      "friday",
+      "mattress",
+      "deals",
+      "2026"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-30 17:22:20"
+  },
+  {
+    "id": "lenovo_googlebook_15_review",
+    "headline": "LENOVO GOOGLEBOOK 15: ANDROID USERS KE LIYE NAYA LAPTOP!",
+    "raw_title": "Lenovo Googlebook 15 review: Your Android phone's new best friend",
+    "keywords": [
+      "lenovo",
+      "googlebook",
+      "15",
+      "review"
+    ],
+    "slot": "5PM",
+    "timestamp": "2026-10-30 17:22:20"
   }
 ]

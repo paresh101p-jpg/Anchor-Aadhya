@@ -210,3 +210,13 @@ https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85
 [AIImage|Shot2] Extreme macro close-up photograph of a physical golden cryptocurrency coin with intricate circuit bo
 [VerifiedEditorial|Shot1] NVIDIA CEO JENSEN HUANG
 [VerifiedEditorial|Shot2] NVIDIA CEO JENSEN HUANG
+[VerifiedEditorial|Shot1] ELON MUSK TEXAS POLITICS
+[AIImage|Shot2] Extreme close-up macro photograph of a high-tech corporate signature document on a wooden executive 
+[AIImage|Shot1] Editorial news photo of a deep space observatory telescope dome at night with the glowing starry nig
+[AIImage|Shot2] Macro photographic shot of a digital astronomical screen displaying a deep-space celestial star char
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a modern tech office interior with multiple glowing comput
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photograph of a smartphone screen displaying artificial intelli
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3 of a modern minimalist bedroom wit
+[AIPhoto|Shot2] BLACK FRIDAY SE PEHLE MATTRESS DEALS PAR BARI BACHAT
+[AIPhoto|Shot1] LENOVO GOOGLEBOOK 15: ANDROID USERS KE LIYE NAYA LAPTOP!
+[AIPhoto|Shot2] LENOVO GOOGLEBOOK 15: ANDROID USERS KE LIYE NAYA LAPTOP!
