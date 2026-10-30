@@ -1448,5 +1448,72 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-29 17:52:25"
+  },
+  {
+    "id": "govee_smart_lighting_deals_sale",
+    "headline": "GOVEE SMART LIGHTS PAR BADI DISCOUNT OFFER",
+    "raw_title": "Govee Discount Codes and Deals: 30% Off",
+    "keywords": [
+      "govee",
+      "smart",
+      "lighting",
+      "deals",
+      "sale"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 06:44:30"
+  },
+  {
+    "id": "anthropic_share_listing_khulasa",
+    "headline": "ANTHROPIC SHARE LISTING SE HUE BADE KHULASE",
+    "raw_title": "Anthropic's blockbuster share listing - 5 surprising things we now know",
+    "keywords": [
+      "anthropic",
+      "share",
+      "listing",
+      "khulasa"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 06:44:30"
+  },
+  {
+    "id": "gop_midterms_digital_campaign",
+    "headline": "DIGITAL CAMPAIGN PAR GOP KA FINAL PUSH",
+    "raw_title": "This Is What the GOP’s Final Midterms Push Looks Like",
+    "keywords": [
+      "gop",
+      "midterms",
+      "digital",
+      "campaign"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 06:44:30"
+  },
+  {
+    "id": "vmware_licensing_costs_survey_2026",
+    "headline": "VMWARE KE LICENSING KHARCHE SE PARESHAN 90 PERCENT USERS",
+    "raw_title": "Licensing costs driving 90 percent of VMware users to explore options: Survey",
+    "keywords": [
+      "vmware",
+      "licensing",
+      "costs",
+      "survey",
+      "2026"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 06:44:30"
+  },
+  {
+    "id": "ai_agents_fantasy_soccer",
+    "headline": "AI AGENTS KO DIYA FANTASY SOCCER TEAM KA CHARGE",
+    "raw_title": "I Put a Bunch of AI Agents in Charge of a Fantasy Soccer Team. They’re Not Better Than Humans—Yet",
+    "keywords": [
+      "ai",
+      "agents",
+      "fantasy",
+      "soccer"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-30 06:44:30"
   }
 ]

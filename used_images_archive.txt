@@ -192,3 +192,13 @@ https://images.unsplash.com/photo-1518770660439-4636190af475?w=1920&q=85
 [AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of an e-reader screen glowing softly in a d
 [AIPhoto|Shot1] ENGADGET KAR RAHA HAI NAYE TECH WRITERS KI HIRING
 [AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photograph of mechanical keyboard keys typing an article on a g
+[AIImage|Shot1] SHOT 1 WIDE: Editorial photograph of a modern futuristic gaming bedroom setup illuminated by vibrant
+[AIImage|Shot2] SHOT 2 MACRO: Extreme macro photograph of high-tech flexible RGBIC LED ribbon strip showing microsco
+[AIImage|Shot1] A modern high-tech financial stock exchange trading floor with large digital displays showing green 
+[AIImage|Shot2] Macro extreme close-up photograph of a sleek glass desk screen displaying glowing artificial intelli
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph prompt for Gemini Imagen 3 of a modern digital strategy war r
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of digital data streams, analytics graphs, 
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a modern IT control room with server racks glowing with bl
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro photograph of a high-performance server motherboard showing cir
+[AIImage|Shot1] SHOT 1 WIDE: Editorial news photograph of a futuristic control room with multiple holographic displa
+[AIImage|Shot2] SHOT 2 MACRO: Extreme close-up macro prompt for Imagen 3 of a glowing digital processor chip with so
