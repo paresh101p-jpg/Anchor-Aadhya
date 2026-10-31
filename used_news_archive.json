@@ -1638,5 +1638,61 @@
     ],
     "slot": "5PM",
     "timestamp": "2026-10-30 17:22:20"
+  },
+  {
+    "id": "best_leaf_blower_tech_review",
+    "headline": "WIRED KA TOP LEAF BLOWER CLEANUP KE LIYE TAIYAAR",
+    "raw_title": "The Best Leaf Blower We’ve Tested Is Ready for Halloween",
+    "keywords": [
+      "best",
+      "leaf",
+      "blower",
+      "tech",
+      "review"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-31 12:03:28"
+  },
+  {
+    "id": "anthropic_cursor_extension_backdoor_alert",
+    "headline": "ANTHROPIC CLAUDE EXTENSION HACK HUA CURSOR PAR",
+    "raw_title": "Anthropic VS code extension on Cursor backdoored for nearly 12 hours",
+    "keywords": [
+      "anthropic",
+      "cursor",
+      "extension",
+      "backdoor",
+      "alert"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-31 12:03:28"
+  },
+  {
+    "id": "death_stranding_anime_teaser_disney",
+    "headline": "DEATH STRANDING ANIME KA FIRST TEASER RELEASE HUA",
+    "raw_title": "The Death Stranding anime's first teaser trailer arrives ahead of its Disney+ debut",
+    "keywords": [
+      "death",
+      "stranding",
+      "anime",
+      "teaser",
+      "disney"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-31 12:03:28"
+  },
+  {
+    "id": "samsung_s95h_oled_review_launch",
+    "headline": "SAMSUNG KA NAYA S95H OLED TV HUA LAUNCH",
+    "raw_title": "Samsung S95H OLED TV Review (2026)",
+    "keywords": [
+      "samsung",
+      "s95h",
+      "oled",
+      "review",
+      "launch"
+    ],
+    "slot": "12PM",
+    "timestamp": "2026-10-31 12:03:28"
   }
 ]
