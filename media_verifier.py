@@ -243,7 +243,9 @@ def generate_ai_photorealistic_image(prompt, output_path, width=1920, height=108
         try:
             seed = random.randint(1000, 9999999)
             enc = urllib.parse.quote(enhanced_prompt)
-            url = f"https://image.pollinations.ai/prompt/{enc}?model=sana&width={width}&height={height}&nologo=true&seed={seed}"
+            models_pool = ["sana", "flux", "turbo"]
+            model_to_use = models_pool[attempt % len(models_pool)]
+            url = f"https://image.pollinations.ai/prompt/{enc}?model={model_to_use}&width={width}&height={height}&nologo=true&seed={seed}"
             resp = requests.get(url, headers=headers, timeout=40)
 
             if resp.status_code == 200 and len(resp.content) > 15000:

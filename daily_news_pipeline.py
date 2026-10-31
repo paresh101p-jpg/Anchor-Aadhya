@@ -150,6 +150,14 @@ def create_ai_news_images(slot, stories):
                 print(f"  [RE-FETCH] Generating AI visual for {os.path.basename(d_check)}...", flush=True)
                 generate_ai_news_image(p_check, d_check, story_id=item.get("id"), shot_idx=d_idx+1, headline_text=topic_title, topic_details=topic_context)
 
+            # Bulletproof Fallback: Never let pipeline crash if network AI fails
+            if not os.path.exists(d_check) or os.path.getsize(d_check) < 15000:
+                master_ref = os.path.join(BASE_DIR, 'anchor_aadhya_master.jpg')
+                if os.path.exists(master_ref):
+                    import shutil
+                    shutil.copyfile(master_ref, d_check)
+                    print(f'  [FALLBACK SECURED] Applied studio backdrop for {os.path.basename(d_check)}', flush=True)
+
         print(f"  --> [DUAL SHOTS READY] Story {idx+1}:", flush=True)
         print(f"       Shot 1 (Wide):  {dest1} ({os.path.getsize(dest1)} bytes)", flush=True)
         print(f"       Shot 2 (Macro): {dest2} ({os.path.getsize(dest2)} bytes)", flush=True)
