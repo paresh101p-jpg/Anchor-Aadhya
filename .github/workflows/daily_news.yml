@@ -1,16 +1,9 @@
-name: Anchor Aadhya Daily Tech News Bulletin
+name: Anchor Aadhya Daily Tech News Bulletin [PAUSED]
 
+# PAUSED BY USER: Automatic cron and external dispatches disabled.
 on:
-  schedule:
-    # 12:00 PM IST (12:00 IST) is 06:30 AM UTC
-    - cron: '30 6 * * *'
-    # 5:00 PM IST (17:00 IST) is 11:30 AM UTC
-    - cron: '30 11 * * *'
-  repository_dispatch:
-    # Triggered externally via cron-job.org or API webhook
-    types: [daily_news_trigger]
   workflow_dispatch:
-    # Manual 1-click trigger from GitHub Actions UI
+    # Only manual run permitted if needed
 
 concurrency:
   group: anchor-aadhya-daily
@@ -18,55 +11,9 @@ concurrency:
 
 jobs:
   produce_and_upload:
-    name: Generate News & Upload to YouTube
+    name: Generate News & Upload to YouTube (PAUSED)
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    timeout-minutes: 45
-
+    if: false  # STRICT PAUSE: Prevents any execution even on manual run
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install System Dependencies (FFmpeg & Fonts)
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation
-
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests google-genai
-
-      - name: Generate Today's Tech News Video & Thumbnail
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          python daily_news_pipeline.py
-
-      - name: Upload Video & Thumbnail to YouTube Channel (Anchor Aadhya)
-        env:
-          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
-          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
-          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
-        run: |
-          python youtube_uploader.py --force
-
-      - name: Commit & Push Upload Tracker & Memory Archives
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Anchor Aadhya Cloud Bot"
-          git add uploaded_bulletins_tracker.txt used_news_archive.json used_images_archive.txt
-          git commit -m "chore: record news upload & memory $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
-          for i in 1 2 3; do
-            git pull --rebase origin ${{ github.ref_name }} || true
-            git push origin HEAD:${{ github.ref_name }} && break || sleep 3
-          done
+      - name: Paused Notice
+        run: echo "Anchor Aadhya is currently PAUSED. No videos will be generated or uploaded."

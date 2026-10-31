@@ -1,16 +1,9 @@
-name: Anchor Aadhya Daily Tech Shorts (FactTechz Style)
+name: Anchor Aadhya Daily Tech Shorts [PAUSED]
 
+# PAUSED BY USER: Automatic cron and external dispatches disabled.
 on:
-  schedule:
-    # 09:30 AM IST (09:30 IST) is 04:00 AM UTC
-    - cron: '0 4 * * *'
-    # 07:30 PM IST (19:30 IST) is 02:00 PM UTC
-    - cron: '0 14 * * *'
-  repository_dispatch:
-    # Triggered externally via cron-job.org with exact-minute precision!
-    types: [daily_shorts_trigger]
   workflow_dispatch:
-    # Manual 1-click trigger from GitHub Actions UI
+    # Only manual run permitted if needed
 
 concurrency:
   group: anchor-aadhya-shorts
@@ -18,55 +11,9 @@ concurrency:
 
 jobs:
   create_and_upload_short:
-    name: Generate 3-Facts Short & Upload
+    name: Generate 3-Facts Short & Upload (PAUSED)
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
-    timeout-minutes: 45
-
+    if: false  # STRICT PAUSE: Prevents any execution even on manual run
     steps:
-      - name: Check out repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 1
-
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.11'
-
-      - name: Install System Dependencies (FFmpeg & Fonts)
-        run: |
-          export DEBIAN_FRONTEND=noninteractive
-          sudo apt-get update -qq
-          sudo apt-get install -y --no-install-recommends ffmpeg fonts-dejavu-core fonts-liberation
-
-      - name: Install Python Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install edge-tts google-api-python-client google-auth-oauthlib google-auth pillow requests google-genai
-
-      - name: Generate 3-Facts Tech Short Video
-        env:
-          GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
-        run: |
-          python create_3facts_tech_short.py
-
-      - name: Upload Tech Short to YouTube Channel (Anchor Aadhya)
-        env:
-          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
-          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
-          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
-        run: |
-          python youtube_uploader.py --video sample_3facts_facttechz_short.mp4 --meta metadata_shorts.json
-
-      - name: Commit & Push Upload Tracker
-        run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "Anchor Aadhya Cloud Bot"
-          git add uploaded_bulletins_tracker.txt used_shorts_facts.json
-          git commit -m "chore: record shorts upload $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
-          for i in 1 2 3; do
-            git pull --rebase origin ${{ github.ref_name }} || true
-            git push origin HEAD:${{ github.ref_name }} && break || sleep 3
-          done
+      - name: Paused Notice
+        run: echo "Anchor Aadhya Tech Shorts is currently PAUSED. No reels or shorts will be generated or uploaded."
