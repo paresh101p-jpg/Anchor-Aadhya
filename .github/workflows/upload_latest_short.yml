@@ -1,0 +1,56 @@
+name: Upload Latest Short to YouTube
+
+on:
+  push:
+    paths:
+      - 'Anchor_Aadhya_AI_Robot_Short.mp4'
+      - 'metadata_shorts.json'
+      - '.github/workflows/upload_latest_short.yml'
+  workflow_dispatch:
+
+concurrency:
+  group: anchor-aadhya-upload
+  cancel-in-progress: false
+
+jobs:
+  upload_to_youtube:
+    name: Upload Short to YouTube
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    timeout-minutes: 15
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install Python Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install google-api-python-client google-auth-oauthlib google-auth
+
+      - name: Upload Tech Short to YouTube Channel (Anchor Aadhya)
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+        run: |
+          python youtube_uploader.py --video Anchor_Aadhya_AI_Robot_Short.mp4 --meta metadata_shorts.json
+
+      - name: Commit & Push Upload Tracker
+        run: |
+          git config --local user.email "actions@github.com"
+          git config --local user.name "Anchor Aadhya Cloud Bot"
+          git add uploaded_bulletins_tracker.txt || true
+          git commit -m "chore: record shorts upload $(date +'%Y-%m-%d %H:%M')" || echo "No changes to commit"
+          for i in 1 2 3; do
+            git pull --rebase origin ${{ github.ref_name }} || true
+            git push origin HEAD:${{ github.ref_name }} && break || sleep 3
+          done
