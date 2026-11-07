@@ -42,6 +42,7 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
         run: |
+          python -c "import os; print('CID exists:', bool(os.environ.get('YOUTUBE_CLIENT_ID')), 'SEC exists:', bool(os.environ.get('YOUTUBE_CLIENT_SECRET')), 'TOK exists:', bool(os.environ.get('YOUTUBE_REFRESH_TOKEN')))"
           python youtube_uploader.py --video Anchor_Aadhya_AI_Robot_Short.mp4 --meta metadata_shorts.json
 
       - name: Commit & Push Upload Tracker
