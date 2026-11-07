@@ -5,6 +5,8 @@ on:
     # EXACTLY DAILY AT 5:00 PM IST:
     # 11:30 UTC = 05:00 PM IST (Prime Evening Peak)
     - cron: '30 11 * * *'
+  repository_dispatch: # External precision trigger from cron-job.org
+    types: [daily_shorts_trigger, daily_5pm_trigger, 5pm_reel, daily_reel, post_reel, create_short, trigger_short]
   workflow_dispatch: # Allows manual 1-click trigger from GitHub UI anytime
 
 concurrency:
