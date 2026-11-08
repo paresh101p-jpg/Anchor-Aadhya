@@ -21,7 +21,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENGINE_DIR = os.path.join(BASE_DIR, "engine")
+ENGINE_DIR = os.path.join(BASE_DIR, "engine_3d")
 DATA_DIR = os.path.join(ENGINE_DIR, "data")
 TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
 RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
@@ -275,68 +275,46 @@ def create_16_9_thumbnail(thumb_9_16, topic):
     print(f"  --> 16:9 Thumbnail Created: {out_thumb}", flush=True)
     return out_thumb
 
-def upload_both_formats(topic, short_path, video_16_9_path, thumb_short, thumb_16_9):
+def upload_short_to_youtube(topic, short_path, thumb_path):
     from youtube_uploader import upload_direct_video
     tracker = load_tracker()
     
-    # 1. Upload 16:9 Landscape Video First (Main Video)
-    title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
-    print(f"\n[5/5 - A] Uploading 16:9 Full Landscape Video: {title_16_9}", flush=True)
-    meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
-    meta_16_9 = {
-        "title": title_16_9,
-        "description": build_rich_description(topic, is_short=False),
-        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body"])
-    }
-    with open(meta_path_16_9, "w", encoding="utf-8") as f:
-        json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
-        
-    ok_16_9 = upload_direct_video(video_16_9_path, meta_path_16_9, thumb_path=thumb_16_9)
-    if ok_16_9:
-        print("  --> 16:9 Full Video Uploaded Successfully!", flush=True)
-    else:
-        print("  --> Warning: 16:9 Video upload deferred or failed.", flush=True)
-        
-    # 2. Upload 9:16 Vertical Short
-    print(f"\n[5/5 - B] Uploading 9:16 Vertical Short: {topic['title']}", flush=True)
+    print(f"\n[5/5] Uploading Native 9:16 3D Short: {topic['title']}", flush=True)
     meta_path_short = os.path.join(BASE_DIR, "metadata_short.json")
     meta_short = {
         "title": topic["title"],
         "description": build_rich_description(topic, is_short=True),
-        "tags": topic.get("tags", ["Shorts", "Facts", "Science"])
+        "tags": topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"])
     }
     with open(meta_path_short, "w", encoding="utf-8") as f:
         json.dump(meta_short, f, ensure_ascii=False, indent=2)
         
-    ok_short = upload_direct_video(short_path, meta_path_short, thumb_path=thumb_short)
+    ok_short = upload_direct_video(short_path, meta_path_short, thumb_path=thumb_path)
     if ok_short:
-        print("  --> 9:16 Short Uploaded Successfully!", flush=True)
+        print("  --> 9:16 3D Short Uploaded Successfully!", flush=True)
         if topic["id"] not in tracker:
             tracker.append(topic["id"])
             save_tracker(tracker)
         print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
         return True
-    return ok_16_9
+    return False
 
 def upload_to_youtube(topic, video_path, thumb_path):
-    # Backward compatible wrapper
-    return upload_both_formats(topic, video_path, video_path, thumb_path, thumb_path)
+    return upload_short_to_youtube(topic, video_path, thumb_path)
 
 async def main():
     topic = select_next_topic()
     print("==============================================================", flush=True)
-    print(f"  ANCHOR AADHYA EVERGREEN SHORTS: {topic['title']}", flush=True)
+    print(f"  ANCHOR AADHYA 3D EVERGREEN SHORT: {topic['title']}", flush=True)
     print(f"  Topic ID: {topic['id']}", flush=True)
     print("==============================================================", flush=True)
     
     dur = await build_voice_and_timing(topic)
     build_audio_mix()
     short_mp4 = render_video_mp4()
-    video_16_9 = convert_to_16_9(short_mp4)
     thumb_9_16 = extract_thumbnail_frame()
-    thumb_16_9 = create_16_9_thumbnail(thumb_9_16, topic)
     
-    upload_both_formats(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
+    upload_short_to_youtube(topic, short_mp4, thumb_9_16)
 
 if __name__ == "__main__":
     try:

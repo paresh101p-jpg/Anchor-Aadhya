@@ -1,0 +1,177 @@
+{
+ "duration": 64.094,
+ "cues": [
+  {
+   "t": 0.12,
+   "type": "inhale",
+   "dur": 1
+  },
+  {
+   "t": 6.338,
+   "type": "whoosh"
+  },
+  {
+   "t": 6.388,
+   "type": "pop",
+   "gain": 0.6
+  },
+  {
+   "t": 11.734,
+   "type": "whoosh"
+  },
+  {
+   "t": 11.984,
+   "type": "pop",
+   "gain": 0.5
+  },
+  {
+   "t": 12.034,
+   "type": "whoosh"
+  },
+  {
+   "t": 12.034,
+   "type": "slide",
+   "dur": 5.840000000000002,
+   "gain": 0.5
+  },
+  {
+   "t": 17.874,
+   "type": "whoosh"
+  },
+  {
+   "t": 17.974,
+   "type": "bubbles",
+   "dur": 5.899999999999999
+  },
+  {
+   "t": 23.774,
+   "type": "whoosh"
+  },
+  {
+   "t": 23.974,
+   "type": "alarm",
+   "dur": 6.444000000000002
+  },
+  {
+   "t": 30.418,
+   "type": "whoosh"
+  },
+  {
+   "t": 30.668,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 31.288,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 31.908,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 32.528,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 33.148,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 33.768,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 34.388,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 35.008,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 35.628,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 36.248,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 36.868,
+   "type": "thud",
+   "gain": 0.45
+  },
+  {
+   "t": 37.182,
+   "type": "whoosh"
+  },
+  {
+   "t": 37.332,
+   "type": "heartbeat"
+  },
+  {
+   "t": 37.832,
+   "type": "heartbeat"
+  },
+  {
+   "t": 38.422,
+   "type": "heartbeat"
+  },
+  {
+   "t": 39.118,
+   "type": "heartbeat"
+  },
+  {
+   "t": 39.94,
+   "type": "heartbeat"
+  },
+  {
+   "t": 40.909,
+   "type": "heartbeat"
+  },
+  {
+   "t": 41.959,
+   "type": "heartbeat"
+  },
+  {
+   "t": 43.009,
+   "type": "heartbeat"
+  },
+  {
+   "t": 43.654,
+   "type": "slide",
+   "dur": 1.2,
+   "gain": 0.5
+  },
+  {
+   "t": 50.634,
+   "type": "inhale",
+   "dur": 1
+  },
+  {
+   "t": 52.234,
+   "type": "inhale",
+   "dur": 1,
+   "gain": 0.7
+  },
+  {
+   "t": 57.402,
+   "type": "whoosh"
+  },
+  {
+   "t": 57.652,
+   "type": "slam",
+   "gain": 0.7
+  }
+ ]
+}

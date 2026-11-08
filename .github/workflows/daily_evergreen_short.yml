@@ -50,12 +50,13 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render Evergreen Inside-Out Short & Post to YouTube
+      - name: Render Zack D. Films 3D Short & Post to YouTube
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           SOFTWARE_GL: "1"
+          QS: "&res=0.7&aa=0&shadow=1024"
         run: |
           set -o pipefail
           python -u generate_evergreen_short.py 2>&1 | tee run_debug.log

@@ -5,6 +5,18 @@
 *.tmp
 tv_scenes_list.txt
 
+# Engine Temporary Folders
+engine_3d/renders/
+engine_3d/temp_audio/
+engine_3d/review/
+engine_3d/data/mix.wav
+engine_3d/data/narration.wav
+engine/renders/
+engine/temp_audio/
+engine/review/
+engine/data/mix.wav
+engine/data/narration.wav
+
 # Temporary Motion Graphics Assets
 tv_scene_*
 plate_*
