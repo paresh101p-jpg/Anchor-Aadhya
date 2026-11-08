@@ -1,7 +1,7 @@
 name: Daily 5:00 PM AI Tech Reel (Anchor Aadhya)
 
 on:
-  schedule:
+  # schedule:
     # EXACTLY DAILY AT 5:00 PM IST:
     # 11:30 UTC = 05:00 PM IST (Prime Evening Peak)
     - cron: '30 11 * * *'
