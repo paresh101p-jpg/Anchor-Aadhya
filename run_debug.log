@@ -1,77 +1,89 @@
 ==============================================================
-  ANCHOR AADHYA DUAL NATIVE 3D ENGINE: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
-  Topic ID: brain_sleep
+  ANCHOR AADHYA DUAL NATIVE 3D ENGINE: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️ #Shorts
+  Topic ID: airplane_mode
 ==============================================================
 
-[1/5] Synthesizing Voice (Cartesia-Aadhya (Sonic)) for: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
-  -> Line 1/7: 'क्या आप जानते हैं जब आप गहरी न...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'क्या आप जानते हैं जब आप गहरी न...'
-  -> Line 2/7: 'असल में रात को आपका दिमाग जागन...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'असल में रात को आपका दिमाग जागन...'
-  -> Line 3/7: 'सोते समय दिमाग में सेरेब्रोस्प...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'सोते समय दिमाग में सेरेब्रोस्प...'
-  -> Line 4/7: 'जो दिनभर जमा हुए जहरीले प्रोटी...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'जो दिनभर जमा हुए जहरीले प्रोटी...'
-  -> Line 5/7: 'इसके अलावा, दिमाग दिनभर की जरू...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इसके अलावा, दिमाग दिनभर की जरू...'
-  -> Line 6/7: 'और बेकार की फालतू जानकारी को ह...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और बेकार की फालतू जानकारी को ह...'
-  -> Line 7/7: 'यही कारण है कि अच्छी नींद के ब...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'यही कारण है कि अच्छी नींद के ब...'
-  -> Assembling master narration.wav (36.78s)...
-  --> Voice & Timing Complete: 36.78s across 7 cuts.
+[1/5] Synthesizing Voice (Cartesia-Aadhya (Sonic)) for: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️ #Shorts
+  -> Line 1/7: 'हवाई जहाज में बैठते ही मोबाइल ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'हवाई जहाज में बैठते ही मोबाइल ...'
+  -> Line 2/7: 'क्या मोबाइल ऑन रखने से प्लेन क...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'क्या मोबाइल ऑन रखने से प्लेन क...'
+  -> Line 3/7: 'असल में जब फोन ऑन रहता है, तो ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'असल में जब फोन ऑन रहता है, तो ...'
+  -> Line 4/7: 'इससे निकलने वाली रेडियो तरंगे ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इससे निकलने वाली रेडियो तरंगे ...'
+  -> Line 5/7: 'पायलट को एयर ट्रैफिक कंट्रोलर ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'पायलट को एयर ट्रैफिक कंट्रोलर ...'
+  -> Line 6/7: 'खासकर टेकऑफ़ और लैंडिंग के समय...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'खासकर टेकऑफ़ और लैंडिंग के समय...'
+  -> Line 7/7: 'इसलिए सुरक्षित उड़ान के लिए हम...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इसलिए सुरक्षित उड़ान के लिए हम...'
+  -> Assembling master narration.wav (38.09s)...
+  --> Voice & Timing Complete: 38.09s across 7 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 14 cues, 36.78 s
+data/cues.json: 7 cues, 38.09 s
   -> Running python tools/mix.py...
-unknown cue type, skipped: chime
-unknown cue type, skipped: spark
-unknown cue type, skipped: chime
-unknown cue type, skipped: chime
-data/mix.wav: 36.78 s · voice: yes · music: bed · 14 cues
+data/mix.wav: 38.09 s · voice: yes · music: bed · 7 cues
   --> mix.wav ready!
 
 [Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/920 frames150/920 frames300/920 frames450/920 frames600/920 frames750/920 frames900/920 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (920 frames, with data/mix.wav, 858 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (23.66 MB)
+0/952 frames150/952 frames300/952 frames450/952 frames600/952 frames750/952 frames900/952 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (952 frames, with data/mix.wav, 515 s)
+  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (29.44 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 36.76s (Audio-Visual Synced)
+  ✅ Duration: 38.08s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 
 [Rendering Native 3D 16:9 MP4: aadhya_video_16_9.mp4] via Headless Chromium Three.js...
-0/920 frames150/920 frames300/920 frames450/920 frames600/920 frames750/920 frames900/920 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (920 frames, with data/mix.wav, 809 s)
-  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (21.19 MB)
+0/952 frames150/952 frames300/952 frames450/952 frames600/952 frames750/952 frames900/952 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (952 frames, with data/mix.wav, 473 s)
+  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (23.72 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9
   --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 16:9 video: aadhya_video_16_9.mp4...
   ✅ Resolution: 1920x1080 (100% Native 16:9)
-  ✅ Duration: 36.76s (Audio-Visual Synced)
+  ✅ Duration: 38.08s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
+Generating Viral High-CTR Curiosity Thumbnail for: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों ...
+ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/t6.50.jpg':
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 44842 kb/s
+  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1920x1080 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr, 25 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
+Press [q] to stop, [?] for help
+[swscaler @ 0x7cfa98052300] deprecated pixel format used, make sure you did set range correctly
+Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 25 fps, 25 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 mjpeg
+    Side data:
+      ICC Profile
+      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[out#0/image2 @ 0x6122375a5000] video:190KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=1.52x elapsed=0:00:00.02    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg (189.9 KB)
+  --> Attached High-CTR Viral Curiosity Thumbnail: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg
 
-[5/5 - A] Uploading Native 16:9 Landscape Video: हमारा दिमाग रात को सोते समय क्या करता है? 🧠
-  --> Title: हमारा दिमाग रात को सोते समय क्या करता है? 🧠
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (21.19 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 18%
-  --> Upload Progress: 37%
-  --> Upload Progress: 56%
-  --> Upload Progress: 75%
-  --> Upload Progress: 94%
-
-[SUCCESS] VIDEO UPLOADED! Video ID: aTOSqFBNQrw
-  --> Live URL: https://www.youtube.com/watch?v=aTOSqFBNQrw
-  --> [SUCCESS] Custom Thumbnail Attached!
-  --> 16:9 Full Widescreen Video Uploaded Successfully!
-
-[5/5 - B] Uploading Native 9:16 3D Short: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
-  --> Title: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (23.66 MB)
+[5/5 - A] Uploading Native 16:9 Landscape Video: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️
+  --> Title: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (23.72 MB)
   --> Uploading video stream to YouTube...
   --> Upload Progress: 16%
   --> Upload Progress: 33%
@@ -79,9 +91,26 @@ data/mix.wav: 36.78 s · voice: yes · music: bed · 14 cues
   --> Upload Progress: 67%
   --> Upload Progress: 84%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: mh6VdySaxjY
-  --> Live URL: https://www.youtube.com/watch?v=mh6VdySaxjY
+[SUCCESS] VIDEO UPLOADED! Video ID: psO53HuRKwY
+  --> Live URL: https://www.youtube.com/watch?v=psO53HuRKwY
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> 16:9 Full Widescreen Video Uploaded Successfully!
+
+[5/5 - B] Uploading Native 9:16 3D Short: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️ #Shorts
+  --> Title: फ्लाइट में मोबाइल एयरप्लेन मोड पर क्यों रखना पड़ता है? ✈️ #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (29.44 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 13%
+  --> Upload Progress: 27%
+  --> Upload Progress: 40%
+  --> Upload Progress: 54%
+  --> Upload Progress: 67%
+  --> Upload Progress: 81%
+  --> Upload Progress: 95%
+
+[SUCCESS] VIDEO UPLOADED! Video ID: bsrtQabHlY0
+  --> Live URL: https://www.youtube.com/watch?v=bsrtQabHlY0
   --> [SUCCESS] Custom Thumbnail Attached!
   --> 9:16 3D Short Uploaded Successfully!
 
-🎉 ALL STEPS COMPLETED! Topic 'brain_sleep' marked as posted.
+🎉 ALL STEPS COMPLETED! Topic 'airplane_mode' marked as posted.
