@@ -49,6 +49,7 @@ async function openPage(port) {
     '--no-sandbox',
     '--disable-setuid-sandbox',
     '--disable-dev-shm-usage',
+    '--disable-gpu',
     '--hide-scrollbars',
     '--window-size=1080,1920',
     '--ignore-gpu-blocklist',
