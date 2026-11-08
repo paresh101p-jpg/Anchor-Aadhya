@@ -1,48 +1,63 @@
 ==============================================================
-  ANCHOR AADHYA EVERGREEN SHORTS: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
-  Topic ID: gum_swallow
+  ANCHOR AADHYA EVERGREEN SHORTS: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  Topic ID: holding_sneeze
 ==============================================================
 
-[1/5] Synthesizing Voice (hi-IN-SwaraNeural) for: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
-  -> Line 1/11: 'क्या होगा अगर आप गलती से चुइंग...'
-  -> Line 2/11: 'ये आपके गले से फिसलकर सीधे पेट...'
-  -> Line 3/11: 'जहाँ पेट का स्ट्रॉन्ग एसिड इस ...'
-  -> Line 4/11: 'शुगर और फ्लेवर तो तुरंत घुल जा...'
-  -> Line 5/11: 'यह एक रबर पॉलीमर है, जिसे शरीर...'
-  -> Line 6/11: 'तो क्या ये 7 साल तक चिपकी रहती...'
-  -> Line 7/11: 'आपकी आंतें इसे लगातार आगे धकेल...'
-  -> Line 8/11: 'और दो से तीन दिनों में ये शरीर...'
-  -> Line 9/11: 'लेकिन अगर आप एक साथ बहुत सारी ...'
-  -> Line 10/11: 'तो ये आंतों में गुच्छा बनकर ब्...'
-  -> Line 11/11: 'इसलिए समझदारी यही है, चबाने के...'
-  -> Assembling master narration.wav (59.71s)...
-  --> Voice & Timing Complete: 59.71s across 11 cuts.
+[1/5] Synthesizing Voice (hi-IN-SwaraNeural) for: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  -> Line 1/9: 'अरे बाप रे! क्या आप भी कभी-कभा...'
+  -> Line 2/9: 'रुकिए! जब आप छींकते हैं, तो हव...'
+  -> Line 3/9: 'लेकिन जैसे ही आपने नाक और मुंह...'
+  -> Line 4/9: 'तो ये भयंकर प्रेशर बाहर निकलने...'
+  -> Line 5/9: 'ये भारी दबाव सबसे पहले आपके का...'
+  -> Line 6/9: 'जिससे कान का पर्दा फट सकता है ...'
+  -> Line 7/9: 'इतना ही नहीं, गले की नाजुक नसे...'
+  -> Line 8/9: 'और बहुत सीरियस मामलों में दिमा...'
+  -> Line 9/9: 'तो भाई, अगली बार जब भी छींक आए...'
+  -> Assembling master narration.wav (63.40s)...
+  --> Voice & Timing Complete: 63.40s across 9 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 39 cues, 59.71 s
-  -> Running python tools/mix.py...
-data/mix.wav: 59.71 s · voice: yes · music: bed · 39 cues
-  --> mix.wav ready!
+file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82
+    if (typeof st === 'string') throw new Error('boot failed: ' + st + '\n' + logs.join('\n'));
+                                      ^
 
-[3/5] Rendering 1080x1920 Short via Headless Chromium Engine...
-  -> Executing node tools/capture.mjs video...
-0/1791 frames150/1791 frames300/1791 frames450/1791 frames600/1791 frames750/1791 frames900/1791 frames1050/1791 frames1200/1791 frames1350/1791 frames1500/1791 frames1650/1791 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (1791 frames, with data/mix.wav, 53 s)
-  --> MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (10.91 MB)
+Error: boot failed: ERR:Error: no line 9
+    at L (http://127.0.0.1:46243/src/core/timing.js:15:63)
+    at cut (http://127.0.0.1:46243/src/shots.js:13:37)
+    at buildShots (http://127.0.0.1:46243/src/shots.js:148:29)
+    at http://127.0.0.1:46243/src/main.js:39:29
+ERROR Error: no line 9
+    at L (http://127.0.0.1:46243/src/core/timing.js:15:63)
+    at cut (http://127.0.0.1:46243/src/shots.js:13:37)
+    at buildShots (http://127.0.0.1:46243/src/shots.js:148:29)
+    at http://127.0.0.1:46243/src/main.js:39:29
+    at openPage (file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82:39)
+    at async file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:95:13
 
-[4/5] Extracting High-CTR Kinetic Cover Frame...
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover
-  --> Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/t7.00.jpg
+Node.js v22.23.4
 
-[5/5] Uploading to YouTube Shorts: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
-  --> Title: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (10.91 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 36%
-  --> Upload Progress: 73%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: DpMGxK7gLmU
-  --> Live URL: https://www.youtube.com/watch?v=DpMGxK7gLmU
-  --> [SUCCESS] Custom Thumbnail Attached!
+!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 343, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 333, in main
+    build_audio_mix()
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 169, in build_audio_mix
+    subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['node', 'tools/capture.mjs', 'cues']' returned non-zero exit status 1.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-🎉 ALL STEPS COMPLETED! Topic 'gum_swallow' marked as posted.
+
