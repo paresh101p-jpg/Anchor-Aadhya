@@ -8,6 +8,9 @@ on:
   repository_dispatch: # External precision trigger from cron-job.org
     types: [daily_shorts_trigger, daily_5pm_trigger, 5pm_reel, daily_reel, post_reel, create_short, trigger_short]
   workflow_dispatch: # Allows manual 1-click trigger from GitHub UI anytime
+  push:
+    paths:
+      - 'TRIGGER_AADHYA_POST.txt'
 
 concurrency:
   group: anchor-aadhya-daily-5pm
