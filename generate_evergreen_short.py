@@ -375,6 +375,16 @@ async def main():
     thumb_16_9 = extract_native_thumbnail(aspect="16:9")
     verify_visual_integrity(video_16_9, aspect="16:9")
     
+    # Generate High-CTR Curiosity Hook Thumbnail for 16:9
+    try:
+        from thumbnail_hook_generator import generate_curiosity_hook_thumbnail
+        hook_thumb = generate_curiosity_hook_thumbnail(thumb_16_9, topic)
+        if hook_thumb and os.path.exists(hook_thumb):
+            thumb_16_9 = hook_thumb
+            print(f"  --> Attached High-CTR Viral Curiosity Thumbnail: {thumb_16_9}", flush=True)
+    except Exception as th_err:
+        print(f"  --> [Notice] Curiosity thumbnail generation deferred: {th_err}", flush=True)
+    
     # 3. Upload both to YouTube
     upload_dual_native_3d(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
 
