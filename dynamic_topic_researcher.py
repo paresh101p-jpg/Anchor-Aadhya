@@ -15,7 +15,48 @@ import re
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 TRACKER_FILE = os.path.join(BASE_DIR, "used_topics_tracker.json")
 
-# Emergency verified rare curiosities pool (Used ONLY if Gemini API is completely unreachable)
+# Category rotation list across all diverse installed skills
+CATEGORY_ROTATION = [
+    {
+        "category": "Survival & Emergency Protocol",
+        "skill": "faceless-shorts/stick-story",
+        "focus": "Extreme survival hacks, escaping sinking car, elevator freefall truth, wild animal encounter, quicksand, rip current escape. Highly engaging, practical, life-saving science."
+    },
+    {
+        "category": "Mechanical & Engineering Secrets (Everyday Machines)",
+        "skill": "faceless-shorts/inside-out",
+        "focus": "What actually happens inside everyday machines: ATM dispensing cash, airplane toilet flush at 35,000 ft, key tumblers in a lock, vending machine sensor coin check, car airbag deployment in 30ms."
+    },
+    {
+        "category": "Unsolved Cosmic & Earth Mysteries",
+        "skill": "faceless-shorts/night-file",
+        "focus": "Deep space signals (Wow! signal), ocean abyss anomalies (Bloop sound), eerie abandoned radio stations (UVB-76), mysterious Bermuda compass glitches, Bermuda magnetic anomalies."
+    },
+    {
+        "category": "Bizarre Real History & Crazy Inventions",
+        "skill": "faceless-shorts/paper-atlas",
+        "focus": "Unbelievable but true historical events: The Dancing Plague of 1518, The Australian Emu War, Great Molasses Flood, weird forgotten Victorian inventions, pirate map codes."
+    },
+    {
+        "category": "Crazy True Scams & Loopholes",
+        "skill": "faceless-shorts/tall-tale",
+        "focus": "Hilarious and astonishing true historical scams: The man who sold the Eiffel Tower twice (Victor Lustig), the casino card-counting loophole, the fake island sold to investors."
+    },
+    {
+        "category": "Tech & Algorithm Dark Secrets",
+        "skill": "vox-doc",
+        "focus": "How supermarket layouts trick you to buy 40% more, how flight ticket dynamic pricing tracks your battery percentage, hidden GPS time-dilation relativity correction."
+    },
+    {
+        "category": "Rare Body & Neuro Curiosity",
+        "skill": "faceless-shorts/deep-dive",
+        "focus": "Only extreme, rare anomalies like phantom limb syndrome, alien hand syndrome, synesthesia, electric shock muscle lock. Strictly NO generic sleep/water/sneeze."
+    }
+]
+
+def get_next_rotation_category(used_count):
+    idx = used_count % len(CATEGORY_ROTATION)
+    return CATEGORY_ROTATION[idx]
 EMERGENCY_RARE_POOL = [
     {
         "id": "electric_shock_grip",
@@ -112,31 +153,31 @@ def research_fresh_rare_topic():
     used_summary = ", ".join(used_list[-30:]) if used_list else "None yet"
     print(f"  -> Tracker Audit: {len(used_list)} previously used topics will be strictly excluded.", flush=True)
 
+    target_cat = get_next_rotation_category(len(used_list))
+    print(f"  -> Category Rotation Target: '{target_cat['category']}' [Skill: {target_cat['skill']}]", flush=True)
+
     gemini_key = resolve_gemini_key()
     if gemini_key:
         try:
             from google import genai
             client = genai.Client(api_key=gemini_key)
             
-            prompt = f"""You are the Executive Lead Researcher & Creative Director for 'Anchor Aadhya' (viral Hindi 3D animated curiosity & science explainer channel inspired by Zack D. Films & Vox).
+            prompt = f"""You are the Executive Lead Researcher & Creative Director for 'Anchor Aadhya' (viral Hindi 3D animated curiosity & explainer channel).
 
 ALREADY COVERED TOPICS (DO NOT REPEAT ANY OF THESE OR SIMILAR CONCEPTS):
 {used_summary}
 
+MANDATORY CATEGORY FOR THIS RUN (DO NOT PICK BODY/MEDICAL UNLESS THIS CATEGORY IS RARE BODY/NEURO):
+Category: {target_cat['category']}
+Assigned Skill: {target_cat['skill']}
+Category Focus: {target_cat['focus']}
+
 TASK:
-Research and generate ONE 100% BRAND NEW, RARE, UNHEARD-OF, HIGH-RETENTION CURIOSITY TOPIC in Hindi.
+Research and generate ONE 100% BRAND NEW, RARE, UNHEARD-OF, HIGH-RETENTION TOPIC strictly inside the MANDATORY CATEGORY.
 It must be scientifically/historically verified with ZERO competition on Hindi YouTube.
 
-CATEGORIES TO CHOOSE FROM (Rotate to fresh one):
-1. 'Body & Medical 3D' (Bizarre anatomical reflex, medical anomaly, organ defense) -> Skill: faceless-shorts/deep-dive
-2. 'Survival Protocol' (Emergency escape, life-or-death science hack) -> Skill: faceless-shorts/stick-story
-3. 'Unsolved Mystery' (Scientific cosmic signal, strange deep anomaly, radio mystery) -> Skill: faceless-shorts/night-file
-4. 'Bizarre History' (Real bizarre historical war or lost cartography event) -> Skill: faceless-shorts/paper-atlas
-5. 'Tech & Algorithm Secret' (Hidden digital algorithm, pricing mechanism) -> Skill: vox-doc
-6. 'Crazy True Scam' (Hilarious true con or bizarre loophole that really happened) -> Skill: faceless-shorts/tall-tale
-
 CRITICAL RULES:
-- STRICTLY ZERO CLICHES (NO 'water 7 days', NO 'swallowing gum', NO 'holding sneeze', NO 'don't sleep').
+- STRICTLY ZERO CLICHES (NO 'water 7 days', NO 'swallowing gum', NO 'holding sneeze', NO 'sleep brain').
 - High Psychological Hook in Line 1 (Viewer must stop scrolling in 0-3 seconds).
 - Exactly 7 to 9 spoken lines in natural, energetic conversational Hindi spoken by female anchor Aadhya.
 - Every line MUST have a 'caps' field with 2-4 uppercase words, with '*' on the single yellow highlight word, separated by '|' for caption chunks.
@@ -146,15 +187,15 @@ OUTPUT STRICT VALID JSON ONLY (NO MARKDOWN FENCES, NO PROSE):
   "id": "unique_short_english_slug",
   "title": "Hindi Catchy Hook Title #Shorts",
   "video_title": "Clean Title for 16:9 Landscape Video",
-  "category": "Category Name",
-  "best_skill": "skill-name",
+  "category": "{target_cat['category']}",
+  "best_skill": "{target_cat['skill']}",
   "hook_pill": "SHORT 2-3 WORD PILL ⚡",
   "lines": [
     {{"text": "Hindi line 1", "caps": "HINDI *CAPS | CHUNK 2"}},
     {{"text": "Hindi line 2", "caps": "HINDI *CAPS | CHUNK 2"}}
   ],
-  "tags": ["Tag1", "Tag2", "Anchor Aadhya", "Science Facts Hindi", "3D Animation"],
-  "description": "Rich 2-3 paragraph YouTube description in Hindi explaining the verified science."
+  "tags": ["Tag1", "Tag2", "Anchor Aadhya", "Curiosity Facts Hindi", "3D Animation"],
+  "description": "Rich 2-3 paragraph YouTube description in Hindi explaining the verified facts."
 }}"""
 
             print("  -> Querying Gemini 3.8 Flash for fresh breakthrough curiosity...", flush=True)
@@ -193,3 +234,4 @@ if __name__ == "__main__":
     t = research_fresh_rare_topic()
     print("\nResearched Topic Payload:")
     print(json.dumps(t, ensure_ascii=False, indent=2))
+
