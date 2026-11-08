@@ -1,0 +1,57 @@
+==============================================================
+  ANCHOR AADHYA EVERGREEN SHORTS: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
+  Topic ID: gum_swallow
+==============================================================
+
+[1/5] Synthesizing Voice (hi-IN-SwaraNeural) for: क्या होगा अगर आप गलती से चुइंगम निगल जाएं? 😱 #Shorts
+  -> Line 1/11: 'क्या होगा अगर आप गलती से चुइंग...'
+  -> Line 2/11: 'ये आपके गले से फिसलकर सीधे पेट...'
+  -> Line 3/11: 'जहाँ पेट का स्ट्रॉन्ग एसिड इस ...'
+  -> Line 4/11: 'शुगर और फ्लेवर तो तुरंत घुल जा...'
+  -> Line 5/11: 'यह एक रबर पॉलीमर है, जिसे शरीर...'
+  -> Line 6/11: 'तो क्या ये 7 साल तक चिपकी रहती...'
+  -> Line 7/11: 'आपकी आंतें इसे लगातार आगे धकेल...'
+  -> Line 8/11: 'और दो से तीन दिनों में ये शरीर...'
+  -> Line 9/11: 'लेकिन अगर आप एक साथ बहुत सारी ...'
+  -> Line 10/11: 'तो ये आंतों में गुच्छा बनकर ब्...'
+  -> Line 11/11: 'इसलिए समझदारी यही है, चबाने के...'
+  -> Assembling master narration.wav (59.71s)...
+  --> Voice & Timing Complete: 59.71s across 11 cuts.
+
+[2/5] Building Procedural Sound Effects & Music Mix...
+  -> Running node tools/capture.mjs cues...
+file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:67
+  const ws = new WebSocket(target.webSocketDebuggerUrl);
+             ^
+
+ReferenceError: WebSocket is not defined
+    at openPage (file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:67:14)
+    at process.processTicksAndRejections (node:internal/process/task_queues:95:5)
+    at async file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:95:13
+
+Node.js v20.20.2
+
+
+!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 244, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 236, in main
+    build_audio_mix()
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 168, in build_audio_mix
+    subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['node', 'tools/capture.mjs', 'cues']' returned non-zero exit status 1.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
+
