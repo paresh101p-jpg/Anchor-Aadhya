@@ -132,6 +132,91 @@ export function buildShots(E, script = {}) {
   }
 
   // =========================================================================
+  // 🧠 TOPIC: BRAIN SLEEP (हमारा दिमाग रात को सोते समय क्या करता है?)
+  // =========================================================================
+  else if (topicId === 'brain_sleep') {
+    // 1 · HOOK: Sleeping brain (Hero asleep, peaceful breathing, camera pushing in)
+    { const st = cut(0);
+      add({ id: 'B01', at: st, note: 'Hero asleep peacefully, camera pushing in toward head', draw(lt, d, t, blit) {
+        reset(); const breath = 0.5 - 0.5 * Math.cos(lt * 2.2); chest(hero, breath);
+        hero.pose({ head: [12, -4, 0], lid: 1, look: [0, -10] });
+        cam.position.copy(lerpV(V3(0.4, 1.72, 0.65), V3(0.24, 1.68, 0.22), eio(lt / d))); cam.lookAt(FACE);
+        kitchenRender(cam.position.distanceTo(FACE), { warm: 0.08 }); blit();
+        pill('SLEEPING BRAIN 🧠', 540, 1180, eob(seg(lt, 0.2, 0.5)), '#FFD43B');
+      } });
+      cue(st + 0.1, 'whoosh'); cue(st + 0.3, 'chime', { gain: 0.6 }); }
+
+    // 2 · Super Active Brain (X-ray head lights up with radiant neural pulses across cortex)
+    { const st = cut(1);
+      add({ id: 'B02', at: st, note: 'X-ray head: brain lights up with electric neural energy', draw(lt, d, t, blit) {
+        reset(); const pulse = Math.abs(Math.sin(lt * 8));
+        xh.pose({ head: [8, 0, 0], lid: 0.9 });
+        xmat.uniforms.uCol.value.copy(CYAN);
+        cam.position.copy(lerpV(V3(0.28, 1.72, 0.8), V3(0.12, 1.70, 0.42), eio(lt / d))); cam.lookAt(FACE);
+        E.render(X.scene, cam, { ...XLOOK, bloom: 0.75 + 0.25 * pulse, focus: cam.position.distanceTo(FACE) }); blit();
+        pill('SUPER ACTIVE BRAIN ⚡', 540, 320, eob(seg(lt, 0.1, 0.35)), '#4FD1E8');
+      } });
+      cue(st, 'whoosh'); cue(st + 0.2, 'spark', { gain: 0.7 }); }
+
+    // 3 · CSF Fluid Waves (Cerebrospinal fluid waves flowing through brain)
+    { const st = cut(2);
+      add({ id: 'B03', at: st, note: 'Cerebrospinal fluid waves pulsing through brain tissue', draw(lt, d, t, blit) {
+        reset(); const wave = Math.sin(lt * 4) * 0.02;
+        xh.pose({ head: [4, 6 * wave, 0], lid: 0.8 });
+        cam.position.copy(lerpV(V3(0.18, 1.68, 0.65), V3(0.08, 1.66, 0.32), eio(lt / d))); cam.lookAt(FACE);
+        E.render(X.scene, cam, { ...XLOOK, bloom: 0.65, focus: cam.position.distanceTo(FACE) }); blit();
+        pill('CSF FLUID WAVES 🌊', 540, 320, eob(seg(lt, 0.1, 0.35)), '#38EF7D');
+      } });
+      cue(st, 'whoosh'); cue(st + 0.2, 'bubbles', { gain: 0.5 }); }
+
+    // 4 · Cleaning Waste & Toxins (CSF fluid washes away beta-amyloid debris)
+    { const st = cut(3);
+      add({ id: 'B04', at: st, note: 'CSF fluid washes away toxic protein debris', draw(lt, d, t, blit) {
+        reset(); VS.update(lt, 2.8 + lt * 0.4, 0.3, 0.2);
+        cam.position.set(0, 0, 3.2 - lt * 0.2); cam.lookAt(0, 0, -10);
+        E.render(VS.scene, cam, { ...VLOOK, bloom: 0.7 }); blit();
+        pill('DEEP BRAIN DETOX 🧼', 540, 330, eob(seg(lt, 0.15, 0.4)), '#7CF29A');
+        label('TOXINS CLEARED: 100%', 740, 560, ...screen(V3(0, 0, -2), cam), eob(seg(lt, 0.3, 0.6)));
+      } });
+      cue(st, 'whoosh'); cue(st + 0.3, 'slide', { gain: 0.5 }); }
+
+    // 5 · Saving Important Memories (Neural synapses glowing gold, memory storage)
+    { const st = cut(4);
+      add({ id: 'B05', at: st, note: 'Memory consolidation: golden synapses glowing in cortex', draw(lt, d, t, blit) {
+        reset(); const glow = 0.5 - 0.5 * Math.cos(lt * 5);
+        xh.pose({ head: [2, 0, 0], lid: 0.7 });
+        xmat.uniforms.uCol.value.copy(GOLD);
+        cam.position.copy(lerpV(V3(0.2, 1.70, 0.75), V3(0.1, 1.68, 0.38), eio(lt / d))); cam.lookAt(FACE);
+        E.render(X.scene, cam, { ...XLOOK, bloom: 0.8 + 0.3 * glow, focus: cam.position.distanceTo(FACE) }); blit();
+        pill('SAVING MEMORIES 💾', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FFD43B');
+      } });
+      cue(st, 'whoosh'); cue(st + 0.2, 'chime', { gain: 0.7 }); }
+
+    // 6 · Deleting Junk Data (Pruning weak unused synaptic connections)
+    { const st = cut(5);
+      add({ id: 'B06', at: st, note: 'Synaptic pruning: deleting useless junk data', draw(lt, d, t, blit) {
+        reset(); const fadeOut = clamp(1 - (lt / d) * 0.6);
+        xh.pose({ head: [0, 4, 0], lid: 0.6 });
+        xmat.uniforms.uCol.value.copy(CYAN);
+        cam.position.copy(lerpV(V3(0.15, 1.68, 0.6), V3(0.08, 1.66, 0.3), eio(lt / d))); cam.lookAt(FACE);
+        E.render(X.scene, cam, { ...XLOOK, exposure: fadeOut, focus: cam.position.distanceTo(FACE) }); blit();
+        pill('DELETING JUNK DATA 🗑️', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FF6B6B');
+      } });
+      cue(st, 'whoosh'); cue(st + 0.2, 'pop', { gain: 0.5 }); }
+
+    // 7 · OUTRO: Morning freshness & sharp brain (Hero wakes up smiling and alert)
+    { const st = cut(6);
+      add({ id: 'B07', at: st, note: 'Outro: Hero wakes up refreshed and alert at golden sunrise', draw(lt, d, t, blit) {
+        reset(); const wake = eo(seg(lt, 0.1, 1.0));
+        hero.pose({ head: [-2 * wake, 0, 0], lid: lerp(0.8, -0.2, wake), look: [0, 0], shL: [10, 0, 5], shR: [10, 0, 5] });
+        cam.position.copy(lerpV(V3(0.28, 1.68, 0.65), V3(0.15, 1.66, 0.3), eio(lt / d))); cam.lookAt(FACE);
+        kitchenRender(cam.position.distanceTo(FACE), { bloom: 0.5, warm: 0.05 }); blit();
+        pill('FRESH & SHARP! ⚡', 540, 1180, eob(seg(lt, 0.25, 0.55)), '#4FD1E8');
+      } });
+      cue(st, 'whoosh'); cue(st + 0.3, 'chime', { gain: 0.8 }); }
+  }
+
+  // =========================================================================
   // ⚡ FALLBACK / ADAPTIVE DIRECTOR FOR OTHER TOPICS
   // =========================================================================
   else {
