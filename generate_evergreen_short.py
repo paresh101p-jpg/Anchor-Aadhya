@@ -339,6 +339,11 @@ def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb
         if topic["id"] not in tracker:
             tracker.append(topic["id"])
             save_tracker(tracker)
+        try:
+            from dynamic_topic_researcher import save_to_used_tracker
+            save_to_used_tracker(topic["id"], topic.get("title"))
+        except Exception:
+            pass
         print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
         return True
     return False
@@ -356,7 +361,13 @@ def upload_to_youtube(topic, video_path, thumb_path):
     return upload_dual_native_3d(topic, video_path, video_path, thumb_path, thumb_path)
 
 async def main():
-    topic = select_next_topic()
+    try:
+        from dynamic_topic_researcher import research_fresh_rare_topic, save_to_used_tracker
+        topic = research_fresh_rare_topic()
+    except Exception as re_err:
+        print(f"[Warning] Live researcher fallback note: {re_err}, using select_next_topic()", flush=True)
+        topic = select_next_topic()
+
     print("==============================================================", flush=True)
     print(f"  ANCHOR AADHYA DUAL NATIVE 3D ENGINE: {topic['title']}", flush=True)
     print(f"  Topic ID: {topic['id']}", flush=True)
