@@ -50,7 +50,7 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render Zack D. Films 3D Short & Post to YouTube
+      - name: Render Dual Native 3D (9:16 Short & 16:9 Video) & Post to YouTube
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}

@@ -1,5 +1,5 @@
 // Deep Dive 2D layer (drawn over the 3D frame): captions, labels.
-import { ctx } from './lib.js';
+import { ctx, W, H } from './lib.js';
 export const CAPLOOK = { size: 112, y: 1560, maxW: 940, fg: '#FFFFFF', hi: '#FFD43B', stroke: '#111111' };
 /** caption: sentence case, white, thick dark outline, one yellow word. words = [{ txt, hi }] */
 export function caption(words, x, y, sc = 1, look = CAPLOOK) {
@@ -19,15 +19,32 @@ export function label(text, x, y, tx, ty, sc = 1) {
 }
 /** rounded info pill (counters, short facts). col = accent colour of the text */
 export function pill(text, x, y, sc = 1, col = '#FFFFFF', bg = 'rgba(12,14,20,0.8)', size = 60) {
-  if (sc <= 0) return; ctx.save(); ctx.translate(x, y); ctx.scale(sc, sc); ctx.font = `900 ${size}px Inter, "Noto Sans Devanagari", sans-serif`;
+  if (sc <= 0) return; ctx.save();
+  const px = x === 540 ? W / 2 : x;
+  ctx.translate(px, y); ctx.scale(sc, sc); ctx.font = `900 ${size}px Inter, "Noto Sans Devanagari", sans-serif`;
   const w = ctx.measureText(text).width + size * 1.2; ctx.fillStyle = bg; ctx.beginPath(); ctx.roundRect(-w / 2, -size * 0.85, w, size * 1.7, size * 0.85); ctx.fill();
   ctx.fillStyle = col; ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(text, 0, size * 0.06); ctx.restore();
 }
 /** red warning triangle with "!" */
 export function warning(x, y, s) {
-  if (s <= 0) return; ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 30;
+  if (s <= 0) return; ctx.save();
+  const px = x === 540 ? W / 2 : x;
+  ctx.translate(px, y); ctx.scale(s, s); ctx.shadowColor = 'rgba(0,0,0,0.5)'; ctx.shadowBlur = 30;
   ctx.beginPath(); ctx.moveTo(0, -130); ctx.lineTo(140, 110); ctx.lineTo(-140, 110); ctx.closePath(); ctx.lineJoin = 'round'; ctx.lineWidth = 40; ctx.strokeStyle = '#D62839'; ctx.stroke(); ctx.fillStyle = '#D62839'; ctx.fill();
   ctx.shadowBlur = 0; ctx.fillStyle = '#FFFFFF'; ctx.beginPath(); ctx.roundRect(-14, -60, 28, 110, 14); ctx.fill(); ctx.beginPath(); ctx.arc(0, 82, 17, 0, 7); ctx.fill(); ctx.restore();
 }
 /** darken toward the edges (passing out); k 0..1 */
-export function blackout(k) { if (k <= 0) return; const g = ctx.createRadialGradient(540, 860, 200 * (1 - k), 540, 960, 1300 * (1 - k * 0.6)); g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, `rgba(0,0,0,${Math.min(1, k * 1.4)})`); ctx.fillStyle = g; ctx.fillRect(0, 0, 1080, 1920); if (k > 0.75) { ctx.fillStyle = `rgba(0,0,0,${(k - 0.75) * 4})`; ctx.fillRect(0, 0, 1080, 1920); } }
+export function blackout(k) {
+  if (k <= 0) return;
+  const cx = W / 2, cy = H / 2;
+  const maxR = Math.max(W, H);
+  const g = ctx.createRadialGradient(cx, cy, 200 * (1 - k), cx, cy, maxR * 0.7 * (1 - k * 0.6));
+  g.addColorStop(0, 'rgba(0,0,0,0)');
+  g.addColorStop(1, `rgba(0,0,0,${Math.min(1, k * 1.4)})`);
+  ctx.fillStyle = g;
+  ctx.fillRect(0, 0, W, H);
+  if (k > 0.75) {
+    ctx.fillStyle = `rgba(0,0,0,${(k - 0.75) * 4})`;
+    ctx.fillRect(0, 0, W, H);
+  }
+}

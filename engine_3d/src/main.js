@@ -30,7 +30,8 @@ function draw(t) {
     const script = await (await fetch('script.json', { cache: 'no-store' })).json();
     await loadTiming();
     buildCaptions(script);
-    GL.width = Math.round(1080 * RES); GL.height = Math.round(1920 * RES);
+    cv.width = W; cv.height = H;
+    GL.width = Math.round(W * RES); GL.height = Math.round(H * RES);
     const E = makeEngine(GL, { w: GL.width, h: GL.height, samples: AA });
     const { shots, cues } = buildShots(E, script);
     shots.sort((a, b) => a.at - b.at);

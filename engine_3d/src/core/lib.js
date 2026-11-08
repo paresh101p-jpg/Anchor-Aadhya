@@ -1,6 +1,8 @@
-// Inside Out engine: canvas, palette, math and drawing primitives.
-// Every drawing function in the kit uses the shared `ctx` exported here (set once by main.js).
-export const W = 1080, H = 1920, FPS = 30;
+// Inside Out / Deep Dive 3D engine: canvas, palette, math and drawing primitives.
+const Q = typeof location !== 'undefined' ? new URLSearchParams(location.search) : null;
+const IS_16_9 = Q ? Q.get('aspect') === '16:9' : false;
+export const W = IS_16_9 ? 1920 : 1080, H = IS_16_9 ? 1080 : 1920, FPS = 30;
+export const ASPECT = W / H;
 export let ctx = null;
 export function setCtx(c) { ctx = c; }
 
