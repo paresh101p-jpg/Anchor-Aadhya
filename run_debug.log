@@ -4,60 +4,171 @@
 ==============================================================
 
 [1/5] Synthesizing Voice (hi-IN-SwaraNeural) for: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
-  -> Line 1/9: 'अरे बाप रे! क्या आप भी कभी-कभा...'
-  -> Line 2/9: 'रुकिए! जब आप छींकते हैं, तो हव...'
-  -> Line 3/9: 'लेकिन जैसे ही आपने नाक और मुंह...'
-  -> Line 4/9: 'तो ये भयंकर प्रेशर बाहर निकलने...'
-  -> Line 5/9: 'ये भारी दबाव सबसे पहले आपके का...'
-  -> Line 6/9: 'जिससे कान का पर्दा फट सकता है ...'
-  -> Line 7/9: 'इतना ही नहीं, गले की नाजुक नसे...'
-  -> Line 8/9: 'और बहुत सीरियस मामलों में दिमा...'
-  -> Line 9/9: 'तो भाई, अगली बार जब भी छींक आए...'
-  -> Assembling master narration.wav (63.40s)...
-  --> Voice & Timing Complete: 63.40s across 9 cuts.
+  -> Line 1/11: 'अरे बाप रे! क्या आप भी कभी-कभा...'
+  -> Line 2/11: 'रुकिए! जब आप छींकते हैं, तो हव...'
+  -> Line 3/11: 'लेकिन जैसे ही आपने नाक और मुंह...'
+  -> Line 4/11: 'तो ये भयंकर प्रेशर बाहर निकलने...'
+  -> Line 5/11: 'ये भारी दबाव सबसे पहले आपके का...'
+  -> Line 6/11: 'जिससे कान का पर्दा फट सकता है ...'
+  -> Line 7/11: 'इतना ही नहीं, गले की नाजुक नसे...'
+  -> Line 8/11: 'और बहुत सीरियस मामलों में दिमा...'
+  -> Line 9/11: 'क्या आप जानते हैं कि डॉक्टरों ...'
+  -> Line 10/11: 'जहाँ छींक रोकने से लोगों के सी...'
+  -> Line 11/11: 'तो भाई, अगली बार जब भी छींक आए...'
+  -> Assembling master narration.wav (75.55s)...
+  --> Voice & Timing Complete: 75.55s across 11 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82
-    if (typeof st === 'string') throw new Error('boot failed: ' + st + '\n' + logs.join('\n'));
-                                      ^
+data/cues.json: 40 cues, 75.55 s
+  -> Running python tools/mix.py...
+data/mix.wav: 75.55 s · voice: yes · music: tension · 40 cues
+  --> mix.wav ready!
 
-Error: boot failed: ERR:Error: no line 9
-    at L (http://127.0.0.1:46243/src/core/timing.js:15:63)
-    at cut (http://127.0.0.1:46243/src/shots.js:13:37)
-    at buildShots (http://127.0.0.1:46243/src/shots.js:148:29)
-    at http://127.0.0.1:46243/src/main.js:39:29
-ERROR Error: no line 9
-    at L (http://127.0.0.1:46243/src/core/timing.js:15:63)
-    at cut (http://127.0.0.1:46243/src/shots.js:13:37)
-    at buildShots (http://127.0.0.1:46243/src/shots.js:148:29)
-    at http://127.0.0.1:46243/src/main.js:39:29
-    at openPage (file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82:39)
-    at async file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:95:13
+[3/5] Rendering 1080x1920 Short via Headless Chromium Engine...
+  -> Executing node tools/capture.mjs video...
+0/2266 frames150/2266 frames300/2266 frames450/2266 frames600/2266 frames750/2266 frames900/2266 frames1050/2266 frames1200/2266 frames1350/2266 frames1500/2266 frames1650/2266 frames1800/2266 frames1950/2266 frames2100/2266 frames2250/2266 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (2266 frames, with data/mix.wav, 53 s)
+  --> MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (13.34 MB)
 
-Node.js v22.23.4
+[3.5/5] Generating Broadcast 16:9 Full HD Video (1920x1080)...
+ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Input #0, mov,mp4,m4a,3gp,3g2,mj2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.3.100
+  Duration: 00:01:15.53, start: 0.000000, bitrate: 1481 kb/s
+  Stream #0:0[0x1](und): Video: h264 (High) (avc1 / 0x31637661), yuvj420p(pc, bt470bg/unknown/unknown, progressive), 1080x1920 [SAR 1:1 DAR 9:16], 1280 kb/s, 30 fps, 30 tbr, 15360 tbn (default)
+    Metadata:
+      handler_name    : VideoHandler
+      vendor_id       : [0][0][0][0]
+      encoder         : Lavc62.11.100 libx264
+    Side data:
+      ICC Profile
+  Stream #0:1[0x2](und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 192 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      vendor_id       : [0][0][0][0]
+Stream mapping:
+  Stream #0:0 (h264) -> scale:default
+  Stream #0:0 (h264) -> scale:default
+  overlay:default -> Stream #0:0 (libx264)
+  Stream #0:1 -> #0:1 (copy)
+Press [q] to stop, [?] for help
+[swscaler @ 0x7b9a78349200] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x7b9a78d5e5c0] deprecated pixel format used, make sure you did set range correctly
+[libx264 @ 0x6153268715c0] using SAR=1/1
+[libx264 @ 0x6153268715c0] using cpu capabilities: MMX2 SSE2Fast SSSE3 SSE4.2 AVX FMA3 BMI2 AVX2 AVX512
+[libx264 @ 0x6153268715c0] profile High, level 4.0, 4:2:0, 8-bit
+[libx264 @ 0x6153268715c0] 264 - core 165 - H.264/MPEG-4 AVC codec - Copyleft 2003-2025 - http://www.videolan.org/x264.html - options: cabac=1 ref=1 deblock=1:0:0 analyse=0x3:0x113 me=hex subme=2 psy=1 psy_rd=1.00:0.00 mixed_ref=0 me_range=16 chroma_me=1 trellis=0 8x8dct=1 cqm=0 deadzone=21,11 fast_pskip=1 chroma_qp_offset=0 threads=6 lookahead_threads=2 sliced_threads=0 nr=0 decimate=1 interlaced=0 bluray_compat=0 constrained_intra=0 bframes=3 b_pyramid=2 b_adapt=1 b_bias=0 direct=1 weightb=1 open_gop=0 weightp=1 keyint=250 keyint_min=25 scenecut=40 intra_refresh=0 rc_lookahead=10 rc=crf mbtree=1 crf=19.0 qcomp=0.60 qpmin=0 qpmax=69 qpstep=4 ip_ratio=1.40 aq=1:1.00
+Output #0, mp4, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4':
+  Metadata:
+    major_brand     : isom
+    minor_version   : 512
+    compatible_brands: isomiso2avc1mp41
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: h264 (avc1 / 0x31637661), yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 10239:10240 DAR 3413:1920], q=2-31, 30 fps, 15360 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 libx264
+    Side data:
+      ICC Profile
+      cpb: bitrate max/min/avg: 0/0/0 buffer size: 0 vbv_delay: N/A
+  Stream #0:1(und): Audio: aac (LC) (mp4a / 0x6134706D), 48000 Hz, stereo, fltp, 192 kb/s (default)
+    Metadata:
+      handler_name    : SoundHandler
+      vendor_id       : [0][0][0][0]
+frame=    0 fps=0.0 q=0.0 size=       0KiB time=N/A bitrate=N/A speed=N/A elapsed=0:00:00.50    frame=   15 fps= 15 q=25.0 size=       0KiB time=00:00:00.43 bitrate=   0.9kbits/s speed=0.433x elapsed=0:00:01.00    frame=   33 fps= 22 q=25.0 size=       0KiB time=00:00:01.03 bitrate=   0.4kbits/s speed=0.689x elapsed=0:00:01.50    frame=   52 fps= 26 q=25.0 size=     256KiB time=00:00:01.66 bitrate=1258.5kbits/s speed=0.833x elapsed=0:00:02.00    frame=   71 fps= 28 q=25.0 size=     256KiB time=00:00:02.30 bitrate= 912.0kbits/s speed=0.92x elapsed=0:00:02.50    frame=   90 fps= 30 q=25.0 size=     256KiB time=00:00:02.93 bitrate= 715.1kbits/s speed=0.977x elapsed=0:00:03.00    frame=  108 fps= 31 q=25.0 size=     256KiB time=00:00:03.53 bitrate= 593.6kbits/s speed=1.01x elapsed=0:00:03.50    frame=  126 fps= 31 q=25.0 size=     256KiB time=00:00:04.13 bitrate= 507.5kbits/s speed=1.03x elapsed=0:00:04.00    frame=  144 fps= 32 q=25.0 size=     512KiB time=00:00:04.73 bitrate= 886.2kbits/s speed=1.05x elapsed=0:00:04.50    frame=  162 fps= 32 q=25.0 size=     512KiB time=00:00:05.33 bitrate= 786.5kbits/s speed=1.07x elapsed=0:00:05.00    frame=  181 fps= 33 q=25.0 size=     512KiB time=00:00:05.96 bitrate= 703.0kbits/s speed=1.08x elapsed=0:00:05.50    frame=  199 fps= 33 q=25.0 size=     512KiB time=00:00:06.56 bitrate= 638.8kbits/s speed=1.09x elapsed=0:00:06.00    frame=  218 fps= 34 q=25.0 size=     512KiB time=00:00:07.20 bitrate= 582.6kbits/s speed=1.11x elapsed=0:00:06.50    frame=  236 fps= 34 q=22.0 size=     512KiB time=00:00:07.80 bitrate= 537.8kbits/s speed=1.11x elapsed=0:00:07.00    frame=  252 fps= 34 q=25.0 size=     768KiB time=00:00:08.33 bitrate= 755.0kbits/s speed=1.11x elapsed=0:00:07.50    frame=  271 fps= 34 q=25.0 size=    1024KiB time=00:00:08.96 bitrate= 935.6kbits/s speed=1.12x elapsed=0:00:08.00    frame=  289 fps= 34 q=25.0 size=    1024KiB time=00:00:09.56 bitrate= 876.9kbits/s speed=1.12x elapsed=0:00:08.50    frame=  307 fps= 34 q=25.0 size=    1024KiB time=00:00:10.16 bitrate= 825.1kbits/s speed=1.13x elapsed=0:00:09.00    frame=  324 fps= 34 q=25.0 size=    1024KiB time=00:00:10.73 bitrate= 781.6kbits/s speed=1.13x elapsed=0:00:09.50    frame=  341 fps= 34 q=25.0 size=    1280KiB time=00:00:11.30 bitrate= 928.0kbits/s speed=1.13x elapsed=0:00:10.00    frame=  358 fps= 34 q=25.0 size=    1280KiB time=00:00:11.86 bitrate= 883.7kbits/s speed=1.13x elapsed=0:00:10.50    frame=  376 fps= 34 q=25.0 size=    1536KiB time=00:00:12.46 bitrate=1009.4kbits/s speed=1.13x elapsed=0:00:11.00    frame=  393 fps= 34 q=25.0 size=    1536KiB time=00:00:13.03 bitrate= 965.5kbits/s speed=1.13x elapsed=0:00:11.50    frame=  411 fps= 34 q=25.0 size=    1792KiB time=00:00:13.63 bitrate=1076.8kbits/s speed=1.14x elapsed=0:00:12.00    frame=  429 fps= 34 q=25.0 size=    1792KiB time=00:00:14.23 bitrate=1031.4kbits/s speed=1.14x elapsed=0:00:12.50    frame=  447 fps= 34 q=25.0 size=    2048KiB time=00:00:14.83 bitrate=1131.1kbits/s speed=1.14x elapsed=0:00:13.00    frame=  465 fps= 34 q=25.0 size=    2048KiB time=00:00:15.43 bitrate=1087.1kbits/s speed=1.14x elapsed=0:00:13.50    frame=  483 fps= 34 q=25.0 size=    2304KiB time=00:00:16.03 bitrate=1177.2kbits/s speed=1.14x elapsed=0:00:14.00    frame=  502 fps= 35 q=25.0 size=    2304KiB time=00:00:16.66 bitrate=1132.5kbits/s speed=1.15x elapsed=0:00:14.50    frame=  519 fps= 35 q=25.0 size=    2304KiB time=00:00:17.23 bitrate=1095.2kbits/s speed=1.15x elapsed=0:00:15.00    frame=  536 fps= 35 q=25.0 size=    2560KiB time=00:00:17.80 bitrate=1178.2kbits/s speed=1.15x elapsed=0:00:15.50    frame=  553 fps= 35 q=25.0 size=    2816KiB time=00:00:18.36 bitrate=1256.0kbits/s speed=1.15x elapsed=0:00:16.00    frame=  570 fps= 35 q=25.0 size=    2816KiB time=00:00:18.93 bitrate=1218.4kbits/s speed=1.15x elapsed=0:00:16.50    frame=  587 fps= 35 q=25.0 size=    3072KiB time=00:00:19.50 bitrate=1290.6kbits/s speed=1.15x elapsed=0:00:17.00    frame=  605 fps= 35 q=25.0 size=    3072KiB time=00:00:20.10 bitrate=1252.1kbits/s speed=1.15x elapsed=0:00:17.50    frame=  623 fps= 35 q=25.0 size=    3328KiB time=00:00:20.70 bitrate=1317.1kbits/s speed=1.15x elapsed=0:00:18.00    frame=  640 fps= 35 q=25.0 size=    3328KiB time=00:00:21.26 bitrate=1282.0kbits/s speed=1.15x elapsed=0:00:18.50    frame=  658 fps= 35 q=25.0 size=    3584KiB time=00:00:21.86 bitrate=1342.7kbits/s speed=1.15x elapsed=0:00:19.00    frame=  675 fps= 35 q=25.0 size=    3584KiB time=00:00:22.43 bitrate=1308.8kbits/s speed=1.15x elapsed=0:00:19.51    frame=  693 fps= 35 q=25.0 size=    3840KiB time=00:00:23.03 bitrate=1365.7kbits/s speed=1.15x elapsed=0:00:20.01    frame=  710 fps= 35 q=25.0 size=    4096KiB time=00:00:23.60 bitrate=1421.8kbits/s speed=1.15x elapsed=0:00:20.51    frame=  728 fps= 35 q=25.0 size=    4096KiB time=00:00:24.20 bitrate=1386.6kbits/s speed=1.15x elapsed=0:00:21.01    frame=  745 fps= 35 q=25.0 size=    4352KiB time=00:00:24.76 bitrate=1439.5kbits/s speed=1.15x elapsed=0:00:21.51    frame=  762 fps= 35 q=25.0 size=    4352KiB time=00:00:25.36 bitrate=1405.5kbits/s speed=1.15x elapsed=0:00:22.01    frame=  780 fps= 35 q=25.0 size=    4608KiB time=00:00:25.93 bitrate=1455.6kbits/s speed=1.15x elapsed=0:00:22.51    frame=  798 fps= 35 q=25.0 size=    4608KiB time=00:00:26.53 bitrate=1422.7kbits/s speed=1.15x elapsed=0:00:23.01    frame=  815 fps= 35 q=25.0 size=    4864KiB time=00:00:27.10 bitrate=1470.3kbits/s speed=1.15x elapsed=0:00:23.51    frame=  833 fps= 35 q=25.0 size=    4864KiB time=00:00:27.70 bitrate=1438.5kbits/s speed=1.15x elapsed=0:00:24.01    frame=  850 fps= 35 q=25.0 size=    4864KiB time=00:00:28.26 bitrate=1409.7kbits/s speed=1.15x elapsed=0:00:24.51    frame=  868 fps= 35 q=25.0 size=    5120KiB time=00:00:28.86 bitrate=1453.0kbits/s speed=1.15x elapsed=0:00:25.01    frame=  886 fps= 35 q=22.0 size=    5120KiB time=00:00:29.46 bitrate=1423.4kbits/s speed=1.15x elapsed=0:00:25.51    frame=  903 fps= 35 q=25.0 size=    5376KiB time=00:00:30.03 bitrate=1466.4kbits/s speed=1.15x elapsed=0:00:26.01    frame=  920 fps= 35 q=25.0 size=    5376KiB time=00:00:30.60 bitrate=1439.2kbits/s speed=1.15x elapsed=0:00:26.51    frame=  938 fps= 35 q=25.0 size=    5376KiB time=00:00:31.20 bitrate=1411.6kbits/s speed=1.15x elapsed=0:00:27.01    frame=  956 fps= 35 q=25.0 size=    5632KiB time=00:00:31.80 bitrate=1450.9kbits/s speed=1.16x elapsed=0:00:27.51    frame=  974 fps= 35 q=25.0 size=    5632KiB time=00:00:32.40 bitrate=1424.0kbits/s speed=1.16x elapsed=0:00:28.01    frame=  992 fps= 35 q=25.0 size=    5632KiB time=00:00:33.00 bitrate=1398.1kbits/s speed=1.16x elapsed=0:00:28.51    frame= 1010 fps= 35 q=25.0 size=    5888KiB time=00:00:33.60 bitrate=1435.6kbits/s speed=1.16x elapsed=0:00:29.01    frame= 1029 fps= 35 q=25.0 size=    5888KiB time=00:00:34.23 bitrate=1409.0kbits/s speed=1.16x elapsed=0:00:29.51    frame= 1047 fps= 35 q=25.0 size=    6144KiB time=00:00:34.86 bitrate=1443.6kbits/s speed=1.16x elapsed=0:00:30.01    frame= 1065 fps= 35 q=25.0 size=    6144KiB time=00:00:35.43 bitrate=1420.5kbits/s speed=1.16x elapsed=0:00:30.51    frame= 1082 fps= 35 q=25.0 size=    6400KiB time=00:00:36.00 bitrate=1456.4kbits/s speed=1.16x elapsed=0:00:31.01    frame= 1101 fps= 35 q=25.0 size=    6400KiB time=00:00:36.63 bitrate=1431.2kbits/s speed=1.16x elapsed=0:00:31.51    frame= 1120 fps= 35 q=25.0 size=    6400KiB time=00:00:37.26 bitrate=1406.9kbits/s speed=1.16x elapsed=0:00:32.01    frame= 1138 fps= 35 q=25.0 size=    6400KiB time=00:00:37.86 bitrate=1384.6kbits/s speed=1.16x elapsed=0:00:32.51    frame= 1156 fps= 35 q=25.0 size=    6400KiB time=00:00:38.46 bitrate=1363.0kbits/s speed=1.17x elapsed=0:00:33.01    frame= 1175 fps= 35 q=25.0 size=    6656KiB time=00:00:39.10 bitrate=1394.5kbits/s speed=1.17x elapsed=0:00:33.51    frame= 1193 fps= 35 q=25.0 size=    6656KiB time=00:00:39.70 bitrate=1373.5kbits/s speed=1.17x elapsed=0:00:34.01    frame= 1211 fps= 35 q=25.0 size=    6656KiB time=00:00:40.30 bitrate=1353.0kbits/s speed=1.17x elapsed=0:00:34.51    frame= 1229 fps= 35 q=25.0 size=    6656KiB time=00:00:40.90 bitrate=1333.2kbits/s speed=1.17x elapsed=0:00:35.01    frame= 1248 fps= 35 q=25.0 size=    6656KiB time=00:00:41.53 bitrate=1312.8kbits/s speed=1.17x elapsed=0:00:35.51    frame= 1266 fps= 35 q=25.0 size=    6656KiB time=00:00:42.13 bitrate=1294.1kbits/s speed=1.17x elapsed=0:00:36.01    frame= 1285 fps= 35 q=25.0 size=    6912KiB time=00:00:42.76 bitrate=1324.0kbits/s speed=1.17x elapsed=0:00:36.51    frame= 1303 fps= 35 q=25.0 size=    6912KiB time=00:00:43.36 bitrate=1305.7kbits/s speed=1.17x elapsed=0:00:37.01    frame= 1321 fps= 35 q=25.0 size=    6912KiB time=00:00:43.96 bitrate=1287.9kbits/s speed=1.17x elapsed=0:00:37.51    frame= 1340 fps= 35 q=25.0 size=    7168KiB time=00:00:44.60 bitrate=1316.6kbits/s speed=1.17x elapsed=0:00:38.01    frame= 1357 fps= 35 q=25.0 size=    7168KiB time=00:00:45.16 bitrate=1300.1kbits/s speed=1.17x elapsed=0:00:38.51    frame= 1375 fps= 35 q=25.0 size=    7168KiB time=00:00:45.76 bitrate=1283.0kbits/s speed=1.17x elapsed=0:00:39.01    frame= 1393 fps= 35 q=25.0 size=    7424KiB time=00:00:46.36 bitrate=1311.7kbits/s speed=1.17x elapsed=0:00:39.51    frame= 1412 fps= 35 q=25.0 size=    7424KiB time=00:00:47.00 bitrate=1294.0kbits/s speed=1.17x elapsed=0:00:40.01    frame= 1430 fps= 35 q=25.0 size=    7680KiB time=00:00:47.60 bitrate=1321.7kbits/s speed=1.17x elapsed=0:00:40.51    frame= 1448 fps= 35 q=25.0 size=    7680KiB time=00:00:48.20 bitrate=1305.3kbits/s speed=1.18x elapsed=0:00:41.02    frame= 1467 fps= 35 q=25.0 size=    7680KiB time=00:00:48.83 bitrate=1288.4kbits/s speed=1.18x elapsed=0:00:41.52    frame= 1485 fps= 35 q=25.0 size=    7936KiB time=00:00:49.43 bitrate=1315.1kbits/s speed=1.18x elapsed=0:00:42.02    frame= 1502 fps= 35 q=25.0 size=    7936KiB time=00:00:50.00 bitrate=1300.2kbits/s speed=1.18x elapsed=0:00:42.52    frame= 1521 fps= 35 q=25.0 size=    7936KiB time=00:00:50.63 bitrate=1284.0kbits/s speed=1.18x elapsed=0:00:43.02    frame= 1540 fps= 35 q=25.0 size=    7936KiB time=00:00:51.26 bitrate=1268.1kbits/s speed=1.18x elapsed=0:00:43.52    frame= 1558 fps= 35 q=25.0 size=    7936KiB time=00:00:51.86 bitrate=1253.4kbits/s speed=1.18x elapsed=0:00:44.02    frame= 1577 fps= 35 q=25.0 size=    7936KiB time=00:00:52.50 bitrate=1238.3kbits/s speed=1.18x elapsed=0:00:44.52    frame= 1595 fps= 35 q=25.0 size=    8192KiB time=00:00:53.10 bitrate=1263.8kbits/s speed=1.18x elapsed=0:00:45.02    frame= 1614 fps= 35 q=25.0 size=    8192KiB time=00:00:53.73 bitrate=1248.9kbits/s speed=1.18x elapsed=0:00:45.52    frame= 1633 fps= 35 q=25.0 size=    8192KiB time=00:00:54.36 bitrate=1234.4kbits/s speed=1.18x elapsed=0:00:46.02    frame= 1651 fps= 35 q=25.0 size=    8192KiB time=00:00:55.00 bitrate=1220.2kbits/s speed=1.18x elapsed=0:00:46.52    frame= 1669 fps= 35 q=25.0 size=    8448KiB time=00:00:55.60 bitrate=1244.7kbits/s speed=1.18x elapsed=0:00:47.02    frame= 1688 fps= 36 q=25.0 size=    8448KiB time=00:00:56.20 bitrate=1231.4kbits/s speed=1.18x elapsed=0:00:47.52    frame= 1706 fps= 36 q=25.0 size=    8448KiB time=00:00:56.80 bitrate=1218.4kbits/s speed=1.18x elapsed=0:00:48.02    frame= 1724 fps= 36 q=25.0 size=    8704KiB time=00:00:57.40 bitrate=1242.2kbits/s speed=1.18x elapsed=0:00:48.52    frame= 1742 fps= 36 q=25.0 size=    8704KiB time=00:00:58.00 bitrate=1229.4kbits/s speed=1.18x elapsed=0:00:49.02    frame= 1760 fps= 36 q=25.0 size=    8704KiB time=00:00:58.60 bitrate=1216.8kbits/s speed=1.18x elapsed=0:00:49.52    frame= 1778 fps= 36 q=25.0 size=    8960KiB time=00:00:59.20 bitrate=1239.9kbits/s speed=1.18x elapsed=0:00:50.02    frame= 1796 fps= 36 q=25.0 size=    8960KiB time=00:00:59.80 bitrate=1227.4kbits/s speed=1.18x elapsed=0:00:50.52    frame= 1815 fps= 36 q=25.0 size=    8960KiB time=00:01:00.43 bitrate=1214.6kbits/s speed=1.18x elapsed=0:00:51.02    frame= 1834 fps= 36 q=25.0 size=    8960KiB time=00:01:01.06 bitrate=1202.0kbits/s speed=1.19x elapsed=0:00:51.52    frame= 1852 fps= 36 q=25.0 size=    9216KiB time=00:01:01.66 bitrate=1224.3kbits/s speed=1.19x elapsed=0:00:52.02    frame= 1870 fps= 36 q=25.0 size=    9216KiB time=00:01:02.26 bitrate=1212.5kbits/s speed=1.19x elapsed=0:00:52.52    frame= 1889 fps= 36 q=25.0 size=    9472KiB time=00:01:02.90 bitrate=1233.6kbits/s speed=1.19x elapsed=0:00:53.02    frame= 1906 fps= 36 q=25.0 size=    9472KiB time=00:01:03.50 bitrate=1222.0kbits/s speed=1.19x elapsed=0:00:53.52    frame= 1925 fps= 36 q=25.0 size=    9472KiB time=00:01:04.10 bitrate=1210.5kbits/s speed=1.19x elapsed=0:00:54.02    frame= 1943 fps= 36 q=25.0 size=    9728KiB time=00:01:04.70 bitrate=1231.7kbits/s speed=1.19x elapsed=0:00:54.52    frame= 1962 fps= 36 q=25.0 size=    9728KiB time=00:01:05.33 bitrate=1219.8kbits/s speed=1.19x elapsed=0:00:55.02    frame= 1980 fps= 36 q=25.0 size=    9728KiB time=00:01:05.93 bitrate=1208.7kbits/s speed=1.19x elapsed=0:00:55.52    frame= 1999 fps= 36 q=25.0 size=    9984KiB time=00:01:06.56 bitrate=1228.7kbits/s speed=1.19x elapsed=0:00:56.02    frame= 2017 fps= 36 q=25.0 size=    9984KiB time=00:01:07.16 bitrate=1217.7kbits/s speed=1.19x elapsed=0:00:56.52    frame= 2035 fps= 36 q=25.0 size=   10240KiB time=00:01:07.76 bitrate=1237.9kbits/s speed=1.19x elapsed=0:00:57.02    frame= 2053 fps= 36 q=25.0 size=   10240KiB time=00:01:08.36 bitrate=1227.0kbits/s speed=1.19x elapsed=0:00:57.52    frame= 2072 fps= 36 q=25.0 size=   10240KiB time=00:01:09.00 bitrate=1215.7kbits/s speed=1.19x elapsed=0:00:58.02    frame= 2091 fps= 36 q=25.0 size=   10240KiB time=00:01:09.63 bitrate=1204.7kbits/s speed=1.19x elapsed=0:00:58.52    frame= 2109 fps= 36 q=25.0 size=   10496KiB time=00:01:10.23 bitrate=1224.3kbits/s speed=1.19x elapsed=0:00:59.02    frame= 2128 fps= 36 q=25.0 size=   10496KiB time=00:01:10.86 bitrate=1213.3kbits/s speed=1.19x elapsed=0:00:59.53    frame= 2146 fps= 36 q=25.0 size=   10496KiB time=00:01:11.46 bitrate=1203.1kbits/s speed=1.19x elapsed=0:01:00.03    frame= 2164 fps= 36 q=25.0 size=   10496KiB time=00:01:12.06 bitrate=1193.1kbits/s speed=1.19x elapsed=0:01:00.53    frame= 2183 fps= 36 q=25.0 size=   10752KiB time=00:01:12.70 bitrate=1211.6kbits/s speed=1.19x elapsed=0:01:01.03    frame= 2201 fps= 36 q=25.0 size=   10752KiB time=00:01:13.30 bitrate=1201.6kbits/s speed=1.19x elapsed=0:01:01.53    frame= 2220 fps= 36 q=25.0 size=   10752KiB time=00:01:13.93 bitrate=1191.4kbits/s speed=1.19x elapsed=0:01:02.03    frame= 2238 fps= 36 q=25.0 size=   10752KiB time=00:01:14.53 bitrate=1181.8kbits/s speed=1.19x elapsed=0:01:02.53    [out#0/mp4 @ 0x61532687a700] video:9323KiB audio:1777KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: 0.741734%
+frame= 2266 fps= 36 q=-1.0 Lsize=   11182KiB time=00:01:15.46 bitrate=1213.8kbits/s speed= 1.2x elapsed=0:01:02.82    
+[libx264 @ 0x6153268715c0] frame I:11    Avg QP:11.06  size: 29510
+[libx264 @ 0x6153268715c0] frame P:705   Avg QP:15.58  size:  8265
+[libx264 @ 0x6153268715c0] frame B:1550  Avg QP:17.96  size:  2190
+[libx264 @ 0x6153268715c0] consecutive B-frames:  6.1%  6.5%  4.4% 83.0%
+[libx264 @ 0x6153268715c0] mb I  I16..4: 77.4% 14.6%  8.0%
+[libx264 @ 0x6153268715c0] mb P  I16..4: 16.3%  2.9%  0.4%  P16..4:  8.3%  2.9%  1.1%  0.0%  0.0%    skip:68.2%
+[libx264 @ 0x6153268715c0] mb B  I16..4:  1.0%  0.2%  0.0%  B16..8:  4.6%  1.0%  0.1%  direct: 3.9%  skip:89.2%  L0:44.2% L1:50.1% BI: 5.7%
+[libx264 @ 0x6153268715c0] 8x8 transform intra:14.8% inter:11.8%
+[libx264 @ 0x6153268715c0] coded y,uvDC,uvAC intra: 7.8% 30.0% 11.3% inter: 0.5% 5.9% 0.3%
+[libx264 @ 0x6153268715c0] i16 v,h,dc,p: 69% 19%  3% 10%
+[libx264 @ 0x6153268715c0] i8 v,h,dc,ddl,ddr,vr,hd,vl,hu: 26% 28% 18%  4%  6%  6%  5%  5%  2%
+[libx264 @ 0x6153268715c0] i4 v,h,dc,ddl,ddr,vr,hd,vl,hu: 31% 26% 23%  4%  4%  3%  3%  2%  3%
+[libx264 @ 0x6153268715c0] i8c dc,h,v,p: 53% 22% 17%  8%
+[libx264 @ 0x6153268715c0] Weighted P-Frames: Y:4.7% UV:4.5%
+[libx264 @ 0x6153268715c0] kb/s:1011.04
+  --> 16:9 Video Rendered: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (10.92 MB)
 
+[4/5] Extracting High-CTR Kinetic Cover Frame...
+/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover
+  --> Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/t7.00.jpg
 
-!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
-Traceback (most recent call last):
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 343, in <module>
-    asyncio.run(main())
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 333, in main
-    build_audio_mix()
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 169, in build_audio_mix
-    subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/subprocess.py", line 571, in run
-    raise CalledProcessError(retcode, process.args,
-subprocess.CalledProcessError: Command '['node', 'tools/capture.mjs', 'cues']' returned non-zero exit status 1.
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[4.5/5] Generating High-CTR 16:9 Landscape Thumbnail...
+ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/t7.00.jpg':
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 23239 kb/s
+  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
+Stream mapping:
+  Stream #0:0 (mjpeg) -> scale:default
+  Stream #0:0 (mjpeg) -> scale:default
+  overlay:default -> Stream #0:0 (mjpeg)
+Press [q] to stop, [?] for help
+[swscaler @ 0x759dc4027ec0] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x759dc423e1c0] deprecated pixel format used, make sure you did set range correctly
+Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/thumb_16_9.jpg':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1280x720 [SAR 5121:5120 DAR 569:320], q=2-31, 200 kb/s, 25 fps, 25 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 mjpeg
+    Side data:
+      ICC Profile
+      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[image2 @ 0x5e9f99375b00] The specified filename '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/thumb_16_9.jpg' does not contain an image sequence pattern or a pattern is invalid.
+[image2 @ 0x5e9f99375b00] Use a pattern such as %03d for an image sequence or use the -update option (with -frames:v 1 if needed) to write a single image.
+[out#0/image2 @ 0x5e9f993795c0] video:33KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=7.2 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=1.52x elapsed=0:00:00.02    
+  --> 16:9 Thumbnail Created: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover/thumb_16_9.jpg
 
+[5/5 - A] Uploading 16:9 Full Landscape Video: छींक को जबरदस्ती रोकने से शरीर में क्या होता है? | Shocking Human Body Science
+  --> Title: छींक को जबरदस्ती रोकने से शरीर में क्या होता है? | Shocking Human Body Science
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (10.92 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 36%
+  --> Upload Progress: 73%
 
+[SUCCESS] VIDEO UPLOADED! Video ID: UY_AFJPbW0Y
+  --> Live URL: https://www.youtube.com/watch?v=UY_AFJPbW0Y
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> 16:9 Full Video Uploaded Successfully!
+
+[5/5 - B] Uploading 9:16 Vertical Short: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  --> Title: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short.mp4 (13.34 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 29%
+  --> Upload Progress: 59%
+  --> Upload Progress: 89%
+
+[SUCCESS] VIDEO UPLOADED! Video ID: PFw85NF2lYk
+  --> Live URL: https://www.youtube.com/watch?v=PFw85NF2lYk
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> 9:16 Short Uploaded Successfully!
+
+🎉 ALL STEPS COMPLETED! Topic 'holding_sneeze' marked as posted.
