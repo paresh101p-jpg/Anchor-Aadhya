@@ -55,16 +55,17 @@ jobs:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
-          CHROME: /usr/bin/google-chrome
           SOFTWARE_GL: "1"
-        run: python -u generate_evergreen_short.py
+        run: |
+          python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
 
-      - name: Commit Topic Tracker & Upload Log to Git
+      - name: Upload Debug Log if Failed
+        if: always()
         run: |
           git config user.name "Anchor Aadhya Bot"
           git config user.email "bot@anchoraadhya.com"
-          git add used_topics_tracker.json uploaded_bulletins_tracker.txt || true
-          git diff --staged --quiet || git commit -m "Auto-posted Evergreen Curiosity Short to YouTube [skip ci]"
+          git add run_debug.log used_topics_tracker.json uploaded_bulletins_tracker.txt || true
+          git diff --staged --quiet || git commit -m "Update run debug log & tracker [skip ci]"
           for i in 1 2 3 4 5; do
             git pull --rebase origin master || true
             git push origin master && break || sleep 3
