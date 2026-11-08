@@ -1694,5 +1694,29 @@
     ],
     "slot": "12PM",
     "timestamp": "2026-10-31 12:03:28"
+  },
+  {
+    "title": "The US let Nvidia sell chips to an empty office in China",
+    "source": "www.theverge.com",
+    "date": "2026-11-08T06:11:03.561746+00:00",
+    "link": "https://www.theverge.com/ai-artificial-intelligence/1029483/nvidia-ai-chips-china-blacklist-government"
+  },
+  {
+    "title": "AI broke the cybersecurity world. What’s next?",
+    "source": "www.theverge.com",
+    "date": "2026-11-08T06:11:03.561764+00:00",
+    "link": "https://www.theverge.com/podcast/1029038/ai-cybersecurity-hackers-data-breach-dark-age-alex-stamos"
+  },
+  {
+    "title": "OpenAI valued at $1.25 trillion, as rival Anthropic nears its IPO",
+    "source": "www.theverge.com",
+    "date": "2026-11-08T06:11:03.561767+00:00",
+    "link": "https://www.theverge.com/ai-artificial-intelligence/1029380/openai-1-25-trillion-investment-valuation"
+  },
+  {
+    "title": "Good riddance, Cybertruck!",
+    "source": "www.theverge.com",
+    "date": "2026-11-08T06:11:03.561772+00:00",
+    "link": "https://www.theverge.com/transportation/1029460/elon-musk-cybertruck-death-election-backlash"
   }
 ]
