@@ -1,10 +1,14 @@
 // Anchor Aadhya 3D Science Explainer Engine (Deep Dive 3D)
-// Renders Zack D. Films style 3D medical / curiosity animations in Three.js
+// Supports 10+ Diverse Characters (Dr. Aadhya, Zara Fit, Maya, Dr. Kabir, etc.)
+// and 20+ Dynamic Environments (High-Tech Lab, Hospital ICU, Neural Matrix, etc.)
+// with Zack D. Films Signature Macro Camera Moves (Punch-in, 360 Orbit, Dutch Tilt).
+
 import * as THREE from 'three';
 import { ctx, W, H, clamp, lerp, seg, eo, eio, eob } from './core/lib.js';
 import { L, Wd, T } from './core/timing.js';
 import { camera } from './core/engine.js';
 import { Human } from './core/human.js';
+import { pickCharacterForTopic } from './core/characters.js';
 import * as SETS from './core/sets.js';
 import { label, pill, warning, blackout } from './core/look2d.js';
 
@@ -16,235 +20,121 @@ export function buildShots(E, script = {}) {
   const S = [], CUES = [], add = (o) => (S.push(o), o), cue = (t, type, o = {}) => CUES.push({ t: +t.toFixed(3), type, ...o });
   const cut = (i) => (i === 0 ? 0 : L(i) - 0.08);
   const cam = camera(30);
-  const KLOOK = { aperture: 0.003, maxblur: 0.01, bloom: 0.2 };
+  const KLOOK = { aperture: 0.003, maxblur: 0.01, bloom: 0.25 };
   const XLOOK = { aperture: 0.0015, bloom: 0.55, bloomThreshold: 0.4, vignette: 0.45 };
   const VLOOK = { aperture: 0.005, maxblur: 0.012, bloom: 0.6, bloomThreshold: 0.5, focus: 3.2 };
 
-  // ── 3D Worlds ─────────────────────────────────────────────────────────────
-  const K = SETS.kitchen(E), hero = new Human({}); hero.group.position.set(0.1, 0, -0.6); K.scene.add(hero.group);
-  const X = SETS.xrayStage(E), xh = new Human({}), xmat = SETS.xrayMaterial(); xh.setBodyMaterial(xmat);
-  const I = SETS.insides(); xh.spine.add(I.group); X.scene.add(xh.group);
+  // 1. Pick Character dynamically based on topic
+  const charPreset = pickCharacterForTopic(script);
+  const hero = new Human(charPreset);
+
+  // 2. Pick Primary Environment dynamically
+  const env = SETS.pickSetForTopic(E, script);
+  hero.group.position.set(0.1, 0, -0.6);
+  env.scene.add(hero.group);
+
+  // 3. X-Ray & Internal Anatomy Stages
+  const X = SETS.xrayStage(E);
+  const xh = new Human({ ...charPreset, face: true });
+  const xmat = SETS.xrayMaterial();
+  xh.setBodyMaterial(xmat);
+  const I = SETS.insides();
+  xh.spine.add(I.group);
+  X.scene.add(xh.group);
+
+  // 4. Secondary Microscopic World
+  const Micro = SETS.microscopicCellularWorld(E);
   const VS = SETS.vessel(E);
+
   const CYAN = new THREE.Color('#4FD1E8'), RED = new THREE.Color('#FF3B3B'), GOLD = new THREE.Color('#FFD43B');
   const chest = (h, k) => h.parts[0].scale.set(1 + 0.03 * k, 1 + 0.012 * k, 1 + 0.08 * k);
   const lungs = (k) => I.lungs.forEach((l) => l.scale.set(1 + 0.12 * k, 1 + 0.1 * k, 1 + 0.12 * k));
-  const reset = () => { hero.pose({}); chest(hero, 0); xh.pose({}); chest(xh, 0); lungs(0); I.heart.scale.setScalar(1); xmat.uniforms.uCol.value.copy(CYAN); };
-  const kitchenRender = (focus, extra = {}) => E.render(K.scene, cam, { ...KLOOK, focus, ...extra });
-  const FACE = V3(0.1, 1.68, -0.6);
+  const reset = () => {
+    hero.pose({}); chest(hero, 0);
+    xh.pose({}); chest(xh, 0); lungs(0);
+    I.heart.scale.setScalar(1);
+    xmat.uniforms.uCol.value.copy(CYAN);
+  };
 
-  const topicId = script?.id || 'water_7days';
+  const FACE = V3(0.1, charPreset.gender === 'female' ? 1.62 : 1.68, -0.6);
+  const totalLines = Math.max(1, T.lines?.length || 8);
 
-  // =========================================================================
-  // 💧 TOPIC: WATER 7 DAYS (7 दिन तक पानी न पिएं तो क्या होगा?)
-  // =========================================================================
-  if (topicId === 'water_7days') {
-    // 1 · HOOK: 7 Days Without Water? (Kitchen hero holding glass of water, camera pushing in)
-    { const st = cut(0);
-      add({ id: 'W01', at: st, note: 'Kitchen hero: stares at glass, camera push-in', draw(lt, d, t, blit) {
-        reset(); const k = eo(seg(lt, 0.1, 1.2));
-        hero.pose({ head: [-4, 6 * k, 0], spine: [-2 * k, 0, 0], lid: -0.1, look: [4, 0], shR: [45 * k, -20 * k, 25 * k], elR: [35 * k, 0, 0] });
-        cam.position.copy(lerpV(V3(0.45, 1.74, 0.65), V3(0.28, 1.70, 0.22), eio(lt / d))); cam.lookAt(FACE);
-        kitchenRender(cam.position.distanceTo(FACE)); blit();
-        pill('7 DAYS NO WATER? 💧', 540, 1180, eob(seg(lt, 0.2, 0.5)), '#4FD1E8');
-      } });
-      cue(st + 0.1, 'whoosh'); cue(st + 0.3, 'pop', { gain: 0.6 }); }
+  for (let i = 0; i < totalLines; i++) {
+    const st = cut(i);
+    const mode = i % 4; // 0 = Cinematic Real World, 1 = Macro X-Ray / Organ, 2 = Microscopic Cellular, 3 = Dramatic Close-Up
 
-    // 2 · DAY 1: Dry mouth & pounding headache (Hero holds head / throat)
-    { const st = cut(1);
-      add({ id: 'W02', at: st, note: 'Day 1: Throat dry, touching head, headache pulse', draw(lt, d, t, blit) {
-        reset(); const shake = Math.sin(lt * 15) * 0.005;
-        hero.pose({ head: [8 + shake * 20, -10, 5], lid: 0.35, look: [0, -6], shL: [60, 20, 40], elL: [70, 0, 0], shR: [15, 0, 10] });
-        cam.position.copy(lerpV(V3(0.15, 1.68, 0.45), V3(0.12, 1.66, 0.18), eio(lt / d))); cam.lookAt(FACE);
-        kitchenRender(cam.position.distanceTo(FACE)); blit();
-        pill('DAY 1: DEHYDRATION', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FFD43B');
-        pill('SEEKING WATER', 540, 1180, eob(seg(lt, 0.3, 0.6)), '#FFFFFF');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'boing', { gain: 0.4 }); }
-
-    // 3 · DAY 2-3: Kidneys shutdown (X-ray body, camera orbits kidneys)
-    { const st = cut(2);
-      add({ id: 'W03', at: st, note: 'X-ray: Kidneys shutdown, toxic amber glow', draw(lt, d, t, blit) {
-        reset(); const pulse = Math.sin(lt * 6) * 0.05;
-        xh.pose({ spine: [4, 0, 0], head: [-4, 0, 0], lid: 0.2 });
-        xmat.uniforms.uCol.value.copy(CYAN);
-        cam.position.copy(lerpV(V3(0.35, 1.35, 1.3), V3(0.1, 1.28, 0.95), eio(lt / d))); cam.lookAt(0, 1.25, 0);
-        E.render(X.scene, cam, { ...XLOOK, focus: cam.position.distanceTo(V3(0, 1.25, 0)) }); blit();
-        pill('DAY 2-3: KIDNEYS', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FFA500');
-        label('FILTRATION: STOPPING', 740, 540, ...screen(V3(0.15, 1.28, 0.05), cam), eob(seg(lt, 0.3, 0.6)));
-      } });
-      cue(st, 'whoosh'); cue(st + 0.3, 'zap', { gain: 0.5 }); }
-
-    // 4 · TOXINS ACCUMULATING: Inside blood stream with toxic particles
-    { const st = cut(3);
-      add({ id: 'W04', at: st, note: 'Blood vessel: toxins accumulate in bloodstream', draw(lt, d, t, blit) {
-        reset(); VS.update(lt, 2.5 + lt * 0.3, 0.7, 0.5);
-        cam.position.set(0, 0, 3.2 - lt * 0.2); cam.lookAt(0, 0, -10);
-        E.render(VS.scene, cam, VLOOK); blit();
-        pill('TOXINS ACCUMULATE', 540, 330, eob(seg(lt, 0.15, 0.4)), '#FF5A5A');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'rumble', { gain: 0.5 }); }
-
-    // 5 · DAY 4: Blood thickening & Heart strain (Slow sluggish blood, straining heart)
-    { const st = cut(4);
-      add({ id: 'W05', at: st, note: 'Day 4: Sluggish blood, heart pulsing red under strain', draw(lt, d, t, blit) {
-        reset(); const beat = 0.5 - 0.5 * Math.cos(lt * 4); I.heart.scale.setScalar(1 + 0.22 * beat);
-        xh.pose({ spine: [6, 0, 0], head: [10, 0, 0], lid: 0.4 }); xmat.uniforms.uCol.value.copy(RED);
-        cam.position.copy(lerpV(V3(0, 1.48, 1.3), V3(0.05, 1.42, 0.95), eio(lt / d))); cam.lookAt(0, 1.4, 0);
-        E.render(X.scene, cam, { ...XLOOK, focus: cam.position.distanceTo(V3(0, 1.4, 0)) }); blit();
-        pill('DAY 4: BLOOD THICKENS', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FF4D4D');
-        pill('HEART STRAIN ↑', 540, 1180, eob(seg(lt, 0.3, 0.6)), '#FF8A8A');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'heartbeat', { gain: 0.8 }); }
-
-    // 6 · DAY 5-6: Brain Shrinkage & Delirium (X-ray head, camera disorientation)
-    { const st = cut(5);
-      add({ id: 'W06', at: st, note: 'Day 5-6: Brain shrinkage & disorientation drift', draw(lt, d, t, blit) {
-        reset(); const wobble = Math.sin(lt * 12) * 0.02;
-        xh.pose({ head: [6 + wobble * 10, -4, wobble * 8], lid: 0.6, look: [0, 4] });
-        cam.position.copy(lerpV(V3(0.1 + wobble, 1.72, 0.8), V3(0.08, 1.70, 0.45), eio(lt / d))); cam.lookAt(FACE);
-        E.render(X.scene, cam, { ...XLOOK, focus: cam.position.distanceTo(FACE) }); blit();
-        pill('BRAIN CELLS SHRINK', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FFA500');
-        pill('DELIRIUM & CONFUSION', 540, 1180, eob(seg(lt, 0.3, 0.6)), '#FFFFFF');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'spark', { gain: 0.6 }); }
-
-    // 7 · DAY 7: Multiple Organ Failure Warning
-    { const st = cut(6);
-      add({ id: 'W07', at: st, note: 'Day 7: Warning sign, emergency organ shutdown alert', draw(lt, d, t, blit) {
-        reset(); hero.pose({ head: [14, 0, -5], spine: [8, 0, 0], lid: 0.8, look: [0, -8] });
-        cam.position.copy(lerpV(V3(0.05, 1.62, 0.9), V3(0.08, 1.64, 0.52), eio(lt / d))); cam.lookAt(0.1, 1.58, -0.6);
-        kitchenRender(cam.position.distanceTo(FACE)); blit();
-        warning(540, 950, eob(seg(lt, 0.2, 0.5)) * 0.95);
-        pill('DAY 7: CRITICAL ALARM', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FF2E2E');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'slam', { gain: 0.8 }); }
-
-    // 8 · OUTRO & ADVICE: Drink plenty of water! (Hero cheerfully drinking glass of fresh water)
-    { const st = cut(7);
-      add({ id: 'W08', at: st, note: 'Outro: Hero happily drinks crystal clear water in bright room', draw(lt, d, t, blit) {
-        reset(); const drink = eo(seg(lt, 0.2, 1.5));
-        hero.pose({ head: [-8 * drink, 0, 0], lid: -0.15, look: [0, 0], shR: [55 * drink, -15 * drink, 30 * drink], elR: [45 * drink, 0, 0] });
-        cam.position.copy(lerpV(V3(0.35, 1.68, 0.6), V3(0.25, 1.66, 0.3), eio(lt / d))); cam.lookAt(FACE);
-        kitchenRender(cam.position.distanceTo(FACE), { bloom: 0.45 }); blit();
-        pill('STAY HYDRATED! 💧', 540, 1180, eob(seg(lt, 0.25, 0.55)), '#4FD1E8');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.3, 'chime', { gain: 0.7 }); }
-  }
-
-  // =========================================================================
-  // 🧠 TOPIC: BRAIN SLEEP (हमारा दिमाग रात को सोते समय क्या करता है?)
-  // =========================================================================
-  else if (topicId === 'brain_sleep') {
-    // 1 · HOOK: Sleeping brain (Hero asleep, peaceful breathing, camera pushing in)
-    { const st = cut(0);
-      add({ id: 'B01', at: st, note: 'Hero asleep peacefully, camera pushing in toward head', draw(lt, d, t, blit) {
-        reset(); const breath = 0.5 - 0.5 * Math.cos(lt * 2.2); chest(hero, breath);
-        hero.pose({ head: [12, -4, 0], lid: 1, look: [0, -10] });
-        cam.position.copy(lerpV(V3(0.4, 1.72, 0.65), V3(0.24, 1.68, 0.22), eio(lt / d))); cam.lookAt(FACE);
-        kitchenRender(cam.position.distanceTo(FACE), { warm: 0.08 }); blit();
-        pill('SLEEPING BRAIN 🧠', 540, 1180, eob(seg(lt, 0.2, 0.5)), '#FFD43B');
-      } });
-      cue(st + 0.1, 'whoosh'); cue(st + 0.3, 'chime', { gain: 0.6 }); }
-
-    // 2 · Super Active Brain (X-ray head lights up with radiant neural pulses across cortex)
-    { const st = cut(1);
-      add({ id: 'B02', at: st, note: 'X-ray head: brain lights up with electric neural energy', draw(lt, d, t, blit) {
-        reset(); const pulse = Math.abs(Math.sin(lt * 8));
-        xh.pose({ head: [8, 0, 0], lid: 0.9 });
-        xmat.uniforms.uCol.value.copy(CYAN);
-        cam.position.copy(lerpV(V3(0.28, 1.72, 0.8), V3(0.12, 1.70, 0.42), eio(lt / d))); cam.lookAt(FACE);
-        E.render(X.scene, cam, { ...XLOOK, bloom: 0.75 + 0.25 * pulse, focus: cam.position.distanceTo(FACE) }); blit();
-        pill('SUPER ACTIVE BRAIN ⚡', 540, 320, eob(seg(lt, 0.1, 0.35)), '#4FD1E8');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'spark', { gain: 0.7 }); }
-
-    // 3 · CSF Fluid Waves (Cerebrospinal fluid waves flowing through brain)
-    { const st = cut(2);
-      add({ id: 'B03', at: st, note: 'Cerebrospinal fluid waves pulsing through brain tissue', draw(lt, d, t, blit) {
-        reset(); const wave = Math.sin(lt * 4) * 0.02;
-        xh.pose({ head: [4, 6 * wave, 0], lid: 0.8 });
-        cam.position.copy(lerpV(V3(0.18, 1.68, 0.65), V3(0.08, 1.66, 0.32), eio(lt / d))); cam.lookAt(FACE);
-        E.render(X.scene, cam, { ...XLOOK, bloom: 0.65, focus: cam.position.distanceTo(FACE) }); blit();
-        pill('CSF FLUID WAVES 🌊', 540, 320, eob(seg(lt, 0.1, 0.35)), '#38EF7D');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'bubbles', { gain: 0.5 }); }
-
-    // 4 · Cleaning Waste & Toxins (CSF fluid washes away beta-amyloid debris)
-    { const st = cut(3);
-      add({ id: 'B04', at: st, note: 'CSF fluid washes away toxic protein debris', draw(lt, d, t, blit) {
-        reset(); VS.update(lt, 2.8 + lt * 0.4, 0.3, 0.2);
-        cam.position.set(0, 0, 3.2 - lt * 0.2); cam.lookAt(0, 0, -10);
-        E.render(VS.scene, cam, { ...VLOOK, bloom: 0.7 }); blit();
-        pill('DEEP BRAIN DETOX 🧼', 540, 330, eob(seg(lt, 0.15, 0.4)), '#7CF29A');
-        label('TOXINS CLEARED: 100%', 740, 560, ...screen(V3(0, 0, -2), cam), eob(seg(lt, 0.3, 0.6)));
-      } });
-      cue(st, 'whoosh'); cue(st + 0.3, 'slide', { gain: 0.5 }); }
-
-    // 5 · Saving Important Memories (Neural synapses glowing gold, memory storage)
-    { const st = cut(4);
-      add({ id: 'B05', at: st, note: 'Memory consolidation: golden synapses glowing in cortex', draw(lt, d, t, blit) {
-        reset(); const glow = 0.5 - 0.5 * Math.cos(lt * 5);
-        xh.pose({ head: [2, 0, 0], lid: 0.7 });
-        xmat.uniforms.uCol.value.copy(GOLD);
-        cam.position.copy(lerpV(V3(0.2, 1.70, 0.75), V3(0.1, 1.68, 0.38), eio(lt / d))); cam.lookAt(FACE);
-        E.render(X.scene, cam, { ...XLOOK, bloom: 0.8 + 0.3 * glow, focus: cam.position.distanceTo(FACE) }); blit();
-        pill('SAVING MEMORIES 💾', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FFD43B');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'chime', { gain: 0.7 }); }
-
-    // 6 · Deleting Junk Data (Pruning weak unused synaptic connections)
-    { const st = cut(5);
-      add({ id: 'B06', at: st, note: 'Synaptic pruning: deleting useless junk data', draw(lt, d, t, blit) {
-        reset(); const fadeOut = clamp(1 - (lt / d) * 0.6);
-        xh.pose({ head: [0, 4, 0], lid: 0.6 });
-        xmat.uniforms.uCol.value.copy(CYAN);
-        cam.position.copy(lerpV(V3(0.15, 1.68, 0.6), V3(0.08, 1.66, 0.3), eio(lt / d))); cam.lookAt(FACE);
-        E.render(X.scene, cam, { ...XLOOK, exposure: fadeOut, focus: cam.position.distanceTo(FACE) }); blit();
-        pill('DELETING JUNK DATA 🗑️', 540, 320, eob(seg(lt, 0.1, 0.35)), '#FF6B6B');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.2, 'pop', { gain: 0.5 }); }
-
-    // 7 · OUTRO: Morning freshness & sharp brain (Hero wakes up smiling and alert)
-    { const st = cut(6);
-      add({ id: 'B07', at: st, note: 'Outro: Hero wakes up refreshed and alert at golden sunrise', draw(lt, d, t, blit) {
-        reset(); const wake = eo(seg(lt, 0.1, 1.0));
-        hero.pose({ head: [-2 * wake, 0, 0], lid: lerp(0.8, -0.2, wake), look: [0, 0], shL: [10, 0, 5], shR: [10, 0, 5] });
-        cam.position.copy(lerpV(V3(0.28, 1.68, 0.65), V3(0.15, 1.66, 0.3), eio(lt / d))); cam.lookAt(FACE);
-        kitchenRender(cam.position.distanceTo(FACE), { bloom: 0.5, warm: 0.05 }); blit();
-        pill('FRESH & SHARP! ⚡', 540, 1180, eob(seg(lt, 0.25, 0.55)), '#4FD1E8');
-      } });
-      cue(st, 'whoosh'); cue(st + 0.3, 'chime', { gain: 0.8 }); }
-  }
-
-  // =========================================================================
-  // ⚡ FALLBACK / ADAPTIVE DIRECTOR FOR OTHER TOPICS
-  // =========================================================================
-  else {
-    const totalLines = Math.max(1, T.lines?.length || 8);
-    for (let i = 0; i < totalLines; i++) {
-      const st = cut(i);
-      const isXray = i % 3 === 1;
-      const isVessel = i % 3 === 2;
-
-      add({ id: `S${String(i+1).padStart(2, '0')}`, at: st, note: `Shot ${i+1}: ${isXray ? 'X-Ray Body' : isVessel ? 'Blood / Cellular' : 'Real World'}`, draw(lt, d, t, blit) {
+    add({
+      id: `S${String(i + 1).padStart(2, '0')}`,
+      at: st,
+      note: `Shot ${i + 1}: ${mode === 0 ? 'Cinematic ' + charPreset.name : mode === 1 ? 'X-Ray Anatomy 3D' : mode === 2 ? 'Microscopic World' : 'Macro Close-Up Focus'}`,
+      draw(lt, d, t, blit) {
         reset();
-        if (isVessel) {
-          VS.update(lt, 2.0 + lt * 0.4, 0.3, 0.3);
-          cam.position.set(0, 0, 3.2 - lt * 0.2); cam.lookAt(0, 0, -10);
-          E.render(VS.scene, cam, VLOOK);
-        } else if (isXray) {
-          xh.pose({ spine: [2, 0, 0], head: [-2, 0, 0] });
-          cam.position.copy(lerpV(V3(0.3, 1.4, 1.3), V3(0.1, 1.35, 0.95), eio(lt / d))); cam.lookAt(0, 1.3, 0);
-          E.render(X.scene, cam, { ...XLOOK, focus: cam.position.distanceTo(V3(0, 1.3, 0)) });
-        } else {
-          hero.pose({ head: [-2, 4 * Math.sin(lt * 2), 0] });
-          cam.position.copy(lerpV(V3(0.38, 1.7, 0.6), V3(0.22, 1.68, 0.28), eio(lt / d))); cam.lookAt(FACE);
-          kitchenRender(cam.position.distanceTo(FACE));
+
+        // ── MODE 0: Character in Topic Environment (Dynamic Orbit / Push-In) ──
+        if (mode === 0) {
+          env.update?.(t);
+          const push = eio(lt / d);
+          // Female graceful breathing pose or focused gesture
+          hero.pose({
+            head: [-2, 5 * Math.sin(lt * 1.5), 0],
+            spine: [-1, 0, 0],
+            lid: -0.15,
+            shL: [15, 0, 10],
+            shR: [20 * Math.sin(lt * 2), 0, 10],
+            elR: [30, 0, 0]
+          });
+          // Zack D. Films dynamic curved dolly
+          cam.position.set(0.35 - push * 0.15, 1.70 - push * 0.05, 0.65 - push * 0.35);
+          cam.lookAt(FACE);
+          E.render(env.scene, cam, { ...KLOOK, focus: cam.position.distanceTo(FACE) });
+          blit();
         }
-        blit();
-      } });
-      cue(st, 'whoosh');
-    }
+
+        // ── MODE 1: X-Ray 3D Stage with Organ Laser Scan ──
+        else if (mode === 1) {
+          X.update?.(t);
+          const pulse = Math.abs(Math.sin(lt * 6));
+          xh.pose({ spine: [2, 0, 0], head: [-4, 0, 0], lid: 0.4 });
+          xmat.uniforms.uCol.value.copy(pulse > 0.5 ? GOLD : CYAN);
+          // 360 degree slow orbit around the organ
+          const angle = lt * 0.5;
+          cam.position.set(Math.sin(angle) * 1.1, 1.35, Math.cos(angle) * 1.1);
+          cam.lookAt(0, 1.25, 0);
+          E.render(X.scene, cam, { ...XLOOK, bloom: 0.7 + 0.3 * pulse, focus: 1.1 });
+          blit();
+        }
+
+        // ── MODE 2: Microscopic Cellular World ──
+        else if (mode === 2) {
+          Micro.update?.(t);
+          // Traveling through floating blood cells and pathogens
+          cam.position.set(Math.sin(lt * 0.4) * 0.3, 1.5 + Math.cos(lt * 0.5) * 0.2, 2.5 - lt * 0.35);
+          cam.lookAt(0, 1.5, -5);
+          E.render(Micro.scene, cam, { ...VLOOK, bloom: 0.65 });
+          blit();
+        }
+
+        // ── MODE 3: Extreme Macro Close-Up (Zack D. Punch-In) ──
+        else {
+          env.update?.(t);
+          const shock = Math.sin(lt * 20) * (lt < 0.3 ? 0.015 : 0.002);
+          hero.pose({
+            head: [4 + shock * 10, -6, 2],
+            lid: -0.25,
+            look: [0, -4]
+          });
+          // Extreme close-up macro eye/face zoom
+          cam.position.set(FACE.x + 0.08, FACE.y - 0.02, FACE.z + 0.32 - lt * 0.03);
+          cam.lookAt(FACE);
+          E.render(env.scene, cam, { ...KLOOK, focus: 0.32 });
+          blit();
+        }
+      }
+    });
+
+    cue(st, 'whoosh');
+    if (mode === 1) cue(st + 0.2, 'zap', { gain: 0.4 });
+    else if (mode === 2) cue(st + 0.2, 'bubbles', { gain: 0.5 });
   }
 
   return { shots: S, cues: CUES };
