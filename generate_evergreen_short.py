@@ -272,9 +272,8 @@ def verify_visual_integrity(video_path, aspect="9:16"):
 
 def build_rich_description(topic, is_short=True):
     """
-    Builds a clean, genuine, and authentic YouTube Description.
-    STRICT ZERO-SPAM RULE: No keyword stuffing, no 'Searches & Topics Covered' blocks, no generic junk.
-    Uses pure, engaging, real story content that viewers actually love to read.
+    Builds a clean, genuine, and authentic YouTube Description with a professional Educational Disclaimer.
+    STRICT ZERO-SPAM: No keyword stuffing or 'Searches Covered' blocks.
     """
     title_clean = topic.get("video_title", topic["title"].split("#")[0].strip())
     base_desc = topic.get("description", "").strip()
@@ -286,6 +285,9 @@ def build_rich_description(topic, is_short=True):
     desc = f"""{title_clean}
 
 {base_desc}
+
+⚠️ Educational & Advisory Disclaimer:
+This video is created strictly for educational, informative, and curiosity purposes based on verified scientific and historical research. It does not substitute professional medical, legal, or emergency advice.
 
 🔔 Subscribe to Anchor Aadhya for daily mind-blowing curiosities, real-life mysteries, and fascinating science!
 
