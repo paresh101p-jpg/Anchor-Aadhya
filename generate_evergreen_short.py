@@ -73,7 +73,8 @@ def get_audio_duration(file_path):
 
 async def generate_line_audio(text, outfile):
     import edge_tts
-    comm = edge_tts.Communicate(text, VOICE, rate="+3%")
+    # Energetic, witty, masti-bhara anchor delivery: +8% rate, +4Hz pitch
+    comm = edge_tts.Communicate(text, VOICE, rate="+8%", pitch="+4Hz")
     await comm.save(outfile)
 
 async def build_voice_and_timing(topic):
@@ -199,31 +200,127 @@ def extract_thumbnail_frame():
     print(f"  --> Cover Frame Extracted: {thumb_path}", flush=True)
     return thumb_path
 
-def upload_to_youtube(topic, video_path, thumb_path):
-    print(f"\n[5/5] Uploading to YouTube Shorts: {topic['title']}", flush=True)
+def build_rich_description(topic, is_short=True):
+    title_clean = topic["title"].split("#")[0].strip()
     
-    meta_path = os.path.join(BASE_DIR, "current_metadata.json")
-    meta_content = {
+    desc = f"""{title_clean}
+
+अरे दोस्तों! क्या आपको पता है कि हमारे शरीर और रोज़मर्रा की ज़िंदगी में ऐसे कई चौंकाने वाले रहस्य छुपे हैं जिनके बारे में हम कभी सोचते भी नहीं? आज Anchor Aadhya के इस खास एपिसोड में हम जानेंगे कि {title_clean}! 
+
+इस वीडियो को पूरा अंत तक देखें और जानें इसके पीछे का असली साइंटिफिक सच और रोचक तथ्य।
+
+📌 इस वीडियो में क्या खास है:
+• {topic.get('summary', title_clean)}
+• शरीर के अंदर होने वाली वास्तविक बायोलॉजिकल प्रक्रिया
+• सामान्य गलतफहमी और मेडिकल साइंस का असली सच
+• खुद को सुरक्षित रखने के लिए जरूरी हेल्थ टिप्स
+
+🔍 Searches & Topics Covered:
+• {title_clean}
+• Amazing Human Body Science Facts in Hindi
+• What Happens If You Hold Sneeze
+• Shocking Human Body Facts Hindi
+• Anchor Aadhya Evergreen Science Explainer
+• Eardrum Damage and Sneeze Pressure
+• Daily Life Science Myths Busted
+
+⚠️ DISCLAIMER & HEALTH ADVISORY:
+This video is created strictly for educational, informational, and general curiosity purposes only. The animations, graphics, and descriptions illustrate scientific and physiological mechanisms in a stylized format. This content does not constitute professional medical advice, clinical diagnosis, or medical treatment. If you experience health issues or medical symptoms, always seek the advice of a qualified physician or healthcare provider.
+
+🔔 Subscribe to Anchor Aadhya for daily mind-blowing facts, evergreen science explainers, and real mysteries!
+
+#AnchorAadhya #Shorts #Facts #ScienceFacts #HumanBody #BiologyFacts #DidYouKnow #HindiFacts #ViralFacts"""
+    return desc
+
+def convert_to_16_9(short_path):
+    print("\n[3.5/5] Generating Broadcast 16:9 Full HD Video (1920x1080)...", flush=True)
+    out_16_9 = os.path.join(RENDERS_DIR, "aadhya_video_16_9.mp4")
+    if os.path.exists(out_16_9):
+        try: os.remove(out_16_9)
+        except Exception: pass
+        
+    filter_complex = (
+        "[0:v]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,boxblur=25:5,eq=brightness=-0.15:saturation=1.2[bg];"
+        "[0:v]scale=-1:1040[fg];"
+        "[bg][fg]overlay=(W-w)/2:(H-h)/2[v]"
+    )
+    cmd = [
+        "ffmpeg", "-y", "-i", short_path,
+        "-filter_complex", filter_complex,
+        "-map", "[v]", "-map", "0:a",
+        "-c:v", "libx264", "-preset", "veryfast", "-crf", "19",
+        "-c:a", "copy",
+        out_16_9
+    ]
+    subprocess.run(cmd, check=True)
+    print(f"  --> 16:9 Video Rendered: {out_16_9} ({os.path.getsize(out_16_9)/(1024*1024):.2f} MB)", flush=True)
+    return out_16_9
+
+def create_16_9_thumbnail(thumb_9_16, topic):
+    print("\n[4.5/5] Generating High-CTR 16:9 Landscape Thumbnail...", flush=True)
+    out_thumb = os.path.join(REVIEW_DIR, "cover", "thumb_16_9.jpg")
+    filter_complex = (
+        "[0:v]scale=1280:720:force_original_aspect_ratio=increase,crop=1280:720,boxblur=20:5,eq=brightness=-0.2:saturation=1.15[bg];"
+        "[0:v]scale=-1:700[fg];"
+        "[bg][fg]overlay=(W-w)/2:(H-h)/2[v]"
+    )
+    cmd = [
+        "ffmpeg", "-y", "-i", thumb_9_16,
+        "-filter_complex", filter_complex,
+        "-map", "[v]",
+        "-frames:v", "1",
+        out_thumb
+    ]
+    subprocess.run(cmd, check=True)
+    print(f"  --> 16:9 Thumbnail Created: {out_thumb}", flush=True)
+    return out_thumb
+
+def upload_both_formats(topic, short_path, video_16_9_path, thumb_short, thumb_16_9):
+    from youtube_uploader import upload_direct_video
+    tracker = load_tracker()
+    
+    # 1. Upload 16:9 Landscape Video First (Main Video)
+    title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
+    print(f"\n[5/5 - A] Uploading 16:9 Full Landscape Video: {title_16_9}", flush=True)
+    meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
+    meta_16_9 = {
+        "title": title_16_9,
+        "description": build_rich_description(topic, is_short=False),
+        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body"])
+    }
+    with open(meta_path_16_9, "w", encoding="utf-8") as f:
+        json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
+        
+    ok_16_9 = upload_direct_video(video_16_9_path, meta_path_16_9, thumb_path=thumb_16_9)
+    if ok_16_9:
+        print("  --> 16:9 Full Video Uploaded Successfully!", flush=True)
+    else:
+        print("  --> Warning: 16:9 Video upload deferred or failed.", flush=True)
+        
+    # 2. Upload 9:16 Vertical Short
+    print(f"\n[5/5 - B] Uploading 9:16 Vertical Short: {topic['title']}", flush=True)
+    meta_path_short = os.path.join(BASE_DIR, "metadata_short.json")
+    meta_short = {
         "title": topic["title"],
-        "description": topic["description"] + "\n\n#AnchorAadhya #Shorts #Facts #Science",
+        "description": build_rich_description(topic, is_short=True),
         "tags": topic.get("tags", ["Shorts", "Facts", "Science"])
     }
-    with open(meta_path, "w", encoding="utf-8") as f:
-        json.dump(meta_content, f, ensure_ascii=False, indent=2)
+    with open(meta_path_short, "w", encoding="utf-8") as f:
+        json.dump(meta_short, f, ensure_ascii=False, indent=2)
         
-    from youtube_uploader import upload_direct_video
-    success = upload_direct_video(video_path, meta_path, thumb_path=thumb_path)
-    
-    if success:
-        tracker = load_tracker()
+    ok_short = upload_direct_video(short_path, meta_path_short, thumb_path=thumb_short)
+    if ok_short:
+        print("  --> 9:16 Short Uploaded Successfully!", flush=True)
         if topic["id"] not in tracker:
             tracker.append(topic["id"])
             save_tracker(tracker)
         print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
         return True
-    else:
-        print("\n❌ Upload failed or deferred.", flush=True)
-        return False
+    return ok_16_9
+
+def upload_to_youtube(topic, video_path, thumb_path):
+    # Backward compatible wrapper
+    return upload_both_formats(topic, video_path, video_path, thumb_path, thumb_path)
 
 async def main():
     topic = select_next_topic()
@@ -234,10 +331,12 @@ async def main():
     
     dur = await build_voice_and_timing(topic)
     build_audio_mix()
-    video_mp4 = render_video_mp4()
-    thumb_img = extract_thumbnail_frame()
+    short_mp4 = render_video_mp4()
+    video_16_9 = convert_to_16_9(short_mp4)
+    thumb_9_16 = extract_thumbnail_frame()
+    thumb_16_9 = create_16_9_thumbnail(thumb_9_16, topic)
     
-    upload_to_youtube(topic, video_mp4, thumb_img)
+    upload_both_formats(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
 
 if __name__ == "__main__":
     try:

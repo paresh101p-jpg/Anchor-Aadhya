@@ -49,53 +49,73 @@
         "caps": "हमेशा *डस्टबिन में | थूक *दें!"
       }
     ],
-    "tags": ["Chewing Gum", "Science Facts", "Human Body Facts", "What Happens If", "Health Facts", "Swallow Gum", "Anchor Aadhya", "Hindi Science", "Curiosity Facts"],
+    "tags": [
+      "Chewing Gum",
+      "Science Facts",
+      "Human Body Facts",
+      "What Happens If",
+      "Health Facts",
+      "Swallow Gum",
+      "Anchor Aadhya",
+      "Hindi Science",
+      "Curiosity Facts"
+    ],
     "description": "क्या सच में पेट में चुइंगम 7 साल तक चिपकी रहती है? जानिए जब आप चुइंगम निगल जाते हैं तो पेट और आंतों के अंदर असल में क्या होता है! \n\n#AnchorAadhya #ScienceFacts #HumanBody #BiologyFacts #Curiosity #HindiShorts #ViralFacts"
   },
   {
     "id": "holding_sneeze",
-    "title": "छींक को जबरदस्ती रोकने से क्या हो सकता है? ⚠️ #Shorts",
+    "title": "छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts",
     "music": "tension",
     "lines": [
       {
-        "text": "क्या आप जानते हैं छींक को जबरदस्ती रोकने से क्या हो सकता है?",
-        "caps": "छींक *रोकने से | क्या होगा?"
+        "text": "अरे बाप रे! क्या आप भी कभी-कभार स्टाइल मारने के चक्कर में अपनी छींक रोक लेते हैं?",
+        "caps": "स्टाइल में *छींक | कभी *रोकी है?"
       },
       {
-        "text": "जब आप छींकते हैं, तो हवा 160 किलोमीटर प्रति घंटे की रफ्तार से निकलती है।",
-        "caps": "160 KM *स्पीड | तूफानी *हवा"
+        "text": "रुकिए! जब आप छींकते हैं, तो हवा 160 किलोमीटर प्रति घंटे की तूफानी रफ्तार से बाहर आती है!",
+        "caps": "160 KM/H *स्पीड | तूफानी *रफ्तार"
       },
       {
-        "text": "लेकिन अगर आप नाक और मुंह बंद करके इसे रोकते हैं,",
-        "caps": "नाक-मुंह *बंद | करने पर"
+        "text": "लेकिन जैसे ही आपने नाक और मुंह दबाकर इसे जबरदस्ती रोका...",
+        "caps": "नाक-मुंह *दबाकर | जबरदस्ती *रोका"
       },
       {
-        "text": "तो यह भारी दबाव बाहर निकलने के बजाय शरीर के अंदर लौट जाता है।",
-        "caps": "प्रेशर *अंदर | लौटता *है"
+        "text": "तो ये भयंकर प्रेशर बाहर निकलने के बजाय सीधे आपके शरीर के अंदर विस्फोट करता है!",
+        "caps": "प्रेशर *अंदर | ब्लास्ट *करता है!"
       },
       {
-        "text": "यह खतरनाक दबाव आपके कान के पर्दों तक पहुंच सकता है,",
-        "caps": "कान के *पर्दे | फट सकते *हैं"
+        "text": "ये भारी दबाव सबसे पहले आपके कान के पर्दों पर हथौड़े की तरह टकराता है,",
+        "caps": "कान के *पर्दों पर | सीधा *हमला"
       },
       {
-        "text": "जिससे आपके कान का पर्दा फट सकता है और सुनने की शक्ति जा सकती है।",
-        "caps": "बहरापन *हो | सकता *है"
+        "text": "जिससे कान का पर्दा फट सकता है और हमेशा के लिए सुनाई देना बंद हो सकता है!",
+        "caps": "पर्दा *फट सकता है | बहरापन *खतरा"
       },
       {
-        "text": "इतना ही नहीं, गले की नसें और आंख की बारीक रक्त वाहिकाएं भी फट सकती हैं।",
-        "caps": "गले की *नसें | फट सकती *हैं"
+        "text": "इतना ही नहीं, गले की नाजुक नसें और आंखों की बारीक नसें भी फट सकती हैं!",
+        "caps": "गले और *आंखों की | नसें *फट सकती हैं"
       },
       {
-        "text": "बहुत दुर्लभ मामलों में इससे दिमाग की नसों में सूजन आ सकती है।",
-        "caps": "दिमाग पर *असर | पड़ सकता *है"
+        "text": "और बहुत सीरियस मामलों में दिमाग की नसों तक पर तगड़ा झटका लग सकता है!",
+        "caps": "दिमाग पर *असर | तगड़ा *झटका"
       },
       {
-        "text": "इसलिए जब भी छींक आए, उसे कभी न रोकें, खुलकर छींकें!",
-        "caps": "छींक कभी *न रोकें | खुलकर *छींकें!"
+        "text": "तो भाई, अगली बार जब भी छींक आए, बिल्कुल शर्म मत करो—खुलकर छींक दो!",
+        "caps": "शर्म मत *करो | खुलकर *छींक दो!"
       }
     ],
-    "tags": ["Sneeze", "Stop Sneeze", "Health Facts", "Human Body Facts", "Science Facts", "Eardrum", "Anchor Aadhya", "Shorts"],
-    "description": "छींक को रोकने की गलती कभी मत करना! जानिए कैसे 160 km/h की रफ्तार से आने वाला प्रेशर शरीर को भारी नुकसान पहुंचा सकता है।\n\n#AnchorAadhya #SneezeFacts #HealthCare #ScienceExplainers #BodyFacts #HindiFacts"
+    "tags": [
+      "Sneeze",
+      "Stop Sneeze",
+      "Health Facts",
+      "Human Body Facts",
+      "Science Facts",
+      "Eardrum",
+      "Anchor Aadhya",
+      "Shorts"
+    ],
+    "description": "छींक को रोकने की गलती कभी मत करना! जानिए कैसे 160 km/h की रफ्तार से आने वाला प्रेशर शरीर को भारी नुकसान पहुंचा सकता है।\n\n#AnchorAadhya #SneezeFacts #HealthCare #ScienceExplainers #BodyFacts #HindiFacts",
+    "video_title": "छींक को जबरदस्ती रोकने से शरीर में क्या होता है? | Shocking Human Body Science"
   },
   {
     "id": "water_7days",
@@ -135,7 +155,15 @@
         "caps": "पानी ही *जीवन है | खूब पानी *पिएं!"
       }
     ],
-    "tags": ["Water", "Dehydration", "Health Facts", "Human Biology", "Kidney Health", "What Happens Without Water", "Anchor Aadhya"],
+    "tags": [
+      "Water",
+      "Dehydration",
+      "Health Facts",
+      "Human Biology",
+      "Kidney Health",
+      "What Happens Without Water",
+      "Anchor Aadhya"
+    ],
     "description": "पानी के बिना इंसान कितने दिन जीवित रह सकता है? 7 दिन पानी न पीने पर शरीर के अंदर हर घंटे क्या बदलाव होते हैं, देखिए इस वीडियो में।\n\n#AnchorAadhya #WaterFacts #HealthAwareness #ScienceShorts #Dehydration #LifeFacts"
   },
   {
@@ -172,7 +200,15 @@
         "caps": "अच्छी नींद *लें | दिमाग *तेज करें!"
       }
     ],
-    "tags": ["Brain Facts", "Sleep Science", "Human Brain", "Memory", "Sleep Facts", "Psychology Facts", "Anchor Aadhya"],
+    "tags": [
+      "Brain Facts",
+      "Sleep Science",
+      "Human Brain",
+      "Memory",
+      "Sleep Facts",
+      "Psychology Facts",
+      "Anchor Aadhya"
+    ],
     "description": "सोते समय दिमाग खुद को कैसे धोकर साफ करता है और यादों को कैसे सेव करता है? जानिए इस जादुई ब्रेन साइंस वीडियो में।\n\n#AnchorAadhya #BrainPower #SleepScience #HumanMind #ScienceFactsHindi #MemoryBooster"
   },
   {
@@ -209,7 +245,15 @@
         "caps": "सुरक्षित *उड़ान | फ्लाइट मोड *ऑन!"
       }
     ],
-    "tags": ["Airplane Mode", "Flight Safety", "Aviation Facts", "Pilots", "Air Traffic Control", "Travel Facts", "Anchor Aadhya"],
+    "tags": [
+      "Airplane Mode",
+      "Flight Safety",
+      "Aviation Facts",
+      "Pilots",
+      "Air Traffic Control",
+      "Travel Facts",
+      "Anchor Aadhya"
+    ],
     "description": "हवाई जहाज में फोन फ्लाइट मोड पर न रखें तो क्या होगा? क्या प्लेन गिर जाएगा या पायलट को परेशानी होगी? जानिए पूरा सच!\n\n#AnchorAadhya #AirplaneMode #AviationFacts #TravelTips #ScienceFacts #HindiShorts"
   }
 ]
