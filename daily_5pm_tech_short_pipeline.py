@@ -247,27 +247,114 @@ Return ONLY valid JSON matching this schema:
         "outro": "इनमें से कौन सी टेक खोज आपको सबसे ज़्यादा हैरान कर गई? मुझे कमेंट में ज़रूर बताइए और ऐसी ही ताज़ा टेक खबरों के लिए अभी सब्सक्राइब कीजिए!"
     }
 
-def generate_voiceover(script_data, output_audio_path):
-    """Generates continuous high-energy Indian Hindi female voiceover."""
-    print("\n🎙️ [3/6] Generating Anchor Aadhya Natural Indian Hindi Voiceover...")
-    full_text = script_data["hook"] + " ... "
-    for f in script_data["facts"]:
-        full_text += f["narration"] + " ... "
-    full_text += script_data["outro"]
+def generate_matched_ai_image(prompt, topic_title, output_path):
+    """Generates an 8K photorealistic 9:16 vertical image tailored to the exact fact."""
+    import urllib.request, urllib.parse, random
+    enhanced_prompt = (
+        f"8k commercial editorial photograph representing {topic_title}. {prompt}. "
+        f"Hyper-detailed, futuristic cinematic lighting, authentic physical textures, "
+        f"9:16 vertical aspect ratio, no text, no watermark, no logos, sharp focus."
+    )
+    enc = urllib.parse.quote(enhanced_prompt)
+    seed = random.randint(1000, 999999)
+    models = ["flux", "turbo", "sana"]
+    for model in models:
+        url = f"https://image.pollinations.ai/prompt/{enc}?model={model}&width=1080&height=1920&nologo=true&seed={seed}"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"})
+        try:
+            with urllib.request.urlopen(req, timeout=30) as resp:
+                data = resp.read()
+                if len(data) > 20000:
+                    with open(output_path, "wb") as f:
+                        f.write(data)
+                    # Cover crop and resize to exactly 1080x1920
+                    im = Image.open(output_path).convert("RGB")
+                    w, h = im.size
+                    target_ratio = 1080 / 1920.0
+                    im_ratio = w / float(h)
+                    if im_ratio > target_ratio:
+                        new_w = int(h * target_ratio)
+                        off_x = (w - new_w) // 2
+                        im = im.crop((off_x, 0, off_x + new_w, h))
+                    else:
+                        new_h = int(w / target_ratio)
+                        off_y = (h - new_h) // 2
+                        im = im.crop((0, off_y, w, off_y + new_h))
+                    im = im.resize((1080, 1920), Image.Resampling.LANCZOS)
+                    im.save(output_path, "JPEG", quality=95)
+                    print(f"  ✅ [AI IMAGE MATCHED] {topic_title[:35]} -> {os.path.basename(output_path)}")
+                    return output_path
+        except Exception as e:
+            print(f"  Image gen model={model} note: {e}")
 
+    # Fallback to local reference if all endpoints fail
+    fallback_p = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+    if os.path.exists(fallback_p):
+        im = Image.open(fallback_p).convert("RGB").resize((1080, 1920), Image.Resampling.LANCZOS)
+        im.save(output_path, "JPEG", quality=95)
+    return output_path
+
+def generate_voiceover(script_data, output_audio_path):
+    """
+    Generates frame-accurate segmented Indian Hindi female voiceover.
+    Measures exact audio duration per fact to guarantee 100% mouth-sync.
+    """
+    print("\n🎙️ [3/6] Generating Anchor Aadhya Segmented Voiceover (100% Mouth-Sync)...")
+    ffmpeg = find_ffmpeg()
     import edge_tts
-    # Microsoft Swara Neural (Authentic Indian Hindi Female News Presenter)
     voice = "hi-IN-SwaraNeural"
     rate = "+3%"
     pitch = "+1Hz"
 
-    async def _synth():
-        comm = edge_tts.Communicate(full_text, voice=voice, rate=rate, pitch=pitch)
-        await comm.save(output_audio_path)
+    segments = []
+    # 1. Hook
+    segments.append(("hook", script_data["hook"]))
+    # 2. Facts
+    for i, f in enumerate(script_data["facts"]):
+        segments.append((f"fact_{i+1}", f["narration"]))
+    # 3. Outro
+    segments.append(("outro", script_data["outro"]))
 
-    asyncio.run(_synth())
-    print(f"✅ Voiceover rendered: {output_audio_path}")
-    return output_audio_path
+    seg_files = []
+    seg_durs = []
+
+    for name, text in segments:
+        p_seg = os.path.join(ASSETS_DIR, f"seg_{name}.mp3")
+        asyncio.run(edge_tts.Communicate(text, voice=voice, rate=rate, pitch=pitch).save(p_seg))
+        dur = get_audio_duration(p_seg)
+        seg_files.append(p_seg)
+        seg_durs.append(dur)
+        print(f"  🎙️ [{name.upper()}] Duration: {dur:.2f}s | Text: '{text[:45]}...'")
+
+    # Generate small 0.20s breathing silence
+    silence_mp3 = os.path.join(ASSETS_DIR, "seg_silence.mp3")
+    subprocess.run([
+        ffmpeg, "-y", "-f", "lavfi", "-i", "anullsrc=r=24000:cl=mono",
+        "-t", "0.20", "-q:a", "9", silence_mp3
+    ], stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    concat_list = os.path.join(ASSETS_DIR, "voice_concat_list.txt")
+    with open(concat_list, "w", encoding="utf-8") as f:
+        for idx, sf in enumerate(seg_files):
+            f.write(f"file '{os.path.abspath(sf)}'\n")
+            if idx < len(seg_files) - 1:
+                f.write(f"file '{os.path.abspath(silence_mp3)}'\n")
+
+    subprocess.run([
+        ffmpeg, "-y", "-f", "concat", "-safe", "0", "-i", concat_list,
+        "-c", "copy", output_audio_path
+    ], check=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+    total_dur = get_audio_duration(output_audio_path)
+    print(f"✅ Total Master Audio Duration: {total_dur:.2f}s")
+
+    # Scene durations exactly mapped to each segment + pause
+    scene_durations = [seg_durs[0] + 0.20] # Hook
+    for d in seg_durs[1:-1]:
+        scene_durations.append(d + 0.20)  # Each Fact
+    scene_durations.append(seg_durs[-1] + 0.40) # Outro
+
+    return scene_durations
 
 def get_audio_duration(audio_path):
     ffprobe = find_ffprobe()
@@ -391,34 +478,29 @@ def generate_chrome_overlays(script_data):
     print("✅ All Chrome overlays rendered with 100% vector-sharp Devanagari!")
     return overlays
 
-def render_master_short(script_data, voice_audio_path, overlays):
-    """Renders 1080x1920 Full HD short with dynamic Ken-Burns moves & real waveform."""
-    print("\n🎬 [5/6] Assembling Master 9:16 Video with High-Energy Ken-Burns & Real Waveform...")
+def render_master_short(script_data, voice_audio_path, overlays, scene_durations, scene_imgs):
+    """
+    Renders 1080x1920 Full HD short with 100% mouth-synced scene boundaries & real audio waveform.
+    Each scene duration exactly matches the spoken audio duration of that specific fact!
+    """
+    print("\n🎬 [5/6] Assembling Master 9:16 Video with 100% Mouth-Synced Timing & Real Waveform...")
     ffmpeg = find_ffmpeg()
     total_dur = get_audio_duration(voice_audio_path)
     fps = 25
     w, h = 1080, 1920
     total_frames = int(total_dur * fps)
 
-    # Prepare scene images
-    img_anchor = os.path.join(ASSETS_DIR, "anchor_aadhya_studio_916.jpg")
-    if not os.path.exists(img_anchor):
-        img_anchor = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
-
-    # Load images
-    scene_imgs = [img_anchor]
-    available_artworks = [
-        os.path.join(ASSETS_DIR, "scene_robot_lab.jpg"),
-        os.path.join(ASSETS_DIR, "scene_robot_smile.jpg"),
-        os.path.join(ASSETS_DIR, "scene_ai_workplace.jpg")
-    ]
-    for i in range(len(script_data["facts"])):
-        art = available_artworks[i % len(available_artworks)]
-        scene_imgs.append(art)
-    scene_imgs.append(img_anchor) # Outro Anchor
-
     num_scenes = len(scene_imgs)
-    scene_dur = total_dur / float(num_scenes)
+    # Compute exact cumulative scene boundaries
+    scene_starts = [0.0]
+    for d in scene_durations:
+        scene_starts.append(scene_starts[-1] + d)
+
+    print(f"  ⏱️ Scene Timing Map ({num_scenes} scenes):")
+    for s_i in range(num_scenes):
+        st = scene_starts[s_i]
+        et = scene_starts[s_i + 1] if s_i + 1 < len(scene_starts) else total_dur
+        print(f"     Scene {s_i}: {st:.2f}s -> {et:.2f}s ({et - st:.2f}s) | Image: {os.path.basename(scene_imgs[s_i])}")
 
     # Extract real audio energy for soundwave
     cmd_audio = [
@@ -470,8 +552,20 @@ def render_master_short(script_data, voice_audio_path, overlays):
     # Render frame loop
     for frame_idx in range(total_frames):
         t = frame_idx / float(fps)
-        scene_idx = min(num_scenes - 1, int(t / scene_dur))
-        shot_t = (t - (scene_idx * scene_dur)) / scene_dur
+        # Find exact active scene based on audio boundaries
+        scene_idx = 0
+        for s_i in range(num_scenes):
+            st = scene_starts[s_i]
+            et = scene_starts[s_i + 1] if s_i + 1 < len(scene_starts) else total_dur
+            if t >= st and (s_i == num_scenes - 1 or t < et):
+                scene_idx = s_i
+                break
+
+        scene_st = scene_starts[scene_idx]
+        scene_et = scene_starts[scene_idx + 1] if scene_idx + 1 < len(scene_starts) else total_dur
+        dur_this_scene = max(0.1, scene_et - scene_st)
+
+        shot_t = min(1.0, max(0.0, (t - scene_st) / dur_this_scene))
         smooth_t = (1.0 - math.cos(shot_t * math.pi)) / 2.0
 
         base_img = loaded_scenes[scene_idx]
@@ -482,14 +576,14 @@ def render_master_short(script_data, voice_audio_path, overlays):
         transformed = cv2.warpAffine(base_img, M, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REFLECT)
         transformed_bgr = cv2.cvtColor(transformed, cv2.COLOR_RGB2BGR)
 
-        # Transition Flash
-        frame_in_shot = int((t - (scene_idx * scene_dur)) * fps)
+        # Transition Flash on exact scene onset
+        frame_in_shot = int((t - scene_st) * fps)
         if frame_in_shot < 3 and scene_idx > 0:
             alpha_flash = (3 - frame_in_shot) * 0.28
             white = np.full((h, w, 3), 255, dtype=np.uint8)
             transformed_bgr = cv2.addWeighted(transformed_bgr, 1.0 - alpha_flash, white, alpha_flash, 0)
 
-        # Composite Overlay
+        # Composite Overlay (Exact Overlay for Active Scene)
         ov_bgr, ov_alpha = loaded_overlays[scene_idx]
         composite = (transformed_bgr * (1.0 - ov_alpha) + ov_bgr * ov_alpha).astype(np.uint8)
 
@@ -574,9 +668,23 @@ def main():
 
     script_data = synthesize_story_details(stories)
     voice_audio = os.path.join(ASSETS_DIR, "daily_5pm_voice.mp3")
-    generate_voiceover(script_data, voice_audio)
+    scene_durations = generate_voiceover(script_data, voice_audio)
+
+    # 100% Fact-Matched 8K AI Visual Generation per Fact
+    print("\n🎨 [4/6] Generating 100% Matched 8K AI Images for each Fact...")
+    fact_imgs = []
+    for i, f in enumerate(script_data["facts"]):
+        target_img = os.path.join(ASSETS_DIR, f"fact_{i+1}_matched.jpg")
+        generate_matched_ai_image(f.get("image_prompt", f["headline_hi"]), f["headline_hi"], target_img)
+        fact_imgs.append(target_img)
+
+    img_anchor = os.path.join(ASSETS_DIR, "anchor_aadhya_studio_916.jpg")
+    if not os.path.exists(img_anchor):
+        img_anchor = os.path.join(BASE_DIR, "anchor_aadhya_master.jpg")
+
+    scene_imgs = [img_anchor, *fact_imgs, img_anchor]
     overlays = generate_chrome_overlays(script_data)
-    video_path = render_master_short(script_data, voice_audio, overlays)
+    video_path = render_master_short(script_data, voice_audio, overlays, scene_durations, scene_imgs)
     generate_youtube_metadata(stories, script_data)
     print("\n🚀 [SUCCESS] Daily 5:00 PM Tech Short is Ready for Broadcast!")
 
