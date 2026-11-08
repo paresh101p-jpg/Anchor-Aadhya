@@ -36,10 +36,16 @@ jobs:
         with:
           node-version: '20'
 
-      - name: Install System Dependencies (FFmpeg & Hindi Fonts)
+      - name: Install System Dependencies (FFmpeg, Google Chrome & Hindi Fonts)
         run: |
           sudo apt-get update
           sudo apt-get install -y ffmpeg fonts-noto-extra fonts-noto-core fonts-deva
+          if ! command -v google-chrome &> /dev/null && ! command -v google-chrome-stable &> /dev/null; then
+            echo "Installing Google Chrome..."
+            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt-get install -y ./google-chrome-stable_current_amd64.deb || true
+          fi
+          echo "Verified Chrome path: $(which google-chrome || which google-chrome-stable || which chromium || echo 'NOT_FOUND')"
 
       - name: Install Python Dependencies
         run: pip install -r requirements.txt

@@ -13,6 +13,7 @@ import os
 import sys
 import json
 import asyncio
+import traceback
 import subprocess
 from datetime import datetime
 
@@ -59,7 +60,7 @@ def select_next_topic():
     
     available = [t for t in topics if t["id"] not in used_ids]
     if not available:
-        print("[Notice] All curated topics used once! Cycling back to beginning.")
+        print("[Notice] All curated topics used once! Cycling back to beginning.", flush=True)
         available = topics
         save_tracker([])
         
@@ -79,7 +80,7 @@ async def build_voice_and_timing(topic):
     import numpy as np
     from scipy.io import wavfile
     
-    print(f"\n[1/5] Synthesizing Voice ({VOICE}) for: {topic['title']}")
+    print(f"\n[1/5] Synthesizing Voice ({VOICE}) for: {topic['title']}", flush=True)
     lead = 0.45
     outro = 0.90
     lines_meta = []
@@ -92,6 +93,7 @@ async def build_voice_and_timing(topic):
         mp3_p = os.path.join(TEMP_DIR, f"line_{i:02d}.mp3")
         wav_p = os.path.join(TEMP_DIR, f"line_{i:02d}.wav")
         
+        print(f"  -> Line {i+1}/{len(topic['lines'])}: '{text[:30]}...'", flush=True)
         await generate_line_audio(text, mp3_p)
         subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", mp3_p, "-ar", "48000", "-ac", "1", wav_p], check=True)
         dur = get_audio_duration(wav_p)
@@ -123,8 +125,8 @@ async def build_voice_and_timing(topic):
         current_time = end_t + 0.30
         
     total_dur = round(current_time + outro, 3)
+    print(f"  -> Assembling master narration.wav ({total_dur:.2f}s)...", flush=True)
     
-    # Assemble master narration.wav
     sr = 48000
     master_samples = np.zeros(int(total_dur * sr), dtype=np.float32)
     for i, (wav_p, dur) in enumerate(line_files):
@@ -138,7 +140,6 @@ async def build_voice_and_timing(topic):
     narration_out = os.path.join(DATA_DIR, "narration.wav")
     wavfile.write(narration_out, sr, (master_samples * 32767).astype(np.int16))
     
-    # Save script.json
     script_obj = {
         "id": topic["id"],
         "title": topic["title"],
@@ -158,19 +159,19 @@ async def build_voice_and_timing(topic):
     with open(os.path.join(DATA_DIR, "words.json"), "w", encoding="utf-8") as f:
         json.dump(all_words, f, ensure_ascii=False, indent=2)
         
-    print(f"  --> Audio Duration: {total_dur:.2f}s across {len(lines_meta)} cuts.")
+    print(f"  --> Voice & Timing Complete: {total_dur:.2f}s across {len(lines_meta)} cuts.", flush=True)
     return total_dur
 
 def build_audio_mix():
-    print("\n[2/5] Building Procedural Sound Effects & Music Mix...")
-    # Extract cues
+    print("\n[2/5] Building Procedural Sound Effects & Music Mix...", flush=True)
+    print("  -> Running node tools/capture.mjs cues...", flush=True)
     subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
-    # Run mix.py
+    print("  -> Running python tools/mix.py...", flush=True)
     subprocess.run([sys.executable, "tools/mix.py", "."], cwd=ENGINE_DIR, check=True)
-    print("  --> mix.wav ready!")
+    print("  --> mix.wav ready!", flush=True)
 
 def render_video_mp4():
-    print("\n[3/5] Rendering 1080x1920 Short via Headless Chromium Engine...")
+    print("\n[3/5] Rendering 1080x1920 Short via Headless Chromium Engine...", flush=True)
     out_mp4 = os.path.join(RENDERS_DIR, "aadhya_short.mp4")
     if os.path.exists(out_mp4):
         try: os.remove(out_mp4)
@@ -178,28 +179,28 @@ def render_video_mp4():
         
     env = os.environ.copy()
     env["FPS"] = "30"
+    print("  -> Executing node tools/capture.mjs video...", flush=True)
     subprocess.run(["node", "tools/capture.mjs", "video", "renders/aadhya_short.mp4"], cwd=ENGINE_DIR, env=env, check=True)
-    print(f"  --> MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)")
+    print(f"  --> MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
     return out_mp4
 
 def extract_thumbnail_frame():
-    print("\n[4/5] Extracting High-CTR Kinetic Cover Frame...")
+    print("\n[4/5] Extracting High-CTR Kinetic Cover Frame...", flush=True)
     thumb_dir = os.path.join(REVIEW_DIR, "cover")
     os.makedirs(thumb_dir, exist_ok=True)
     subprocess.run(["node", "tools/capture.mjs", "frames", "review/cover", "7.0"], cwd=ENGINE_DIR, check=True)
     
     thumb_path = os.path.join(thumb_dir, "t7.00.jpg")
     if not os.path.exists(thumb_path):
-        # Fallback to any jpg in review/cover
         jpgs = [os.path.join(thumb_dir, f) for f in os.listdir(thumb_dir) if f.endswith(".jpg")]
         if jpgs:
             thumb_path = jpgs[0]
             
-    print(f"  --> Cover Frame Extracted: {thumb_path}")
+    print(f"  --> Cover Frame Extracted: {thumb_path}", flush=True)
     return thumb_path
 
 def upload_to_youtube(topic, video_path, thumb_path):
-    print(f"\n[5/5] Uploading to YouTube Shorts: {topic['title']}")
+    print(f"\n[5/5] Uploading to YouTube Shorts: {topic['title']}", flush=True)
     
     meta_path = os.path.join(BASE_DIR, "current_metadata.json")
     meta_content = {
@@ -218,26 +219,31 @@ def upload_to_youtube(topic, video_path, thumb_path):
         if topic["id"] not in tracker:
             tracker.append(topic["id"])
             save_tracker(tracker)
-        print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.")
+        print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
         return True
     else:
-        print("\n❌ Upload failed or deferred.")
+        print("\n❌ Upload failed or deferred.", flush=True)
         return False
 
 async def main():
     topic = select_next_topic()
-    print("==============================================================")
-    print(f"  ANCHOR AADHYA EVERGREEN SHORTS: {topic['title']}")
-    print(f"  Topic ID: {topic['id']}")
-    print("==============================================================")
+    print("==============================================================", flush=True)
+    print(f"  ANCHOR AADHYA EVERGREEN SHORTS: {topic['title']}", flush=True)
+    print(f"  Topic ID: {topic['id']}", flush=True)
+    print("==============================================================", flush=True)
     
     dur = await build_voice_and_timing(topic)
     build_audio_mix()
     video_mp4 = render_video_mp4()
     thumb_img = extract_thumbnail_frame()
     
-    # Upload
     upload_to_youtube(topic, video_mp4, thumb_img)
 
 if __name__ == "__main__":
-    asyncio.run(main())
+    try:
+        asyncio.run(main())
+    except Exception as e:
+        print("\n\n!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!", flush=True)
+        traceback.print_exc()
+        print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\n\n", flush=True)
+        sys.exit(1)
