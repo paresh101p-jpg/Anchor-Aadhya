@@ -362,41 +362,6 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
             print(f"  [WARNING] Thumbnail upload failed: {e}")
 
     mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
-
-    # Archive pending shorts facts upon confirmed YouTube upload
-    pending_facts_file = os.path.join(BASE_DIR, "pending_shorts_facts.json")
-    if os.path.exists(pending_facts_file):
-        try:
-            with open(pending_facts_file, "r", encoding="utf-8") as pf:
-                p_facts = json.load(pf)
-            from create_3facts_tech_short import record_used_facts
-            record_used_facts(p_facts)
-            os.remove(pending_facts_file)
-            print("  --> [ARCHIVE] Successfully recorded shorts facts to used_shorts_facts.json!")
-        except Exception as arc_err:
-            print(f"  Notice archiving pending facts: {arc_err}")
-
-    # Automatically delete video, metadata, and all temporary shorts assets after successful upload
-    print("\n--- Cleaning Up Posted Shorts Video & Temporary Assets ---", flush=True)
-    import glob
-    del_targets = [video_path, meta_path]
-    if thumb_path: del_targets.append(thumb_path)
-    for f_del in del_targets:
-        if f_del and os.path.exists(f_del):
-            try:
-                os.remove(f_del)
-                print(f"  [DELETED] {os.path.basename(f_del)}", flush=True)
-            except Exception:
-                pass
-
-    for pat in ["shorts_*", "fact1_*", "fact2_*", "fact3_*", "temp_*", "*.tmp"]:
-        for f in glob.glob(os.path.join(BASE_DIR, pat)):
-            try:
-                os.remove(f)
-                print(f"  [DELETED] Temporary asset: {os.path.basename(f)}", flush=True)
-            except Exception:
-                pass
-
     return True
 
 if __name__ == "__main__":

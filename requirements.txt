@@ -4,4 +4,5 @@ google-auth-oauthlib
 google-auth
 pillow
 requests
-google-genai
+numpy
+scipy

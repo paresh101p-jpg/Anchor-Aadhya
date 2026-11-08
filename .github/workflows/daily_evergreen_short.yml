@@ -1,0 +1,64 @@
+name: Anchor Aadhya Daily Evergreen Short (Faceless Inside-Out)
+
+on:
+  workflow_dispatch: # Allows manual 1-click run anytime from GitHub Actions tab
+  repository_dispatch:
+    types: [daily_short, post_aadhya_short]
+  push:
+    paths:
+      - 'TRIGGER_AADHYA_POST.txt'
+  schedule:
+    # 11:30 UTC = 05:00 PM IST (Evening peak viewer engagement)
+    - cron: '30 11 * * *'
+
+concurrency:
+  group: aadhya-evergreen-short
+  cancel-in-progress: false
+
+jobs:
+  render-and-upload-short:
+    name: Render Faceless Inside-Out Short & Upload to YouTube
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install System Dependencies (FFmpeg, Chromium & Hindi Fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg chromium-browser fonts-noto-extra fonts-noto-core fonts-deva
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Render Evergreen Inside-Out Short & Post to YouTube
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          CHROME: /usr/bin/chromium-browser
+        run: python -u generate_evergreen_short.py
+
+      - name: Commit Topic Tracker & Upload Log to Git
+        run: |
+          git config user.name "Anchor Aadhya Bot"
+          git config user.email "bot@anchoraadhya.com"
+          git add used_topics_tracker.json uploaded_bulletins_tracker.txt || true
+          git diff --staged --quiet || git commit -m "Auto-posted Evergreen Curiosity Short to YouTube [skip ci]"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin master || true
+            git push origin master && break || sleep 3
+          done
