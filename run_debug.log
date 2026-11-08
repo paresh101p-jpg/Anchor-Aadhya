@@ -18,64 +18,70 @@
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और बेकार की फालतू जानकारी को ह...'
   -> Line 7/7: 'यही कारण है कि अच्छी नींद के ब...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'यही कारण है कि अच्छी नींद के ब...'
-  -> Assembling master narration.wav (36.31s)...
-  --> Voice & Timing Complete: 36.31s across 7 cuts.
+  -> Assembling master narration.wav (36.78s)...
+  --> Voice & Timing Complete: 36.78s across 7 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 14 cues, 36.31 s
+data/cues.json: 14 cues, 36.78 s
   -> Running python tools/mix.py...
 unknown cue type, skipped: chime
 unknown cue type, skipped: spark
 unknown cue type, skipped: chime
 unknown cue type, skipped: chime
-data/mix.wav: 36.31 s · voice: yes · music: bed · 14 cues
+data/mix.wav: 36.78 s · voice: yes · music: bed · 14 cues
   --> mix.wav ready!
 
 [Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/908 frames150/908 frames300/908 frames450/908 frames600/908 frames750/908 frames900/908 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (908 frames, with data/mix.wav, 843 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (23.93 MB)
+0/920 frames150/920 frames300/920 frames450/920 frames600/920 frames750/920 frames900/920 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (920 frames, with data/mix.wav, 858 s)
+  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (23.66 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 36.28s (Audio-Visual Synced)
+  ✅ Duration: 36.76s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 
 [Rendering Native 3D 16:9 MP4: aadhya_video_16_9.mp4] via Headless Chromium Three.js...
-0/908 frames150/908 frames300/908 frames450/908 frames600/908 frames750/908 frames900/908 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (908 frames, with data/mix.wav, 794 s)
-  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (21.04 MB)
+0/920 frames150/920 frames300/920 frames450/920 frames600/920 frames750/920 frames900/920 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (920 frames, with data/mix.wav, 809 s)
+  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (21.19 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9
   --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 16:9 video: aadhya_video_16_9.mp4...
   ✅ Resolution: 1920x1080 (100% Native 16:9)
-  ✅ Duration: 36.28s (Audio-Visual Synced)
+  ✅ Duration: 36.76s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 
 [5/5 - A] Uploading Native 16:9 Landscape Video: हमारा दिमाग रात को सोते समय क्या करता है? 🧠
+  --> Title: हमारा दिमाग रात को सोते समय क्या करता है? 🧠
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (21.19 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 18%
+  --> Upload Progress: 37%
+  --> Upload Progress: 56%
+  --> Upload Progress: 75%
+  --> Upload Progress: 94%
 
+[SUCCESS] VIDEO UPLOADED! Video ID: aTOSqFBNQrw
+  --> Live URL: https://www.youtube.com/watch?v=aTOSqFBNQrw
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> 16:9 Full Widescreen Video Uploaded Successfully!
 
-!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
-Traceback (most recent call last):
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 353, in <module>
-    asyncio.run(main())
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 349, in main
-    upload_dual_native_3d(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 283, in upload_dual_native_3d
-    "description": build_rich_description(topic, is_short=False),
-                   ^^^^^^^^^^^^^^^^^^^^^^
-NameError: name 'build_rich_description' is not defined
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+[5/5 - B] Uploading Native 9:16 3D Short: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
+  --> Title: हमारा दिमाग रात को सोते समय क्या करता है? 🧠 #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (23.66 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 16%
+  --> Upload Progress: 33%
+  --> Upload Progress: 50%
+  --> Upload Progress: 67%
+  --> Upload Progress: 84%
 
+[SUCCESS] VIDEO UPLOADED! Video ID: mh6VdySaxjY
+  --> Live URL: https://www.youtube.com/watch?v=mh6VdySaxjY
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> 9:16 3D Short Uploaded Successfully!
 
+🎉 ALL STEPS COMPLETED! Topic 'brain_sleep' marked as posted.
