@@ -12,8 +12,18 @@ export async function loadTiming() {
   T.lines = lines.lines; T.words = words; T.dur = lines.duration;
   return T;
 }
-export const L = (i) => { const l = T.lines[i]; if (!l) throw new Error(`no line ${i}`); return l.start; };
-export const Le = (i) => { const l = T.lines[i]; if (!l) throw new Error(`no line ${i}`); return l.end; };
+export const L = (i) => {
+  if (!T.lines || T.lines.length === 0) return 0;
+  if (i < 0) return 0;
+  if (i >= T.lines.length) return T.lines[T.lines.length - 1].end;
+  return T.lines[i].start;
+};
+export const Le = (i) => {
+  if (!T.lines || T.lines.length === 0) return 0;
+  if (i < 0) return 0;
+  if (i >= T.lines.length) return T.lines[T.lines.length - 1].end;
+  return T.lines[i].end;
+};
 export function Wd(word, line, which = 's') {
   const n = norm(word);
   const hit = T.words.find((w) => (line == null || w.line === line) && (norm(w.w).startsWith(n) || norm(w.w) === n));
