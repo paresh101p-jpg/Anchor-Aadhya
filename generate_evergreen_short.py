@@ -30,7 +30,11 @@ REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
 TOPICS_FILE = os.path.join(BASE_DIR, "curiosity_topics.json")
 TRACKER_FILE = os.path.join(BASE_DIR, "used_topics_tracker.json")
 
-VOICE = "hi-IN-SwaraNeural"
+# Cartesia Sonic Primary #1 (Real Native Hindi Female Voice - Aadhya)
+CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY", "sk_car_nxiMG1b3Lkcu4XT45qZDaH")
+CARTESIA_VOICE_ID = os.environ.get("CARTESIA_VOICE_ID", "f91ab3e6-5071-4e15-b016-cde6f2bcd222")  # Aadhya (Indian Female Real Voice)
+FALLBACK_VOICE = "hi-IN-SwaraNeural"
+VOICE_NAME = "Cartesia-Aadhya (Sonic)"
 
 os.makedirs(DATA_DIR, exist_ok=True)
 os.makedirs(TEMP_DIR, exist_ok=True)
@@ -72,16 +76,47 @@ def get_audio_duration(file_path):
     return float(res.stdout.strip())
 
 async def generate_line_audio(text, outfile):
-    import edge_tts
-    # Energetic, witty, masti-bhara anchor delivery: +8% rate, +4Hz pitch
-    comm = edge_tts.Communicate(text, VOICE, rate="+8%", pitch="+4Hz")
-    await comm.save(outfile)
+    synthesized = False
+    if CARTESIA_API_KEY:
+        try:
+            import urllib.request, json
+            url = "https://api.cartesia.ai/tts/bytes"
+            payload = {
+                "model_id": "sonic-latest",
+                "transcript": text,
+                "voice": {"mode": "id", "id": CARTESIA_VOICE_ID},
+                "output_format": {"container": "mp3", "encoding": "mp3", "sample_rate": 44100},
+                "language": "hi"
+            }
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={
+                    "X-API-Key": CARTESIA_API_KEY,
+                    "Cartesia-Version": "2024-06-10",
+                    "Content-Type": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                with open(outfile, "wb") as f_out:
+                    f_out.write(resp.read())
+            synthesized = True
+            print(f"    [Cartesia Sonic Female #1 Primary (Aadhya)]: '{text[:30]}...'")
+        except Exception as ce:
+            print(f"    ⚠️ Cartesia voice fallback note: {ce}")
+
+    if not synthesized:
+        import edge_tts
+        # Energetic, witty, masti-bhara anchor delivery fallback: +8% rate, +4Hz pitch
+        comm = edge_tts.Communicate(text, FALLBACK_VOICE, rate="+8%", pitch="+4Hz")
+        await comm.save(outfile)
+        print(f"    [Edge-TTS Swara Backup]: '{text[:30]}...'")
 
 async def build_voice_and_timing(topic):
     import numpy as np
     from scipy.io import wavfile
     
-    print(f"\n[1/5] Synthesizing Voice ({VOICE}) for: {topic['title']}", flush=True)
+    print(f"\n[1/5] Synthesizing Voice ({VOICE_NAME}) for: {topic['title']}", flush=True)
     lead = 0.45
     outro = 0.90
     lines_meta = []
@@ -144,7 +179,7 @@ async def build_voice_and_timing(topic):
     script_obj = {
         "id": topic["id"],
         "title": topic["title"],
-        "voice": VOICE,
+        "voice": VOICE_NAME,
         "speed": 1.0,
         "lead": lead,
         "outro": outro,
@@ -155,7 +190,7 @@ async def build_voice_and_timing(topic):
         json.dump(script_obj, f, ensure_ascii=False, indent=2)
         
     with open(os.path.join(DATA_DIR, "lines.json"), "w", encoding="utf-8") as f:
-        json.dump({"duration": total_dur, "voice": VOICE, "speed": 1.0, "lines": lines_meta}, f, ensure_ascii=False, indent=2)
+        json.dump({"duration": total_dur, "voice": VOICE_NAME, "speed": 1.0, "lines": lines_meta}, f, ensure_ascii=False, indent=2)
         
     with open(os.path.join(DATA_DIR, "words.json"), "w", encoding="utf-8") as f:
         json.dump(all_words, f, ensure_ascii=False, indent=2)
@@ -179,7 +214,7 @@ def render_native_3d_video(aspect="9:16"):
         except Exception: pass
         
     env = os.environ.copy()
-    env["FPS"] = "30"
+    env["FPS"] = "25"
     env["ASPECT"] = aspect
     print(f"\n[Rendering Native 3D {aspect} MP4: {filename}] via Headless Chromium Three.js...", flush=True)
     subprocess.run(["node", "tools/capture.mjs", "video", f"renders/{filename}"], cwd=ENGINE_DIR, env=env, check=True)

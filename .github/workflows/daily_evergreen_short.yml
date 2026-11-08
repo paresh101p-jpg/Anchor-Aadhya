@@ -55,8 +55,11 @@ jobs:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY || 'sk_car_nxiMG1b3Lkcu4XT45qZDaH' }}
+          CARTESIA_VOICE_ID: "f91ab3e6-5071-4e15-b016-cde6f2bcd222"
           SOFTWARE_GL: "1"
-          QS: "&res=0.7&aa=0&shadow=1024"
+          FPS: "25"
+          QS: "&res=0.55&aa=0&shadow=512"
         run: |
           set -o pipefail
           python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
