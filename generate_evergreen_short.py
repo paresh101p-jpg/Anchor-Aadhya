@@ -271,33 +271,25 @@ def verify_visual_integrity(video_path, aspect="9:16"):
     return True
 
 def build_rich_description(topic, is_short=True):
+    """
+    Builds a clean, genuine, and authentic YouTube Description.
+    STRICT ZERO-SPAM RULE: No keyword stuffing, no 'Searches & Topics Covered' blocks, no generic junk.
+    Uses pure, engaging, real story content that viewers actually love to read.
+    """
     title_clean = topic.get("video_title", topic["title"].split("#")[0].strip())
-    base_desc = topic.get("description", "")
-    tags_str = " ".join(f"#{t.replace(' ', '')}" for t in topic.get("tags", ["AnchorAadhya", "Shorts", "ScienceFacts", "3DAnimation", "HumanBody"]))
+    base_desc = topic.get("description", "").strip()
+    
+    # Clean, targeted hashtags (max 4, no spam)
+    raw_tags = topic.get("tags", ["AnchorAadhya", "Curiosity", "Facts", "Shorts"])
+    hashtags = " ".join(f"#{t.replace(' ', '')}" for t in raw_tags[:4])
     
     desc = f"""{title_clean}
 
 {base_desc}
 
-📌 इस 3D एपिसोड में क्या खास है:
-• 100% Verified Scientific & Medical Facts (NIH / Mayo Clinic / PubMed Certified)
-• Zack D. Films Inspired 3D Anatomical Inside-Out Visuals
-• Deep Human Body & Brain Mystery Uncovered
-• Anchor Aadhya Exclusive 3D Animation
+🔔 Subscribe to Anchor Aadhya for daily mind-blowing curiosities, real-life mysteries, and fascinating science!
 
-🔍 Searches & Topics Covered:
-• {title_clean}
-• {topic.get('title', '')}
-• Zack D Films Style 3D Animation Hindi
-• Human Body Secrets & Science Facts Hindi
-• Anchor Aadhya 3D Explainer
-
-⚠️ DISCLAIMER & EDUCATIONAL ADVISORY:
-This video is created strictly for educational, scientific curiosity, and illustrative purposes using stylized 3D anatomical models. This content does not constitute professional medical advice. Always consult a qualified medical professional for health concerns.
-
-🔔 Subscribe to Anchor Aadhya for daily mind-blowing 3D science explainers, human body secrets, and medical mysteries!
-
-{tags_str}"""
+{hashtags}"""
     return desc.strip()
 
 def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb_16_9):
