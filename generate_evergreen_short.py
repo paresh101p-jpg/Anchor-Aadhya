@@ -407,6 +407,53 @@ def render_video_mp4():
 def extract_thumbnail_frame():
     return extract_native_thumbnail(aspect="9:16")
 
+def generate_aadhya_ai_thumbnail(topic):
+    """Generates high-CTR bespoke 16:9 thumbnail for Anchor Aadhya using Imagen 3 Fast."""
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if not api_key:
+        return None
+    try:
+        from master_thumbnail_prompt_engine import build_aadhya_master_thumbnail_prompt
+        from google import genai
+        prompt = build_aadhya_master_thumbnail_prompt(topic)
+        client = genai.Client(api_key=api_key)
+        img_model = "imagen-3.0-fast-generate-001"
+        try:
+            resp = client.models.generate_images(
+                model=img_model,
+                prompt=prompt,
+                config=dict(
+                    number_of_images=1,
+                    output_mime_type="image/jpeg",
+                    aspect_ratio="16:9",
+                    person_generation="ALLOW_ADULT"
+                )
+            )
+        except Exception as fast_err:
+            print(f"  -> [Info] Fast model retry on standard: {fast_err}", flush=True)
+            img_model = "imagen-3.0-generate-002"
+            resp = client.models.generate_images(
+                model=img_model,
+                prompt=prompt,
+                config=dict(
+                    number_of_images=1,
+                    output_mime_type="image/jpeg",
+                    aspect_ratio="16:9",
+                    person_generation="ALLOW_ADULT"
+                )
+            )
+        if resp.generated_images:
+            thumb_dir = os.path.join(REVIEW_DIR, "cover_16_9")
+            os.makedirs(thumb_dir, exist_ok=True)
+            out_path = os.path.join(thumb_dir, "aadhya_master_ai_thumb.jpg")
+            with open(out_path, "wb") as f:
+                f.write(resp.generated_images[0].image.image_bytes)
+            print(f"  -> ✅ [SUCCESS] Generated Bespoke AI 16:9 Thumbnail via Gemini Imagen 3 Fast ({img_model})!", flush=True)
+            return out_path
+    except Exception as e:
+        print(f"  -> [Notice] Live AI thumbnail generation fallback: {e}", flush=True)
+    return None
+
 def upload_short_to_youtube(topic, short_path, thumb_path):
     return upload_dual_native_3d(topic, short_path, short_path, thumb_path, thumb_path)
 
@@ -439,9 +486,13 @@ async def main():
     thumb_16_9 = extract_native_thumbnail(aspect="16:9")
     verify_visual_integrity(video_16_9, aspect="16:9")
     
-    # STRICT ZERO-HTML DRAWBOX RULE: Never overlay cheap FFmpeg textboxes or HTML boxes.
-    # We use either the clean native 3D cover or a verified Master AI Art thumbnail.
-    print(f"  --> Using Clean Native 3D Cinematic Cover: {thumb_16_9}", flush=True)
+    # Live Bespoke AI Thumbnail via Imagen 3 Fast
+    ai_thumb = generate_aadhya_ai_thumbnail(topic)
+    if ai_thumb and os.path.exists(ai_thumb):
+        thumb_16_9 = ai_thumb
+        print(f"  --> Attached Master AI Thumbnail (Imagen 3 Fast): {thumb_16_9}", flush=True)
+    else:
+        print(f"  --> Using Clean Native 3D Cinematic Cover: {thumb_16_9}", flush=True)
     
     # 3. Upload both to YouTube
     upload_dual_native_3d(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
