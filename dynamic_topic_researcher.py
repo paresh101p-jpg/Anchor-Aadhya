@@ -300,6 +300,8 @@ OUTPUT STRICT VALID JSON ONLY (NO MARKDOWN FENCES, NO PROSE):
 
                 # 3. Inject YouTube safe educational shield metadata
                 topic = inject_monetization_shield_metadata(topic)
+                topic["category"] = target_cat["category"]
+                topic["skill"] = target_cat["skill"]
 
                 print(f"  🎉 SUCCESS! Approved Brand New Viral Topic: [{slug}] {title}", flush=True)
                 print(f"  -> Hook Engine: {hook_pick['name']} | Lines: {len(lines)} | Monetization: 🟢 100% Green Dollar Safe", flush=True)
