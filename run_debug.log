@@ -1,129 +1,67 @@
-
-[AI Researcher] Initiating Real-Time Deep Web Curiosity Research...
-  -> Tracker Audit: 5 previously used topics will be strictly excluded.
-  -> Querying Gemini 3.8 Flash for fresh breakthrough curiosity...
-  🎉 SUCCESS! Discovered Brand New Rare Topic: [eye_immune_secret] आपकी Immune System को आपकी आँखों का पता नहीं! 👁️❌ #Shorts
-  -> Best Skill Assigned: faceless-shorts/deep-dive
 ==============================================================
-  ANCHOR AADHYA DUAL NATIVE 3D ENGINE: आपकी Immune System को आपकी आँखों का पता नहीं! 👁️❌ #Shorts
-  Topic ID: eye_immune_secret
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: कान में कीड़ा घुसने पर तीली डालने की गलती कभी मत करना! 😱 #Shorts
+  Topic ID: bug_in_ear
 ==============================================================
+  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine (engine)
 
-[1/5] Synthesizing Voice (Cartesia-Aadhya (Sonic)) for: आपकी Immune System को आपकी आँखों का पता नहीं! 👁️❌ #Shorts
-  -> Line 1/8: 'क्या आपको पता है कि आपकी immun...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'क्या आपको पता है कि आपकी immun...'
-  -> Line 2/8: 'जी हाँ, हमारी आँखों में एक sup...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'जी हाँ, हमारी आँखों में एक sup...'
-  -> Line 3/8: 'जब आप माँ के पेट में बन रहे थे...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'जब आप माँ के पेट में बन रहे थे...'
-  -> Line 4/8: 'ताकि नॉर्मल सूजन या white bloo...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'ताकि नॉर्मल सूजन या white bloo...'
-  -> Line 5/8: 'लेकिन असली ख़तरा तब शुरू होता ...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन असली ख़तरा तब शुरू होता ...'
-  -> Line 6/8: 'अगर आँख का fluid लीक हुआ, तो i...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'अगर आँख का fluid लीक हुआ, तो i...'
-  -> Line 7/8: 'और उन्हें लगता है कि यह कोई जा...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और उन्हें लगता है कि यह कोई जा...'
-  -> Line 8/8: 'इसे Sympathetic Ophthalmia कहत...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इसे Sympathetic Ophthalmia कहत...'
-  -> Assembling master narration.wav (53.49s)...
-  --> Voice & Timing Complete: 53.49s across 8 cuts.
+🎬 >>> STAGE 1: Rendering Full 16:9 Long-Form Master Video <<<
+
+[Voice Synthesis - Full Video (16:9)] (Cartesia-Aadhya (Sonic)) for: कान में कीड़ा घुसने पर तीली डालने की गलती कभी मत करना! 😱 #Shorts
+  -> Line 1/9: 'अगर रात को कान में अचानक कीड़ा...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'अगर रात को कान में अचानक कीड़ा...'
+  -> Line 2/9: 'तीली डालते ही घबराकर कीड़ा आपक...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तीली डालते ही घबराकर कीड़ा आपक...'
+  -> Line 3/9: 'और कान का पर्दा डैमेज होकर आप ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और कान का पर्दा डैमेज होकर आप ...'
+  -> Line 4/9: 'पर क्या कीड़ा सच में दिमाग तक ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'पर क्या कीड़ा सच में दिमाग तक ...'
+  -> Line 5/9: 'कान का पर्दा एक मजबूत अभेद्य द...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'कान का पर्दा एक मजबूत अभेद्य द...'
+  -> Line 6/9: 'तो फिर कीड़े को बाहर कैसे निका...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तो फिर कीड़े को बाहर कैसे निका...'
+  -> Line 7/9: 'डॉक्टरों के मुताबिक, कान में त...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'डॉक्टरों के मुताबिक, कान में त...'
+  -> Line 8/9: 'ऑयल से कीड़े का दम घुट जाएगा औ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'ऑयल से कीड़े का दम घुट जाएगा औ...'
+  -> Line 9/9: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
+  -> Assembling master narration.wav (47.75s)...
+  --> Voice & Timing Complete (Full Video (16:9)): 47.75s across 9 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 8 cues, 53.49 s
+data/cues.json: 40 cues, 47.75 s
   -> Running python tools/mix.py...
-data/mix.wav: 53.49 s · voice: yes · music: bed · 8 cues
+data/mix.wav: 47.75 s · voice: yes · music: tension · 40 cues
   --> mix.wav ready!
 
-[Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/1337 frames150/1337 frames300/1337 frames450/1337 frames600/1337 frames750/1337 frames900/1337 frames1050/1337 frames1200/1337 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (1337 frames, with data/mix.wav, 1212 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (37.78 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
-  --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
-
-[QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
-  ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 53.48s (Audio-Visual Synced)
-  ✅ Zero Fake Blur & Zero Black Padding Verified!
-
 [Rendering Native 3D 16:9 MP4: aadhya_video_16_9.mp4] via Headless Chromium Three.js...
-0/1337 frames150/1337 frames300/1337 frames450/1337 frames600/1337 frames750/1337 frames900/1337 frames1050/1337 frames1200/1337 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (1337 frames, with data/mix.wav, 1134 s)
-  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (32.82 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9
-  --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/t6.50.jpg
+0/1194 frames150/1194 frames300/1194 frames450/1194 frames600/1194 frames750/1194 frames900/1194 frames1050/1194 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (1194 frames, with data/mix.wav, 46 s)
+  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (8.98 MB)
+/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9
+  --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 16:9 video: aadhya_video_16_9.mp4...
-  ✅ Resolution: 1920x1080 (100% Native 16:9)
-  ✅ Duration: 53.48s (Audio-Visual Synced)
-  ✅ Zero Fake Blur & Zero Black Padding Verified!
-Generating Viral High-CTR Curiosity Thumbnail for: आपकी Immune System को आपकी आँखों का पता ...
-ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
-  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
-  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
-  libavutil      60.  8.100 / 60.  8.100
-  libavcodec     62. 11.100 / 62. 11.100
-  libavformat    62.  3.100 / 62.  3.100
-  libavdevice    62.  1.100 / 62.  1.100
-  libavfilter    11.  4.100 / 11.  4.100
-  libswscale      9.  1.100 /  9.  1.100
-  libswresample   6.  1.100 /  6.  1.100
-Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 45999 kb/s
-  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1920x1080 [SAR 1:1 DAR 16:9], 25 fps, 25 tbr, 25 tbn
-Stream mapping:
-  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
-Press [q] to stop, [?] for help
-[swscaler @ 0x7ba530052000] deprecated pixel format used, make sure you did set range correctly
-Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg':
-  Metadata:
-    encoder         : Lavf62.3.100
-  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 1:1 DAR 16:9], q=2-31, 200 kb/s, 25 fps, 25 tbn
-    Metadata:
-      encoder         : Lavc62.11.100 mjpeg
-    Side data:
-      ICC Profile
-      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x60cac77d9000] video:180KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.975x elapsed=0:00:00.04    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg (180.0 KB)
-  --> Attached High-CTR Viral Curiosity Thumbnail: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_16_9/high_ctr_hook_thumb.jpg
 
-[5/5 - A] Uploading Native 16:9 Landscape Video: Why Your Immune System Doesn't Know Your Eyes Exist | Sympathetic Ophthalmia Explained
-  --> Title: Why Your Immune System Doesn't Know Your Eyes Exist | Sympathetic Ophthalmia Explained
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_video_16_9.mp4 (32.82 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 12%
-  --> Upload Progress: 24%
-  --> Upload Progress: 36%
-  --> Upload Progress: 48%
-  --> Upload Progress: 60%
-  --> Upload Progress: 73%
-  --> Upload Progress: 85%
-  --> Upload Progress: 97%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: pCjvvnUdhZg
-  --> Live URL: https://www.youtube.com/watch?v=pCjvvnUdhZg
-  --> [SUCCESS] Custom Thumbnail Attached!
-  --> 16:9 Full Widescreen Video Uploaded Successfully!
+!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 636, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 523, in main
+    verify_visual_integrity(video_16_9, aspect="16:9")
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 305, in verify_visual_integrity
+    raise ValueError(f"QA Failed: Resolution mismatch! Expected {expected_w}x{expected_h}, got {w}x{h}")
+ValueError: QA Failed: Resolution mismatch! Expected 1920x1080, got 1080x1920
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-[5/5 - B] Uploading Native 9:16 3D Short: आपकी Immune System को आपकी आँखों का पता नहीं! 👁️❌ #Shorts
-  --> Title: आपकी Immune System को आपकी आँखों का पता नहीं! 👁️❌ #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (37.78 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 10%
-  --> Upload Progress: 21%
-  --> Upload Progress: 31%
-  --> Upload Progress: 42%
-  --> Upload Progress: 52%
-  --> Upload Progress: 63%
-  --> Upload Progress: 74%
-  --> Upload Progress: 84%
-  --> Upload Progress: 95%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: c7jV84uS3dQ
-  --> Live URL: https://www.youtube.com/watch?v=c7jV84uS3dQ
-  --> [SUCCESS] Custom Thumbnail Attached!
-  --> 9:16 3D Short Uploaded Successfully!
-
-🎉 ALL STEPS COMPLETED! Topic 'eye_immune_secret' marked as posted.
