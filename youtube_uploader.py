@@ -295,14 +295,18 @@ def upload_daily_bulletin(slot=None, force=False):
                 pass
     return True
 
-def post_interactive_comment(youtube, video_id, question):
+def post_interactive_comment(youtube, video_id, question_or_comment, is_custom=False):
     """
     Posts an interactive author comment under the video to kickstart viewer engagement.
+    Supports either an engagement question or a bespoke pinned full-video CTA.
     """
-    if not question:
-        question = "क्या आपके साथ या परिवार में कभी ऐसा हुआ है? मुझे कमेंट्स में ज़रूर बताओ! 👇"
-        
-    full_comment = f"✨ आध्या का सवाल:\n{question}\n\nरोज़ाना ऐसे ही हैरान कर देने वाले वैज्ञानिक रहस्यों के लिए चैनल को सब्सक्राइब ज़रूर करें! 🔔"
+    if is_custom:
+        full_comment = question_or_comment
+    else:
+        if not question_or_comment:
+            question_or_comment = "क्या आपके साथ या परिवार में कभी ऐसा हुआ है? मुझे कमेंट्स में ज़रूर बताओ! 👇"
+        full_comment = f"✨ आध्या का सवाल:\n{question_or_comment}\n\nरोज़ाना ऐसे ही हैरान कर देने वाले वैज्ञानिक रहस्यों के लिए चैनल को सब्सक्राइब ज़रूर करें! 🔔"
+
     try:
         body = {
             "snippet": {
@@ -325,10 +329,10 @@ def post_interactive_comment(youtube, video_id, question):
 def upload_direct_video(video_path, meta_path, thumb_path=None):
     if not os.path.exists(video_path):
         print(f"[ERROR] Video file not found: {video_path}")
-        return False
+        return False, None, None
     if not os.path.exists(meta_path):
         print(f"[ERROR] Metadata file not found: {meta_path}")
-        return False
+        return False, None, None
 
     with open(meta_path, "r", encoding="utf-8") as f:
         meta = json.load(f)
@@ -336,7 +340,7 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
     youtube = get_authenticated_service()
     if not youtube:
         print("[CRITICAL] YouTube authentication failed! Check GitHub Secrets.", flush=True)
-        return False
+        return False, None, None
 
     body = {
         "snippet": {
@@ -388,13 +392,16 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
         except Exception as e:
             print(f"  [WARNING] Thumbnail upload failed: {e}")
 
-    # Post Interactive Author Engagement Comment
+    # Post Interactive Author Engagement Comment or Custom Pinned Comment
+    custom_comment = meta.get("custom_comment")
     eg_q = meta.get("engagement_question")
-    if eg_q:
+    if custom_comment:
+        post_interactive_comment(youtube, video_id, custom_comment, is_custom=True)
+    elif eg_q:
         post_interactive_comment(youtube, video_id, eg_q)
 
     mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
-    return True
+    return True, video_id, video_url
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -406,7 +413,8 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.video and args.meta:
-        ok = upload_direct_video(args.video, args.meta, thumb_path=args.thumb)
+        res = upload_direct_video(args.video, args.meta, thumb_path=args.thumb)
+        ok = res[0] if isinstance(res, tuple) else res
     else:
         ok = upload_daily_bulletin(args.slot, force=args.force)
 

@@ -112,11 +112,18 @@ async def generate_line_audio(text, outfile):
         await comm.save(outfile)
         print(f"    [Edge-TTS Swara Backup]: '{text[:30]}...'")
 
-async def build_voice_and_timing(topic):
+async def build_voice_and_timing(topic, is_short=False):
     import numpy as np
     from scipy.io import wavfile
+    import glob
     
-    print(f"\n[1/5] Synthesizing Voice ({VOICE_NAME}) for: {topic['title']}", flush=True)
+    # Clean previous temp audio files to prevent cross-line bleed
+    for old_f in glob.glob(os.path.join(TEMP_DIR, "*.*")):
+        try: os.remove(old_f)
+        except Exception: pass
+
+    stage_tag = "Short Reel (9:16)" if is_short else "Full Video (16:9)"
+    print(f"\n[Voice Synthesis - {stage_tag}] ({VOICE_NAME}) for: {topic['title']}", flush=True)
     lead = 0.45
     outro = 0.90
     lines_meta = []
@@ -184,6 +191,7 @@ async def build_voice_and_timing(topic):
         "lead": lead,
         "outro": outro,
         "music": topic.get("music", "bed"),
+        "is_short": is_short,
         "lines": topic["lines"]
     }
     with open(os.path.join(ENGINE_DIR, "script.json"), "w", encoding="utf-8") as f:
@@ -195,7 +203,7 @@ async def build_voice_and_timing(topic):
     with open(os.path.join(DATA_DIR, "words.json"), "w", encoding="utf-8") as f:
         json.dump(all_words, f, ensure_ascii=False, indent=2)
         
-    print(f"  --> Voice & Timing Complete: {total_dur:.2f}s across {len(lines_meta)} cuts.", flush=True)
+    print(f"  --> Voice & Timing Complete ({stage_tag}): {total_dur:.2f}s across {len(lines_meta)} cuts.", flush=True)
     return total_dur
 
 def build_audio_mix():
@@ -243,7 +251,8 @@ def extract_native_thumbnail(aspect="9:16"):
 def verify_visual_integrity(video_path, aspect="9:16"):
     """Automated Pre-Flight Visual Inspector: Ensures 0% black bars, 100% correct aspect ratio, and valid stream."""
     print(f"\n[QA Pre-Flight Inspector] Auditing {aspect} video: {os.path.basename(video_path)}...", flush=True)
-    if not os.path.exists(video_path) or os.path.getsize(video_path) < 2 * 1024 * 1024:
+    min_size = 1 * 1024 * 1024 if aspect == "9:16" else 2 * 1024 * 1024
+    if not os.path.exists(video_path) or os.path.getsize(video_path) < min_size:
         raise ValueError(f"QA Failed: Video file missing or too small ({os.path.basename(video_path)})")
         
     cmd = [
@@ -262,7 +271,8 @@ def verify_visual_integrity(video_path, aspect="9:16"):
     if (w, h) != (expected_w, expected_h):
         raise ValueError(f"QA Failed: Resolution mismatch! Expected {expected_w}x{expected_h}, got {w}x{h}")
         
-    if dur < 15.0:
+    min_dur = 15.0 if aspect == "9:16" else 45.0
+    if dur < min_dur:
         raise ValueError(f"QA Failed: Video duration too short ({dur:.2f}s)")
         
     print(f"  ✅ Resolution: {w}x{h} (100% Native {aspect})")
@@ -351,55 +361,50 @@ This video is created strictly for educational, informative, and curiosity purpo
 {hashtags}"""
     return desc.strip()
 
-def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb_16_9):
-    from youtube_uploader import upload_direct_video
-    tracker = load_tracker()
+def create_short_topic_from_full(full_topic):
+    """
+    Creates a high-retention 30-40s Short / Reel from the full curiosity topic:
+    - Slices the first 4-5 lines of the mystery/hook (approx 20-25 seconds).
+    - Appends a high-stakes psychological cliffhanger CTA line (~7-8 seconds) directing viewers to the full video link!
+    """
+    short_topic = dict(full_topic)
+    short_topic["is_short"] = True
     
-    # 1. Upload 16:9 Full Widescreen Video (Main Video)
-    title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
-    print(f"\n[5/5 - A] Uploading Native 16:9 Landscape Video: {title_16_9}", flush=True)
-    meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
-    meta_16_9 = {
-        "title": title_16_9,
-        "description": build_rich_description(topic, is_short=False),
-        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"]),
-        "engagement_question": topic.get("engagement_question")
+    full_lines = full_topic.get("lines", [])
+    # Slice first 5 lines (Hook + Setup + Core Mystery)
+    selected_lines = full_lines[:5] if len(full_lines) >= 5 else full_lines
+    
+    # High-converting Cliffhanger Call-To-Action voice line spoken by Aadhya
+    cta_line = {
+        "text": "लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हिला कर रख देगा! पूरा सच और गहरी वजह जानने के लिए नीचे डिस्क्रिप्शन और पहले कमेंट वाले लिंक पर अभी क्लिक करें!",
+        "caps": "असली *वैज्ञानिक* सच | नीचे लिंक पर *क्लिक* करें"
     }
-    with open(meta_path_16_9, "w", encoding="utf-8") as f:
-        json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
-        
-    ok_16_9 = upload_direct_video(video_16_9_path, meta_path_16_9, thumb_path=thumb_16_9)
-    if ok_16_9:
-        print("  --> 16:9 Full Widescreen Video Uploaded Successfully!", flush=True)
-    else:
-        print("  --> [Notice] 16:9 Video upload deferred or failed.", flush=True)
-        
-    # 2. Upload 9:16 Vertical Short (Shorts Feed)
-    print(f"\n[5/5 - B] Uploading Native 9:16 3D Short: {topic['title']}", flush=True)
-    meta_path_short = os.path.join(BASE_DIR, "metadata_short.json")
-    meta_short = {
-        "title": topic["title"],
-        "description": build_rich_description(topic, is_short=True),
-        "tags": topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"]),
-        "engagement_question": topic.get("engagement_question")
-    }
-    with open(meta_path_short, "w", encoding="utf-8") as f:
-        json.dump(meta_short, f, ensure_ascii=False, indent=2)
-        
-    ok_short = upload_direct_video(short_path, meta_path_short, thumb_path=thumb_short)
-    if ok_short:
-        print("  --> 9:16 3D Short Uploaded Successfully!", flush=True)
-        if topic["id"] not in tracker:
-            tracker.append(topic["id"])
-            save_tracker(tracker)
-        try:
-            from dynamic_topic_researcher import save_to_used_tracker
-            save_to_used_tracker(topic["id"], topic.get("title"), topic.get("description"))
-        except Exception:
-            pass
-        print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
-        return True
-    return False
+    short_lines = list(selected_lines) + [cta_line]
+    short_topic["lines"] = short_lines
+    return short_topic
+
+def build_short_description_with_full_link(topic, full_video_url):
+    """
+    Builds clean, high-conversion YouTube Shorts description with direct clickable link to the Full Video.
+    """
+    title_clean = topic.get("title", "").split("#")[0].strip()
+    raw_tags = topic.get("tags", ["AnchorAadhya", "Curiosity", "Facts", "Shorts"])
+    hashtags = " ".join(f"#{t.replace(' ', '')}" for t in raw_tags[:5])
+    
+    desc = f"""{title_clean}
+
+🔴 पूरा वीडियो और गहरा रहस्य यहाँ देखें (Watch Full Video):
+👉 {full_video_url}
+
+{topic.get('description', '').strip()}
+
+⚠️ Educational & Advisory Disclaimer:
+This video is created strictly for educational, informative, and curiosity purposes based on verified scientific and historical research. It does not substitute professional medical, legal, or emergency advice.
+
+🔔 Subscribe to Anchor Aadhya for daily mind-blowing curiosities, real-life mysteries, and fascinating science!
+
+{hashtags}"""
+    return desc.strip()
 
 def render_video_mp4():
     return render_native_3d_video(aspect="9:16")
@@ -454,12 +459,6 @@ def generate_aadhya_ai_thumbnail(topic):
         print(f"  -> [Notice] Live AI thumbnail generation fallback: {e}", flush=True)
     return None
 
-def upload_short_to_youtube(topic, short_path, thumb_path):
-    return upload_dual_native_3d(topic, short_path, short_path, thumb_path, thumb_path)
-
-def upload_to_youtube(topic, video_path, thumb_path):
-    return upload_dual_native_3d(topic, video_path, video_path, thumb_path, thumb_path)
-
 async def main():
     try:
         from dynamic_topic_researcher import research_fresh_rare_topic, save_to_used_tracker
@@ -469,33 +468,109 @@ async def main():
         topic = select_next_topic()
 
     print("==============================================================", flush=True)
-    print(f"  ANCHOR AADHYA DUAL NATIVE 3D ENGINE: {topic['title']}", flush=True)
+    print(f"  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: {topic['title']}", flush=True)
     print(f"  Topic ID: {topic['id']}", flush=True)
     print("==============================================================", flush=True)
-    
-    dur = await build_voice_and_timing(topic)
+
+    from youtube_uploader import upload_direct_video
+
+    # ==============================================================
+    # STAGE 1: Full Long-Form Video (16:9 Widescreen, 2+ Mins)
+    # ==============================================================
+    print("\n🎬 >>> STAGE 1: Rendering Full 16:9 Long-Form Master Video <<<", flush=True)
+    dur_16_9 = await build_voice_and_timing(topic, is_short=False)
     build_audio_mix()
-    
-    # 1. Render Native 9:16 Short (1080x1920)
-    short_mp4 = render_native_3d_video(aspect="9:16")
-    thumb_9_16 = extract_native_thumbnail(aspect="9:16")
-    verify_visual_integrity(short_mp4, aspect="9:16")
-    
-    # 2. Render Native 16:9 Landscape Video (1920x1080)
+
     video_16_9 = render_native_3d_video(aspect="16:9")
     thumb_16_9 = extract_native_thumbnail(aspect="16:9")
     verify_visual_integrity(video_16_9, aspect="16:9")
-    
-    # Live Bespoke AI Thumbnail via Imagen 3 Fast
+
+    # Live Bespoke AI Thumbnail via Imagen 3 Fast ($0.02)
     ai_thumb = generate_aadhya_ai_thumbnail(topic)
     if ai_thumb and os.path.exists(ai_thumb):
         thumb_16_9 = ai_thumb
         print(f"  --> Attached Master AI Thumbnail (Imagen 3 Fast): {thumb_16_9}", flush=True)
     else:
-        print(f"  --> Using Clean Native 3D Cinematic Cover: {thumb_16_9}", flush=True)
-    
-    # 3. Upload both to YouTube
-    upload_dual_native_3d(topic, short_mp4, video_16_9, thumb_9_16, thumb_16_9)
+        print(f"  --> Using Clean Native 3D Cover: {thumb_16_9}", flush=True)
+
+    # Upload Full 16:9 Video to YouTube First
+    title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
+    print(f"\n[Stage 1 Upload] Uploading Native 16:9 Full Video: {title_16_9}", flush=True)
+    meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
+    meta_16_9 = {
+        "title": title_16_9,
+        "description": build_rich_description(topic, is_short=False),
+        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"]),
+        "engagement_question": topic.get("engagement_question")
+    }
+    with open(meta_path_16_9, "w", encoding="utf-8") as f:
+        json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
+
+    upload_res = upload_direct_video(video_16_9, meta_path_16_9, thumb_path=thumb_16_9)
+    full_video_id = None
+    full_video_url = None
+    if isinstance(upload_res, tuple):
+        ok_16_9, full_video_id, full_video_url = upload_res
+    else:
+        ok_16_9 = upload_res
+
+    if ok_16_9 and full_video_url:
+        print(f"\n  --> ✅ [STAGE 1 SUCCESS] Full 16:9 Video LIVE: {full_video_url}", flush=True)
+    else:
+        print("\n  --> [Notice] 16:9 Video upload deferred or failed, falling back to channel URL.", flush=True)
+        full_video_url = "https://www.youtube.com/@AnchorAadhya"
+
+    # ==============================================================
+    # STAGE 2: 30-40s Punchy Viral Reel / Short (9:16 Vertical)
+    # ==============================================================
+    print("\n📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<", flush=True)
+    short_topic = create_short_topic_from_full(topic)
+
+    dur_short = await build_voice_and_timing(short_topic, is_short=True)
+    build_audio_mix()
+
+    short_mp4 = render_native_3d_video(aspect="9:16")
+    thumb_9_16 = extract_native_thumbnail(aspect="9:16")
+    verify_visual_integrity(short_mp4, aspect="9:16")
+
+    # Injects Full Video URL into Short Description & Author Pinned Comment
+    short_desc = build_short_description_with_full_link(short_topic, full_video_url)
+    short_comment = (
+        f"👇 पूरा वीडियो और गहरा रहस्य देखने के लिए यहाँ क्लिक करें:\n"
+        f"👉 {full_video_url}\n\n"
+        f"✨ {short_topic.get('engagement_question', 'क्या आपको यह वैज्ञानिक सच पता था? मुझे कमेंट्स में बताओ! 👇')}"
+    )
+
+    print(f"\n[Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...", flush=True)
+    meta_path_short = os.path.join(BASE_DIR, "metadata_short.json")
+    meta_short = {
+        "title": short_topic["title"],
+        "description": short_desc,
+        "tags": short_topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"]),
+        "custom_comment": short_comment
+    }
+    with open(meta_path_short, "w", encoding="utf-8") as f:
+        json.dump(meta_short, f, ensure_ascii=False, indent=2)
+
+    upload_short_res = upload_direct_video(short_mp4, meta_path_short, thumb_path=thumb_9_16)
+    short_video_url = upload_short_res[2] if isinstance(upload_short_res, tuple) and upload_short_res[2] else "Uploaded"
+
+    # Mark topic in persistent trackers
+    tracker = load_tracker()
+    if topic["id"] not in tracker:
+        tracker.append(topic["id"])
+        save_tracker(tracker)
+    try:
+        from dynamic_topic_researcher import save_to_used_tracker
+        save_to_used_tracker(topic["id"], topic.get("title"), topic.get("description"))
+    except Exception:
+        pass
+
+    print("\n==============================================================", flush=True)
+    print("  🎉 2-STAGE FUNNEL FULLY COMPLETED!", flush=True)
+    print(f"  1. Full 16:9 Video: {full_video_url}", flush=True)
+    print(f"  2. Viral 30-40s Short: {short_video_url}", flush=True)
+    print("==============================================================", flush=True)
 
 if __name__ == "__main__":
     try:

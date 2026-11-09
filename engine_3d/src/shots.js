@@ -174,6 +174,13 @@ export function buildShots(E, script = {}) {
           const sc = Math.min(1, lt * 4);
           pill('⚠️ CRITICAL REALITY', W / 2, 220, sc, '#FF3B3B', 'rgba(30,10,10,0.92)', 50);
         }
+
+        // ── SHORT CLIFFHANGER CALLOUT: Direct viewer to description/comment link ──
+        if (script.is_short && i === totalLines - 1) {
+          const sc = Math.min(1, lt * 3);
+          const flash = Math.sin(lt * 8) > 0;
+          pill(flash ? '🔴 FULL VIDEO LINK BELOW 👇' : '👉 WATCH FULL VIDEO (Link Below) 👇', W / 2, 360, sc, '#FFD43B', 'rgba(20,10,15,0.92)', 52);
+        }
       }
     });
 
