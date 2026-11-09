@@ -23,7 +23,7 @@ if sys.platform == "win32":
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 ENGINE_DIR_3D = os.path.join(BASE_DIR, "engine_3d")
 ENGINE_DIR_2D = os.path.join(BASE_DIR, "engine")
-ENGINE_DIR = ENGINE_DIR_3D
+ENGINE_DIR = ENGINE_DIR_2D
 DATA_DIR = os.path.join(ENGINE_DIR, "data")
 TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
 RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
@@ -32,21 +32,21 @@ REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
 def configure_engine_for_topic(topic=None):
     """
     Dynamically routes the topic to the best visual engine:
-    - 2D Graphic / Inside-Out Engine for machines, mechanisms, and survival schematics
-    - 3D Deep Dive Engine for human anatomy, surgical procedures, and immersive space/lab environments
+    - 2D Graphic / Inside-Out Engine (Default, fast, 100% code-based, zero cost, topic-accurate)
+    - 3D Deep Dive Engine (for complex 3D environments)
     """
     global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
-    chosen_engine = ENGINE_DIR_3D
+    chosen_engine = ENGINE_DIR_2D
     if topic:
         skill = str(topic.get("best_skill", "")).lower()
         cat = str(topic.get("category", "")).lower()
-        if "inside-out" in skill or "stick-story" in skill or "2d" in skill or "mechanical" in cat or "machine" in cat:
-            if os.path.exists(ENGINE_DIR_2D):
-                chosen_engine = ENGINE_DIR_2D
-                print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
+        if "3d" in skill or "deep-dive" in skill:
+            if os.path.exists(ENGINE_DIR_3D):
+                chosen_engine = ENGINE_DIR_3D
+                print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
 
-    if chosen_engine == ENGINE_DIR_3D:
-        print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
+    if chosen_engine == ENGINE_DIR_2D:
+        print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
 
     ENGINE_DIR = chosen_engine
     DATA_DIR = os.path.join(ENGINE_DIR, "data")
@@ -493,11 +493,12 @@ def generate_aadhya_ai_thumbnail(topic):
     return None
 
 async def main():
-    try:
-        from dynamic_topic_researcher import research_fresh_rare_topic, save_to_used_tracker
-        topic = research_fresh_rare_topic()
-    except Exception as re_err:
-        print(f"[Warning] Live researcher fallback note: {re_err}, using select_next_topic()", flush=True)
+    topic_id_arg = os.environ.get("TOPIC_ID") or (sys.argv[1] if len(sys.argv) > 1 else None)
+    if topic_id_arg:
+        topics = load_topics()
+        matched = [t for t in topics if t.get("id") == topic_id_arg]
+        topic = matched[0] if matched else select_next_topic()
+    else:
         topic = select_next_topic()
 
     print("==============================================================", flush=True)
@@ -521,13 +522,21 @@ async def main():
     thumb_16_9 = extract_native_thumbnail(aspect="16:9")
     verify_visual_integrity(video_16_9, aspect="16:9")
 
-    # Live Bespoke AI Thumbnail via Imagen 3 Fast ($0.02)
-    ai_thumb = generate_aadhya_ai_thumbnail(topic)
-    if ai_thumb and os.path.exists(ai_thumb):
-        thumb_16_9 = ai_thumb
-        print(f"  --> Attached Master AI Thumbnail (Imagen 3 Fast): {thumb_16_9}", flush=True)
-    else:
-        print(f"  --> Using Clean Native 3D Cover: {thumb_16_9}", flush=True)
+    # 100% Free ($0) Curiosity Hook Thumbnail via local FFmpeg + Noto Sans Devanagari Bold (Zero API / Zero Cost)
+    try:
+        from thumbnail_hook_generator import generate_curiosity_hook_thumbnail
+        hook_thumb_16_9 = generate_curiosity_hook_thumbnail(
+            thumb_16_9,
+            topic,
+            os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
+        )
+        if hook_thumb_16_9 and os.path.exists(hook_thumb_16_9):
+            thumb_16_9 = hook_thumb_16_9
+            print(f"  --> ✅ Attached Master High-CTR Curiosity Thumbnail ($0 Zero Cost): {thumb_16_9}", flush=True)
+        else:
+            print(f"  --> Using Clean Native Cover Frame: {thumb_16_9}", flush=True)
+    except Exception as te:
+        print(f"  --> [Notice] Local thumbnail hook note: {te}, using raw cover: {thumb_16_9}", flush=True)
 
     # Upload Full 16:9 Video to YouTube First
     title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
@@ -568,6 +577,20 @@ async def main():
     short_mp4 = render_native_3d_video(aspect="9:16")
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
     verify_visual_integrity(short_mp4, aspect="9:16")
+
+    # High-CTR Curiosity Hook for Short
+    try:
+        from thumbnail_hook_generator import generate_curiosity_hook_thumbnail
+        hook_thumb_short = generate_curiosity_hook_thumbnail(
+            thumb_9_16,
+            short_topic,
+            os.path.join(REVIEW_DIR, "cover_9_16", "high_ctr_short_thumb.jpg")
+        )
+        if hook_thumb_short and os.path.exists(hook_thumb_short):
+            thumb_9_16 = hook_thumb_short
+            print(f"  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): {thumb_9_16}", flush=True)
+    except Exception as ste:
+        print(f"  --> [Notice] Short thumbnail hook note: {ste}", flush=True)
 
     # Injects Full Video URL into Short Description & Author Pinned Comment
     short_desc = build_short_description_with_full_link(short_topic, full_video_url)

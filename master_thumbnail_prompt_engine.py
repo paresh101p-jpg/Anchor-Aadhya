@@ -24,39 +24,39 @@ import re
 SITUATION_PATTERNS = [
     {
         "keywords": ["सोते", "नींद", "sleep", "dream", "night", "रात", "बेड", "तकिया"],
-        "pose_desc": "She is elegantly reclining back on a soft luxury bed, head resting sideways on a plush midnight-blue velvet pillow in a deep dreamy sleep state, enchanting almond eyes softly closed with a blissful serene expression",
-        "outfit_desc": "a completely strapless, low-cut off-the-shoulder couture midnight-sapphire satin sleep bodice with an elongated deeply plunging sweetheart neckline cutting deep into cleavage, beautifully accentuating her tight, voluptuous bust curves and bare glowing shoulders",
+        "pose_desc": "She is elegantly reclining back on a luxury bed, head resting sideways on a plush midnight-blue velvet pillow in a deep dreamy sleep state, enchanting almond eyes softly closed with a blissful serene expression",
+        "outfit_desc": "a designer midnight-sapphire satin sleep bodice with an elegant off-the-shoulder neckline, graceful silhouette, and bare glowing shoulders",
         "env_desc": "a moody dark bedroom illuminated by soft celestial moonlight and glowing 3D dreamwaves"
     },
     {
-        "keywords": ["hospital", "आँख", "eye", "immune", "doctor", "बीमारी", "medical", "नस", "खून", "blood", "इलाज", "सर्जरी", "हड्डी", "दवा", "heart", "दिल"],
+        "keywords": ["hospital", "आँख", "eye", "immune", "doctor", "बीमारी", "medical", "नस", "खून", "blood", "इलाज", "सर्जरी", "हड्डी", "दवा", "heart", "दिल", "हाथ", "hand"],
         "pose_desc": "She is in a modern clinical medical laboratory, one manicured finger pointing in intense shock and disbelief toward the medical anomaly, wide hazel eyes filled with awe, lips parted in a dramatic gasp",
-        "outfit_desc": "a tailored designer white medical lab coat worn wide open over a deeply plunging low-cut crimson satin corset bodice cutting deep into cleavage, dramatically highlighting her large tight bust curves, bare décolletage, and signature butterfly tattoo",
+        "outfit_desc": "a tailored designer white medical lab coat worn stylishly open over a fitted crimson satin corset bodice with an elegant sweetheart neckline, highlighting her graceful silhouette and signature butterfly tattoo",
         "env_desc": "a sleek futuristic medical laboratory with glowing translucent 3D anatomical holograms and ambient volumetric rim lighting"
     },
     {
         "keywords": ["student", "school", "college", "पढ़ाई", "परीक्षा", "exam", "किताब", "book", "क्लास", "दिमाग", "memory", "याद"],
         "pose_desc": "She is seated at a modern study desk leaning forward with captivating curiosity, resting her chin delicately on her manicured hand with an intelligent, inquisitive smile and sharp focused eyes",
-        "outfit_desc": "a chic stylish fitted collegiate knit top with a deeply plunging low-cut wide neckline cutting deep into cleavage, accentuating her tight voluptuous bust curves and smooth glowing collarbones",
+        "outfit_desc": "a chic stylish fitted collegiate knit top with an elegant wide neckline, accentuating her graceful silhouette and smooth glowing collarbones",
         "env_desc": "a high-tech modern library archive with floating glowing 3D formula diagrams and warm ambient study lighting"
     },
     {
         "keywords": ["पानी", "water", "खाना", "food", "भूख", "drink", "चाय", "कॉफी", "digest", "पेट", "stomach", "जहर", "poison"],
         "pose_desc": "She is seated at an elegant dining setup, holding a clear laboratory beaker or glass with wide, intrigued eyes and a fascinated expression, explaining the hidden reaction",
-        "outfit_desc": "a low-cut emerald-green couture bodice with an elongated plunging sweetheart neckline cutting deep into cleavage, accentuating her prominently contoured tight bust curves and bare shoulders",
+        "outfit_desc": "an elegant emerald-green couture bodice with a graceful sweetheart neckline, accentuating her contoured silhouette and bare shoulders",
         "env_desc": "a sleek modern test kitchen with glowing 3D molecular nutrient breakdown holograms floating in the air"
     },
     {
         "keywords": ["current", "करंट", "shock", "escape", "कार", "डिक्की", "lock", "बंद", "खतरा", "danger", "आग", "fire", "sink"],
         "pose_desc": "She is captured in a high-tension emergency stance, bracing herself with wide shocked eyes, one hand reaching forward in urgent warning, her glossy lips parted in intense alarm",
-        "outfit_desc": "a form-fitting emergency tactical top with an ultra-deep plunging low-cut sweetheart neckline cutting deep into cleavage, accentuating her firm tight voluptuous bust shape and bare glowing collarbones",
+        "outfit_desc": "a form-fitting emergency tactical designer top with an elegant sweetheart neckline, accentuating her athletic silhouette and bare glowing collarbones",
         "env_desc": "a dramatic emergency scenario with flashing warning lights, glowing hazard particles, and high-tension cinematic rim lighting"
     }
 ]
 
 DEFAULT_SITUATION = {
     "pose_desc": "She is framed prominently on the right side in a tight macro bust-up portrait, looking forward with captivating curiosity and charm, head tilted with intriguing smile, wide almond eyes gazing directly at the viewer",
-    "outfit_desc": "a luxurious strapless couture corset bodice with an elongated, deeply plunging low-cut sweetheart neckline cutting deep into cleavage, accentuating her tight voluptuous bust curves and bare glowing shoulders",
+    "outfit_desc": "a luxurious strapless couture corset bodice with an elegant sweetheart neckline, accentuating her glamorous silhouette and bare glowing shoulders",
     "env_desc": "a cutting-edge 3D science studio with glowing holographic breakdowns and dramatic cinematic lighting"
 }
 
@@ -93,10 +93,10 @@ def build_aadhya_master_thumbnail_prompt(topic):
         f"with radiant glowing porcelain skin, large expressive warm almond eyes, dark plum lipstick, "
         f"a delicate traditional small red bindi on her forehead, and soft dark wavy curls framing her face. "
         f"MANDATORY INVARIANT CHEST TATTOO: The exact signature delicate black-ink line-art butterfly tattoo "
-        f"is permanently and clearly visible on the center of her upper chest/sternum, right above her cleavage in full sharp focus. "
-        f"Framed in an extreme macro close-up portrait strictly from the lower-to-mid bustline upwards to the top of her head (zero waist, zero navel in frame). "
-        f"VOLUPTUOUS BUST & DEEP NECKLINE: She wears {sit['outfit_desc']}, with the neckline plunging deep into her cleavage, "
-        f"maintaining a tight, firm, prominently contoured voluptuous bust shape, bare glowing shoulders and collarbones, "
+        f"is permanently and clearly visible on the center of her upper chest right above the neckline in full sharp focus. "
+        f"Framed in an extreme macro close-up portrait strictly from the upper torso upwards to the top of her head. "
+        f"ELEGANT ATTIRE: She wears {sit['outfit_desc']}, "
+        f"maintaining a tasteful, glamorous, high-retention silhouette, smooth glowing shoulders and collarbones, "
         f"100% compliant with YouTube Community Guidelines (tasteful, high-retention, strictly monetization-safe). "
         f"TOPIC-ADAPTIVE POSE: {sit['pose_desc']}. "
         f"ON THE OTHER SIDE OF THE SAME CONTINUOUS SCENE: A hyper-detailed, glowing translucent 3D holographic model "
