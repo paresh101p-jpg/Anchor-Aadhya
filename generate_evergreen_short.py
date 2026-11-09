@@ -335,7 +335,7 @@ def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb
             save_tracker(tracker)
         try:
             from dynamic_topic_researcher import save_to_used_tracker
-            save_to_used_tracker(topic["id"], topic.get("title"))
+            save_to_used_tracker(topic["id"], topic.get("title"), topic.get("description"))
         except Exception:
             pass
         print(f"\n🎉 ALL STEPS COMPLETED! Topic '{topic['id']}' marked as posted.", flush=True)
