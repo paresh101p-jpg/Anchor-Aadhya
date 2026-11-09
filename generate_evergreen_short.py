@@ -21,11 +21,44 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENGINE_DIR = os.path.join(BASE_DIR, "engine_3d")
+ENGINE_DIR_3D = os.path.join(BASE_DIR, "engine_3d")
+ENGINE_DIR_2D = os.path.join(BASE_DIR, "engine")
+ENGINE_DIR = ENGINE_DIR_3D
 DATA_DIR = os.path.join(ENGINE_DIR, "data")
 TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
 RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
 REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
+
+def configure_engine_for_topic(topic=None):
+    """
+    Dynamically routes the topic to the best visual engine:
+    - 2D Graphic / Inside-Out Engine for machines, mechanisms, and survival schematics
+    - 3D Deep Dive Engine for human anatomy, surgical procedures, and immersive space/lab environments
+    """
+    global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
+    chosen_engine = ENGINE_DIR_3D
+    if topic:
+        skill = str(topic.get("best_skill", "")).lower()
+        cat = str(topic.get("category", "")).lower()
+        if "inside-out" in skill or "stick-story" in skill or "2d" in skill or "mechanical" in cat or "machine" in cat:
+            if os.path.exists(ENGINE_DIR_2D):
+                chosen_engine = ENGINE_DIR_2D
+                print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
+
+    if chosen_engine == ENGINE_DIR_3D:
+        print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
+
+    ENGINE_DIR = chosen_engine
+    DATA_DIR = os.path.join(ENGINE_DIR, "data")
+    TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
+    RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
+    REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
+
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    os.makedirs(RENDERS_DIR, exist_ok=True)
+    os.makedirs(REVIEW_DIR, exist_ok=True)
+    return ENGINE_DIR
 
 TOPICS_FILE = os.path.join(BASE_DIR, "curiosity_topics.json")
 TRACKER_FILE = os.path.join(BASE_DIR, "used_topics_tracker.json")
@@ -471,6 +504,9 @@ async def main():
     print(f"  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: {topic['title']}", flush=True)
     print(f"  Topic ID: {topic['id']}", flush=True)
     print("==============================================================", flush=True)
+
+    # Automatically route to best engine (2D Graphic / Inside-Out or 3D Deep Dive)
+    configure_engine_for_topic(topic)
 
     from youtube_uploader import upload_direct_video
 
