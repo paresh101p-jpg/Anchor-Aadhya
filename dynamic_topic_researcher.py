@@ -266,7 +266,8 @@ OUTPUT STRICT VALID JSON ONLY (NO MARKDOWN FENCES, NO PROSE):
     {{"text": "Hindi line 2", "caps": "HINDI *CAPS | CHUNK 2"}}
   ],
   "tags": ["Tag1", "Tag2", "Anchor Aadhya", "Curiosity Facts Hindi", "3D Animation"],
-  "description": "Rich 2-3 paragraph YouTube description in Hindi explaining the verified facts."
+  "description": "Rich 2-3 paragraph YouTube description in Hindi explaining the verified facts.",
+  "engagement_question": "दर्शक को कमेंट करने के लिए प्रेरित करने वाला एक रोचक सवाल (उदा: क्या आपको ये पता था?)"
 }}"""
 
             for attempt in range(3):

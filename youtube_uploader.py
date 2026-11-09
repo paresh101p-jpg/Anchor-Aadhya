@@ -295,6 +295,33 @@ def upload_daily_bulletin(slot=None, force=False):
                 pass
     return True
 
+def post_interactive_comment(youtube, video_id, question):
+    """
+    Posts an interactive author comment under the video to kickstart viewer engagement.
+    """
+    if not question:
+        question = "क्या आपके साथ या परिवार में कभी ऐसा हुआ है? मुझे कमेंट्स में ज़रूर बताओ! 👇"
+        
+    full_comment = f"✨ आध्या का सवाल:\n{question}\n\nरोज़ाना ऐसे ही हैरान कर देने वाले वैज्ञानिक रहस्यों के लिए चैनल को सब्सक्राइब ज़रूर करें! 🔔"
+    try:
+        body = {
+            "snippet": {
+                "videoId": video_id,
+                "topLevelComment": {
+                    "snippet": {
+                        "textOriginal": full_comment
+                    }
+                }
+            }
+        }
+        res = youtube.commentThreads().insert(part="snippet", body=body).execute()
+        cid = res.get("id")
+        print(f"  --> [SUCCESS] Interactive Author Engagement Comment Live! ID: {cid}", flush=True)
+        return cid
+    except Exception as e:
+        print(f"  --> [Notice] Comment posting skipped or failed: {e}", flush=True)
+        return None
+
 def upload_direct_video(video_path, meta_path, thumb_path=None):
     if not os.path.exists(video_path):
         print(f"[ERROR] Video file not found: {video_path}")
@@ -360,6 +387,11 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
             print("  --> [SUCCESS] Custom Thumbnail Attached!")
         except Exception as e:
             print(f"  [WARNING] Thumbnail upload failed: {e}")
+
+    # Post Interactive Author Engagement Comment
+    eg_q = meta.get("engagement_question")
+    if eg_q:
+        post_interactive_comment(youtube, video_id, eg_q)
 
     mark_as_uploaded(os.path.basename(video_path), video_id, video_url)
     return True

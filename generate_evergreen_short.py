@@ -270,10 +270,61 @@ def verify_visual_integrity(video_path, aspect="9:16"):
     print(f"  ✅ Zero Fake Blur & Zero Black Padding Verified!")
     return True
 
+def generate_video_chapters(lines_meta=None):
+    """
+    Computes exact YouTube Key Moments / Chapters from lines_meta.
+    YouTube expects:
+    0:00 - First chapter
+    MM:SS - Second chapter
+    ...
+    """
+    if not lines_meta:
+        lines_json_path = os.path.join(DATA_DIR, "lines.json")
+        if os.path.exists(lines_json_path):
+            try:
+                with open(lines_json_path, "r", encoding="utf-8") as f:
+                    data = json.load(f)
+                    lines_meta = data.get("lines", [])
+            except Exception:
+                pass
+
+    if not lines_meta or len(lines_meta) < 15:
+        return ""
+    
+    def fmt_time(sec):
+        m = int(sec) // 60
+        s = int(sec) % 60
+        return f"{m}:{s:02d}"
+    
+    ch1_time = "0:00"
+    ch1_title = "रहस्य एवं मुख्य सवाल (The Mystery Hook)"
+    
+    idx2 = min(4, len(lines_meta) - 1)
+    ch2_time = fmt_time(lines_meta[idx2]["start"])
+    ch2_title = "आंतरिक प्रक्रिया एवं क्रियाविधि (The Mechanism)"
+    
+    idx3 = min(11, len(lines_meta) - 1)
+    ch3_time = fmt_time(lines_meta[idx3]["start"])
+    ch3_title = "वैज्ञानिक सच और विश्लेषण (The Science)"
+    
+    idx4 = min(18, len(lines_meta) - 1)
+    ch4_time = fmt_time(lines_meta[idx4]["start"])
+    ch4_title = "महत्वपूर्ण सीख एवं निष्कर्ष (The Takeaway)"
+    
+    chapters_text = (
+        "⏱️ मुख्य भाग एवं टाइमस्टैम्प्स (Key Moments):\n"
+        f"{ch1_time} - {ch1_title}\n"
+        f"{ch2_time} - {ch2_title}\n"
+        f"{ch3_time} - {ch3_title}\n"
+        f"{ch4_time} - {ch4_title}\n"
+    )
+    return chapters_text
+
 def build_rich_description(topic, is_short=True):
     """
     Builds a clean, genuine, and authentic YouTube Description with a professional Educational Disclaimer.
     STRICT ZERO-SPAM: No keyword stuffing or 'Searches Covered' blocks.
+    Injects automatic clickable Chapters / Key Moments for long-form 16:9 videos.
     """
     title_clean = topic.get("video_title", topic["title"].split("#")[0].strip())
     base_desc = topic.get("description", "").strip()
@@ -282,10 +333,16 @@ def build_rich_description(topic, is_short=True):
     raw_tags = topic.get("tags", ["AnchorAadhya", "Curiosity", "Facts", "Shorts"])
     hashtags = " ".join(f"#{t.replace(' ', '')}" for t in raw_tags[:4])
     
+    chapters_block = ""
+    if not is_short:
+        chapters_block = generate_video_chapters()
+        if chapters_block:
+            chapters_block = "\n" + chapters_block.strip() + "\n"
+
     desc = f"""{title_clean}
 
 {base_desc}
-
+{chapters_block}
 ⚠️ Educational & Advisory Disclaimer:
 This video is created strictly for educational, informative, and curiosity purposes based on verified scientific and historical research. It does not substitute professional medical, legal, or emergency advice.
 
@@ -305,7 +362,8 @@ def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb
     meta_16_9 = {
         "title": title_16_9,
         "description": build_rich_description(topic, is_short=False),
-        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"])
+        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"]),
+        "engagement_question": topic.get("engagement_question")
     }
     with open(meta_path_16_9, "w", encoding="utf-8") as f:
         json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
@@ -322,7 +380,8 @@ def upload_dual_native_3d(topic, short_path, video_16_9_path, thumb_short, thumb
     meta_short = {
         "title": topic["title"],
         "description": build_rich_description(topic, is_short=True),
-        "tags": topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"])
+        "tags": topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"]),
+        "engagement_question": topic.get("engagement_question")
     }
     with open(meta_path_short, "w", encoding="utf-8") as f:
         json.dump(meta_short, f, ensure_ascii=False, indent=2)
