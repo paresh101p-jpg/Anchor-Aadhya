@@ -25,19 +25,19 @@
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'ऑयल से कीड़े का दम घुट जाएगा औ...'
   -> Line 9/9: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
-  -> Assembling master narration.wav (46.34s)...
-  --> Voice & Timing Complete (Full Video (16:9)): 46.34s across 9 cuts.
+  -> Assembling master narration.wav (45.11s)...
+  --> Voice & Timing Complete (Full Video (16:9)): 45.11s across 9 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 39 cues, 46.34 s
+data/cues.json: 39 cues, 45.11 s
   -> Running python tools/mix.py...
-data/mix.wav: 46.34 s · voice: yes · music: tension · 39 cues
+data/mix.wav: 45.11 s · voice: yes · music: tension · 39 cues
   --> mix.wav ready!
 
 [Rendering Native 3D 16:9 MP4: aadhya_video_16_9.mp4] via Headless Chromium Three.js...
-0/1159 frames150/1159 frames300/1159 frames450/1159 frames600/1159 frames750/1159 frames900/1159 frames1050/1159 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (1159 frames, with data/mix.wav, 34 s)
-  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (8.84 MB)
+0/1128 frames150/1128 frames300/1128 frames450/1128 frames600/1128 frames750/1128 frames900/1128 frames1050/1128 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (1128 frames, with data/mix.wav, 45 s)
+  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (8.58 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9
   --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9/t6.50.jpg
 
