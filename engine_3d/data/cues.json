@@ -1,68 +1,89 @@
 {
- "duration": 37.017,
+ "duration": 46.005,
  "cues": [
   {
-   "t": 0.1,
+   "t": 0,
    "type": "whoosh"
   },
   {
-   "t": 0.3,
-   "type": "chime",
-   "gain": 0.6
-  },
-  {
-   "t": 5.659,
+   "t": 3.596,
    "type": "whoosh"
   },
   {
-   "t": 5.859,
-   "type": "spark",
-   "gain": 0.7
+   "t": 3.746,
+   "type": "zap",
+   "gain": 0.4
   },
   {
-   "t": 10.086,
+   "t": 7.292,
    "type": "whoosh"
   },
   {
-   "t": 10.286,
+   "t": 7.442,
    "type": "bubbles",
    "gain": 0.5
   },
   {
-   "t": 13.939,
+   "t": 10.91,
    "type": "whoosh"
   },
   {
-   "t": 14.239,
-   "type": "slide",
+   "t": 11.06,
+   "type": "sub_bass",
    "gain": 0.5
   },
   {
-   "t": 19.803,
+   "t": 15.808,
    "type": "whoosh"
   },
   {
-   "t": 20.003,
-   "type": "chime",
-   "gain": 0.7
+   "t": 15.958,
+   "type": "beep",
+   "gain": 0.3
   },
   {
-   "t": 25.745,
+   "t": 19.896,
    "type": "whoosh"
   },
   {
-   "t": 25.945,
-   "type": "pop",
+   "t": 25.185,
+   "type": "whoosh"
+  },
+  {
+   "t": 29.038,
+   "type": "whoosh"
+  },
+  {
+   "t": 29.188,
+   "type": "zap",
+   "gain": 0.4
+  },
+  {
+   "t": 32.656,
+   "type": "whoosh"
+  },
+  {
+   "t": 32.806,
+   "type": "bubbles",
    "gain": 0.5
   },
   {
-   "t": 30.251,
+   "t": 36.509,
    "type": "whoosh"
   },
   {
-   "t": 30.551,
-   "type": "chime",
-   "gain": 0.8
+   "t": 36.659,
+   "type": "sub_bass",
+   "gain": 0.5
+  },
+  {
+   "t": 40.127,
+   "type": "whoosh"
+  },
+  {
+   "t": 40.277,
+   "type": "beep",
+   "gain": 0.3
   }
  ]
 }
