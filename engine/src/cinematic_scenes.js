@@ -918,3 +918,348 @@ export function drawChernobylOutro(lt, d, t) {
   ctx.font = F(38, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
   ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
 }
+
+// ── D. BLACK HOLE SPAGHETTIFICATION SUITE (1080x1920 9:16) ─────────────────────────
+
+// ── D1. GARGANTUA ACCRETION DISK & CORE ─────────────────────────────────────────────
+export function drawBlackHoleGargantua(lt, d, t) {
+  ctx.fillStyle = '#020308'; ctx.fillRect(0, 0, W, H);
+
+  // Distant twinkling stars
+  ctx.fillStyle = '#FFFFFF';
+  for (let i = 0; i < 45; i++) {
+    const sx = (i * 137.5) % W;
+    const sy = 120 + ((i * 73.1) % 1000);
+    const alpha = 0.2 + 0.8 * Math.abs(Math.sin(t * 2 + i));
+    ctx.globalAlpha = alpha;
+    ctx.fillRect(sx, sy, 2 + (i % 3), 2 + (i % 3));
+  }
+  ctx.globalAlpha = 1.0;
+
+  hudHeader('GARGANTUA BLACK HOLE // GRAVITY WELL', 'ब्लैक होल में गिरे तो क्या होगा?', '#FFAA00');
+
+  ctx.save();
+  const cx = 540, cy = 660;
+
+  // Accretion disk glow behind event horizon
+  const diskGlow = ctx.createRadialGradient(cx, cy, 140, cx, cy, 420);
+  diskGlow.addColorStop(0, 'rgba(255, 170, 0, 0.9)');
+  diskGlow.addColorStop(0.35, 'rgba(255, 77, 0, 0.65)');
+  diskGlow.addColorStop(0.7, 'rgba(160, 20, 240, 0.3)');
+  diskGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = diskGlow;
+  ctx.beginPath(); ctx.ellipse(cx, cy, 440, 140, -0.15, 0, TAU); ctx.fill();
+
+  // Swirling accretion filaments
+  for (let k = 0; k < 6; k++) {
+    const angleOffset = (t * 0.8 + k * 1.05) % TAU;
+    ctx.strokeStyle = k % 2 === 0 ? '#FFD700' : '#FF4500';
+    ctx.lineWidth = 4 + k * 1.5;
+    ctx.globalAlpha = 0.5 + Math.sin(t * 3 + k) * 0.3;
+    ctx.beginPath();
+    ctx.ellipse(cx, cy, 380 - k * 35, 110 - k * 10, -0.15 + Math.sin(t + k) * 0.05, angleOffset, angleOffset + Math.PI * 1.3);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1.0;
+
+  // Complete Black Hole Sphere (Event Horizon)
+  circle(cx, cy, 155, '#000000');
+
+  // Relativistic Doppler Beaming (Left side of disk brighter due to approaching matter)
+  const beamGrad = ctx.createLinearGradient(cx - 300, cy, cx + 300, cy);
+  beamGrad.addColorStop(0, 'rgba(255, 240, 180, 0.7)');
+  beamGrad.addColorStop(0.4, 'rgba(255, 120, 0, 0.3)');
+  beamGrad.addColorStop(1, 'rgba(255, 50, 0, 0.05)');
+  ctx.fillStyle = beamGrad;
+  ctx.beginPath(); ctx.ellipse(cx, cy, 400, 45, -0.15, 0, TAU); ctx.fill();
+
+  // Thin razor-sharp Photon Sphere Ring
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3.5;
+  ctx.beginPath(); ctx.arc(cx, cy, 158, 0, TAU); ctx.stroke();
+  ctx.strokeStyle = '#FFD700'; ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(cx, cy, 163, 0, TAU); ctx.stroke();
+
+  // Central Core: pure pitch-black abyss
+  circle(cx, cy, 150, '#000000');
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFAA00'; ctx.textAlign = 'center';
+  ctx.fillText('प्रकाश भी यहाँ से बचकर नहीं निकल सकता!', 540, 1020);
+
+  filmAtmosphere(t, 660, 'rgba(255, 170, 0, 0.35)');
+}
+
+// ── D2. EVENT HORIZON LASER GRID (घटना क्षितिज) ──────────────────────────────────
+export function drawEventHorizonLaserGrid(lt, d, t) {
+  ctx.fillStyle = '#020206'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('EVENT HORIZON // POINT OF NO RETURN', 'घटना क्षितिज: वापसी असंभव!', '#FF1744');
+
+  ctx.save();
+  const cx = 540, cy = 670;
+
+  // Space-Time curvature funnel grid
+  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 2;
+  for (let r = 50; r <= 360; r += 45) {
+    const warpR = r + Math.sin(t * 3 + r * 0.05) * 8;
+    ctx.globalAlpha = 0.2 + (r / 360) * 0.6;
+    ctx.beginPath(); ctx.arc(cx, cy, warpR, 0, TAU); ctx.stroke();
+  }
+
+  // Radiating rays curved toward center
+  ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 2.5;
+  for (let a = 0; a < TAU; a += TAU / 16) {
+    ctx.globalAlpha = 0.5 + Math.sin(t * 4 + a) * 0.3;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * 380, cy + Math.sin(a) * 380);
+    const midA = a + 0.35;
+    ctx.quadraticCurveTo(cx + Math.cos(midA) * 220, cy + Math.sin(midA) * 220, cx + Math.cos(a + 0.7) * 110, cy + Math.sin(a + 0.7) * 110);
+    ctx.stroke();
+  }
+  ctx.globalAlpha = 1.0;
+
+  // Inescapable Event Horizon Core
+  circle(cx, cy, 110, '#000000');
+  ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(cx, cy, 112, 0, TAU); ctx.stroke();
+
+  // Tech readout box
+  ctx.fillStyle = 'rgba(255, 23, 68, 0.15)'; ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 240, 850, 480, 75, 14); ctx.fill(); ctx.stroke();
+  ctx.font = F(30, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('ESCAPE VELOCITY > SPEED OF LIGHT (c)', cx, 897);
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
+  ctx.fillText('एक बार सीमा पार की, तो वापसी शून्य!', 540, 1020);
+
+  filmAtmosphere(t);
+}
+
+// ── D3. GRAVITATIONAL LENSING (रोशनी का मुड़ना) ──────────────────────────────────
+export function drawGravitationalLensing(lt, d, t) {
+  ctx.fillStyle = '#03030A'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('GRAVITATIONAL LENSING // LIGHT BENDING', 'प्रचंड ग्रैविटी ने रोशनी को मोड़ दिया!', '#00F2FE');
+
+  ctx.save();
+  const cx = 540, cy = 660;
+
+  // Warped Einstein Rings
+  for (let i = 0; i < 5; i++) {
+    const rx = 240 + i * 35 + Math.sin(t * 2 + i) * 12;
+    const ry = 210 + i * 28 + Math.cos(t * 2 + i) * 10;
+    ctx.strokeStyle = i % 2 === 0 ? 'rgba(0, 242, 254, 0.65)' : 'rgba(255, 215, 0, 0.65)';
+    ctx.lineWidth = 5 - i * 0.6;
+    ctx.beginPath(); ctx.ellipse(cx, cy, rx, ry, t * 0.15 + i * 0.4, 0, TAU); ctx.stroke();
+  }
+
+  // Photon trajectories curving inward
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 3;
+  for (let k = 0; k < 8; k++) {
+    const startY = 320 + k * 85;
+    ctx.beginPath();
+    ctx.moveTo(120, startY);
+    ctx.bezierCurveTo(cx - 180, startY, cx - 120, cy + (k < 4 ? -80 : 80), cx, cy);
+    ctx.stroke();
+  }
+
+  // Pitch-black silhouette
+  circle(cx, cy, 145, '#000000');
+  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.arc(cx, cy, 147, 0, TAU); ctx.stroke();
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#00F2FE'; ctx.textAlign = 'center';
+  ctx.fillText('ग्रैविटी इतनी तेज कि रोशनी भी मुड़ जाती है!', 540, 1020);
+
+  filmAtmosphere(t, 660, 'rgba(0, 242, 254, 0.3)');
+}
+
+// ── D4. ASTRONAUT GRAVITY DIFFERENTIAL (पैरों पर भयानक खिंचाव) ───────────────────
+export function drawAstronautGravityVectors(lt, d, t) {
+  ctx.fillStyle = '#05070F'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('TIDAL GRAVITY GRADIENT // EXTREME SHEAR', 'पैरों पर सिर से करोड़ों गुना खिंचाव!', '#FF5500');
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Astronaut Figure Falling Feet First
+  // Helmet
+  circle(cx, cy - 130, 42, '#E2E8F0');
+  // Visor (Gold Reflective)
+  circle(cx, cy - 130, 26, '#FFB703');
+  // Torso
+  ctx.fillStyle = '#CBD5E1'; ctx.strokeStyle = '#64748B'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(cx - 38, cy - 85, 76, 110, 16); ctx.fill(); ctx.stroke();
+  // Arms
+  line([[cx - 38, cy - 70], [cx - 85, cy - 30], [cx - 110, cy - 70]], '#CBD5E1', 14);
+  line([[cx + 38, cy - 70], [cx + 85, cy - 30], [cx + 110, cy - 70]], '#CBD5E1', 14);
+  // Legs stretched downward
+  line([[cx - 22, cy + 25], [cx - 28, cy + 140]], '#CBD5E1', 18);
+  line([[cx + 22, cy + 25], [cx + 28, cy + 140]], '#CBD5E1', 18);
+
+  // Tidal Gravity Force Vectors (Head vs Feet)
+  // Head vector: Small arrow (1G)
+  ctx.strokeStyle = '#00FF66'; ctx.lineWidth = 5;
+  line([[cx - 80, cy - 150], [cx - 80, cy - 110]], '#00FF66', 5);
+  ctx.font = F(24, '900'); ctx.fillStyle = '#00FF66'; ctx.textAlign = 'right';
+  ctx.fillText('HEAD: 1G', cx - 95, cy - 125);
+
+  // Feet vectors: Gigantic pulsing red arrows (10,000,000G!)
+  const pulseLen = 140 + Math.sin(t * 8) * 35;
+  ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 8;
+  line([[cx - 28, cy + 150], [cx - 28, cy + 150 + pulseLen]], '#FF1744', 8);
+  line([[cx + 28, cy + 150], [cx + 28, cy + 150 + pulseLen]], '#FF1744', 8);
+  // Arrow heads
+  ctx.fillStyle = '#FF1744';
+  ctx.beginPath(); ctx.moveTo(cx - 45, cy + 150 + pulseLen); ctx.lineTo(cx - 28, cy + 175 + pulseLen); ctx.lineTo(cx - 11, cy + 150 + pulseLen); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx + 11, cy + 150 + pulseLen); ctx.lineTo(cx + 28, cy + 175 + pulseLen); ctx.lineTo(cx + 45, cy + 150 + pulseLen); ctx.fill();
+
+  ctx.font = F(32, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
+  ctx.fillText('FEET: 10,000,000G GRAVITATIONAL PULL!', cx, 915);
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF5500'; ctx.textAlign = 'center';
+  ctx.fillText('पैरों और सिर में भयंकर खिंचाव का अंतर!', 540, 1020);
+
+  filmAtmosphere(t);
+}
+
+// ── D5. SPAGHETTIFICATION PROCESS (नूडल की तरह खिंचाव) ───────────────────────────
+export function drawSpaghettificationProcess(lt, d, t) {
+  ctx.fillStyle = '#030206'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('SPAGHETTIFICATION // ATOMIC DISRUPTION', 'नूडल की तरह खिंचकर परमाणुओं में विखंडन!', '#FF0055');
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Multiple stretched human particle filaments stretching into singularity
+  for (let i = -4; i <= 4; i++) {
+    const fx = cx + i * 28;
+    const grad = ctx.createLinearGradient(fx, 340, fx, 880);
+    grad.addColorStop(0, 'rgba(255, 255, 255, 0.9)');
+    grad.addColorStop(0.3, 'rgba(255, 0, 85, 0.8)');
+    grad.addColorStop(0.7, 'rgba(255, 170, 0, 0.7)');
+    grad.addColorStop(1, 'rgba(120, 0, 255, 0.4)');
+
+    ctx.strokeStyle = grad;
+    ctx.lineWidth = Math.max(2, 10 - Math.abs(i) * 1.8);
+    ctx.beginPath();
+    ctx.moveTo(fx, 350);
+    const wave = Math.sin(t * 6 + i * 0.8) * 25;
+    ctx.bezierCurveTo(fx + wave, 520, fx - wave, 700, cx, 890);
+    ctx.stroke();
+  }
+
+  // Sparkling disassociated atoms
+  for (let k = 0; k < 30; k++) {
+    const ax = cx - 180 + ((k * 63 + t * 90) % 360);
+    const ay = 420 + ((k * 47 + t * 240) % 450);
+    const ar = 2 + (k % 4);
+    circle(ax, ay, ar, k % 2 === 0 ? '#FFE600' : '#00F2FE');
+  }
+
+  // Inescapable singularity suction point
+  circle(cx, 890, 36, '#000000');
+  ctx.strokeStyle = '#FF0055'; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.arc(cx, 890, 38, 0, TAU); ctx.stroke();
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF0055'; ctx.textAlign = 'center';
+  ctx.fillText('शरीर पतले धागे की तरह लंबा खिंच जाएगा!', 540, 1020);
+
+  filmAtmosphere(t, 620, 'rgba(255, 0, 85, 0.3)');
+}
+
+// ── D6. TIME DILATION // RELATIVISTIC FREEZE (समय का रुकना) ───────────────────────
+export function drawFrozenTimeDilation(lt, d, t) {
+  ctx.fillStyle = '#020409'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('RELATIVISTIC TIME DILATION // t -> ∞', 'बाहर की दुनिया के लिए वक्त हमेशा को रुका!', '#00F2FE');
+
+  ctx.save();
+  const cx = 540, cy = 650;
+
+  // Melting Warped Clock Face
+  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 10;
+  ctx.fillStyle = '#0A1220';
+  ctx.beginPath();
+  ctx.ellipse(cx, cy, 240, 200, 0.12, 0, TAU);
+  ctx.fill(); ctx.stroke();
+
+  // Melting bottom drips
+  for (let i = -140; i <= 140; i += 50) {
+    line([[cx + i, cy + 180], [cx + i, cy + 240 + Math.sin(t * 3 + i) * 20]], '#00F2FE', 8);
+  }
+
+  // Frozen Clock Hands
+  // Hour hand
+  line([[cx, cy], [cx + 70, cy - 50]], '#FFFFFF', 8);
+  // Minute hand
+  line([[cx, cy], [cx - 40, cy - 130]], '#FFE600', 6);
+  // Second hand frozen and vibrating slightly
+  const vib = Math.sin(t * 25) * 0.02;
+  line([[cx, cy], [cx + Math.sin(vib) * 160, cy - Math.cos(vib) * 160]], '#FF1744', 3.5);
+  circle(cx, cy, 14, '#FF1744');
+
+  // Digital readout card
+  ctx.fillStyle = 'rgba(0, 242, 254, 0.12)'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 250, 840, 500, 75, 14); ctx.fill(); ctx.stroke();
+  ctx.font = F(32, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('TIME DILATION: Δt_ext / Δt_0 = ∞', cx, 888);
+
+  ctx.restore();
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('आप बाहर के लोगों के लिए हमेशा जम जाएंगे!', 540, 1020);
+
+  filmAtmosphere(t, 650, 'rgba(0, 242, 254, 0.25)');
+}
+
+// ── D7. BLACK HOLE SINGULARITY CTA OUTRO ──────────────────────────────────────────
+export function drawBlackHoleSingularityCTA(lt, d, t) {
+  ctx.fillStyle = '#03050E'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('ANCHOR AADHYA OFFICIAL // COSMOS', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
+
+  ctx.save();
+  const ox = 540, oy = 660, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Glowing subscribe badge
+  ctx.fillStyle = '#FF0000'; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  ctx.font = '900 34px Inter, sans-serif'; ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('SUBSCRIBE', 0, 105);
+
+  // Animated Bell
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = '#FFE600';
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, '#FFE600');
+  ctx.restore();
+
+  // Question Callout Bubble
+  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
+  ctx.font = '900 27px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000000'; ctx.textAlign = 'center';
+  ctx.fillText('क्या ब्लैक होल में दूसरी दुनिया है? 🕳️', 0, -135);
+
+  ctx.restore();
+
+  ctx.font = F(38, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
+
+  filmAtmosphere(t);
+}

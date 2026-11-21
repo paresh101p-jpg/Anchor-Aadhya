@@ -8,19 +8,15 @@ import { COUPLE_SPEAKERS } from './couple_scenes.js';
 import * as Cinema from './cinematic_scenes.js';
 
 const CINEMA_POOL = [
-  Cinema.drawOceanDive,
+  Cinema.drawEarthGlobe,
   Cinema.drawMarianaChasm,
-  Cinema.drawEverestComparison,
-  Cinema.drawMidnightDarkness,
+  Cinema.drawMountEverest,
+  Cinema.drawSunRays,
   Cinema.drawSubmarineSearchlight,
   Cinema.drawPressureSlam,
   Cinema.drawElephantWeight,
-  Cinema.drawSonarRadar,
   Cinema.drawAlienCreature,
-  Cinema.drawSonarRadar,
-  Cinema.drawSubmarineSearchlight,
   Cinema.drawPlasticDiscovery,
-  Cinema.drawMarianaChasm,
   Cinema.drawOutroCTA,
 ];
 
@@ -41,6 +37,16 @@ const CHERNOBYL_POOL = [
   Cinema.drawChernobylOutro,
 ];
 
+const BLACKHOLE_POOL = [
+  Cinema.drawBlackHoleGargantua,
+  Cinema.drawEventHorizonLaserGrid,
+  Cinema.drawGravitationalLensing,
+  Cinema.drawAstronautGravityVectors,
+  Cinema.drawSpaghettificationProcess,
+  Cinema.drawFrozenTimeDilation,
+  Cinema.drawBlackHoleSingularityCTA,
+];
+
 export function buildShots(script = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
@@ -48,10 +54,15 @@ export function buildShots(script = {}) {
   const n = (script.lines || []).length || 1;
 
   // Use Rapid-Cut Cinematic Engine for 30s Documentary Shorts
-  const isCinematic = script.id === 'mariana_trench_abyss' || script.id === 'chernobyl_300s_room' || script.is_30s || script.is_cinematic;
+  const isCinematic = script.id === 'mariana_trench_abyss' || script.id === 'chernobyl_300s_room' || script.id === 'black_hole_spaghettification' || script.is_30s || script.is_cinematic;
 
   if (isCinematic) {
-    const pool = script.id === 'chernobyl_300s_room' ? CHERNOBYL_POOL : CINEMA_POOL;
+    let pool = CINEMA_POOL;
+    if (script.id === 'chernobyl_300s_room') {
+      pool = CHERNOBYL_POOL;
+    } else if (script.id === 'black_hole_spaghettification') {
+      pool = BLACKHOLE_POOL;
+    }
     let shotIdx = 0;
     for (let i = 0; i < n; i++) {
       const ws = lineWords(i);
@@ -79,7 +90,9 @@ export function buildShots(script = {}) {
           zoomFast: subIdx > 0,
           note: `Beat ${shotIdx + 1} [Rapid Cut]: ${text.slice(0, 32)}`,
           draw(lt, d, t) {
-            drawFn(lt, d, t);
+            if (typeof drawFn === 'function') {
+              drawFn(lt, d, t);
+            }
           },
         });
 
