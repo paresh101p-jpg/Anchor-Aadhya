@@ -92,15 +92,26 @@ def save_tracker(tracker):
         json.dump(tracker, f, indent=2, ensure_ascii=False)
 
 def select_next_topic():
+    """Always return a genuinely unseen topic. Never recycle an old reel's topic."""
+    # 1) Live/audited fresh-topic researcher (Gemini -> deduped emergency pool).
+    try:
+        from dynamic_topic_researcher import research_fresh_rare_topic
+        fresh = research_fresh_rare_topic()
+        if fresh and fresh.get("lines"):
+            print(f"  🆕 [Fresh Topic] {fresh.get('id')} | {fresh.get('title')}", flush=True)
+            return fresh
+    except Exception as e:
+        print(f"  [Notice] Fresh topic researcher unavailable: {e}", flush=True)
+
+    # 2) Only if the researcher fails, use an unused curated topic.
     topics = load_topics()
-    used_ids = set(load_tracker())
-    
+    used_ids = set()
+    for item in load_tracker():
+        used_ids.add(item if isinstance(item, str) else item.get("id", ""))
     available = [t for t in topics if t["id"] not in used_ids]
     if not available:
-        print("[Notice] All curated topics used once! Cycling back to beginning.", flush=True)
-        available = topics
-        save_tracker([])
-        
+        raise RuntimeError("No unused topic available. Refusing to repeat an old reel topic.")
+    print(f"  🆕 [Fresh Topic - curated fallback] {available[0]['id']}", flush=True)
     return available[0]
 
 def get_audio_duration(file_path):

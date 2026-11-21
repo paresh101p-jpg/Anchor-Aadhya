@@ -263,6 +263,144 @@ const E = {
   danger(x, y, s, t) { K.warning(x, y, 1.3 * s * (1 + 0.05 * Math.sin(t * 8))); tag('खतरा', x, y + 160 * s, 42, C.white, C.red); },
   question(x, y, s, t) { bigText('?', x, y, 150 * s, C.yellow, 0.1); tag('सवाल', x, y + 150 * s, 38, C.white, C.navy); },
   person(x, y, s, t) { K.man({ x, y, s: 0.85 * s, eyes: 'wide', mouth: 'o', brow: 1 }); tag('इंसान', x, y + 260 * s, 36); },
+
+  // ── generic spoken-word card: for ANY new topic, the words being said are shown on screen ──
+  word(x, y, s, t, label) {
+    const raw = String(label || 'विषय');
+    const shown = raw.length > 11 ? raw.slice(0, 10) + '…' : raw;
+    const palette = ['#0E1A2B', '#2F67BE', '#C9566E', '#5D8A2E', '#8B5B2C', '#5B3B6E'];
+    let sum = 0; for (const ch of raw) sum += ch.codePointAt(0);
+    const color = palette[sum % palette.length];
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-190, -150, 380, 300, 30); ctx.fillStyle = color; ctx.fill();
+    ctx.strokeStyle = C.white; ctx.lineWidth = 8; ctx.stroke();
+    circle(-105, -62, 40, 'rgba(255,255,255,0.22)');
+    for (let k = 0; k < 3; k++) line([[-40, -95 + k * 28], [110 - k * 25, -95 + k * 28]], 'rgba(255,255,255,0.35)', 12);
+    ctx.font = F(64); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(shown, 0, 62);
+    ctx.restore();
+    tag(shown, x, y + 195 * s, 40, C.white, color);
+  },
+
+  // ── electricity / grip ──
+  bolt(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    ctx.beginPath(); ctx.moveTo(-25, -155); ctx.lineTo(65, -20); ctx.lineTo(5, -8);
+    ctx.lineTo(55, 155); ctx.lineTo(-72, 8); ctx.lineTo(-8, -2); ctx.closePath();
+    ctx.fillStyle = C.yellow; ctx.fill(); ctx.strokeStyle = C.ink; ctx.lineWidth = 8; ctx.stroke();
+    ctx.restore(); tag('बिजली', x, y + 205 * s, 40, C.white, '#B8860B');
+  },
+  wire(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    ctx.strokeStyle = C.ink; ctx.lineWidth = 24; ctx.beginPath();
+    ctx.moveTo(-230, -120); ctx.bezierCurveTo(-60, -210, 60, 50, 230, -80); ctx.stroke();
+    ctx.strokeStyle = C.cyan; ctx.lineWidth = 8; ctx.stroke();
+    circle(-230, -120, 26, C.red); circle(230, -80, 26, C.red);
+    ctx.restore(); tag('तार', x, y + 180 * s, 38, C.white, C.ink);
+  },
+  handGrip(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    ell(0, 30, 125, 95, C.skin);
+    for (let k = -2; k <= 2; k++) {
+      ctx.strokeStyle = C.skinShade; ctx.lineWidth = 26; ctx.lineCap = 'round';
+      ctx.beginPath(); ctx.moveTo(k * 42, -40); ctx.lineTo(k * 46, 95); ctx.stroke();
+    }
+    ctx.restore(); K.redX(x, y, 1.5 * s, 0.95); tag('जकड़ी हथेली', x, y + 190 * s, 38, C.white, C.red);
+  },
+  muscle(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    ell(-70, 0, 78, 120, '#D9667C'); ell(70, 0, 78, 120, '#C9566E');
+    for (let k = -2; k <= 2; k++) {
+      line([[-120, k * 35], [-25, k * 42]], C.pinkDark, 7);
+      line([[25, k * 42], [120, k * 35]], C.pinkDark, 7);
+    }
+    ctx.restore(); tag('मांसपेशियां', x, y + 175 * s, 36, C.white, C.pinkDark);
+  },
+  switch(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-140, -100, 280, 200, 18); ctx.fillStyle = '#D9DEE6'; ctx.fill();
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 10; ctx.stroke();
+    circle(0, 0, 46, C.white); line([[0, 0], [65, -70]], C.red, 20);
+    ctx.restore(); tag('मेन स्विच', x, y + 175 * s, 38, C.white, C.navy);
+  },
+
+  // ── car / water survival ──
+  car(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y + Math.sin(t * 2) * 8); ctx.scale(s, s);
+    rr(-190, -60, 380, 130, 28); ctx.fillStyle = '#3A7BD5'; ctx.fill();
+    ctx.beginPath(); ctx.moveTo(-120, -60); ctx.lineTo(-70, -145); ctx.lineTo(95, -145); ctx.lineTo(145, -60); ctx.fill();
+    circle(-110, 85, 46, C.ink); circle(110, 85, 46, C.ink);
+    circle(-110, 85, 18, '#B9C4CC'); circle(110, 85, 18, '#B9C4CC');
+    ctx.restore(); tag('कार', x, y + 190 * s, 40, C.white, '#3A7BD5');
+  },
+  door(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-130, -170, 260, 340, 16); ctx.fillStyle = '#8FA3B8'; ctx.fill();
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 12; ctx.stroke();
+    rr(70, -20, 38, 90, 12); ctx.fillStyle = C.yellow; ctx.fill();
+    ctx.restore(); tag('दरवाज़ा', x, y + 225 * s, 38, C.white, C.navy);
+  },
+  window(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-150, -130, 300, 260, 12); ctx.fillStyle = '#BFE3F2'; ctx.fill();
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 16; ctx.stroke();
+    for (let k = 0; k < 5; k++) line([[0, 0], [Math.cos(k) * 140, Math.sin(k) * 120]], C.white, 9);
+    ctx.restore(); tag('खिड़की', x, y + 190 * s, 38, C.white, '#2F8FA8');
+  },
+  headrest(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-110, -150, 220, 110, 30); ctx.fillStyle = C.ink; ctx.fill();
+    line([[-60, -40], [-60, 120]], '#A9B4C2', 22); line([[60, -40], [60, 120]], '#A9B4C2', 22);
+    ctx.restore(); tag('हेडरेस्ट', x, y + 195 * s, 38, C.white, C.ink);
+  },
+  seatbelt(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    line([[-130, -160], [120, 150]], C.red, 42);
+    rr(60, 90, 80, 60, 12); ctx.fillStyle = C.yellow; ctx.fill();
+    ctx.restore(); tag('सीटबेल्ट', x, y + 210 * s, 38, C.white, C.red);
+  },
+
+  // ── machines / everyday secrets ──
+  atm(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-130, -180, 260, 360, 20); ctx.fillStyle = '#6B7B8C'; ctx.fill();
+    rr(-90, -140, 180, 110, 10); ctx.fillStyle = C.navy; ctx.fill();
+    rr(-95, 20, 190, 28, 8); ctx.fillStyle = C.ink; ctx.fill();
+    rr(-70, 85, 140, 60, 8); ctx.fillStyle = C.white; ctx.fill();
+    ctx.restore(); tag('ATM', x, y + 245 * s, 40, C.white, '#6B7B8C');
+  },
+  cash(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    for (let k = -1; k <= 1; k++) {
+      ctx.save(); ctx.translate(k * 70, k * 18); ctx.rotate(k * 0.12);
+      rr(-95, -55, 190, 110, 10); ctx.fillStyle = '#5BAE6A'; ctx.fill();
+      circle(0, 0, 30, '#3E8A4C'); ctx.restore();
+    }
+    ctx.restore(); tag('नोट', x, y + 160 * s, 38, C.white, '#3E8A4C');
+  },
+  lock(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 26; ctx.beginPath(); ctx.arc(0, -55, 70, Math.PI, 0); ctx.stroke();
+    rr(-110, -40, 220, 190, 20); ctx.fillStyle = C.yellow; ctx.fill();
+    circle(0, 45, 22, C.ink); ctx.restore(); tag('ताला', x, y + 205 * s, 38, C.white, '#B8860B');
+  },
+  airbag(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    circle(0, 0, 115, C.ink); circle(0, 0, 70, '#4A5568');
+    ell(0, -110, 145, 105, C.white); ctx.strokeStyle = C.navy; ctx.lineWidth = 10; ctx.stroke();
+    ctx.restore(); tag('एयरबैग', x, y + 190 * s, 38, C.white, '#4A5568');
+  },
+  toilet(x, y, s, t) {
+    ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
+    rr(-135, -170, 270, 230, 24); ctx.fillStyle = C.white; ctx.fill();
+    ctx.strokeStyle = C.navy; ctx.lineWidth = 12; ctx.stroke();
+    ell(0, 20, 105, 72, '#BFE3F2');
+    for (let k = 0; k < 3; k++) {
+      ctx.strokeStyle = C.cyan; ctx.lineWidth = 8;
+      ctx.beginPath(); ctx.arc(0, 20, 30 + k * 28, t * 2, t * 2 + 4.2); ctx.stroke();
+    }
+    ctx.restore(); tag('वैक्यूम', x, y + 185 * s, 38, C.white, '#2F8FA8');
+  },
 };
 
 function arrowLocal(x1, y1, x2, y2, color, w) {
@@ -274,6 +412,12 @@ function arrowLocal(x1, y1, x2, y2, color, w) {
 
 // keyword → element name(s). Matched against the actual spoken text.
 const RULES = [
+  [/बिजली|करंट|वोल्टेज|झटका/, 'bolt'], [/तार/, 'wire'], [/जकड़|पकड़|ग्रिप|छोड़/, 'handGrip'],
+  [/मांसपेश|फ्लेक्सर|एक्सटेंसर|सिकोड़/, 'muscle'], [/स्विच|एमसीबी|मेन स्विच/, 'switch'],
+  [/कार|वाहन|गाड़ी/, 'car'], [/दरवाज/, 'door'], [/खिड़की|काँच|कांच/, 'window'],
+  [/हेडरेस्ट/, 'headrest'], [/सीटबेल्ट/, 'seatbelt'],
+  [/एटीएम|ATM/i, 'atm'], [/नोट|पैस|नकदी/, 'cash'], [/ताला|लॉक|चाबी|कुंजी/, 'lock'],
+  [/एयरबैग/, 'airbag'], [/टॉयलेट|शौचालय/, 'toilet'],
   [/लिंक|क्लिक|कमेंट|डिस्क्रिप्शन/, 'click'],
   [/खून|रक्त/, 'blood'],
   [/कीड़ा[^|]{0,12}नहीं|नहीं[^|]{0,12}कीड़ा|कोई कीड़ा/, 'noBug'],
@@ -285,11 +429,29 @@ const RULES = [
   [/चुइंगम|गम/, 'gum'], [/7 साल|सात साल|मिथक|झूठ/, 'myth'],
   [/पानी|प्यास|सूख/, 'water'], [/किडनी|पेशाब/, 'kidney'],
   [/दिमाग|ब्रेन/, 'brain'], [/नींद|सोते|सोने/, 'sleep'], [/तरल|CSF|धुलाई/, 'fluid'],
-  [/मोबाइल|फोन/, 'phone'], [/प्लेन|हवाई जहाज|फ्लाइट/, 'plane'], [/टावर|सिग्नल/, 'tower'],
+  [/मोबाइल|फोन/, 'phone'], [/प्लेन|हवाई जहाज|फ्लाइट/, 'plane'], [/टावर|सिग्नल टावर|मोबाइल सिग्नल/, 'tower'],
+  [/नस|तंत्रिका/, 'muscle'],
   [/कान/, 'ear'], [/कीड़ा|कीट/, 'bug'], [/टैटू|स्याही|सुई/, 'tattoo'],
   [/मैक्रोफेज|रक्षक/, 'macrophage'], [/ब्लैडर/, 'bladder'],
   [/दांत|कैविटी/, 'tooth'], [/बैक्टीरिया|स्ट्रेप्टो/, 'bacteria'], [/मीठा|शुगर|चीनी/, 'sugar'],
 ];
+
+const SPOKEN_STOP = new Set([
+  'की', 'के', 'कि', 'क्या', 'क्यों', 'कैसे', 'सबसे', 'बहुत', 'बिल्कुल', 'लेकिन', 'यह', 'ये', 'वह', 'वो',
+  'इस', 'उस', 'इसे', 'उसे', 'अपने', 'अपनी', 'आपका', 'आपके', 'आपको', 'हमारा', 'हमारे', 'हमारी',
+  'हैं', 'है', 'था', 'थी', 'थे', 'होता', 'होती', 'होते', 'होगा', 'होगी', 'रहा', 'रही', 'गया', 'गई',
+  'नहीं', 'भी', 'ही', 'तो', 'जब', 'तब', 'और', 'एक', 'दो', 'तीन', 'चार', 'पाँच', 'लिए', 'करने', 'करना',
+  'जाता', 'जाती', 'सकता', 'सकती', 'चाहे', 'कितना', 'कितनी', 'ज्यादा', 'अंदर', 'बाहर', 'तुरंत', 'अभी',
+  'जानने', 'देखने', 'समझ', 'बात', 'सच', 'वैज्ञानिक', 'साइंस', 'शॉर्ट्स', 'एंकर', 'आध्या', 'वीडियो',
+]);
+
+function spokenWords(text = '') {
+  return [...String(text).matchAll(/[\u0900-\u097F]{3,}/g)]
+    .map((m) => m[0])
+    .filter((w) => !SPOKEN_STOP.has(w))
+    .filter((w, i, a) => a.indexOf(w) === i)
+    .slice(0, 3);
+}
 
 export function elementKeysFor(text = '') {
   const t = String(text);
@@ -308,7 +470,13 @@ export function elementKeysFor(text = '') {
     const si = out.indexOf('stomach'); if (si >= 0) out.splice(si, 1);
   }
   const uniq = [...new Set(out)];
-  if (!uniq.length) uniq.push(/[?？]/.test(t) || /^(क्या|क्यों|कैसे)/.test(t.trim()) ? 'question' : 'person');
+
+  // Unknown/new topic: show the actual spoken words as on-screen cards, never unrelated art.
+  if (!uniq.length) {
+    const words = spokenWords(t);
+    if (words.length) return words.map((w) => `word:${w}`);
+    return [/[?？]/.test(t) || /^(क्या|क्यों|कैसे)/.test(t.trim()) ? 'question' : 'person'];
+  }
   return uniq.slice(0, 3);
 }
 
@@ -345,7 +513,8 @@ export function drawSemanticScene(lineText, script, lineIndex, t, lt, d) {
   keys.forEach((key, k) => {
     const [x, y, s] = slots[k];
     try {
-      if (key === 'tooth') E.tooth(x, y, s, t, /छेद|दावत|बैक्टीरिया|मीठा/.test(lineText) ? 3 : 0);
+      if (key.startsWith('word:')) E.word(x, y, s, t, key.slice(5));
+      else if (key === 'tooth') E.tooth(x, y, s, t, /छेद|दावत|बैक्टीरिया|मीठा/.test(lineText) ? 3 : 0);
       else E[key](x, y, s, t, p);
     } catch (err) {
       console.error('visual error', key, String(err));
