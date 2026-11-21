@@ -1,55 +1,55 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
-  Topic ID: sinking_car_door_physics
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: समुद्र के 11,000 मीटर नीचे वैज्ञानिकों को क्या दिखा? 🌊😱 #Shorts
+  Topic ID: mariana_trench_abyss
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
-  -> Line 1/7: 'अगर कभी कोई कार पानी में गिर ज...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: समुद्र के 11,000 मीटर नीचे वैज्ञानिकों को क्या दिखा? 🌊😱 #Shorts
+  -> Line 1/7: 'अगर आप पृथ्वी के सबसे गहरे स्थ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'अगर कभी कोई कार पानी में गिर ज...'
-  -> Line 2/7: 'लोग सोचते हैं कि सेंट्रल लॉक ख...'
+    [Edge-TTS Swara Backup]: 'अगर आप पृथ्वी के सबसे गहरे स्थ...'
+  -> Line 2/7: 'यह खाई इतनी गहरी है कि पूरा मा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'लोग सोचते हैं कि सेंट्रल लॉक ख...'
-  -> Line 3/7: 'दरवाज़े के बाहर लगभग 800 किलो ...'
+    [Edge-TTS Swara Backup]: 'यह खाई इतनी गहरी है कि पूरा मा...'
+  -> Line 3/7: 'यहाँ सूरज की एक भी किरण नहीं प...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'दरवाज़े के बाहर लगभग 800 किलो ...'
-  -> Line 4/7: 'जिसके कारण किसी भी इंसान के लि...'
+    [Edge-TTS Swara Backup]: 'यहाँ सूरज की एक भी किरण नहीं प...'
+  -> Line 4/7: 'यहाँ पानी का दबाव इतना भयंकर ह...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'जिसके कारण किसी भी इंसान के लि...'
-  -> Line 5/7: 'जान बचाने के लिए तुरंत सीटबेल्...'
+    [Edge-TTS Swara Backup]: 'यहाँ पानी का दबाव इतना भयंकर ह...'
+  -> Line 5/7: 'लेकिन इस जानलेवा अंधेरे में भी...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'जान बचाने के लिए तुरंत सीटबेल्...'
-  -> Line 6/7: 'अगर खिड़की जाम हो, तो सीट का ह...'
+    [Edge-TTS Swara Backup]: 'लेकिन इस जानलेवा अंधेरे में भी...'
+  -> Line 6/7: 'और सबसे हैरान करने वाली चीज़: ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'अगर खिड़की जाम हो, तो सीट का ह...'
-  -> Line 7/7: 'कमेंट में बताएं कि क्या आपको य...'
+    [Edge-TTS Swara Backup]: 'और सबसे हैरान करने वाली चीज़: ...'
+  -> Line 7/7: 'क्या इंसान हर जगह तबाही मचाएगा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'कमेंट में बताएं कि क्या आपको य...'
-  -> Assembling master narration.wav (49.77s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 49.77s across 7 cuts.
+    [Edge-TTS Swara Backup]: 'क्या इंसान हर जगह तबाही मचाएगा...'
+  -> Assembling master narration.wav (50.54s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 50.54s across 7 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 34 cues, 49.77 s
+data/cues.json: 28 cues, 50.54 s
   -> Running python tools/mix.py...
-data/mix.wav: 49.77 s · voice: yes · music: tension · 34 cues
+data/mix.wav: 50.54 s · voice: yes · music: tension · 28 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1244 frames150/1244 frames300/1244 frames450/1244 frames600/1244 frames750/1244 frames900/1244 frames1050/1244 frames1200/1244 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1244 frames, with data/mix.wav, 41 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.24 MB)
+0/1263 frames150/1263 frames300/1263 frames450/1263 frames600/1263 frames750/1263 frames900/1263 frames1050/1263 frames1200/1263 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1263 frames, with data/mix.wav, 49 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (12.02 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 49.76s (Audio-Visual Synced)
+  ✅ Duration: 50.52s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
-Generating Viral High-CTR Curiosity Thumbnail for: पानी में डूबती कार का दरवाज़ा क्यों नहीं...
+Generating Viral High-CTR Curiosity Thumbnail for: समुद्र के 11,000 मीटर नीचे वैज्ञानिकों क...
 ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
   built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
   configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
@@ -61,12 +61,12 @@ ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
   libswscale      9.  1.100 /  9.  1.100
   libswresample   6.  1.100 /  6.  1.100
 Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 22810 kb/s
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 46781 kb/s
   Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
 Stream mapping:
   Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
 Press [q] to stop, [?] for help
-[swscaler @ 0x7bf614052040] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x7a6898052040] deprecated pixel format used, make sure you did set range correctly
 Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg':
   Metadata:
     encoder         : Lavf62.3.100
@@ -76,24 +76,26 @@ Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/revi
     Side data:
       ICC Profile
       cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x5c85d3bd6000] video:182KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.88x elapsed=0:00:00.04    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (181.5 KB)
+[out#0/image2 @ 0x587ebc602000] video:212KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=1.05x elapsed=0:00:00.03    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (212.0 KB)
   --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg
 
 [Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
-  --> Title: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.24 MB)
+  --> Title: समुद्र के 11,000 मीटर नीचे वैज्ञानिकों को क्या दिखा? 🌊😱 #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (12.02 MB)
   --> Uploading video stream to YouTube...
-  --> Upload Progress: 94%
+  --> Upload Progress: 33%
+  --> Upload Progress: 66%
+  --> Upload Progress: 99%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: X46p7Oe4p4w
-  --> Live URL: https://www.youtube.com/watch?v=X46p7Oe4p4w
+[SUCCESS] VIDEO UPLOADED! Video ID: EeazpUOZK_o
+  --> Live URL: https://www.youtube.com/watch?v=EeazpUOZK_o
   --> [SUCCESS] Custom Thumbnail Attached!
   --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
 
 ==============================================================
   🎉 2-STAGE FUNNEL FULLY COMPLETED!
   1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
-  2. Viral 30-40s Short: https://www.youtube.com/watch?v=X46p7Oe4p4w
+  2. Viral 30-40s Short: https://www.youtube.com/watch?v=EeazpUOZK_o
 ==============================================================
