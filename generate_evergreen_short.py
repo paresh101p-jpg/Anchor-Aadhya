@@ -562,6 +562,10 @@ async def main():
             times = [round(float(x.get("start", 0)) + 0.6, 2) for x in line_data.get("lines", [])[:10]]
             if times:
                 frames_dir = os.path.join(sheet_dir, "frames")
+                if os.path.isdir(frames_dir):
+                    for old in os.listdir(frames_dir):
+                        try: os.remove(os.path.join(frames_dir, old))
+                        except Exception: pass
                 os.makedirs(frames_dir, exist_ok=True)
                 subprocess.run(
                     ["node", "tools/capture.mjs", "frames", frames_dir, ",".join(f"{x:.2f}" for x in times)],
