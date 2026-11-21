@@ -4,11 +4,11 @@ on:
   workflow_dispatch: # Allows manual 1-click run anytime from GitHub Actions tab
     inputs:
       engine:
-        description: 'Visual engine (2d = free code-based default, 3d = experimental)'
+        description: 'Visual engine (3d = Three.js Dynamic Explainer, 2d = legacy code-based)'
         required: false
-        default: '2d'
+        default: '3d'
         type: choice
-        options: [2d, 3d]
+        options: [3d, 2d]
       topic_id:
         description: 'Optional curiosity_topics.json id to render a specific topic'
         required: false
@@ -63,7 +63,7 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render 2D Aadhya Short (voice + facts + captions) & Post as Unlisted
+      - name: Render 3D Aadhya Short (voice + facts + captions) & Post as Unlisted
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
@@ -73,20 +73,12 @@ jobs:
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
         run: |
           set -o pipefail
-          ENGINE="${{ github.event.inputs.engine || '2d' }}"
+          ENGINE="${{ github.event.inputs.engine || '3d' }}"
           TOPIC_ID="${{ github.event.inputs.topic_id || '' }}"
           export AADHYA_ENGINE="$ENGINE"
           export TOPIC_ID="$TOPIC_ID"
-          if [ "$ENGINE" = "3d" ]; then
-            echo "3D engine requested (experimental: depends on a paid image API)."
-            python -u generate_rico_synced_short.py 2>&1 | tee run_debug.log || {
-              echo "3D pipeline failed - falling back to the free 2D engine."
-              export AADHYA_ENGINE=2d
-              python -u generate_evergreen_short.py 2>&1 | tee -a run_debug.log
-            }
-          else
-            python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
-          fi
+          echo "Starting 3D Aadhya Engine (engine=$ENGINE, topic=$TOPIC_ID)..."
+          python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
 
       - name: Commit Run Logs & Trackers
         if: always()

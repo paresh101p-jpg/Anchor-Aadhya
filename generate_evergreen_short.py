@@ -53,12 +53,9 @@ def configure_engine_for_topic(topic=None):
     - 3D engine is opt-in via AADHYA_ENGINE=3d or a topic tagged best_skill='3d'.
     """
     global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
-    force_3d = os.environ.get("AADHYA_ENGINE", "").strip().lower() == "3d"
-    topic_wants_3d = bool(topic) and (
-        "3d" in str(topic.get("best_skill", "")).lower()
-        or "deep-dive" in str(topic.get("best_skill", "")).lower()
-    )
-    chosen_engine = ENGINE_DIR_3D if (force_3d or topic_wants_3d) and os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
+    engine_env = os.environ.get("AADHYA_ENGINE", "3d").strip().lower()
+    # Default strictly to 3D Three.js engine (zero hardcoded bubblegum)
+    chosen_engine = ENGINE_DIR_3D if engine_env != "2d" and os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
 
     if chosen_engine == ENGINE_DIR_3D:
         print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
