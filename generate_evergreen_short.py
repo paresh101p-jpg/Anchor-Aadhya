@@ -563,7 +563,14 @@ async def main():
         try:
             with open(lines_path, "r", encoding="utf-8") as lf:
                 line_data = json.load(lf)
-            times = [round(float(x.get("start", 0)) + 0.6, 2) for x in line_data.get("lines", [])[:10]]
+            lines = line_data.get("lines", [])[:10]
+            times = [round(float(x.get("start", 0)) + 0.6, 2) for x in lines]
+            if short_topic.get("id") == "couple_first_reel":
+                # Extra late-in-line frames to show the wide two-shot pullback.
+                for idx in (1, 3):
+                    if idx < len(lines):
+                        s = float(lines[idx].get("start", 0)); e = float(lines[idx].get("end", s))
+                        times.append(round(s + 0.85 * (e - s), 2))
             if times:
                 frames_dir = os.path.join(sheet_dir, "frames")
                 if os.path.isdir(frames_dir):
