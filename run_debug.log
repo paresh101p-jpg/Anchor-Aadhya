@@ -4,49 +4,48 @@
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine (engine)
 
-🎬 >>> STAGE 1: Rendering Full 16:9 Long-Form Master Video <<<
+🎨 [2D Graphic Engine]: 100% Native 9:16 Vertical Reel format. Skipping 16:9 to avoid resolution mismatch and proceeding directly to 9:16 Viral Short.
 
-[Voice Synthesis - Full Video (16:9)] (Cartesia-Aadhya (Sonic)) for: कान में कीड़ा घुसने पर तीली डालने की गलती कभी मत करना! 😱 #Shorts
-  -> Line 1/9: 'अगर रात को कान में अचानक कीड़ा...'
+📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
+
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: कान में कीड़ा घुसने पर तीली डालने की गलती कभी मत करना! 😱 #Shorts
+  -> Line 1/6: 'अगर रात को कान में अचानक कीड़ा...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'अगर रात को कान में अचानक कीड़ा...'
-  -> Line 2/9: 'तीली डालते ही घबराकर कीड़ा आपक...'
+  -> Line 2/6: 'तीली डालते ही घबराकर कीड़ा आपक...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तीली डालते ही घबराकर कीड़ा आपक...'
-  -> Line 3/9: 'और कान का पर्दा डैमेज होकर आप ...'
+  -> Line 3/6: 'और कान का पर्दा डैमेज होकर आप ...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और कान का पर्दा डैमेज होकर आप ...'
-  -> Line 4/9: 'पर क्या कीड़ा सच में दिमाग तक ...'
+  -> Line 4/6: 'पर क्या कीड़ा सच में दिमाग तक ...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'पर क्या कीड़ा सच में दिमाग तक ...'
-  -> Line 5/9: 'कान का पर्दा एक मजबूत अभेद्य द...'
+  -> Line 5/6: 'कान का पर्दा एक मजबूत अभेद्य द...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'कान का पर्दा एक मजबूत अभेद्य द...'
-  -> Line 6/9: 'तो फिर कीड़े को बाहर कैसे निका...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तो फिर कीड़े को बाहर कैसे निका...'
-  -> Line 7/9: 'डॉक्टरों के मुताबिक, कान में त...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'डॉक्टरों के मुताबिक, कान में त...'
-  -> Line 8/9: 'ऑयल से कीड़े का दम घुट जाएगा औ...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'ऑयल से कीड़े का दम घुट जाएगा औ...'
-  -> Line 9/9: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'इस लाइफ-सेविंग ट्रिक को अपने द...'
-  -> Assembling master narration.wav (45.11s)...
-  --> Voice & Timing Complete (Full Video (16:9)): 45.11s across 9 cuts.
+  -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन इसके पीछे का असली वैज्ञा...'
+  -> Assembling master narration.wav (39.30s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 39.30s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 39 cues, 45.11 s
+data/cues.json: 40 cues, 39.30 s
   -> Running python tools/mix.py...
-data/mix.wav: 45.11 s · voice: yes · music: tension · 39 cues
-  --> mix.wav ready!
-
-[Rendering Native 3D 16:9 MP4: aadhya_video_16_9.mp4] via Headless Chromium Three.js...
-0/1128 frames150/1128 frames300/1128 frames450/1128 frames600/1128 frames750/1128 frames900/1128 frames1050/1128 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (1128 frames, with data/mix.wav, 45 s)
-  --> Native 16:9 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_video_16_9.mp4 (8.58 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9
-  --> Native 16:9 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_16_9/t6.50.jpg
-
-[QA Pre-Flight Inspector] Auditing 16:9 video: aadhya_video_16_9.mp4...
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/mix.py", line 164, in <module>
+    x = fn(**({'d': c['dur']} if c.get('dur') else {}))
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/mix.py", line 49, in slide
+    n = lp(noise(d), 700); e = np.sin(np.pi * np.linspace(0, 1, len(n))) ** 2
+           ^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/mix.py", line 40, in noise
+    def noise(d): return rng.standard_normal(int(d * SR))
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "numpy/random/_generator.pyx", line 1181, in numpy.random._generator.Generator.standard_normal
+  File "numpy/random/_common.pyx", line 309, in numpy.random._common.double_fill
+ValueError: negative dimensions are not allowed
 
 
 !!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
 Traceback (most recent call last):
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 636, in <module>
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 640, in <module>
     asyncio.run(main())
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
     return runner.run(main)
@@ -57,11 +56,13 @@ Traceback (most recent call last):
   File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
     return future.result()
            ^^^^^^^^^^^^^^^
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 523, in main
-    verify_visual_integrity(video_16_9, aspect="16:9")
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 305, in verify_visual_integrity
-    raise ValueError(f"QA Failed: Resolution mismatch! Expected {expected_w}x{expected_h}, got {w}x{h}")
-ValueError: QA Failed: Resolution mismatch! Expected 1920x1080, got 1080x1920
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 579, in main
+    build_audio_mix()
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 247, in build_audio_mix
+    subprocess.run([sys.executable, "tools/mix.py", "."], cwd=ENGINE_DIR, check=True)
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['/opt/hostedtoolcache/Python/3.11.18/x64/bin/python', 'tools/mix.py', '.']' returned non-zero exit status 1.
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
