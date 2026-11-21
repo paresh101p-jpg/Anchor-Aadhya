@@ -3,7 +3,7 @@
 import { ctx, C, W, H } from './core/lib.js';
 import { L, T, lineWords } from './core/timing.js';
 import { drawSemanticScene, elementKeysFor } from './semantics.js';
-import { COUPLE_SPEAKERS, coupleCam } from './couple_scenes.js';
+import { COUPLE_SPEAKERS } from './couple_scenes.js';
 
 export function buildShots(script = {}) {
   const S = [], CUES = [];
@@ -22,9 +22,8 @@ export function buildShots(script = {}) {
       id: `S${String(i + 1).padStart(2, '0')}`,
       at: st,
       cam: [540, 925],
-      zoom: isCouple ? 0 : 0.02,
-      zoomFast: isCouple,
-      camAt: isCouple ? (p) => coupleCam(i, p) : undefined,
+      zoom: isCouple ? 0.05 : 0.02,
+      zoomFast: false,
       note: isCouple
         ? `line ${i + 1} [${speaker} face close-up]: ${text.slice(0, 44)}`
         : `line ${i + 1} [${elementKeysFor(text).join('+')}]: ${text.slice(0, 44)}`,
