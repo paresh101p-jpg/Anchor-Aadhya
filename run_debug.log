@@ -1,96 +1,53 @@
-🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
-==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
-  Topic ID: holding_urine_risk
-==============================================================
-  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine (engine_3d)
+==========================================================
+  RICO ANIMATION / 100% SYNCED 3D SHORTS GENERATOR
+==========================================================
+Gemini live research notice: HTTP Error 404: Not Found, using curated fallback pool
 
-📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
+🎬 Topic: छींक (Sneeze) रोकने की गलती कभी मत करना! 😱 #Shorts (ID: sneezing_held_in)
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
-  -> Line 1/6: 'अगर आप भी सफर या आलस में घंटों...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'अगर आप भी सफर या आलस में घंटों...'
-  -> Line 2/6: 'हमारा ब्लैडर लगभग आधा लीटर लिक...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'हमारा ब्लैडर लगभग आधा लीटर लिक...'
-  -> Line 3/6: 'लेकिन जब यह फुल हो जाता है और ...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन जब यह फुल हो जाता है और ...'
-  -> Line 4/6: 'तो ब्लैडर किसी फूले हुए गुब्बा...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तो ब्लैडर किसी फूले हुए गुब्बा...'
-  -> Line 5/6: 'रुका हुआ पेशाब बैक्टीरिया की व...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'रुका हुआ पेशाब बैक्टीरिया की व...'
-  -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (35.36s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 35.36s across 6 cuts.
+--- Scene 1/4 ---
+  🔊 Voice: 'अगर आप गलती से भी अपनी छींक को दबाने की ...'
+  ✓ Audio generated: 8.16s
+  🎨 Visual: 'Shocked 3D cartoon character pinching no...'
+  ✓ Visual generated (9:16 Vertical)
+  ✓ Scene 1 Video Clip ready (8.16s)
 
-[2/5] Building Procedural Sound Effects & Music Mix...
-  -> Running node tools/capture.mjs cues...
-data/cues.json: 10 cues, 35.36 s
-  -> Running python tools/mix.py...
-unknown cue type, skipped: zap
-unknown cue type, skipped: sub_bass
-unknown cue type, skipped: beep
-data/mix.wav: 35.36 s · voice: yes · music: tension · 10 cues
-  --> mix.wav ready!
-
-[Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/884 frames150/884 frames300/884 frames450/884 frames600/884 frames750/884 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (884 frames, with data/mix.wav, 461 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.31 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
-  --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
-
-[QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
-  ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 35.36s (Audio-Visual Synced)
-  ✅ Zero Fake Blur & Zero Black Padding Verified!
-Generating Viral High-CTR Curiosity Thumbnail for: घंटों तक पेशाब (Urine) रोकने से शरीर में...
-ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
-  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
-  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
-  libavutil      60.  8.100 / 60.  8.100
-  libavcodec     62. 11.100 / 62. 11.100
-  libavformat    62.  3.100 / 62.  3.100
-  libavdevice    62.  1.100 / 62.  1.100
-  libavfilter    11.  4.100 / 11.  4.100
-  libswscale      9.  1.100 /  9.  1.100
-  libswresample   6.  1.100 /  6.  1.100
-Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 51413 kb/s
-  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
-Stream mapping:
-  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
-Press [q] to stop, [?] for help
-[swscaler @ 0x73cc1c052340] deprecated pixel format used, make sure you did set range correctly
-Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg':
-  Metadata:
-    encoder         : Lavf62.3.100
-  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 81:256 DAR 9:16], q=2-31, 200 kb/s, 25 fps, 25 tbn
-    Metadata:
-      encoder         : Lavc62.11.100 mjpeg
-    Side data:
-      ICC Profile
-      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x5cade7d8c000] video:198KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=1.15x elapsed=0:00:00.03    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg (197.8 KB)
-  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg
-
-[Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
-  --> Title: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.31 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 20%
-  --> Upload Progress: 41%
-  --> Upload Progress: 62%
-  --> Upload Progress: 82%
-
-[SUCCESS] VIDEO UPLOADED! Video ID: 210Xiiydd2A
-  --> Live URL: https://www.youtube.com/watch?v=210Xiiydd2A
-  --> [SUCCESS] Custom Thumbnail Attached!
-  --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
-
-==============================================================
-  🎉 2-STAGE FUNNEL FULLY COMPLETED!
-  1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
-  2. Viral 30-40s Short: https://www.youtube.com/watch?v=210Xiiydd2A
-==============================================================
+--- Scene 2/4 ---
+  🔊 Voice: 'एक छींक की रफ्तार 160 किलोमीटर प्रति घंट...'
+  ✓ Audio generated: 13.92s
+  🎨 Visual: '3D internal x-ray anatomical cutaway of ...'
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 268, in <module>
+    asyncio.run(render_synced_video())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 192, in render_synced_video
+    generate_scene_image(prompt, image_file)
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 70, in generate_scene_image
+    with urllib.request.urlopen(req, timeout=60) as resp:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 216, in urlopen
+    return opener.open(url, data, timeout)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 525, in open
+    response = meth(req, response)
+               ^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 634, in http_response
+    response = self.parent.error(
+               ^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 563, in error
+    return self._call_chain(*args)
+           ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 496, in _call_chain
+    result = func(*args)
+             ^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 643, in http_error_default
+    raise HTTPError(req.full_url, code, msg, hdrs, fp)
+urllib.error.HTTPError: HTTP Error 402: Payment Required
