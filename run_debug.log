@@ -1,73 +1,105 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
+
+[AI Researcher v3.0] Initiating Real-Time Deep Web Curiosity Research...
+  -> Tracker Audit: 12 previously covered topics strictly locked against duplicates.
+  -> Category Rotation Target: 'Tech & Everyday Psychology Dark Secrets' [Skill: vox-doc]
+  -> Psychological Hook Engine Armed: THE_IMPOSSIBLE_HEIST
+  -> Querying Gemini 3.5 Flash (Attempt 1/3)...
+  -> [Notice] Gemini live research error: 503 UNAVAILABLE. {'error': {'code': 503, 'message': 'This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.', 'status': 'UNAVAILABLE'}}
+  -> Using Emergency Rare Verified Curiosity Pool...
+  -> Selected Unused Emergency Candidate: [electric_shock_grip] करंट लगते ही हाथ तार को इतनी मजबूती से क्यों पकड़ लेता है? ⚡ #Shorts
+  🆕 [Fresh Topic] electric_shock_grip | करंट लगते ही हाथ तार को इतनी मजबूती से क्यों पकड़ लेता है? ⚡ #Shorts
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: सिर के बल उल्टा लटकने से इंसान की जान क्यों चली जाती है? 🦇 #Shorts
-  Topic ID: upside_down_hang
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: करंट लगते ही हाथ तार को इतनी मजबूती से क्यों पकड़ लेता है? ⚡ #Shorts
+  Topic ID: electric_shock_grip
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: सिर के बल उल्टा लटकने से इंसान की जान क्यों चली जाती है? 🦇 #Shorts
-  -> Line 1/6: 'क्या होगा अगर कोई इंसान सिर्फ ...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: करंट लगते ही हाथ तार को इतनी मजबूती से क्यों पकड़ लेता है? ⚡ #Shorts
+  -> Line 1/6: 'जब किसी इंसान को हाई वोल्टेज ब...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'क्या होगा अगर कोई इंसान सिर्फ ...'
-  -> Line 2/6: 'चमगादड़ तो आसानी से उल्टे लटकत...'
+    [Edge-TTS Swara Backup]: 'जब किसी इंसान को हाई वोल्टेज ब...'
+  -> Line 2/6: 'आपने अक्सर सुना होगा कि बिजली ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'चमगादड़ तो आसानी से उल्टे लटकत...'
-  -> Line 3/6: 'उल्टा होते ही आपके भारी पेट, ल...'
+    [Edge-TTS Swara Backup]: 'आपने अक्सर सुना होगा कि बिजली ...'
+  -> Line 3/6: 'लेकिन क्या वाकई बिजली में खींच...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'उल्टा होते ही आपके भारी पेट, ल...'
-  -> Line 4/6: 'जिससे फेफड़ों को फैलने की जगह ...'
+    [Edge-TTS Swara Backup]: 'लेकिन क्या वाकई बिजली में खींच...'
+  -> Line 4/6: 'हकीकत में बिजली किसी को नहीं ख...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'जिससे फेफड़ों को फैलने की जगह ...'
-  -> Line 5/6: 'साथ ही, सारा खून ग्रेविटी के क...'
+    [Edge-TTS Swara Backup]: 'हकीकत में बिजली किसी को नहीं ख...'
+  -> Line 5/6: 'जैसे ही करंट उंगलियों को छूता ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'साथ ही, सारा खून ग्रेविटी के क...'
+    [Edge-TTS Swara Backup]: 'जैसे ही करंट उंगलियों को छूता ...'
   -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (47.12s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 47.12s across 6 cuts.
+  -> Assembling master narration.wav (49.01s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 49.01s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 27 cues, 47.12 s
+data/cues.json: 28 cues, 49.01 s
   -> Running python tools/mix.py...
-data/mix.wav: 47.12 s · voice: yes · music: tension · 27 cues
+data/mix.wav: 49.01 s · voice: yes · music: bed · 28 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1178 frames150/1178 frames300/1178 frames450/1178 frames600/1178 frames750/1178 frames900/1178 frames1050/1178 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1178 frames, with data/mix.wav, 40 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (5.43 MB)
+0/1225 frames150/1225 frames300/1225 frames450/1225 frames600/1225 frames750/1225 frames900/1225 frames1050/1225 frames1200/1225 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1225 frames, with data/mix.wav, 37 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.77 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 47.08s (Audio-Visual Synced)
+  ✅ Duration: 49.00s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
+Generating Viral High-CTR Curiosity Thumbnail for: करंट लगते ही हाथ तार को इतनी मजबूती से क...
+ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg':
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 27102 kb/s
+  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
+Press [q] to stop, [?] for help
+[swscaler @ 0x7cf298052180] deprecated pixel format used, make sure you did set range correctly
+Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 81:256 DAR 9:16], q=2-31, 200 kb/s, 25 fps, 25 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 mjpeg
+    Side data:
+      ICC Profile
+      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[out#0/image2 @ 0x63acc8d80000] video:198KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.922x elapsed=0:00:00.04    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (197.6 KB)
+  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg
 
-[DRY RUN] Generating contact sheet for visual review; SKIPPING upload.
-duration 47.12 s
-S01     0.00 →   6.65  (6.65 s)  line 1 [flip]: क्या होगा अगर कोई इंसान सिर्फ 24 घंटे के लिए
-S02     6.65 →  13.40  (6.76 s)  line 2 [bat+flip]: चमगादड़ तो आसानी से उल्टे लटकते हैं, पर इंसा
-S03    13.40 →  20.71  (7.31 s)  line 3 [flip+lungs+organs]: उल्टा होते ही आपके भारी पेट, लीवर और आंतें न
-S04    20.71 →  27.51  (6.80 s)  line 4 [lungs]: जिससे फेफड़ों को फैलने की जगह नहीं मिलती और 
-S05    27.51 →  33.77  (6.25 s)  line 5 [blood+brain]: साथ ही, सारा खून ग्रेविटी के कारण सिर और दिम
-S06    33.77 →  47.12  (13.35 s)  line 6 [click]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
-captions:
-    0.40–3.78   24 घंटे *उल्टा
-    3.78–6.68   लटकने पर *क्या?
-    6.68–10.13  चमगादड़ *लटकते हैं
-   10.13–13.43  इंसान *नहीं!
-   13.43–18.29  भारी *ऑर्गन्स
-   18.29–20.74  फेफड़ों पर *दबाव!
-   20.74–21.25  सांस लेना *मुश्किल
-   21.25–27.54  फेफड़े *दबते हैं
-   27.54–30.80  दिमाग में *खून
-   30.80–33.80  प्रेशर *बढ़ता है
-   33.80–40.94  असली *वैज्ञानिक* सच
-   40.94–47.12  नीचे लिंक पर *क्लिक* करें
-CHECK OK
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (12 frames, every 4 s)
-[DRY RUN] Contact sheet: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg
+[Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
+  --> Title: करंट लगते ही हाथ तार को इतनी मजबूती से क्यों पकड़ लेता है? ⚡ #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.77 MB)
+  --> Uploading video stream to YouTube...
+
+[SUCCESS] VIDEO UPLOADED! Video ID: PgQrwxMMuqU
+  --> Live URL: https://www.youtube.com/watch?v=PgQrwxMMuqU
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
+
+==============================================================
+  🎉 2-STAGE FUNNEL FULLY COMPLETED!
+  1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
+  2. Viral 30-40s Short: https://www.youtube.com/watch?v=PgQrwxMMuqU
+==============================================================
