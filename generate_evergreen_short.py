@@ -539,7 +539,8 @@ async def main():
         sheet_dir = os.path.join(BASE_DIR, "visual_review")
         os.makedirs(sheet_dir, exist_ok=True)
         sheet_path = os.path.join(sheet_dir, "contact_sheet.jpg")
-        subprocess.run(["node", "tools/capture.mjs", "sheet", sheet_path, "4", "6"], cwd=ENGINE_DIR, check=True)
+        drv_env = os.environ.copy(); drv_env["QS"] = "?debug=1"
+        subprocess.run(["node", "tools/capture.mjs", "sheet", sheet_path, "4", "6"], cwd=ENGINE_DIR, env=drv_env, check=True)
         print(f"[DRY RUN] Contact sheet: {sheet_path}", flush=True)
         return
 

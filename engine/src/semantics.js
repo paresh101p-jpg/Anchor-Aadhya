@@ -353,6 +353,8 @@ export function drawSemanticScene(lineText, script, lineIndex, t, lt, d) {
   });
   ctx.restore();
 
-  tag(`Line ${lineIndex + 1}: ${keys.join(' + ')}`, 540, 1330, 30, C.white, C.navy);
+  if (typeof location !== 'undefined' && new URLSearchParams(location.search).has('debug')) {
+    tag(`Line ${lineIndex + 1}: ${keys.join(' + ')}`, 540, 1330, 30, C.white, C.navy);
+  }
   return keys;
 }
