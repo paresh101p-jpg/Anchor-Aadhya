@@ -249,6 +249,17 @@ const E = {
     E.tooth(x, y + 30 * s, 0.9 * s, t, 3);
     tag('एसिड • छेद', x, y + 235 * s, 38, C.white, C.red);
   },
+  blood(x, y, s, t) {
+    ell(x, y - 30 * s, 150 * s, 95 * s, C.skin);
+    for (let k = 0; k < 8; k++) circle(x - 110 * s + k * 32 * s, y - 70 * s + Math.sin(t * 2 + k) * 10, 22 * s, C.red);
+    tag('सिर में खून', x, y + 105 * s, 38, C.white, C.red);
+  },
+  click(x, y, s, t) {
+    arrowLocal(x, y - 130 * s, x, y + 90 * s, C.yellow, 26 * s);
+    rr(x - 150 * s, y + 110 * s, 300 * s, 80 * s, 16 * s); ctx.fillStyle = '#3A7BD5'; ctx.fill();
+    ctx.font = F(38 * s); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText('लिंक खोलें', x, y + 150 * s);
+  },
   danger(x, y, s, t) { K.warning(x, y, 1.3 * s * (1 + 0.05 * Math.sin(t * 8))); tag('खतरा', x, y + 160 * s, 42, C.white, C.red); },
   question(x, y, s, t) { bigText('?', x, y, 150 * s, C.yellow, 0.1); tag('सवाल', x, y + 150 * s, 38, C.white, C.navy); },
   person(x, y, s, t) { K.man({ x, y, s: 0.85 * s, eyes: 'wide', mouth: 'o', brow: 1 }); tag('इंसान', x, y + 260 * s, 36); },
@@ -263,12 +274,14 @@ function arrowLocal(x1, y1, x2, y2, color, w) {
 
 // keyword → element name(s). Matched against the actual spoken text.
 const RULES = [
+  [/लिंक|क्लिक|कमेंट|डिस्क्रिप्शन/, 'click'],
+  [/खून|रक्त/, 'blood'],
   [/कीड़ा[^|]{0,12}नहीं|नहीं[^|]{0,12}कीड़ा|कोई कीड़ा/, 'noBug'],
   [/लैक्टिक एसिड|एसिड[^|]{0,15}दांत|दांत[^|]{0,15}एसिड/, 'acidDrop'],
   [/चमगादड़|बैट/, 'bat'], [/उल्ट|सिर के बल|लटक/, 'flip'], [/कमरा|घर|छत|सेलिंग/, 'room'],
   [/फेफड़|सांस/, 'lungs'], [/पेट|आंत|लीवर|गले|निगल/, 'organs'], [/एसिड|अम्ल/, 'stomach'],
-  [/आंतें/, 'intestine'], [/प्रेशर|दबाव|दबा|जोर/, 'pressure'], [/जान|मौत|खतरा|सावधान|हमला|बहरा|डैमेज|फट/, 'danger'],
-  [/छींक/, 'sneeze'], [/160|हवा|रफ्तार|तूफान/, 'wind'], [/नाक|मुंह|दबाकर|तीली|उंगली/, 'hand'],
+  [/आंतें/, 'intestine'], [/प्रेशर|दबाव|दबा|जोर/, 'pressure'], [/जानलेवा|जान जा|जान का|मौत|खतरा|सावधान|हमला|बहरा|डैमेज|फट/, 'danger'],
+  [/छींक/, 'sneeze'], [/160|हवा|रफ्तार|तूफान/, 'wind'], [/मुंह|दबाकर|तीली|उंगली|नाक और/, 'hand'],
   [/चुइंगम|गम/, 'gum'], [/7 साल|सात साल|मिथक|झूठ/, 'myth'],
   [/पानी|प्यास|सूख/, 'water'], [/किडनी|पेशाब/, 'kidney'],
   [/दिमाग|ब्रेन/, 'brain'], [/नींद|सोते|सोने/, 'sleep'], [/तरल|CSF|धुलाई/, 'fluid'],
@@ -282,8 +295,21 @@ export function elementKeysFor(text = '') {
   const t = String(text);
   const out = [];
   for (const [re, key] of RULES) if (re.test(t) && !out.includes(key)) out.push(key);
-  if (!out.length) out.push(/[?？]/.test(t) || /^(क्या|क्यों|कैसे)/.test(t.trim()) ? 'question' : 'person');
-  return out.slice(0, 3);
+
+  // context fixes: "no bug" must not also draw a live bug; mouth acid is not stomach acid
+  if (out.includes('noBug')) {
+    const i = out.indexOf('bug'); if (i >= 0) out.splice(i, 1);
+  }
+  if (/दांत|इनैमल|छेद/.test(t)) {
+    const si = out.indexOf('stomach');
+    if (si >= 0) out.splice(si, 1, 'acidDrop');
+  }
+  if (out.includes('acidDrop')) {
+    const si = out.indexOf('stomach'); if (si >= 0) out.splice(si, 1);
+  }
+  const uniq = [...new Set(out)];
+  if (!uniq.length) uniq.push(/[?？]/.test(t) || /^(क्या|क्यों|कैसे)/.test(t.trim()) ? 'question' : 'person');
+  return uniq.slice(0, 3);
 }
 
 function anchorBadge(t) {
