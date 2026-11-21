@@ -39,23 +39,12 @@ def main():
         return 1
 
     try:
-        me = youtube.channels().list(mine=True, part="snippet,contentDetails").execute()
+        me = youtube.channels().list(mine=True, part="snippet").execute()
         for ch in me.get("items", []):
-            print(f"[AUTH] Channel: {ch['snippet']['title']} ({ch['id']})", flush=True)
-            uploads = ch.get("contentDetails", {}).get("relatedPlaylists", {}).get("uploads")
-            if uploads:
-                pl = youtube.playlistItems().list(part="snippet", playlistId=uploads, maxResults=20).execute()
-                for item in pl.get("items", []):
-                    print(f"[CHANNEL VIDEO] {item['snippet']['resourceId']['videoId']} | {item['snippet']['title']}", flush=True)
+            snip = ch["snippet"]
+            print(f"[AUTH] Channel: {snip['title']} | handle: @{snip.get('customUrl', '?')}", flush=True)
     except Exception as exc:
-        print(f"[AUTH] Could not read channel (scope missing?): {exc}", flush=True)
-
-    try:
-        found = youtube.videos().list(part="snippet", id=",".join(ids)).execute()
-        for it in found.get("items", []):
-            print(f"[VIDEO FOUND] {it['id']} | {it['snippet']['title']}", flush=True)
-    except Exception as exc:
-        print(f"[VIDEO LOOKUP ERROR] {exc}", flush=True)
+        print(f"[AUTH] Could not read channel: {exc}", flush=True)
 
     failed = []
     for vid in ids:
