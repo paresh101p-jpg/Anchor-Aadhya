@@ -8,53 +8,49 @@
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
 [Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: पत्नी ने पूछा-प्यार कितना? पति ने दिया ये जवाब! 😂 #Shorts
-  -> Line 1/6: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
+  -> Line 1/5: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
-  -> Line 2/6: 'पति ने गंभीर होकर कहा — इतना क...'
+  -> Line 2/5: 'पति ने गंभीर होकर कहा — इतना क...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'पति ने गंभीर होकर कहा — इतना क...'
-  -> Line 3/6: 'पत्नी हैरान — ये तो रोज़ होना ...'
+  -> Line 3/5: 'पत्नी हैरान — ये तो रोज़ होना ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'पत्नी हैरान — ये तो रोज़ होना ...'
-  -> Line 4/6: 'पति ने मुस्कुराकर फोन दिखाया —...'
+  -> Line 4/5: 'पति ने मुस्कुराकर फोन दिखाया —...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'पति ने मुस्कुराकर फोन दिखाया —...'
-  -> Line 5/6: 'पत्नी ने हंसकर कहा — तो प्यार ...'
+  -> Line 5/5: 'पत्नी ने हंसकर कहा — तो प्यार ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'पत्नी ने हंसकर कहा — तो प्यार ...'
-  -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
-    ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (42.22s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 42.22s across 6 cuts.
+  -> Assembling master narration.wav (29.85s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 29.85s across 5 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 30 cues, 42.22 s
+data/cues.json: 25 cues, 29.85 s
   -> Running python tools/mix.py...
-data/mix.wav: 42.22 s · voice: yes · music: bed · 30 cues
+data/mix.wav: 29.85 s · voice: yes · music: bed · 25 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1056 frames150/1056 frames300/1056 frames450/1056 frames600/1056 frames750/1056 frames900/1056 frames1050/1056 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1056 frames, with data/mix.wav, 38 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.75 MB)
+0/746 frames150/746 frames300/746 frames450/746 frames600/746 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (746 frames, with data/mix.wav, 24 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.31 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 42.20s (Audio-Visual Synced)
+  ✅ Duration: 29.84s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 
 [DRY RUN] Generating contact sheet for visual review; SKIPPING upload.
-duration 42.22 s
+duration 29.85 s
 S01     0.00 →   5.57  (5.57 s)  line 1 [girl face close-up]: सुबह-सुबह पत्नी ने पूछा — आज मुझे कितना प्या
 S02     5.57 →  11.36  (5.80 s)  line 2 [man face close-up]: पति ने गंभीर होकर कहा — इतना कि आज मैंने बर्
 S03    11.36 →  16.65  (5.29 s)  line 3 [girl face close-up]: पत्नी हैरान — ये तो रोज़ होना चाहिए था, आज क
 S04    16.65 →  22.62  (5.96 s)  line 4 [man face close-up]: पति ने मुस्कुराकर फोन दिखाया — देखो, आज मेरा
-S05    22.62 →  28.87  (6.25 s)  line 5 [girl face close-up]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
-S06    28.87 →  42.22  (13.35 s)  line 6 [both face close-up]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
+S05    22.62 →  29.85  (7.23 s)  line 5 [girl face close-up]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
 captions:
     0.40–3.47   प्यार *कितना?
     3.47–5.60   सुबह-सुबह
@@ -65,11 +61,9 @@ captions:
    16.68–18.45  बैलेंस *ज़ीरो!
    18.45–22.65  फोन *दिखाया
    22.65–25.18  प्यार *बर्तनों से
-   25.18–28.90  बैलेंस *नहीं!
-   28.90–36.04  असली *वैज्ञानिक* सच
-   36.04–42.22  नीचे लिंक पर *क्लिक* करें
+   25.18–29.85  बैलेंस *नहीं!
 CHECK OK
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (11 frames, every 4 s)
+/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (7 frames, every 4 s)
 [DRY RUN] Contact sheet: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
 [DRY RUN] Per-line frames: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
