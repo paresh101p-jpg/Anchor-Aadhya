@@ -1,17 +1,82 @@
-// SHOT BUILDER: one shot per narration line. Visuals are drawn from the SPOKEN WORDS themselves,
-// so every line shows the object/action it talks about (and only that). No hardcoded gum reel.
+// CINEMATIC RAPID-CUT SHOT BUILDER (High-Dopamine 1.5s-2s Cuts)
+// Word-level dynamic cuts: every line is split into rapid sub-shots
+// synced to the actual spoken words, with camera punch-ins and sound cues.
 import { ctx, C, W, H } from './core/lib.js';
 import { L, T, lineWords } from './core/timing.js';
 import { drawSemanticScene, elementKeysFor } from './semantics.js';
 import { COUPLE_SPEAKERS } from './couple_scenes.js';
+import * as Cinema from './cinematic_scenes.js';
+
+const CINEMA_POOL = [
+  Cinema.drawOceanDive,
+  Cinema.drawMarianaChasm,
+  Cinema.drawEverestComparison,
+  Cinema.drawMidnightDarkness,
+  Cinema.drawSubmarineSearchlight,
+  Cinema.drawPressureSlam,
+  Cinema.drawElephantWeight,
+  Cinema.drawSonarRadar,
+  Cinema.drawAlienCreature,
+  Cinema.drawSonarRadar,
+  Cinema.drawSubmarineSearchlight,
+  Cinema.drawPlasticDiscovery,
+  Cinema.drawMarianaChasm,
+  Cinema.drawOutroCTA,
+];
 
 export function buildShots(script = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
   const cue = (t, type, o = {}) => CUES.push({ t: +t.toFixed(3), type, ...o });
-  const cut = (i) => (i === 0 ? 0 : L(i) - 0.08);
   const n = (script.lines || []).length || 1;
 
+  // Use Rapid-Cut Cinematic Engine for 30s Documentary Shorts
+  const isCinematic = script.id === 'mariana_trench_abyss' || script.is_30s || script.is_cinematic;
+
+  if (isCinematic) {
+    let shotIdx = 0;
+    for (let i = 0; i < n; i++) {
+      const ws = lineWords(i);
+      const text = String((script.lines || [])[i]?.text || '');
+      const lineStart = ws.length ? ws[0].s : L(i);
+      const lineEnd = ws.length ? ws[ws.length - 1].e : (i + 1 < n ? L(i + 1) : T.dur);
+
+      // Split line into 2 rapid sub-shots if there are enough words
+      const cutPoints = [lineStart];
+      if (ws.length >= 4) {
+        const midIdx = Math.floor(ws.length * 0.5);
+        cutPoints.push(ws[midIdx].s);
+      }
+
+      cutPoints.forEach((atTime, subIdx) => {
+        const drawFn = CINEMA_POOL[shotIdx % CINEMA_POOL.length];
+        const nextAt = subIdx + 1 < cutPoints.length ? cutPoints[subIdx + 1] : lineEnd;
+        const shotDur = Math.max(0.8, nextAt - atTime);
+
+        add({
+          id: `S${String(shotIdx + 1).padStart(2, '0')}`,
+          at: Math.max(0, atTime - 0.04),
+          cam: [540, 960],
+          zoom: 0.04,
+          zoomFast: subIdx > 0,
+          note: `Beat ${shotIdx + 1} [Rapid Cut]: ${text.slice(0, 32)}`,
+          draw(lt, d, t) {
+            drawFn(lt, d, t);
+          },
+        });
+
+        // Dynamic audio cues on every single cut
+        cue(atTime, 'whoosh', { gain: 0.45 });
+        cue(atTime + 0.05, 'pop', { gain: 0.3 });
+
+        shotIdx++;
+      });
+    }
+    return { shots: S, cues: CUES };
+  }
+
+  // Fallback for legacy couple reels
+  const cut = (i) => (i === 0 ? 0 : L(i) - 0.08);
   for (let i = 0; i < n; i++) {
     const st = cut(i);
     const dur = (i + 1 < n ? L(i + 1) - 0.08 : T.dur) - st;
