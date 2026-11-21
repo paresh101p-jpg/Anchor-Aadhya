@@ -3,6 +3,7 @@
 // Nothing abstract, nothing from a previous topic. Also shows the Anchor Aadhya presenter badge.
 import { ctx, C, W, H, clamp, lerp, seg, eo, eob, circle, ell, line, rr, bigText, fillAll, TAU } from './core/lib.js';
 import * as K from './core/kit.js';
+import { drawCoupleScene } from './couple_scenes.js';
 
 const F = (s) => `900 ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
@@ -495,6 +496,10 @@ function anchorBadge(t) {
 }
 
 export function drawSemanticScene(lineText, script, lineIndex, t, lt, d) {
+  if (script && script.id === 'couple_first_reel') {
+    drawCoupleScene(lineIndex, lineText, t, lt, d);
+    return ['stick-girl', 'stick-man'];
+  }
   const keys = elementKeysFor(lineText);
   const flip = keys.includes('flip');
   const p = flip ? clamp(lt / Math.max(0.7, d * 0.4)) : 0;
