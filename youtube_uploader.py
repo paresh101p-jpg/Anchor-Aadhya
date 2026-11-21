@@ -204,7 +204,7 @@ def upload_daily_bulletin(slot=None, force=False):
             "defaultAudioLanguage": "hi"
         },
         "status": {
-            "privacyStatus": "public",
+            "privacyStatus": os.environ.get("YOUTUBE_PRIVACY_STATUS", "unlisted"),
             "selfDeclaredMadeForKids": False,
             "embeddable": True,
             "containsSyntheticMedia": True
@@ -352,7 +352,7 @@ def upload_direct_video(video_path, meta_path, thumb_path=None):
             "defaultAudioLanguage": "hi"
         },
         "status": {
-            "privacyStatus": "public",
+            "privacyStatus": os.environ.get("YOUTUBE_PRIVACY_STATUS", "unlisted"),
             "selfDeclaredMadeForKids": False,
             "embeddable": True,
             "containsSyntheticMedia": True
