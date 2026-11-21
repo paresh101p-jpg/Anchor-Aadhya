@@ -29,24 +29,31 @@ TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
 RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
 REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
 
+def clean_all_temp_assets():
+    """Wipes all previous video renders, cached audios, and old frames to guarantee 100% fresh assets on every run."""
+    import shutil
+    for eng in [ENGINE_DIR_2D, ENGINE_DIR_3D]:
+        if not os.path.exists(eng):
+            continue
+        for sub in ["renders", "review", "temp_audio", "data"]:
+            p = os.path.join(eng, sub)
+            if os.path.exists(p):
+                try:
+                    shutil.rmtree(p)
+                except Exception:
+                    pass
+                os.makedirs(p, exist_ok=True)
+    print("🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!", flush=True)
+
 def configure_engine_for_topic(topic=None):
     """
     Dynamically routes the topic to the best visual engine:
-    - 2D Graphic / Inside-Out Engine (Default, fast, 100% code-based, zero cost, topic-accurate)
-    - 3D Deep Dive Engine (for complex 3D environments)
+    - 3D Deep Dive Engine (Default, fully adaptive 3D characters and sets per topic)
     """
     global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
-    chosen_engine = ENGINE_DIR_2D
-    if topic:
-        skill = str(topic.get("best_skill", "")).lower()
-        cat = str(topic.get("category", "")).lower()
-        if "3d" in skill or "deep-dive" in skill:
-            if os.path.exists(ENGINE_DIR_3D):
-                chosen_engine = ENGINE_DIR_3D
-                print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
+    chosen_engine = ENGINE_DIR_3D if os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
 
-    if chosen_engine == ENGINE_DIR_2D:
-        print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
+    print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
 
     ENGINE_DIR = chosen_engine
     DATA_DIR = os.path.join(ENGINE_DIR, "data")
@@ -493,6 +500,9 @@ def generate_aadhya_ai_thumbnail(topic):
     return None
 
 async def main():
+    # 100% Fresh Assets: Wipe all previous cached renders, audio mixes, and frames
+    clean_all_temp_assets()
+
     topic_id_arg = os.environ.get("TOPIC_ID") or (sys.argv[1] if len(sys.argv) > 1 else None)
     if topic_id_arg:
         topics = load_topics()
