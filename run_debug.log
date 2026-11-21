@@ -37,8 +37,8 @@ data/mix.wav: 42.22 s · voice: yes · music: bed · 30 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1056 frames150/1056 frames300/1056 frames450/1056 frames600/1056 frames750/1056 frames900/1056 frames1050/1056 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1056 frames, with data/mix.wav, 31 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.95 MB)
+0/1056 frames150/1056 frames300/1056 frames450/1056 frames600/1056 frames750/1056 frames900/1056 frames1050/1056 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1056 frames, with data/mix.wav, 38 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.75 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
@@ -49,12 +49,12 @@ data/mix.wav: 42.22 s · voice: yes · music: bed · 30 cues
 
 [DRY RUN] Generating contact sheet for visual review; SKIPPING upload.
 duration 42.22 s
-S01     0.00 →   5.57  (5.57 s)  line 1 [word:सुबह+word:पत्नी+word:पूछा]: सुबह-सुबह पत्नी ने पूछा — आज मुझे कितना प्या
-S02     5.57 →  11.36  (5.80 s)  line 2 [word:पति+word:गंभीर+word:होकर]: पति ने गंभीर होकर कहा — इतना कि आज मैंने बर्
-S03    11.36 →  16.65  (5.29 s)  line 3 [word:पत्नी+word:हैरान+word:रोज़]: पत्नी हैरान — ये तो रोज़ होना चाहिए था, आज क
-S04    16.65 →  22.62  (5.96 s)  line 4 [phone]: पति ने मुस्कुराकर फोन दिखाया — देखो, आज मेरा
-S05    22.62 →  28.87  (6.25 s)  line 5 [word:पत्नी+word:हंसकर+word:कहा]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
-S06    28.87 →  42.22  (13.35 s)  line 6 [click]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
+S01     0.00 →   5.57  (5.57 s)  line 1 [girl face close-up]: सुबह-सुबह पत्नी ने पूछा — आज मुझे कितना प्या
+S02     5.57 →  11.36  (5.80 s)  line 2 [man face close-up]: पति ने गंभीर होकर कहा — इतना कि आज मैंने बर्
+S03    11.36 →  16.65  (5.29 s)  line 3 [girl face close-up]: पत्नी हैरान — ये तो रोज़ होना चाहिए था, आज क
+S04    16.65 →  22.62  (5.96 s)  line 4 [man face close-up]: पति ने मुस्कुराकर फोन दिखाया — देखो, आज मेरा
+S05    22.62 →  28.87  (6.25 s)  line 5 [girl face close-up]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
+S06    28.87 →  42.22  (13.35 s)  line 6 [both face close-up]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
 captions:
     0.40–3.47   प्यार *कितना?
     3.47–5.60   सुबह-सुबह
