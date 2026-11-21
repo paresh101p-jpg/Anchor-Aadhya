@@ -22,9 +22,7 @@ if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-ENGINE_DIR_3D = os.path.join(BASE_DIR, "engine_3d")
-ENGINE_DIR_2D = os.path.join(BASE_DIR, "engine")
-ENGINE_DIR = ENGINE_DIR_2D
+ENGINE_DIR = os.path.join(BASE_DIR, "engine")
 DATA_DIR = os.path.join(ENGINE_DIR, "data")
 TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
 RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
@@ -33,11 +31,9 @@ REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
 def clean_all_temp_assets():
     """Wipes all previous video renders, cached audios, and old frames to guarantee 100% fresh assets on every run."""
     import shutil
-    for eng in [ENGINE_DIR_2D, ENGINE_DIR_3D]:
-        if not os.path.exists(eng):
-            continue
+    if os.path.exists(ENGINE_DIR):
         for sub in ["renders", "review", "temp_audio", "data"]:
-            p = os.path.join(eng, sub)
+            p = os.path.join(ENGINE_DIR, sub)
             if os.path.exists(p):
                 try:
                     shutil.rmtree(p)
@@ -48,21 +44,12 @@ def clean_all_temp_assets():
 
 def configure_engine_for_topic(topic=None):
     """
-    Picks the visual engine for this run.
-    - 2D code-based cutaway engine is the reliable DEFAULT (no paid image APIs).
-    - 3D engine is opt-in via AADHYA_ENGINE=3d or a topic tagged best_skill='3d'.
+    Configures 2D Rick's Clips / Inside-Out Cutaway Engine (100% 2D).
     """
     global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
-    engine_env = os.environ.get("AADHYA_ENGINE", "3d").strip().lower()
-    # Default strictly to 3D Three.js engine (zero hardcoded bubblegum)
-    chosen_engine = ENGINE_DIR_3D if engine_env != "2d" and os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
+    ENGINE_DIR = os.path.join(BASE_DIR, "engine")
+    print("  🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)", flush=True)
 
-    if chosen_engine == ENGINE_DIR_3D:
-        print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
-    else:
-        print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
-
-    ENGINE_DIR = chosen_engine
     DATA_DIR = os.path.join(ENGINE_DIR, "data")
     TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
     RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")

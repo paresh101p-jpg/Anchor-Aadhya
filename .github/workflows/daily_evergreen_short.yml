@@ -4,11 +4,10 @@ on:
   workflow_dispatch: # Allows manual 1-click run anytime from GitHub Actions tab
     inputs:
       engine:
-        description: 'Visual engine (3d = Three.js Dynamic Explainer, 2d = legacy code-based)'
+        description: 'Visual engine (2d = Rick Clips / Inside-Out animated)'
         required: false
-        default: '3d'
-        type: choice
-        options: [3d, 2d]
+        default: '2d'
+        type: string
       topic_id:
         description: 'Optional curiosity_topics.json id to render a specific topic'
         required: false
@@ -63,7 +62,7 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render 3D Aadhya Short (voice + facts + captions) & Post as Unlisted
+      - name: Render 2D Aadhya Short (Rick's Clips Inside-Out) & Post as Unlisted
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
@@ -73,11 +72,10 @@ jobs:
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
         run: |
           set -o pipefail
-          ENGINE="${{ github.event.inputs.engine || '3d' }}"
           TOPIC_ID="${{ github.event.inputs.topic_id || '' }}"
-          export AADHYA_ENGINE="$ENGINE"
+          export AADHYA_ENGINE="2d"
           export TOPIC_ID="$TOPIC_ID"
-          echo "Starting 3D Aadhya Engine (engine=$ENGINE, topic=$TOPIC_ID)..."
+          echo "Starting 2D Rick's Clips Engine (topic=$TOPIC_ID)..."
           python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
 
       - name: Commit Run Logs & Trackers
