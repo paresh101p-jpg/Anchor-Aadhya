@@ -15,10 +15,12 @@ Daily faceless Hindi curiosity shorts, rendered and uploaded entirely on GitHub 
 
 Use **Actions → Anchor Aadhya Daily Evergreen Short → Run workflow**:
 
-- `engine`: `2d` (default, recommended) or `3d` (experimental; falls back to 2d on failure)
+- `engine`: `2d` (the only engine; 3D was removed)
 - `topic_id`: optional id from `curiosity_topics.json`, e.g. `upside_down_hang`
 
 A push to `TRIGGER_AADHYA_POST.txt` also starts the workflow.
+
+Old unlisted test uploads can be removed with **Actions → Cleanup YouTube Videos → Run workflow** and passing comma-separated video ids.
 
 ## Repository secrets
 

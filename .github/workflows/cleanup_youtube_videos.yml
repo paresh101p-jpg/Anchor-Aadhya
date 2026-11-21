@@ -1,0 +1,33 @@
+name: Cleanup YouTube Videos
+
+on:
+  workflow_dispatch:
+    inputs:
+      video_ids:
+        description: 'Comma-separated YouTube video IDs to delete permanently'
+        required: true
+        type: string
+
+jobs:
+  delete:
+    name: Permanently delete listed videos
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Delete videos
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_VIDEO_IDS: ${{ github.event.inputs.video_ids }}
+        run: python -u delete_youtube_videos.py

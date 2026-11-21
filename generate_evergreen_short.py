@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Anchor Aadhya Evergreen Curiosity Shorts Engine
-- Default: 100% code-based 2D 'inside-out' cutaway animation (zero external image API, zero cost)
-- Optional 3D engine only when AADHYA_ENGINE=3d is set explicitly
+- 100% code-based 2D 'inside-out' cutaway animation (zero external image API, zero cost)
 - Voice: Cartesia Aadhya (Hindi female) when the API key/credits are available,
   with free edge-tts hi-IN-SwaraNeural fallback so a run never dies on a paid API.
 - Devanagari kinetic captions with yellow keyword pops
@@ -248,7 +247,7 @@ def build_audio_mix():
     subprocess.run([sys.executable, "tools/mix.py", "."], cwd=ENGINE_DIR, check=True)
     print("  --> mix.wav ready!", flush=True)
 
-def render_native_3d_video(aspect="9:16"):
+def render_native_2d_video(aspect="9:16"):
     filename = "aadhya_short_9_16.mp4" if aspect == "9:16" else "aadhya_video_16_9.mp4"
     out_mp4 = os.path.join(RENDERS_DIR, filename)
     if os.path.exists(out_mp4):
@@ -258,9 +257,9 @@ def render_native_3d_video(aspect="9:16"):
     env = os.environ.copy()
     env["FPS"] = "25"
     env["ASPECT"] = aspect
-    print(f"\n[Rendering Native 3D {aspect} MP4: {filename}] via Headless Chromium Three.js...", flush=True)
+    print(f"\n[Rendering Native 2D {aspect} MP4: {filename}] via Headless Chromium canvas...", flush=True)
     subprocess.run(["node", "tools/capture.mjs", "video", f"renders/{filename}"], cwd=ENGINE_DIR, env=env, check=True)
-    print(f"  --> Native {aspect} 3D MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
+    print(f"  --> Native {aspect} 2D MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
     return out_mp4
 
 def extract_native_thumbnail(aspect="9:16"):
@@ -441,7 +440,7 @@ This video is created strictly for educational, informative, and curiosity purpo
     return desc.strip()
 
 def render_video_mp4():
-    return render_native_3d_video(aspect="9:16")
+    return render_native_2d_video(aspect="9:16")
 
 def extract_thumbnail_frame():
     return extract_native_thumbnail(aspect="9:16")
@@ -510,7 +509,7 @@ async def main():
     print(f"  Topic ID: {topic['id']}", flush=True)
     print("==============================================================", flush=True)
 
-    # Automatically route to best engine (2D Graphic / Inside-Out or 3D Deep Dive)
+    # Configure the 2D Graphic / Inside-Out engine for this topic
     configure_engine_for_topic(topic)
 
     from youtube_uploader import upload_direct_video
@@ -527,7 +526,7 @@ async def main():
     dur_short = await build_voice_and_timing(short_topic, is_short=True)
     build_audio_mix()
 
-    short_mp4 = render_native_3d_video(aspect="9:16")
+    short_mp4 = render_native_2d_video(aspect="9:16")
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
     verify_visual_integrity(short_mp4, aspect="9:16")
 
@@ -558,7 +557,7 @@ async def main():
     meta_short = {
         "title": short_topic["title"],
         "description": short_desc,
-        "tags": short_topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "3D Animation"]),
+        "tags": short_topic.get("tags", ["Shorts", "Facts", "Science", "Anchor Aadhya", "2D Animation"]),
         "custom_comment": short_comment
     }
     with open(meta_path_short, "w", encoding="utf-8") as f:
