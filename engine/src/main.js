@@ -18,9 +18,13 @@ function draw(t) {
   // camera: punch-in on the cut + a slow push across the shot ("camera always moving")
   const punch = 1 + 0.13 * (1 - eo(clamp(lt / 0.32)));
   const driftP = sh.zoomFast ? clamp(lt / 0.4) : clamp(lt / d);
-  const drift = 1 + (sh.zoom ?? 0.06) * eio(driftP);
-  const [cx, cy] = sh.cam || [540, 900];
-  ctx.save(); ctx.translate(cx, cy); ctx.scale(punch * drift, punch * drift); ctx.translate(-cx, -cy);
+  let scale = punch * (1 + (sh.zoom ?? 0.06) * eio(driftP));
+  let [cx, cy] = sh.cam || [540, 900];
+  if (sh.camAt) {
+    const [x, y, s] = sh.camAt(clamp(lt / Math.max(d, 0.001)), lt, d);
+    cx = x; cy = y; scale = punch * s;
+  }
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale); ctx.translate(-cx, -cy);
   sh.draw(lt, d, t);
   ctx.restore();
   ctx.globalAlpha = 1; ctx.letterSpacing = '0px';

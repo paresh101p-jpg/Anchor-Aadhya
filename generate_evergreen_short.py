@@ -423,7 +423,11 @@ def create_short_topic_from_full(full_topic):
         "text": "लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हिला कर रख देगा! पूरा सच और गहरी वजह जानने के लिए नीचे डिस्क्रिप्शन और पहले कमेंट वाले लिंक पर अभी क्लिक करें!",
         "caps": "असली *वैज्ञानिक* सच | नीचे लिंक पर *क्लिक* करें"
     }
-    short_lines = list(selected_lines) + [cta_line]
+    # Joke/relationship reels speak for themselves: no extra "scientific truth" CTA line.
+    if full_topic.get("no_cta"):
+        short_lines = list(selected_lines)
+    else:
+        short_lines = list(selected_lines) + [cta_line]
     short_topic["lines"] = short_lines
     return short_topic
 

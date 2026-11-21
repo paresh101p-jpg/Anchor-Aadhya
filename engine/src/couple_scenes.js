@@ -1,25 +1,26 @@
 // FIRST COUPLE REEL: both stick characters in one kitchen, with joke beats per line.
-import { ctx, C, W, H, circle, ell, line, rr, bigText, fillAll, TAU } from './core/lib.js';
+// No invented on-screen text: the spoken line is shown by the engine's Devanagari captions.
+import { ctx, C, W, clamp, circle, ell, line, rr, fillAll, TAU } from './core/lib.js';
 import { stickGirl, stickMan } from './characters.js';
 
-const F = (s) => `900 ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
-
-// Who speaks each line, and where the camera pushes in so that face stays visible.
+// Who speaks each line.
 export const COUPLE_SPEAKERS = ['girl', 'man', 'girl', 'man', 'girl', 'both'];
-export const COUPLE_CAM = {
-  girl: [330, 925],
-  man: [750, 925],
-  both: [540, 925],
-};
 
-function bubble(text, x, y, size = 42, bg = C.white, fg = C.ink) {
-  ctx.save(); ctx.font = F(size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  const w = ctx.measureText(text).width + size * 1.1, h = size * 1.9;
-  rr(x - w / 2, y - h / 2, w, h, h / 2); ctx.fillStyle = bg; ctx.fill();
-  ctx.strokeStyle = C.ink; ctx.lineWidth = 6; ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(x - 26, y + h / 2 - 4); ctx.lineTo(x, y + h / 2 + 34); ctx.lineTo(x + 26, y + h / 2 - 4); ctx.fill();
-  ctx.fillStyle = fg; ctx.fillText(text, x, y);
-  ctx.restore();
+const lerp = (a, b, p) => a + (b - a) * p;
+const smooth = (p) => p * p * (3 - 2 * p);
+
+// Camera keyframes: close-up on whoever is speaking; pull back to a wide
+// two-shot from a distance in lines 2 and 4, and hold wide for the outro.
+export function coupleCam(i, p) {
+  const wide = [540, 930, 0.78];
+  const speaker = COUPLE_SPEAKERS[i] || 'both';
+  const close = speaker === 'girl' ? [330, 925, 1.8]
+              : speaker === 'man' ? [750, 925, 1.8]
+              : [540, 925, 1.25];
+  let pull = 0;
+  if (i === 1 || i === 3) pull = smooth(clamp((p - 0.5) / 0.4, 0, 1));
+  if (i === 5) pull = 1;
+  return [lerp(close[0], wide[0], pull), lerp(close[1], wide[1], pull), lerp(close[2], wide[2], pull)];
 }
 
 function heart(x, y, s, color = C.red) {
@@ -39,9 +40,8 @@ function sparkle(x, y, s, t) {
   ctx.restore();
 }
 
-function kitchen(t) {
+function kitchen() {
   fillAll('#F7E9D7');
-  ctx.strokeStyle = 'rgba(14,26,43,0.07)'; ctx.lineWidth = 3;
   for (let x = 0; x <= W; x += 120) line([[x, 180], [x, 1180]], 'rgba(14,26,43,0.07)', 3);
   for (let y = 180; y <= 1180; y += 120) line([[0, y], [W, y]], 'rgba(14,26,43,0.07)', 3);
 
@@ -64,19 +64,15 @@ function counter() {
   ctx.fillStyle = '#C8A06A'; ctx.fillRect(80, 1210, 920, 46);
   ctx.fillStyle = '#A98255'; ctx.fillRect(100, 1256, 880, 120);
   ctx.strokeStyle = '#8C6A43'; ctx.lineWidth = 8; ctx.strokeRect(100, 1256, 880, 120);
-  // sink on right
   rr(650, 1170, 270, 50, 16); ctx.fillStyle = '#9AA7B4'; ctx.fill();
   circle(785, 1190, 12, C.white);
 }
 
-function nameTags() {
-  bubble('आध्या', 330, 690, 34, C.pinkDark, C.white);
-  bubble('रवि', 750, 690, 34, C.shirt, C.white);
-}
-
-function speakerFocus(i, t) {
+function speakerFocus(i, t, lt, d) {
   const who = COUPLE_SPEAKERS[i];
   if (who !== 'girl' && who !== 'man') return;
+  const p = clamp(lt / Math.max(d, 0.001), 0, 1);
+  if ((i === 1 || i === 3) && p > 0.7) return; // ring off once camera has pulled back
   const x = who === 'girl' ? 330 : 750;
   ctx.save();
   ctx.globalAlpha = 0.7 + 0.25 * Math.sin(t * 6);
@@ -101,57 +97,42 @@ function phoneZero(x, y, s = 1) {
   ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
   rr(-70, -125, 140, 250, 20); ctx.fillStyle = C.navy; ctx.fill();
   rr(-56, -106, 112, 212, 12); ctx.fillStyle = '#DCEEF5'; ctx.fill();
-  ctx.font = F(92); ctx.fillStyle = C.red; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.font = '900 92px Inter, "Noto Sans Devanagari", sans-serif';
+  ctx.fillStyle = C.red; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText('0', 0, -8);
-  ctx.font = F(24); ctx.fillStyle = C.navy; ctx.fillText('बैलेंस', 0, 70);
-  ctx.restore();
-}
-
-function subscribeButton(x, y, s = 1) {
-  ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
-  rr(-200, -55, 400, 110, 55); ctx.fillStyle = C.red; ctx.fill();
-  ctx.font = F(52); ctx.fillStyle = C.white; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText('SUBSCRIBE', 0, 0);
   ctx.restore();
 }
 
 export function drawCoupleScene(i, lineText, t, lt, d) {
-  kitchen(t);
-  nameTags();
+  kitchen();
 
   if (i === 0) {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'ask', expr: 'smile' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'think', expr: 'shock', shirt: C.shirt });
-    bubble('प्यार कितना? ❤️', 540, 560, 46, C.white, C.pinkDark);
     heart(540, 820, 1.5 + 0.08 * Math.sin(t * 4));
   } else if (i === 1) {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'point', expr: 'shock' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'hold', expr: 'smile', shirt: C.shirt });
     utensils(750, 1090, 1.0);
-    bubble('बर्तन धो दिए! 😄', 540, 560, 44, C.white, C.shirt);
   } else if (i === 2) {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'point', expr: 'angry' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'think', expr: 'smile', shirt: C.shirt });
-    bubble('रोज़ होना चाहिए!', 540, 560, 44, C.white, C.red);
     sparkle(540, 830, 1.2, t);
   } else if (i === 3) {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'laugh', expr: 'laugh' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'show', expr: 'shock', shirt: C.shirt });
     phoneZero(750, 1010, 1.05);
-    bubble('बैलेंस ज़ीरो!', 540, 560, 46, C.white, C.red);
   } else if (i === 4) {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'laugh', expr: 'laugh' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'laugh', expr: 'laugh', shirt: C.shirt });
     utensils(540, 1130, 0.9);
     heart(540, 760, 1.7 + 0.1 * Math.sin(t * 5));
-    bubble('प्यार = बर्तन! 😂', 540, 560, 46, C.white, C.pinkDark);
   } else {
     stickGirl({ x: 330, y: 1080, s: 1.05, pose: 'wave', expr: 'smile' });
     stickMan({ x: 750, y: 1080, s: 1.05, pose: 'wave', expr: 'smile', shirt: C.shirt });
     heart(540, 790, 1.5);
-    subscribeButton(540, 560, 1.0);
   }
 
-  speakerFocus(i, t);
+  speakerFocus(i, t, lt, d);
   counter();
 }
