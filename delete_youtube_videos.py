@@ -38,6 +38,13 @@ def main():
         print("[ERROR] YouTube authentication failed. Check the repository secrets.", flush=True)
         return 1
 
+    try:
+        me = youtube.channels().list(mine=True, part="snippet").execute()
+        for ch in me.get("items", []):
+            print(f"[AUTH] Channel: {ch['snippet']['title']} ({ch['id']})", flush=True)
+    except Exception as exc:
+        print(f"[AUTH] Could not read channel (scope missing?): {exc}", flush=True)
+
     failed = []
     for vid in ids:
         try:
