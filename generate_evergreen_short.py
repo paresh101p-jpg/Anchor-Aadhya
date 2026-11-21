@@ -532,6 +532,10 @@ async def main():
 
     if os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes"):
         print("\n[DRY RUN] Generating contact sheet for visual review; SKIPPING upload.", flush=True)
+        try:
+            subprocess.run(["node", "tools/capture.mjs", "check"], cwd=ENGINE_DIR, check=False, timeout=60)
+        except Exception as ce:
+            print(f"[DRY RUN] check note: {ce}", flush=True)
         sheet_dir = os.path.join(BASE_DIR, "visual_review")
         os.makedirs(sheet_dir, exist_ok=True)
         sheet_path = os.path.join(sheet_dir, "contact_sheet.jpg")
