@@ -17,7 +17,8 @@ function draw(t) {
   const sh = S[i], end = i < S.length - 1 ? S[i + 1].at : T.dur, d = end - sh.at, lt = t - sh.at;
   // camera: punch-in on the cut + a slow push across the shot ("camera always moving")
   const punch = 1 + 0.13 * (1 - eo(clamp(lt / 0.32)));
-  const drift = 1 + (sh.zoom ?? 0.06) * eio(clamp(lt / d));
+  const driftP = sh.zoomFast ? clamp(lt / 0.4) : clamp(lt / d);
+  const drift = 1 + (sh.zoom ?? 0.06) * eio(driftP);
   const [cx, cy] = sh.cam || [540, 900];
   ctx.save(); ctx.translate(cx, cy); ctx.scale(punch * drift, punch * drift); ctx.translate(-cx, -cy);
   sh.draw(lt, d, t);

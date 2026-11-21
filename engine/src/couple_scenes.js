@@ -4,6 +4,14 @@ import { stickGirl, stickMan } from './characters.js';
 
 const F = (s) => `900 ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
+// Who speaks each line, and where the camera pushes in so that face stays visible.
+export const COUPLE_SPEAKERS = ['girl', 'man', 'girl', 'man', 'girl', 'both'];
+export const COUPLE_CAM = {
+  girl: [330, 925],
+  man: [750, 925],
+  both: [540, 925],
+};
+
 function bubble(text, x, y, size = 42, bg = C.white, fg = C.ink) {
   ctx.save(); ctx.font = F(size); ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   const w = ctx.measureText(text).width + size * 1.1, h = size * 1.9;
@@ -64,6 +72,19 @@ function counter() {
 function nameTags() {
   bubble('आध्या', 330, 690, 34, C.pinkDark, C.white);
   bubble('रवि', 750, 690, 34, C.shirt, C.white);
+}
+
+function speakerFocus(i, t) {
+  const who = COUPLE_SPEAKERS[i];
+  if (who !== 'girl' && who !== 'man') return;
+  const x = who === 'girl' ? 330 : 750;
+  ctx.save();
+  ctx.globalAlpha = 0.7 + 0.25 * Math.sin(t * 6);
+  ctx.strokeStyle = C.yellow; ctx.lineWidth = 9;
+  ctx.beginPath(); ctx.arc(x, 925, 86, 0, TAU); ctx.stroke();
+  rr(x + 72, 838, 20, 48, 10); ctx.fillStyle = C.yellow; ctx.fill();
+  line([[x + 82, 886], [x + 82, 918], [x + 54, 918]], C.yellow, 9);
+  ctx.restore();
 }
 
 function utensils(x, y, s = 1) {
@@ -131,5 +152,6 @@ export function drawCoupleScene(i, lineText, t, lt, d) {
     subscribeButton(540, 560, 1.0);
   }
 
+  speakerFocus(i, t);
   counter();
 }

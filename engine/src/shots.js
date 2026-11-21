@@ -3,6 +3,7 @@
 import { ctx, C, W, H } from './core/lib.js';
 import { L, T, lineWords } from './core/timing.js';
 import { drawSemanticScene, elementKeysFor } from './semantics.js';
+import { COUPLE_CAM, COUPLE_SPEAKERS } from './couple_scenes.js';
 
 export function buildShots(script = {}) {
   const S = [], CUES = [];
@@ -15,12 +16,17 @@ export function buildShots(script = {}) {
     const st = cut(i);
     const dur = (i + 1 < n ? L(i + 1) - 0.08 : T.dur) - st;
     const text = String((script.lines || [])[i]?.text || '');
+    const isCouple = script.id === 'couple_first_reel';
+    const speaker = isCouple ? (COUPLE_SPEAKERS[i] || 'both') : null;
     add({
       id: `S${String(i + 1).padStart(2, '0')}`,
       at: st,
-      cam: [540, 900],
-      zoom: 0.02,
-      note: `line ${i + 1} [${elementKeysFor(text).join('+')}]: ${text.slice(0, 44)}`,
+      cam: isCouple ? COUPLE_CAM[speaker] : [540, 900],
+      zoom: isCouple ? (speaker === 'both' ? 0.12 : 0.8) : 0.02,
+      zoomFast: isCouple,
+      note: isCouple
+        ? `line ${i + 1} [${speaker} face close-up]: ${text.slice(0, 44)}`
+        : `line ${i + 1} [${elementKeysFor(text).join('+')}]: ${text.slice(0, 44)}`,
       draw(lt, d, t) {
         drawSemanticScene(text, script, i, t, lt, d);
       },
