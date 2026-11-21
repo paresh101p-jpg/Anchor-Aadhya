@@ -1,84 +1,75 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
-
-[AI Researcher v3.0] Initiating Real-Time Deep Web Curiosity Research...
-  -> Tracker Audit: 13 previously covered topics strictly locked against duplicates.
-  -> Category Rotation Target: 'Rare Body & Neuro Curiosities' [Skill: faceless-shorts/deep-dive]
-  -> Psychological Hook Engine Armed: CONTRARIAN_TRUTH
-  -> Querying Gemini 3.5 Flash (Attempt 1/3)...
-  🎉 SUCCESS! Approved Brand New Viral Topic: [phantom_limb_brain_remapping] गाल छूने पर कटे हाथ में दर्द क्यों होता है? 🧠 #Shorts
-  -> Hook Engine: CONTRARIAN_TRUTH | Lines: 23 | Monetization: 🟢 100% Green Dollar Safe
-  🆕 [Fresh Topic] phantom_limb_brain_remapping | गाल छूने पर कटे हाथ में दर्द क्यों होता है? 🧠 #Shorts
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: गाल छूने पर कटे हाथ में दर्द क्यों होता है? 🧠 #Shorts
-  Topic ID: phantom_limb_brain_remapping
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: पत्नी ने पूछा-प्यार कितना? पति ने दिया ये जवाब! 😂 #Shorts
+  Topic ID: couple_first_reel
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: गाल छूने पर कटे हाथ में दर्द क्यों होता है? 🧠 #Shorts
-  -> Line 1/6: 'सब सोचते हैं कि हाथ कटने के बा...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: पत्नी ने पूछा-प्यार कितना? पति ने दिया ये जवाब! 😂 #Shorts
+  -> Line 1/6: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'सब सोचते हैं कि हाथ कटने के बा...'
-  -> Line 2/6: 'इंसान का दिमाग उस कटे हुए हाथ ...'
+    [Edge-TTS Swara Backup]: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
+  -> Line 2/6: 'पति ने गंभीर होकर कहा — इतना क...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'इंसान का दिमाग उस कटे हुए हाथ ...'
-  -> Line 3/6: 'जब कोई इंसान दुर्घटना में अपना...'
+    [Edge-TTS Swara Backup]: 'पति ने गंभीर होकर कहा — इतना क...'
+  -> Line 3/6: 'पत्नी हैरान — ये तो रोज़ होना ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'जब कोई इंसान दुर्घटना में अपना...'
-  -> Line 4/6: 'मेडिकल साइंस में इस रहस्यमयी औ...'
+    [Edge-TTS Swara Backup]: 'पत्नी हैरान — ये तो रोज़ होना ...'
+  -> Line 4/6: 'पति ने मुस्कुराकर फोन दिखाया —...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'मेडिकल साइंस में इस रहस्यमयी औ...'
-  -> Line 5/6: 'हमारे दिमाग के सोमाटोसेंसरी कॉ...'
+    [Edge-TTS Swara Backup]: 'पति ने मुस्कुराकर फोन दिखाया —...'
+  -> Line 5/6: 'पत्नी ने हंसकर कहा — तो प्यार ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'हमारे दिमाग के सोमाटोसेंसरी कॉ...'
+    [Edge-TTS Swara Backup]: 'पत्नी ने हंसकर कहा — तो प्यार ...'
   -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (51.75s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 51.75s across 6 cuts.
+  -> Assembling master narration.wav (42.22s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 42.22s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 25 cues, 51.75 s
+data/cues.json: 30 cues, 42.22 s
   -> Running python tools/mix.py...
-data/mix.wav: 51.75 s · voice: yes · music: bed · 25 cues
+data/mix.wav: 42.22 s · voice: yes · music: bed · 30 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1294 frames150/1294 frames300/1294 frames450/1294 frames600/1294 frames750/1294 frames900/1294 frames1050/1294 frames1200/1294 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1294 frames, with data/mix.wav, 39 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.86 MB)
+0/1056 frames150/1056 frames300/1056 frames450/1056 frames600/1056 frames750/1056 frames900/1056 frames1050/1056 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1056 frames, with data/mix.wav, 31 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.95 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 51.72s (Audio-Visual Synced)
+  ✅ Duration: 42.20s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 
 [DRY RUN] Generating contact sheet for visual review; SKIPPING upload.
-duration 51.75 s
-S01     0.00 →   9.55  (9.55 s)  line 1 [word:सोचते+word:हाथ+word:कटने]: सब सोचते हैं कि हाथ कटने के बाद दर्द हाथ की 
-S02     9.55 →  15.73  (6.18 s)  line 2 [brain]: इंसान का दिमाग उस कटे हुए हाथ को असल में कभी
-S03    15.73 →  23.88  (8.15 s)  line 3 [word:कोई+word:इंसान+word:दुर्घटना]: जब कोई इंसान दुर्घटना में अपना हाथ खो देता ह
-S04    23.88 →  30.61  (6.73 s)  line 4 [word:मेडिकल+word:में+word:रहस्यमयी]: मेडिकल साइंस में इस रहस्यमयी और भयानक बीमारी
-S05    30.61 →  38.40  (7.79 s)  line 5 [brain]: हमारे दिमाग के सोमाटोसेंसरी कॉर्टेक्स में शर
-S06    38.40 →  51.75  (13.35 s)  line 6 [click]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
+duration 42.22 s
+S01     0.00 →   5.57  (5.57 s)  line 1 [word:सुबह+word:पत्नी+word:पूछा]: सुबह-सुबह पत्नी ने पूछा — आज मुझे कितना प्या
+S02     5.57 →  11.36  (5.80 s)  line 2 [word:पति+word:गंभीर+word:होकर]: पति ने गंभीर होकर कहा — इतना कि आज मैंने बर्
+S03    11.36 →  16.65  (5.29 s)  line 3 [word:पत्नी+word:हैरान+word:रोज़]: पत्नी हैरान — ये तो रोज़ होना चाहिए था, आज क
+S04    16.65 →  22.62  (5.96 s)  line 4 [phone]: पति ने मुस्कुराकर फोन दिखाया — देखो, आज मेरा
+S05    22.62 →  28.87  (6.25 s)  line 5 [word:पत्नी+word:हंसकर+word:कहा]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
+S06    28.87 →  42.22  (13.35 s)  line 6 [click]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
 captions:
-    0.40–5.00   SAB SOCHTE *HAIN
-    5.00–9.58   SCIENTIFIC SACH
-    9.58–12.96  BRAIN KABHI *MARA
-   12.96–15.76  NAHI MANTA
-   15.76–20.32  DURGHATNA MEIN *HAATH
-   20.32–23.91  TEZ DARD
-   23.91–27.57  MEDICAL SCIENCE *PHANTOM
-   27.57–30.64  LIMB PHENOMENA
-   30.64–34.92  SOMATOSENSORY *CORTEX
-   34.92–38.43  NEURONAL MAP
-   38.43–45.57  असली *वैज्ञानिक* सच
-   45.57–51.75  नीचे लिंक पर *क्लिक* करें
+    0.40–3.47   प्यार *कितना?
+    3.47–5.60   सुबह-सुबह
+    5.60–7.90   बर्तन *धो दिए!
+    7.90–11.39  इतना *कि
+   11.39–14.72  रोज़ *होना चाहिए
+   14.72–16.68  आज क्या *Special?
+   16.68–18.45  बैलेंस *ज़ीरो!
+   18.45–22.65  फोन *दिखाया
+   22.65–25.18  प्यार *बर्तनों से
+   25.18–28.90  बैलेंस *नहीं!
+   28.90–36.04  असली *वैज्ञानिक* सच
+   36.04–42.22  नीचे लिंक पर *क्लिक* करें
 CHECK OK
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (13 frames, every 4 s)
+/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (11 frames, every 4 s)
 [DRY RUN] Contact sheet: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
 [DRY RUN] Per-line frames: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
