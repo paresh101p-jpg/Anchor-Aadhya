@@ -553,6 +553,23 @@ async def main():
         drv_env = os.environ.copy(); drv_env["QS"] = "?debug=1"
         subprocess.run(["node", "tools/capture.mjs", "sheet", sheet_path, "4", "6"], cwd=ENGINE_DIR, env=drv_env, check=True)
         print(f"[DRY RUN] Contact sheet: {sheet_path}", flush=True)
+
+        # One full-size frame per narration line, for inline review (no upload).
+        lines_path = os.path.join(DATA_DIR, "lines.json")
+        try:
+            with open(lines_path, "r", encoding="utf-8") as lf:
+                line_data = json.load(lf)
+            times = [round(float(x.get("start", 0)) + 0.6, 2) for x in line_data.get("lines", [])[:10]]
+            if times:
+                frames_dir = os.path.join(sheet_dir, "frames")
+                os.makedirs(frames_dir, exist_ok=True)
+                subprocess.run(
+                    ["node", "tools/capture.mjs", "frames", frames_dir, ",".join(f"{x:.2f}" for x in times)],
+                    cwd=ENGINE_DIR, env=drv_env, check=True,
+                )
+                print(f"[DRY RUN] Per-line frames: {frames_dir}", flush=True)
+        except Exception as fe:
+            print(f"[DRY RUN] per-line frames note: {fe}", flush=True)
         return
 
     # High-CTR Curiosity Hook for Short
