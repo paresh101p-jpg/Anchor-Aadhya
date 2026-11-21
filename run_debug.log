@@ -37,8 +37,8 @@ data/mix.wav: 47.12 s · voice: yes · music: tension · 27 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/1178 frames150/1178 frames300/1178 frames450/1178 frames600/1178 frames750/1178 frames900/1178 frames1050/1178 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1178 frames, with data/mix.wav, 33 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (5.65 MB)
+0/1178 frames150/1178 frames300/1178 frames450/1178 frames600/1178 frames750/1178 frames900/1178 frames1050/1178 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1178 frames, with data/mix.wav, 40 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (5.43 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
@@ -53,8 +53,8 @@ S01     0.00 →   6.65  (6.65 s)  line 1 [flip]: क्या होगा अ�
 S02     6.65 →  13.40  (6.76 s)  line 2 [bat+flip]: चमगादड़ तो आसानी से उल्टे लटकते हैं, पर इंसा
 S03    13.40 →  20.71  (7.31 s)  line 3 [flip+lungs+organs]: उल्टा होते ही आपके भारी पेट, लीवर और आंतें न
 S04    20.71 →  27.51  (6.80 s)  line 4 [lungs]: जिससे फेफड़ों को फैलने की जगह नहीं मिलती और 
-S05    27.51 →  33.77  (6.25 s)  line 5 [brain]: साथ ही, सारा खून ग्रेविटी के कारण सिर और दिम
-S06    33.77 →  47.12  (13.35 s)  line 6 [danger]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
+S05    27.51 →  33.77  (6.25 s)  line 5 [blood+brain]: साथ ही, सारा खून ग्रेविटी के कारण सिर और दिम
+S06    33.77 →  47.12  (13.35 s)  line 6 [click]: लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हि
 captions:
     0.40–3.78   24 घंटे *उल्टा
     3.78–6.68   लटकने पर *क्या?
