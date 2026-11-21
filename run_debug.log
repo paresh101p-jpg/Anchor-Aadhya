@@ -3,7 +3,7 @@
   ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: सिर के बल उल्टा लटकने से इंसान की जान क्यों चली जाती है? 🦇 #Shorts
   Topic ID: upside_down_hang
 ==============================================================
-  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine (engine)
+  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine (engine_3d)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
@@ -20,25 +20,28 @@
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'साथ ही, सारा खून ग्रेविटी के क...'
   -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (40.40s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 40.40s across 6 cuts.
+  -> Assembling master narration.wav (40.09s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 40.09s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 39 cues, 40.40 s
+data/cues.json: 10 cues, 40.09 s
   -> Running python tools/mix.py...
-data/mix.wav: 40.40 s · voice: yes · music: tension · 39 cues
+unknown cue type, skipped: zap
+unknown cue type, skipped: sub_bass
+unknown cue type, skipped: beep
+data/mix.wav: 40.09 s · voice: yes · music: tension · 10 cues
   --> mix.wav ready!
 
 [Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/1010 frames150/1010 frames300/1010 frames450/1010 frames600/1010 frames750/1010 frames900/1010 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1010 frames, with data/mix.wav, 27 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (6.97 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
-  --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
+0/1002 frames150/1002 frames300/1002 frames450/1002 frames600/1002 frames750/1002 frames900/1002 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (1002 frames, with data/mix.wav, 3029 s)
+  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (18.55 MB)
+/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
+  --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 40.40s (Audio-Visual Synced)
+  ✅ Duration: 40.08s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
 Generating Viral High-CTR Curiosity Thumbnail for: सिर के बल उल्टा लटकने से इंसान की जान क्...
 ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
@@ -51,14 +54,14 @@ ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
   libavfilter    11.  4.100 / 11.  4.100
   libswscale      9.  1.100 /  9.  1.100
   libswresample   6.  1.100 /  6.  1.100
-Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 35881 kb/s
+Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg':
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 48780 kb/s
   Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
 Stream mapping:
   Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
 Press [q] to stop, [?] for help
-[swscaler @ 0x7ebfd0051f40] deprecated pixel format used, make sure you did set range correctly
-Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg':
+[swscaler @ 0x7d40b4052200] deprecated pixel format used, make sure you did set range correctly
+Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg':
   Metadata:
     encoder         : Lavf62.3.100
   Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 81:256 DAR 9:16], q=2-31, 200 kb/s, 25 fps, 25 tbn
@@ -67,24 +70,27 @@ Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/revi
     Side data:
       ICC Profile
       cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x55d5c52cc000] video:195KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed= 1.2x elapsed=0:00:00.03    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (195.4 KB)
-  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg
+[out#0/image2 @ 0x5918c7f99000] video:183KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.85x elapsed=0:00:00.04    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg (182.7 KB)
+  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg
 
 [Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
   --> Title: सिर के बल उल्टा लटकने से इंसान की जान क्यों चली जाती है? 🦇 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (6.97 MB)
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (18.55 MB)
   --> Uploading video stream to YouTube...
-  --> Upload Progress: 57%
+  --> Upload Progress: 21%
+  --> Upload Progress: 43%
+  --> Upload Progress: 64%
+  --> Upload Progress: 86%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: kNZiFqjy9Ws
-  --> Live URL: https://www.youtube.com/watch?v=kNZiFqjy9Ws
+[SUCCESS] VIDEO UPLOADED! Video ID: saohrMu2eLw
+  --> Live URL: https://www.youtube.com/watch?v=saohrMu2eLw
   --> [SUCCESS] Custom Thumbnail Attached!
   --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
 
 ==============================================================
   🎉 2-STAGE FUNNEL FULLY COMPLETED!
   1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
-  2. Viral 30-40s Short: https://www.youtube.com/watch?v=kNZiFqjy9Ws
+  2. Viral 30-40s Short: https://www.youtube.com/watch?v=saohrMu2eLw
 ==============================================================

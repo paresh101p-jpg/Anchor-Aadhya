@@ -1,0 +1,49 @@
+{
+ "duration": 40.087,
+ "cues": [
+  {
+   "t": 0,
+   "type": "whoosh"
+  },
+  {
+   "t": 5.738,
+   "type": "whoosh"
+  },
+  {
+   "t": 5.888,
+   "type": "zap",
+   "gain": 0.4
+  },
+  {
+   "t": 10.949,
+   "type": "whoosh"
+  },
+  {
+   "t": 11.099,
+   "type": "bubbles",
+   "gain": 0.5
+  },
+  {
+   "t": 17.048,
+   "type": "whoosh"
+  },
+  {
+   "t": 17.198,
+   "type": "sub_bass",
+   "gain": 0.5
+  },
+  {
+   "t": 22.755,
+   "type": "whoosh"
+  },
+  {
+   "t": 22.905,
+   "type": "beep",
+   "gain": 0.3
+  },
+  {
+   "t": 28.201,
+   "type": "whoosh"
+  }
+ ]
+}
