@@ -46,6 +46,13 @@ def main():
     except Exception as exc:
         print(f"[AUTH] Could not read channel: {exc}", flush=True)
 
+    try:
+        mine = youtube.search().list(part="snippet", forMine=True, type="video", maxResults=50).execute()
+        for it in mine.get("items", []):
+            print(f"[MINE] {it['id']['videoId']} | {it['snippet']['title']}", flush=True)
+    except Exception as exc:
+        print(f"[MINE ERROR] {exc}", flush=True)
+
     failed = []
     for vid in ids:
         try:
