@@ -7,9 +7,10 @@ on:
   push:
     paths:
       - 'TRIGGER_AADHYA_POST.txt'
-# schedule:
-#   # 11:30 UTC = 05:00 PM IST (Evening peak viewer engagement)
-#   - cron: '30 11 * * *'
+  schedule:
+    # 02:30 UTC = 08:00 AM IST & 11:30 UTC = 05:00 PM IST
+    - cron: '30 2 * * *'
+    - cron: '30 11 * * *'
 
 concurrency:
   group: aadhya-evergreen-short

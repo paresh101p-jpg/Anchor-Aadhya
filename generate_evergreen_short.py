@@ -511,59 +511,63 @@ async def main():
 
     from youtube_uploader import upload_direct_video
 
-    # ==============================================================
-    # STAGE 1: Full Long-Form Video (16:9 Widescreen, 2+ Mins)
-    # ==============================================================
-    print("\n🎬 >>> STAGE 1: Rendering Full 16:9 Long-Form Master Video <<<", flush=True)
-    dur_16_9 = await build_voice_and_timing(topic, is_short=False)
-    build_audio_mix()
+    full_video_url = "https://www.youtube.com/@AnchorAadhya"
 
-    video_16_9 = render_native_3d_video(aspect="16:9")
-    thumb_16_9 = extract_native_thumbnail(aspect="16:9")
-    verify_visual_integrity(video_16_9, aspect="16:9")
+    # ==============================================================
+    # STAGE 1: Full Long-Form Video (16:9 Widescreen, 2+ Mins) - Only for 3D Engine
+    # ==============================================================
+    if ENGINE_DIR == ENGINE_DIR_3D:
+        print("\n🎬 >>> STAGE 1: Rendering Full 16:9 Long-Form Master Video <<<", flush=True)
+        dur_16_9 = await build_voice_and_timing(topic, is_short=False)
+        build_audio_mix()
 
-    # 100% Free ($0) Curiosity Hook Thumbnail via local FFmpeg + Noto Sans Devanagari Bold (Zero API / Zero Cost)
-    try:
-        from thumbnail_hook_generator import generate_curiosity_hook_thumbnail
-        hook_thumb_16_9 = generate_curiosity_hook_thumbnail(
-            thumb_16_9,
-            topic,
-            os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
-        )
-        if hook_thumb_16_9 and os.path.exists(hook_thumb_16_9):
-            thumb_16_9 = hook_thumb_16_9
-            print(f"  --> ✅ Attached Master High-CTR Curiosity Thumbnail ($0 Zero Cost): {thumb_16_9}", flush=True)
+        video_16_9 = render_native_3d_video(aspect="16:9")
+        thumb_16_9 = extract_native_thumbnail(aspect="16:9")
+        verify_visual_integrity(video_16_9, aspect="16:9")
+
+        # 100% Free ($0) Curiosity Hook Thumbnail via local FFmpeg + Noto Sans Devanagari Bold (Zero API / Zero Cost)
+        try:
+            from thumbnail_hook_generator import generate_curiosity_hook_thumbnail
+            hook_thumb_16_9 = generate_curiosity_hook_thumbnail(
+                thumb_16_9,
+                topic,
+                os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
+            )
+            if hook_thumb_16_9 and os.path.exists(hook_thumb_16_9):
+                thumb_16_9 = hook_thumb_16_9
+                print(f"  --> ✅ Attached Master High-CTR Curiosity Thumbnail ($0 Zero Cost): {thumb_16_9}", flush=True)
+            else:
+                print(f"  --> Using Clean Native Cover Frame: {thumb_16_9}", flush=True)
+        except Exception as te:
+            print(f"  --> [Notice] Local thumbnail hook note: {te}, using raw cover: {thumb_16_9}", flush=True)
+
+        # Upload Full 16:9 Video to YouTube First
+        title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
+        print(f"\n[Stage 1 Upload] Uploading Native 16:9 Full Video: {title_16_9}", flush=True)
+        meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
+        meta_16_9 = {
+            "title": title_16_9,
+            "description": build_rich_description(topic, is_short=False),
+            "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"]),
+            "engagement_question": topic.get("engagement_question")
+        }
+        with open(meta_path_16_9, "w", encoding="utf-8") as f:
+            json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
+
+        upload_res = upload_direct_video(video_16_9, meta_path_16_9, thumb_path=thumb_16_9)
+        full_video_id = None
+        if isinstance(upload_res, tuple):
+            ok_16_9, full_video_id, full_video_url = upload_res
         else:
-            print(f"  --> Using Clean Native Cover Frame: {thumb_16_9}", flush=True)
-    except Exception as te:
-        print(f"  --> [Notice] Local thumbnail hook note: {te}, using raw cover: {thumb_16_9}", flush=True)
+            ok_16_9 = upload_res
 
-    # Upload Full 16:9 Video to YouTube First
-    title_16_9 = topic.get("video_title", topic["title"].split("#")[0].strip())
-    print(f"\n[Stage 1 Upload] Uploading Native 16:9 Full Video: {title_16_9}", flush=True)
-    meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
-    meta_16_9 = {
-        "title": title_16_9,
-        "description": build_rich_description(topic, is_short=False),
-        "tags": topic.get("tags", ["Anchor Aadhya", "Science", "Facts", "Human Body", "3D Animation"]),
-        "engagement_question": topic.get("engagement_question")
-    }
-    with open(meta_path_16_9, "w", encoding="utf-8") as f:
-        json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
-
-    upload_res = upload_direct_video(video_16_9, meta_path_16_9, thumb_path=thumb_16_9)
-    full_video_id = None
-    full_video_url = None
-    if isinstance(upload_res, tuple):
-        ok_16_9, full_video_id, full_video_url = upload_res
+        if ok_16_9 and full_video_url:
+            print(f"\n  --> ✅ [STAGE 1 SUCCESS] Full 16:9 Video LIVE: {full_video_url}", flush=True)
+        else:
+            print("\n  --> [Notice] 16:9 Video upload deferred or failed, falling back to channel URL.", flush=True)
+            full_video_url = "https://www.youtube.com/@AnchorAadhya"
     else:
-        ok_16_9 = upload_res
-
-    if ok_16_9 and full_video_url:
-        print(f"\n  --> ✅ [STAGE 1 SUCCESS] Full 16:9 Video LIVE: {full_video_url}", flush=True)
-    else:
-        print("\n  --> [Notice] 16:9 Video upload deferred or failed, falling back to channel URL.", flush=True)
-        full_video_url = "https://www.youtube.com/@AnchorAadhya"
+        print("\n🎨 [2D Graphic Engine]: 100% Native 9:16 Vertical Reel format. Skipping 16:9 to avoid resolution mismatch and proceeding directly to 9:16 Viral Short.", flush=True)
 
     # ==============================================================
     # STAGE 2: 30-40s Punchy Viral Reel / Short (9:16 Vertical)
