@@ -1,0 +1,193 @@
+{
+ "duration": 47.502,
+ "cues": [
+  {
+   "t": 0.3,
+   "type": "pop",
+   "gain": 0.6
+  },
+  {
+   "t": 0.4,
+   "type": "zip"
+  },
+  {
+   "t": 0.4,
+   "type": "alarm",
+   "dur": 45.822
+  },
+  {
+   "t": 0.5,
+   "type": "pop",
+   "gain": 0.6
+  },
+  {
+   "t": 0.75,
+   "type": "gulp"
+  },
+  {
+   "t": 0.75,
+   "type": "boing",
+   "gain": 0.5
+  },
+  {
+   "t": 10.246,
+   "type": "whoosh"
+  },
+  {
+   "t": 10.446,
+   "type": "slide",
+   "dur": 0.3300000000000008
+  },
+  {
+   "t": 10.776,
+   "type": "plop"
+  },
+  {
+   "t": 15.106,
+   "type": "whoosh"
+  },
+  {
+   "t": 15.106,
+   "type": "bubbles",
+   "dur": 6.404000000000002
+  },
+  {
+   "t": 15.486,
+   "type": "sizzle",
+   "dur": 1
+  },
+  {
+   "t": 21.43,
+   "type": "whoosh"
+  },
+  {
+   "t": 21.81,
+   "type": "sparkle",
+   "dur": 1.2
+  },
+  {
+   "t": 21.81,
+   "type": "pop"
+  },
+  {
+   "t": 26.986,
+   "type": "whoosh"
+  },
+  {
+   "t": 27.436,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 28.486,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 29.536,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 30.586,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 31.636,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 32.686,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 33.736,
+   "type": "boing",
+   "gain": 0.7
+  },
+  {
+   "t": 34.15,
+   "type": "whoosh"
+  },
+  {
+   "t": 34.55,
+   "type": "thud"
+  },
+  {
+   "t": 34.58,
+   "type": "slam"
+  },
+  {
+   "t": 46.108,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.193,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.222,
+   "type": "whoosh"
+  },
+  {
+   "t": 46.222,
+   "type": "whoosh"
+  },
+  {
+   "t": 46.222,
+   "type": "whoosh"
+  },
+  {
+   "t": 46.222,
+   "type": "whoosh"
+  },
+  {
+   "t": 46.222,
+   "type": "whoosh"
+  },
+  {
+   "t": 46.279,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.322,
+   "type": "slide",
+   "dur": -0.12000000000000172,
+   "gain": 0.6
+  },
+  {
+   "t": 46.365,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.422,
+   "type": "tock"
+  },
+  {
+   "t": 46.451,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.536,
+   "type": "plop",
+   "gain": 0.5
+  },
+  {
+   "t": 46.622,
+   "type": "tock"
+  },
+  {
+   "t": 46.622,
+   "type": "plop",
+   "gain": 0.5
+  }
+ ]
+}
