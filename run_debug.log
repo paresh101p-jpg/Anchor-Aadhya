@@ -9,6 +9,7 @@ Gemini live research notice: HTTP Error 404: Not Found, using curated fallback p
   🔊 Voice: 'अगर आप गलती से भी अपनी छींक को दबाने की ...'
   ✓ Audio generated: 8.16s
   🎨 Visual: 'Shocked 3D cartoon character pinching no...'
+  ✓ Image generated via Pollinations Turbo (50 KB)
   ✓ Visual generated (9:16 Vertical)
   ✓ Scene 1 Video Clip ready (8.16s)
 
@@ -16,38 +17,45 @@ Gemini live research notice: HTTP Error 404: Not Found, using curated fallback p
   🔊 Voice: 'एक छींक की रफ्तार 160 किलोमीटर प्रति घंट...'
   ✓ Audio generated: 13.92s
   🎨 Visual: '3D internal x-ray anatomical cutaway of ...'
-Traceback (most recent call last):
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 268, in <module>
-    asyncio.run(render_synced_video())
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
-    return runner.run(main)
-           ^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
-    return self._loop.run_until_complete(task)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
-    return future.result()
-           ^^^^^^^^^^^^^^^
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 192, in render_synced_video
-    generate_scene_image(prompt, image_file)
-  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_rico_synced_short.py", line 70, in generate_scene_image
-    with urllib.request.urlopen(req, timeout=60) as resp:
-         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 216, in urlopen
-    return opener.open(url, data, timeout)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 525, in open
-    response = meth(req, response)
-               ^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 634, in http_response
-    response = self.parent.error(
-               ^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 563, in error
-    return self._call_chain(*args)
-           ^^^^^^^^^^^^^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 496, in _call_chain
-    result = func(*args)
-             ^^^^^^^^^^^
-  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/urllib/request.py", line 643, in http_error_default
-    raise HTTPError(req.full_url, code, msg, hdrs, fp)
-urllib.error.HTTPError: HTTP Error 402: Payment Required
+  --> [Tier 1 Notice]: Pollinations note (HTTP Error 402: Payment Required), switching to Tier 2 (Lexica Search)...
+  --> [Tier 2 Notice]: Lexica search note (HTTP Error 500: Internal Server Error), switching to Tier 3 (Local Canvas)...
+  ✓ Resilient High-Contrast 9:16 Visual Rendered Locally
+  ✓ Visual generated (9:16 Vertical)
+  ✓ Scene 2 Video Clip ready (13.92s)
+
+--- Scene 3/4 ---
+  🔊 Voice: 'इस खतरनाक प्रेशर से कान के पर्दे फट सकते...'
+  ✓ Audio generated: 8.30s
+  🎨 Visual: '3D animation showing glowing shockwave h...'
+  --> [Tier 1 Notice]: Pollinations note (HTTP Error 402: Payment Required), switching to Tier 2 (Lexica Search)...
+  --> [Tier 2 Notice]: Lexica search note (HTTP Error 500: Internal Server Error), switching to Tier 3 (Local Canvas)...
+  ✓ Resilient High-Contrast 9:16 Visual Rendered Locally
+  ✓ Visual generated (9:16 Vertical)
+  ✓ Scene 3 Video Clip ready (8.30s)
+
+--- Scene 4/4 ---
+  🔊 Voice: 'इसलिए जब भी छींक आए, उसे कभी न रोकें—हमे...'
+  ✓ Audio generated: 7.94s
+  🎨 Visual: 'Relieved healthy 3D cartoon character ho...'
+  --> [Tier 1 Notice]: Pollinations note (HTTP Error 402: Payment Required), switching to Tier 2 (Lexica Search)...
+  --> [Tier 2 Notice]: Lexica search note (HTTP Error 500: Internal Server Error), switching to Tier 3 (Local Canvas)...
+  ✓ Resilient High-Contrast 9:16 Visual Rendered Locally
+  ✓ Visual generated (9:16 Vertical)
+  ✓ Scene 4 Video Clip ready (7.94s)
+
+✅ MASTER VIDEO READY: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/renders_synced/run_1795239892/final_short_9_16.mp4 (2.02 MB)
+  --> [Tier 1 Notice]: Pollinations note (HTTP Error 402: Payment Required), switching to Tier 2 (Lexica Search)...
+  --> [Tier 2 Notice]: Lexica search note (HTTP Error 500: Internal Server Error), switching to Tier 3 (Local Canvas)...
+  ✓ Resilient High-Contrast 9:16 Visual Rendered Locally
+✅ Thumbnail Attached: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/renders_synced/run_1795239892/thumbnail_9x16.jpg
+
+🚀 Uploading to YouTube as UNLISTED for user review...
+  --> Title: छींक (Sneeze) रोकने की गलती कभी मत करना! 😱 #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/renders_synced/run_1795239892/final_short_9_16.mp4 (2.02 MB)
+  --> Uploading video stream to YouTube...
+
+[SUCCESS] VIDEO UPLOADED! Video ID: AZWFtLNgJKQ
+  --> Live URL: https://www.youtube.com/watch?v=AZWFtLNgJKQ
+  --> [SUCCESS] Custom Thumbnail Attached!
+
+🎉 SUCCESS! Video Live (UNLISTED): https://www.youtube.com/watch?v=AZWFtLNgJKQ
