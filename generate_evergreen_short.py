@@ -530,6 +530,15 @@ async def main():
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
     verify_visual_integrity(short_mp4, aspect="9:16")
 
+    if os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes"):
+        print("\n[DRY RUN] Generating contact sheet for visual review; SKIPPING upload.", flush=True)
+        sheet_dir = os.path.join(BASE_DIR, "visual_review")
+        os.makedirs(sheet_dir, exist_ok=True)
+        sheet_path = os.path.join(sheet_dir, "contact_sheet.jpg")
+        subprocess.run(["node", "tools/capture.mjs", "sheet", sheet_path, "4", "6"], cwd=ENGINE_DIR, check=True)
+        print(f"[DRY RUN] Contact sheet: {sheet_path}", flush=True)
+        return
+
     # High-CTR Curiosity Hook for Short
     try:
         from thumbnail_hook_generator import generate_curiosity_hook_thumbnail

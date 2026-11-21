@@ -13,6 +13,11 @@ on:
         required: false
         default: ''
         type: string
+      dry_run:
+        description: 'Render frames only, do NOT upload to YouTube'
+        required: false
+        default: false
+        type: boolean
   repository_dispatch:
     types: [daily_short, post_aadhya_short]
   push:
@@ -68,6 +73,7 @@ jobs:
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           YOUTUBE_PRIVACY_STATUS: unlisted
+          DRY_RUN: ${{ inputs.dry_run }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
         run: |
