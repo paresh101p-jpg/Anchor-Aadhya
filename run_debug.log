@@ -1,49 +1,49 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: टैटू की स्याही शरीर में असल में कहाँ गायब हो जाती है? 💉 #Shorts
-  Topic ID: tattoo_ink_lymph
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
+  Topic ID: holding_urine_risk
 ==============================================================
   🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine (engine_3d)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: टैटू की स्याही शरीर में असल में कहाँ गायब हो जाती है? 💉 #Shorts
-  -> Line 1/6: 'क्या आप जानते हैं कि जब आप टैट...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'क्या आप जानते हैं कि जब आप टैट...'
-  -> Line 2/6: 'जैसे ही सुई चमड़ी के अंदर भारी...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'जैसे ही सुई चमड़ी के अंदर भारी...'
-  -> Line 3/6: 'आपके शरीर के रक्षक मैक्रोफेज स...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'आपके शरीर के रक्षक मैक्रोफेज स...'
-  -> Line 4/6: 'ये स्याही के कणों को खाकर खुद ...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'ये स्याही के कणों को खाकर खुद ...'
-  -> Line 5/6: 'और उनकी जगह नए सफेद रक्त कण आक...'
-    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'और उनकी जगह नए सफेद रक्त कण आक...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
+  -> Line 1/6: 'अगर आप भी सफर या आलस में घंटों...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'अगर आप भी सफर या आलस में घंटों...'
+  -> Line 2/6: 'हमारा ब्लैडर लगभग आधा लीटर लिक...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'हमारा ब्लैडर लगभग आधा लीटर लिक...'
+  -> Line 3/6: 'लेकिन जब यह फुल हो जाता है और ...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन जब यह फुल हो जाता है और ...'
+  -> Line 4/6: 'तो ब्लैडर किसी फूले हुए गुब्बा...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'तो ब्लैडर किसी फूले हुए गुब्बा...'
+  -> Line 5/6: 'रुका हुआ पेशाब बैक्टीरिया की व...'
+    [Cartesia Sonic Female #1 Primary (Aadhya)]: 'रुका हुआ पेशाब बैक्टीरिया की व...'
   -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
     [Cartesia Sonic Female #1 Primary (Aadhya)]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (37.71s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 37.71s across 6 cuts.
+  -> Assembling master narration.wav (35.36s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 35.36s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 10 cues, 37.71 s
+data/cues.json: 10 cues, 35.36 s
   -> Running python tools/mix.py...
 unknown cue type, skipped: zap
 unknown cue type, skipped: sub_bass
 unknown cue type, skipped: beep
-data/mix.wav: 37.71 s · voice: yes · music: bed · 10 cues
+data/mix.wav: 35.36 s · voice: yes · music: tension · 10 cues
   --> mix.wav ready!
 
 [Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/943 frames150/943 frames300/943 frames450/943 frames600/943 frames750/943 frames900/943 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (943 frames, with data/mix.wav, 740 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.26 MB)
+0/884 frames150/884 frames300/884 frames450/884 frames600/884 frames750/884 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (884 frames, with data/mix.wav, 461 s)
+  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.31 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 37.68s (Audio-Visual Synced)
+  ✅ Duration: 35.36s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
-Generating Viral High-CTR Curiosity Thumbnail for: टैटू की स्याही शरीर में असल में कहाँ गाय...
+Generating Viral High-CTR Curiosity Thumbnail for: घंटों तक पेशाब (Urine) रोकने से शरीर में...
 ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
   built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
   configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
@@ -55,12 +55,12 @@ ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
   libswscale      9.  1.100 /  9.  1.100
   libswresample   6.  1.100 /  6.  1.100
 Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 51132 kb/s
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 51413 kb/s
   Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
 Stream mapping:
   Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
 Press [q] to stop, [?] for help
-[swscaler @ 0x70553c052300] deprecated pixel format used, make sure you did set range correctly
+[swscaler @ 0x73cc1c052340] deprecated pixel format used, make sure you did set range correctly
 Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg':
   Metadata:
     encoder         : Lavf62.3.100
@@ -70,27 +70,27 @@ Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/r
     Side data:
       ICC Profile
       cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x5a8866b3e000] video:204KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.842x elapsed=0:00:00.04    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg (204.1 KB)
+[out#0/image2 @ 0x5cade7d8c000] video:198KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=1.15x elapsed=0:00:00.03    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg (197.8 KB)
   --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/review/cover_9_16/high_ctr_short_thumb.jpg
 
 [Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
-  --> Title: टैटू की स्याही शरीर में असल में कहाँ गायब हो जाती है? 💉 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.26 MB)
+  --> Title: घंटों तक पेशाब (Urine) रोकने से शरीर में क्या होता है? ⚠️ #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine_3d/renders/aadhya_short_9_16.mp4 (19.31 MB)
   --> Uploading video stream to YouTube...
   --> Upload Progress: 20%
   --> Upload Progress: 41%
   --> Upload Progress: 62%
-  --> Upload Progress: 83%
+  --> Upload Progress: 82%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: lrlW8WP5tzs
-  --> Live URL: https://www.youtube.com/watch?v=lrlW8WP5tzs
+[SUCCESS] VIDEO UPLOADED! Video ID: 210Xiiydd2A
+  --> Live URL: https://www.youtube.com/watch?v=210Xiiydd2A
   --> [SUCCESS] Custom Thumbnail Attached!
   --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
 
 ==============================================================
   🎉 2-STAGE FUNNEL FULLY COMPLETED!
   1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
-  2. Viral 30-40s Short: https://www.youtube.com/watch?v=lrlW8WP5tzs
+  2. Viral 30-40s Short: https://www.youtube.com/watch?v=210Xiiydd2A
 ==============================================================
