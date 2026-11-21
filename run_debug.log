@@ -1,69 +1,99 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: पत्नी ने पूछा-प्यार कितना? पति ने दिया ये जवाब! 😂 #Shorts
-  Topic ID: couple_first_reel
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
+  Topic ID: sinking_car_door_physics
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: पत्नी ने पूछा-प्यार कितना? पति ने दिया ये जवाब! 😂 #Shorts
-  -> Line 1/5: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
+  -> Line 1/7: 'अगर कभी कोई कार पानी में गिर ज...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'सुबह-सुबह पत्नी ने पूछा — आज म...'
-  -> Line 2/5: 'पति ने गंभीर होकर कहा — इतना क...'
+    [Edge-TTS Swara Backup]: 'अगर कभी कोई कार पानी में गिर ज...'
+  -> Line 2/7: 'लोग सोचते हैं कि सेंट्रल लॉक ख...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'पति ने गंभीर होकर कहा — इतना क...'
-  -> Line 3/5: 'पत्नी हैरान — ये तो रोज़ होना ...'
+    [Edge-TTS Swara Backup]: 'लोग सोचते हैं कि सेंट्रल लॉक ख...'
+  -> Line 3/7: 'दरवाज़े के बाहर लगभग 800 किलो ...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'पत्नी हैरान — ये तो रोज़ होना ...'
-  -> Line 4/5: 'पति ने मुस्कुराकर फोन दिखाया —...'
+    [Edge-TTS Swara Backup]: 'दरवाज़े के बाहर लगभग 800 किलो ...'
+  -> Line 4/7: 'जिसके कारण किसी भी इंसान के लि...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'पति ने मुस्कुराकर फोन दिखाया —...'
-  -> Line 5/5: 'पत्नी ने हंसकर कहा — तो प्यार ...'
+    [Edge-TTS Swara Backup]: 'जिसके कारण किसी भी इंसान के लि...'
+  -> Line 5/7: 'जान बचाने के लिए तुरंत सीटबेल्...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'पत्नी ने हंसकर कहा — तो प्यार ...'
-  -> Assembling master narration.wav (29.85s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 29.85s across 5 cuts.
+    [Edge-TTS Swara Backup]: 'जान बचाने के लिए तुरंत सीटबेल्...'
+  -> Line 6/7: 'अगर खिड़की जाम हो, तो सीट का ह...'
+    ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
+    [Edge-TTS Swara Backup]: 'अगर खिड़की जाम हो, तो सीट का ह...'
+  -> Line 7/7: 'कमेंट में बताएं कि क्या आपको य...'
+    ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
+    [Edge-TTS Swara Backup]: 'कमेंट में बताएं कि क्या आपको य...'
+  -> Assembling master narration.wav (49.77s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 49.77s across 7 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 25 cues, 29.85 s
+data/cues.json: 34 cues, 49.77 s
   -> Running python tools/mix.py...
-data/mix.wav: 29.85 s · voice: yes · music: bed · 25 cues
+data/mix.wav: 49.77 s · voice: yes · music: tension · 34 cues
   --> mix.wav ready!
 
 [Rendering Native 2D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium canvas...
-0/746 frames150/746 frames300/746 frames450/746 frames600/746 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (746 frames, with data/mix.wav, 25 s)
-  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (3.80 MB)
+0/1244 frames150/1244 frames300/1244 frames450/1244 frames600/1244 frames750/1244 frames900/1244 frames1050/1244 frames1200/1244 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1244 frames, with data/mix.wav, 41 s)
+  --> Native 9:16 2D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.24 MB)
 /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
   --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
 
 [QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
   ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 29.84s (Audio-Visual Synced)
+  ✅ Duration: 49.76s (Audio-Visual Synced)
   ✅ Zero Fake Blur & Zero Black Padding Verified!
+Generating Viral High-CTR Curiosity Thumbnail for: पानी में डूबती कार का दरवाज़ा क्यों नहीं...
+ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
+  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
+  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
+  libavutil      60.  8.100 / 60.  8.100
+  libavcodec     62. 11.100 / 62. 11.100
+  libavformat    62.  3.100 / 62.  3.100
+  libavdevice    62.  1.100 / 62.  1.100
+  libavfilter    11.  4.100 / 11.  4.100
+  libswscale      9.  1.100 /  9.  1.100
+  libswresample   6.  1.100 /  6.  1.100
+Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg':
+  Duration: 00:00:00.04, start: 0.000000, bitrate: 22810 kb/s
+  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
+Stream mapping:
+  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
+Press [q] to stop, [?] for help
+[swscaler @ 0x7bf614052040] deprecated pixel format used, make sure you did set range correctly
+Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg':
+  Metadata:
+    encoder         : Lavf62.3.100
+  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 81:256 DAR 9:16], q=2-31, 200 kb/s, 25 fps, 25 tbn
+    Metadata:
+      encoder         : Lavc62.11.100 mjpeg
+    Side data:
+      ICC Profile
+      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
+[out#0/image2 @ 0x5c85d3bd6000] video:182KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
+frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed=0.88x elapsed=0:00:00.04    
+✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (181.5 KB)
+  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg
 
-[DRY RUN] Generating contact sheet for visual review; SKIPPING upload.
-duration 29.85 s
-S01     0.00 →   5.57  (5.57 s)  line 1 [girl face close-up]: सुबह-सुबह पत्नी ने पूछा — आज मुझे कितना प्या
-S02     5.57 →  11.36  (5.80 s)  line 2 [man face close-up]: पति ने गंभीर होकर कहा — इतना कि आज मैंने बर्
-S03    11.36 →  16.65  (5.29 s)  line 3 [girl face close-up]: पत्नी हैरान — ये तो रोज़ होना चाहिए था, आज क
-S04    16.65 →  22.62  (5.96 s)  line 4 [man face close-up]: पति ने मुस्कुराकर फोन दिखाया — देखो, आज मेरा
-S05    22.62 →  29.85  (7.23 s)  line 5 [girl face close-up]: पत्नी ने हंसकर कहा — तो प्यार बैलेंस से नहीं
-captions:
-    0.40–3.47   प्यार *कितना?
-    3.47–5.60   सुबह-सुबह
-    5.60–7.90   बर्तन *धो दिए!
-    7.90–11.39  इतना *कि
-   11.39–14.72  रोज़ *होना चाहिए
-   14.72–16.68  आज क्या *Special?
-   16.68–18.45  बैलेंस *ज़ीरो!
-   18.45–22.65  फोन *दिखाया
-   22.65–25.18  प्यार *बर्तनों से
-   25.18–29.85  बैलेंस *नहीं!
-CHECK OK
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg (7 frames, every 4 s)
-[DRY RUN] Contact sheet: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/contact_sheet.jpg
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
-[DRY RUN] Per-line frames: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/visual_review/frames
+[Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
+  --> Title: पानी में डूबती कार का दरवाज़ा क्यों नहीं खुलता? 🚗🌊 #Shorts
+  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (4.24 MB)
+  --> Uploading video stream to YouTube...
+  --> Upload Progress: 94%
+
+[SUCCESS] VIDEO UPLOADED! Video ID: X46p7Oe4p4w
+  --> Live URL: https://www.youtube.com/watch?v=X46p7Oe4p4w
+  --> [SUCCESS] Custom Thumbnail Attached!
+  --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
+
+==============================================================
+  🎉 2-STAGE FUNNEL FULLY COMPLETED!
+  1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
+  2. Viral 30-40s Short: https://www.youtube.com/watch?v=X46p7Oe4p4w
+==============================================================
