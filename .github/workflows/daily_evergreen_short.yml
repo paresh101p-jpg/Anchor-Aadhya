@@ -2,6 +2,18 @@ name: Anchor Aadhya Daily Evergreen Short (Faceless Inside-Out)
 
 on:
   workflow_dispatch: # Allows manual 1-click run anytime from GitHub Actions tab
+    inputs:
+      engine:
+        description: 'Visual engine (2d = free code-based default, 3d = experimental)'
+        required: false
+        default: '2d'
+        type: choice
+        options: [2d, 3d]
+      topic_id:
+        description: 'Optional curiosity_topics.json id to render a specific topic'
+        required: false
+        default: ''
+        type: string
   repository_dispatch:
     types: [daily_short, post_aadhya_short]
   push:
@@ -51,25 +63,39 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render 100% Synced 3D Short (Rico Animation Style) & Post as Unlisted
+      - name: Render 2D Aadhya Short (voice + facts + captions) & Post as Unlisted
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PRIVACY_STATUS: unlisted
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
         run: |
           set -o pipefail
-          python -u generate_rico_synced_short.py 2>&1 | tee run_debug.log
+          ENGINE="${{ github.event.inputs.engine || '2d' }}"
+          TOPIC_ID="${{ github.event.inputs.topic_id || '' }}"
+          export AADHYA_ENGINE="$ENGINE"
+          export TOPIC_ID="$TOPIC_ID"
+          if [ "$ENGINE" = "3d" ]; then
+            echo "3D engine requested (experimental: depends on a paid image API)."
+            python -u generate_rico_synced_short.py 2>&1 | tee run_debug.log || {
+              echo "3D pipeline failed - falling back to the free 2D engine."
+              export AADHYA_ENGINE=2d
+              python -u generate_evergreen_short.py 2>&1 | tee -a run_debug.log
+            }
+          else
+            python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
+          fi
 
-      - name: Upload Debug Log if Failed
+      - name: Commit Run Logs & Trackers
         if: always()
         run: |
           git config user.name "Anchor Aadhya Bot"
           git config user.email "bot@anchoraadhya.com"
-          git add run_debug.log used_topics_tracker.json uploaded_bulletins_tracker.txt || true
-          git diff --staged --quiet || git commit -m "Update run debug log & tracker [skip ci]"
+          git add -A
+          git diff --cached --quiet || git commit -m "Update run debug log & tracker [skip ci]"
           for i in 1 2 3 4 5; do
-            git pull --rebase origin master || true
+            git pull --rebase origin master || { git rebase --abort || true; git pull --rebase origin master || true; }
             git push origin master && break || sleep 3
           done

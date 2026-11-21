@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
 """
 Anchor Aadhya Evergreen Curiosity Shorts Engine
-- Powered by faceless-shorts 'inside-out' 2D X-Ray & Cutaway Engine
-- 100% Code-based animation (Zero external image API dependencies, zero cost)
-- Female Indian voice (hi-IN-SwaraNeural)
-- Devanagari Kinetic Captions with yellow keyword pops
+- Default: 100% code-based 2D 'inside-out' cutaway animation (zero external image API, zero cost)
+- Optional 3D engine only when AADHYA_ENGINE=3d is set explicitly
+- Voice: Cartesia Aadhya (Hindi female) when the API key/credits are available,
+  with free edge-tts hi-IN-SwaraNeural fallback so a run never dies on a paid API.
+- Devanagari kinetic captions with yellow keyword pops
 - Auto-tracks topics so every single run produces a brand new reel
-- Uploads directly to Anchor Aadhya YouTube Channel
+- Uploads directly to Anchor Aadhya YouTube Channel as UNLISTED for review
 """
 
 import os
@@ -47,13 +48,22 @@ def clean_all_temp_assets():
 
 def configure_engine_for_topic(topic=None):
     """
-    Dynamically routes the topic to the best visual engine:
-    - 3D Deep Dive Engine (Default, fully adaptive 3D characters and sets per topic)
+    Picks the visual engine for this run.
+    - 2D code-based cutaway engine is the reliable DEFAULT (no paid image APIs).
+    - 3D engine is opt-in via AADHYA_ENGINE=3d or a topic tagged best_skill='3d'.
     """
     global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
-    chosen_engine = ENGINE_DIR_3D if os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
+    force_3d = os.environ.get("AADHYA_ENGINE", "").strip().lower() == "3d"
+    topic_wants_3d = bool(topic) and (
+        "3d" in str(topic.get("best_skill", "")).lower()
+        or "deep-dive" in str(topic.get("best_skill", "")).lower()
+    )
+    chosen_engine = ENGINE_DIR_3D if (force_3d or topic_wants_3d) and os.path.exists(ENGINE_DIR_3D) else ENGINE_DIR_2D
 
-    print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
+    if chosen_engine == ENGINE_DIR_3D:
+        print(f"  🎨 [Visual Engine Selected]: 3D Deep Dive & Adaptive Environment Engine ({os.path.basename(chosen_engine)})", flush=True)
+    else:
+        print(f"  🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine ({os.path.basename(chosen_engine)})", flush=True)
 
     ENGINE_DIR = chosen_engine
     DATA_DIR = os.path.join(ENGINE_DIR, "data")
@@ -71,7 +81,7 @@ TOPICS_FILE = os.path.join(BASE_DIR, "curiosity_topics.json")
 TRACKER_FILE = os.path.join(BASE_DIR, "used_topics_tracker.json")
 
 # Cartesia Sonic Primary #1 (Real Native Hindi Female Voice - Aadhya)
-CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY", "sk_car_nxiMG1b3Lkcu4XT45qZDaH")
+CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY", "")
 CARTESIA_VOICE_ID = os.environ.get("CARTESIA_VOICE_ID", "f91ab3e6-5071-4e15-b016-cde6f2bcd222")  # Aadhya (Indian Female Real Voice)
 FALLBACK_VOICE = "hi-IN-SwaraNeural"
 VOICE_NAME = "Cartesia-Aadhya (Sonic)"
