@@ -51,20 +51,16 @@ jobs:
       - name: Install Python Dependencies
         run: pip install -r requirements.txt
 
-      - name: Render Dual Native 3D (9:16 Short & 16:9 Video) & Post to YouTube
+      - name: Render 100% Synced 3D Short (Rico Animation Style) & Post as Unlisted
         env:
           YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
           YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
           YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
-          CARTESIA_VOICE_ID: "f91ab3e6-5071-4e15-b016-cde6f2bcd222"
-          SOFTWARE_GL: "1"
-          FPS: "25"
-          QS: "&res=0.55&aa=0&shadow=512"
         run: |
           set -o pipefail
-          python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
+          python -u generate_rico_synced_short.py 2>&1 | tee run_debug.log
 
       - name: Upload Debug Log if Failed
         if: always()
