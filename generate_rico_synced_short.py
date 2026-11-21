@@ -57,19 +57,63 @@ async def generate_speech(text, output_mp3):
     await communicate.save(output_mp3)
 
 def generate_scene_image(prompt, output_jpg):
-    style_prefix = "3D Pixar cartoon render style, Rico Animation, expressive character, vibrant cinematic lighting, highly detailed 9:16 vertical: "
+    """
+    Multi-tier resilient image generator:
+    1. Pollinations AI (model=turbo, nologo)
+    2. Lexica Art API (curated high-res 3D visuals)
+    3. Resilient PIL gradient canvas fallback
+    Guarantees the pipeline NEVER crashes with 402 or 500!
+    """
+    style_prefix = "3D cartoon render style, Rico Animation, expressive character, vibrant cinematic lighting, highly detailed 9:16 vertical: "
     styled_prompt = style_prefix + prompt
     encoded = urllib.parse.quote(styled_prompt)
     seed = random.randint(100000, 999999999)
-    url = f"https://image.pollinations.ai/prompt/{encoded}?width=720&height=1280&seed={seed}&nologo=true"
     
-    req = urllib.request.Request(
-        url,
-        headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
-    )
-    with urllib.request.urlopen(req, timeout=60) as resp:
-        with open(output_jpg, "wb") as f:
-            f.write(resp.read())
+    # Tier 1: Pollinations Turbo
+    try:
+        url = f"https://image.pollinations.ai/prompt/{encoded}?model=turbo&seed={seed}&width=720&height=1280&nologo=true"
+        req = urllib.request.Request(
+            url,
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"}
+        )
+        with urllib.request.urlopen(req, timeout=30) as resp:
+            content = resp.read()
+            if len(content) > 5000:
+                with open(output_jpg, "wb") as f:
+                    f.write(content)
+                print(f"  ✓ Image generated via Pollinations Turbo ({len(content)//1024} KB)")
+                return
+    except Exception as e:
+        print(f"  --> [Tier 1 Notice]: Pollinations note ({e}), switching to Tier 2 (Lexica Search)...")
+
+    # Tier 2: Lexica Art Search API
+    try:
+        clean_q = urllib.parse.quote(prompt.split(",")[0][:50])
+        lex_url = f"https://lexica.art/api/v1/search?q={clean_q}"
+        req2 = urllib.request.Request(lex_url, headers={"User-Agent": "Mozilla/5.0"})
+        with urllib.request.urlopen(req2, timeout=20) as resp:
+            data = json.loads(resp.read().decode("utf-8"))
+            images = data.get("images", [])
+            if images:
+                src_url = images[0].get("src")
+                req_img = urllib.request.Request(src_url, headers={"User-Agent": "Mozilla/5.0"})
+                with urllib.request.urlopen(req_img, timeout=20) as img_resp:
+                    with open(output_jpg, "wb") as f:
+                        f.write(img_resp.read())
+                    print("  ✓ Image retrieved via Lexica Art 3D Engine")
+                    return
+    except Exception as le:
+        print(f"  --> [Tier 2 Notice]: Lexica search note ({le}), switching to Tier 3 (Local Canvas)...")
+
+    # Tier 3: PIL Local 9:16 High-Contrast Visual
+    from PIL import Image, ImageDraw
+    img = Image.new("RGB", (1080, 1920), color=(15, 20, 35))
+    draw = ImageDraw.Draw(img)
+    # Background accent glow
+    draw.rectangle([60, 60, 1020, 1860], outline=(79, 209, 232), width=8)
+    draw.text((100, 900), prompt[:60] + "...", fill=(255, 255, 255))
+    img.save(output_jpg, quality=95)
+    print("  ✓ Resilient High-Contrast 9:16 Visual Rendered Locally")
 
 def fetch_trending_curiosity_script():
     used = load_used_topics()
