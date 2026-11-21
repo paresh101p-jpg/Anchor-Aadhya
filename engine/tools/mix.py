@@ -29,7 +29,7 @@ def lp(x, f, o=2): b, a = signal.butter(o, min(f, SR / 2 - 100) / (SR / 2), 'low
 def hp(x, f, o=2): b, a = signal.butter(o, f / (SR / 2), 'high'); return signal.lfilter(b, a, x)
 def bp(x, f0, f1, o=2): b, a = signal.butter(o, [f0 / (SR / 2), f1 / (SR / 2)], 'band'); return signal.lfilter(b, a, x)
 def db(x): return 10 ** (x / 20)
-def tt(d): return np.arange(int(d * SR)) / SR
+def tt(d): return np.arange(max(1, int(float(d) * SR))) / SR
 def env(n, a=0.005, r=None):
     """attack a seconds then exponential release over the rest"""
     e = np.ones(n); na = max(1, int(a * SR)); e[:na] = np.linspace(0, 1, na)
@@ -37,7 +37,7 @@ def env(n, a=0.005, r=None):
 def sweep(f0, f1, d, shape='exp'):
     t = tt(d); f = f0 * (f1 / f0) ** (t / d) if shape == 'exp' else f0 + (f1 - f0) * t / d
     return np.sin(2 * np.pi * np.cumsum(f) / SR)
-def noise(d): return rng.standard_normal(int(d * SR))
+def noise(d): return rng.standard_normal(max(1, int(float(d) * SR)))
 
 
 # ---------- the effects ----------
@@ -161,7 +161,8 @@ if mus and mus != 'none':
 for c in cj['cues']:
     fn = FX.get(c['type'])
     if not fn: print('unknown cue type, skipped:', c['type']); continue
-    x = fn(**({'d': c['dur']} if c.get('dur') else {}))
+    dur_val = max(0.05, float(c['dur'])) if c.get('dur') is not None else None
+    x = fn(**({'d': dur_val} if dur_val is not None else {}))
     x = lp(x, 5000) * db(LEVEL[c['type']]) * c.get('gain', 1.0) / (np.abs(x).max() + 1e-9) * 0.9
     i = int(c['t'] * SR); n = min(len(x), N - i)
     if n > 0 and i >= 0: pan = c.get('pan', 0.0); mix[i:i + n, 0] += x[:n] * (1 - max(0, pan)); mix[i:i + n, 1] += x[:n] * (1 + min(0, pan))
