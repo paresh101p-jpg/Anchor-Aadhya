@@ -1,533 +1,838 @@
 // CINEMATIC DOCUMENTARY SCENE ENGINE (1080x1920 9:16)
-// Broadcast-quality motion graphics: dark mode, volumetric lighting, particle systems,
-// tactical HUD telemetry, depth gauges, and high-energy documentary visuals.
-// Zero clip-art icons, zero crude stick figures.
+// Broadcast-quality literal visuals for every spoken word:
+// Earth, Mount Everest, Sun, Submarine, 1000 Elephants, Anglerfish, Plastic Bottle, Outro.
+// All visuals placed safely above y=1200 to prevent caption overlap.
 import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU } from './core/lib.js';
 
 const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
-// Utility: HUD Tech Box
-function hudBox(x, y, w, h, title = '', color = '#00F2FE') {
+// Utility: HUD Title Card (top safe area)
+function hudHeader(title, subtitle = '', color = '#00F2FE') {
   ctx.save();
-  ctx.strokeStyle = color; ctx.lineWidth = 4;
-  ctx.strokeRect(x, y, w, h);
-  // corner brackets
-  const b = 18;
-  ctx.lineWidth = 8;
-  // top-left
-  ctx.beginPath(); ctx.moveTo(x, y + b); ctx.lineTo(x, y); ctx.lineTo(x + b, y); ctx.stroke();
-  // top-right
-  ctx.beginPath(); ctx.moveTo(x + w - b, y); ctx.lineTo(x + w, y); ctx.lineTo(x + w, y + b); ctx.stroke();
-  // bottom-left
-  ctx.beginPath(); ctx.moveTo(x, y + h - b); ctx.lineTo(x, y + h); ctx.lineTo(x + b, y + h); ctx.stroke();
-  // bottom-right
-  ctx.beginPath(); ctx.moveTo(x + w - b, y + h); ctx.lineTo(x + w, y + h); ctx.lineTo(x + w, y + h - b); ctx.stroke();
+  ctx.strokeStyle = color; ctx.lineWidth = 3;
+  ctx.strokeRect(100, 140, W - 200, 110);
+  // corner accents
+  ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.moveTo(100, 165); ctx.lineTo(100, 140); ctx.lineTo(125, 140); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W - 125, 140); ctx.lineTo(W - 100, 140); ctx.lineTo(W - 100, 165); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(100, 225); ctx.lineTo(100, 250); ctx.lineTo(125, 250); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W - 125, 250); ctx.lineTo(W - 100, 250); ctx.lineTo(W - 100, 225); ctx.stroke();
 
-  if (title) {
-    ctx.font = F(28, '800'); ctx.fillStyle = color; ctx.textBaseline = 'bottom';
-    ctx.fillText(title, x + 10, y - 10);
+  ctx.font = F(44, '900'); ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(title, 540, 180);
+  if (subtitle) {
+    ctx.font = F(24, '800'); ctx.fillStyle = '#FFFFFF';
+    ctx.fillText(subtitle, 540, 220);
   }
   ctx.restore();
 }
 
-// Utility: Cinematic Film Grain & Scanlines
-function filmAtmosphere(t, alpha = 0.08) {
+// Marine Snow particles (floating deep-sea dust)
+function marineSnow(t, count = 35) {
   ctx.save();
-  ctx.fillStyle = '#000'; ctx.globalAlpha = 0.35;
-  // dark vignette edges
-  const g = ctx.createRadialGradient(W / 2, H / 2, 400, W / 2, H / 2, 1000);
-  g.addColorStop(0, 'rgba(0,0,0,0)');
-  g.addColorStop(1, 'rgba(0,0,0,0.85)');
-  ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
-
-  // scanlines
-  ctx.fillStyle = '#FFFFFF'; ctx.globalAlpha = 0.03;
-  for (let y = 0; y < H; y += 8) {
-    ctx.fillRect(0, y, W, 2);
-  }
-  ctx.restore();
-}
-
-// Marine Snow (floating glowing particulate matter in deep sea)
-function marineSnow(t, count = 45, color = 'rgba(120, 220, 255, 0.45)') {
-  ctx.save();
-  ctx.fillStyle = color;
+  ctx.fillStyle = 'rgba(120, 220, 255, 0.45)';
   for (let i = 0; i < count; i++) {
-    const seed = i * 73.1;
-    const x = (rnd(seed) * W + Math.sin(t * 0.8 + seed) * 40) % W;
-    const y = ((rnd(seed + 1) * H + t * (25 + rnd(seed + 2) * 45)) % (H + 100)) - 50;
-    const r = 2 + rnd(seed + 3) * 6;
+    const seed = i * 67.3;
+    const x = (rnd(seed) * W + Math.sin(t * 0.7 + seed) * 30) % W;
+    const y = ((rnd(seed + 1) * H + t * (20 + rnd(seed + 2) * 35)) % (H + 100)) - 50;
+    const r = 2 + rnd(seed + 3) * 5;
     ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fill();
   }
   ctx.restore();
 }
 
-// ── 1. OCEAN ABYSS DIVE ───────────────────────────────────────────────────────────
-export function drawOceanDive(lt, d, t) {
-  // background: deep ocean gradient
-  const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#001B3A'); bg.addColorStop(0.4, '#000D20'); bg.addColorStop(1, '#00030A');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+// ── 1. EARTH GLOBE (वर्ड: पृथ्वी का सबसे गहरा स्थान) ─────────────────────────────────
+export function drawEarthGlobe(lt, d, t) {
+  // Background space/ocean void
+  ctx.fillStyle = '#020712'; ctx.fillRect(0, 0, W, H);
 
-  // descending depth grid lines
+  hudHeader('PLANET EARTH // DEEPEST POINT', 'पृथ्वी का सबसे गहरा स्थान', '#00F2FE');
+
   ctx.save();
-  ctx.strokeStyle = 'rgba(0, 242, 254, 0.15)'; ctx.lineWidth = 2;
-  const offset = (t * 220) % 180;
-  for (let y = -200; y < H + 200; y += 180) {
-    ctx.beginPath(); ctx.moveTo(80, y + offset); ctx.lineTo(W - 80, y + offset); ctx.stroke();
+  const cx = 540, cy = 680, r = 260;
+
+  // Blue Atmosphere Halo
+  const halo = ctx.createRadialGradient(cx, cy, r * 0.85, cx, cy, r * 1.35);
+  halo.addColorStop(0, 'rgba(0, 242, 254, 0.6)'); halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = halo;
+  ctx.beginPath(); ctx.arc(cx, cy, r * 1.35, 0, TAU); ctx.fill();
+
+  // Ocean Globe Base
+  const ocean = ctx.createRadialGradient(cx - r * 0.35, cy - r * 0.35, 30, cx, cy, r);
+  ocean.addColorStop(0, '#1E88E5'); ocean.addColorStop(0.65, '#0D47A1'); ocean.addColorStop(1, '#051937');
+  ctx.fillStyle = ocean;
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.fill();
+
+  // Continents (Green rotating landmasses)
+  ctx.save();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.clip();
+  ctx.fillStyle = '#4CAF50';
+  const shift = (t * 22) % (r * 2.2);
+  for (let k = -1; k <= 1; k++) {
+    const lx = cx + k * r * 2.0 + shift;
+    ctx.beginPath(); ctx.ellipse(lx - 50, cy - 40, 90, 60, 0.3, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lx + 70, cy + 50, 80, 50, -0.2, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lx - 30, cy + 90, 60, 45, 0.1, 0, TAU); ctx.fill();
   }
+  ctx.restore();
 
-  // ocean depth telemetry
-  const depth = Math.round(lerp(0, 3500, eo(clamp(lt / d))));
-  ctx.fillStyle = '#00F2FE'; ctx.font = F(72, '900'); ctx.textAlign = 'center';
-  ctx.fillText(`-${depth.toLocaleString()} M`, 540, 520);
-  ctx.font = F(32, '800'); ctx.fillStyle = '#A0E6FF';
-  ctx.fillText('OCEANIC ABYSS DESCENT // SECTOR PACIFIC', 540, 580);
+  // Mariana Trench Target Marker on Pacific Ocean
+  const pulse = 1 + 0.15 * Math.sin(t * 6);
+  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(cx + 40, cy + 20, 40 * pulse, 0, TAU); ctx.stroke();
+  circle(cx + 40, cy + 20, 14, '#FFE600');
 
-  // Submersible silhouette diving down
-  const subY = 820 + Math.sin(t * 2) * 15;
-  ctx.fillStyle = '#112233'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.ellipse(540, subY, 180, 85, 0, 0, TAU); ctx.fill(); ctx.stroke();
-  // conning tower
-  ctx.fillRect(510, subY - 120, 60, 45); ctx.strokeRect(510, subY - 120, 60, 45);
-  // dive headlights
-  const beam = ctx.createRadialGradient(540, subY + 60, 20, 540, subY + 360, 320);
-  beam.addColorStop(0, 'rgba(0, 242, 254, 0.6)'); beam.addColorStop(1, 'rgba(0,0,0,0)');
-  ctx.fillStyle = beam;
-  ctx.beginPath(); ctx.moveTo(540, subY + 40); ctx.lineTo(320, subY + 480); ctx.lineTo(760, subY + 480); ctx.fill();
+  // Label card
+  ctx.font = F(36, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('मारियाना ट्रेंच (प्रशांत महासागर)', 540, 1030);
 
   ctx.restore();
-  marineSnow(t, 50);
-  filmAtmosphere(t);
+  marineSnow(t, 25);
 }
 
-// ── 2. MARIANA TRENCH 11,000M CHASM ───────────────────────────────────────────────
+// ── 2. MARIANA TRENCH 11,000M CHASM (वर्ड: 11,000 मीटर नीचे) ────────────────────────
 export function drawMarianaChasm(lt, d, t) {
   ctx.fillStyle = '#01050D'; ctx.fillRect(0, 0, W, H);
 
-  // Massive canyon rock walls on left & right
+  hudHeader('DEPTH READOUT // 11,000 METERS', '11,000 मीटर गहरी खाई', '#00F2FE');
+
   ctx.save();
-  ctx.fillStyle = '#0A131F'; ctx.strokeStyle = 'rgba(0, 242, 254, 0.25)'; ctx.lineWidth = 4;
-  // Left wall
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(340, 0); ctx.lineTo(260, 600);
-  ctx.lineTo(380, 1100); ctx.lineTo(240, 1500); ctx.lineTo(310, H); ctx.lineTo(0, H); ctx.fill(); ctx.stroke();
-  // Right wall
-  ctx.beginPath(); ctx.moveTo(W, 0); ctx.lineTo(W - 340, 0); ctx.lineTo(W - 260, 600);
-  ctx.lineTo(W - 380, 1100); ctx.lineTo(W - 240, 1500); ctx.lineTo(W - 310, H); ctx.lineTo(W, H); ctx.fill(); ctx.stroke();
+  // Canyon walls on left & right
+  ctx.fillStyle = '#0B1726'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.moveTo(60, 270); ctx.lineTo(340, 500); ctx.lineTo(260, 850); ctx.lineTo(380, 1150); ctx.lineTo(60, 1150); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(W - 60, 270); ctx.lineTo(W - 340, 500); ctx.lineTo(W - 260, 850); ctx.lineTo(W - 380, 1150); ctx.lineTo(W - 60, 1150); ctx.fill(); ctx.stroke();
 
-  // Central Glowing Depth Axis
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 6; ctx.setLineDash([20, 15]);
-  ctx.beginPath(); ctx.moveTo(540, 200); ctx.lineTo(540, 1350); ctx.stroke();
-  ctx.setLineDash([]);
+  // Dynamic Descending Depth Meter
+  const depth = Math.round(lerp(1000, 11034, eo(clamp(lt / d))));
+  ctx.font = F(92, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText(`-${depth.toLocaleString()} M`, 540, 680);
 
-  // Beacon Target at Trench Bottom
-  const pulse = 1 + 0.15 * Math.sin(t * 6);
+  // Red Warning Beacon at Depth
+  const pulse = 1 + 0.2 * Math.sin(t * 8);
   ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 8;
-  ctx.beginPath(); ctx.arc(540, 1180, 70 * pulse, 0, TAU); ctx.stroke();
-  ctx.fillStyle = '#FF3366';
-  ctx.beginPath(); ctx.arc(540, 1180, 24, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(540, 880, 60 * pulse, 0, TAU); ctx.stroke();
+  circle(540, 880, 22, '#FF3366');
 
-  // Metric HUD Card
-  hudBox(240, 380, 600, 240, 'CHALLENGER DEEP RADAR', '#00F2FE');
-  ctx.font = F(86, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('11,034 M', 540, 490);
-  ctx.font = F(34, '800'); ctx.fillStyle = '#FFF';
-  ctx.fillText('पृथ्वी की सबसे गहरी खाई', 540, 560);
+  // Challenger Deep text
+  ctx.font = F(38, '900'); ctx.fillStyle = '#FFF';
+  ctx.fillText('CHALLENGER DEEP: 11,034 M', 540, 1020);
 
   ctx.restore();
-  marineSnow(t, 40);
-  filmAtmosphere(t);
+  marineSnow(t, 35);
 }
 
-// ── 3. EVEREST INVERTED SCALE ─────────────────────────────────────────────────────
-export function drawEverestComparison(lt, d, t) {
+// ── 3. MOUNT EVEREST SNOW PEAK (वर्ड: पूरा माउंट एवरेस्ट भी डूब जाएगा) ─────────────────
+export function drawMountEverest(lt, d, t) {
   ctx.fillStyle = '#000814'; ctx.fillRect(0, 0, W, H);
 
-  // Surface Sea Level
-  ctx.fillStyle = 'rgba(0, 242, 254, 0.4)'; ctx.fillRect(60, 320, W - 120, 6);
-  ctx.font = F(30, '800'); ctx.fillStyle = '#00F2FE'; ctx.textAlign = 'left';
-  ctx.fillText('समुद्र तल (SEA LEVEL: 0 M)', 80, 305);
+  hudHeader('EVEREST COMPARISON // 8,848 METERS', 'माउंट एवरेस्ट भी डूब जाएगा', '#FFE600');
 
-  // Inverted Everest Mountain Silhouette
   ctx.save();
-  ctx.fillStyle = '#1A293D'; ctx.strokeStyle = '#4FD1E8'; ctx.lineWidth = 5;
+  const ex = 540, ey = 780;
+
+  // Mountain Base Rock
+  ctx.fillStyle = '#1C2833'; ctx.strokeStyle = '#4FD1E8'; ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(180, 326);
-  ctx.lineTo(540, 1080); // Everest Peak pointing downwards at 8,848m
-  ctx.lineTo(900, 326);
+  ctx.moveTo(ex, ey - 320); // Summit Peak
+  ctx.lineTo(ex + 320, ey + 200);
+  ctx.lineTo(ex - 320, ey + 200);
   ctx.closePath(); ctx.fill(); ctx.stroke();
 
-  // Snow lines on Everest
-  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)';
+  // Pure White Glacier Snow Cap on Summit
+  ctx.fillStyle = '#FFFFFF';
   ctx.beginPath();
-  ctx.moveTo(480, 950); ctx.lineTo(540, 1080); ctx.lineTo(600, 950); ctx.lineTo(540, 990); ctx.fill();
+  ctx.moveTo(ex, ey - 320);
+  ctx.lineTo(ex + 130, ey - 100);
+  ctx.lineTo(ex + 60, ey - 60);
+  ctx.lineTo(ex, ey - 100);
+  ctx.lineTo(ex - 70, ey - 70);
+  ctx.lineTo(ex - 120, ey - 110);
+  ctx.closePath(); ctx.fill();
 
-  // Everest label
-  ctx.font = F(38, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
-  ctx.fillText('माउंट एवरेस्ट (8,848 M)', 540, 850);
+  // Red Summit Flag
+  line([[ex, ey - 320], [ex, ey - 390]], '#FFE600', 8);
+  ctx.fillStyle = '#FF3366';
+  ctx.beginPath(); ctx.moveTo(ex, ey - 390); ctx.lineTo(ex + 65, ey - 360); ctx.lineTo(ex, ey - 330); ctx.fill();
 
-  // Bottom of Trench Floor Marker (11,034 M)
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.moveTo(120, 1320); ctx.lineTo(W - 120, 1320); ctx.stroke();
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FF3366';
-  ctx.fillText('मारियाना ट्रेंच का तल (11,034 M)', 540, 1380);
+  // Rising Ocean Water Line Swallowing Everest
+  const waterY = lerp(ey + 200, ey - 160, eo(clamp(lt / d)));
+  ctx.fillStyle = 'rgba(0, 180, 255, 0.45)';
+  ctx.fillRect(80, waterY, W - 160, (ey + 200) - waterY);
+  line([[80, waterY], [W - 80, waterY]], '#00F2FE', 6);
 
-  // Remaining Gap Indicator
-  ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 4; ctx.setLineDash([12, 10]);
-  ctx.beginPath(); ctx.moveTo(540, 1090); ctx.lineTo(540, 1310); ctx.stroke(); ctx.setLineDash([]);
-  ctx.font = F(34, '900'); ctx.fillStyle = '#FFE600';
-  ctx.fillText('2,186 M गहरा पानी अभी भी बाकी!', 540, 1200);
+  // Label card
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('माउंट एवरेस्ट: 8,848 M (डूबा हुआ!)', 540, 1050);
 
   ctx.restore();
-  filmAtmosphere(t);
 }
 
-// ── 4. COMPLETE MIDNIGHT EXTINCTION ───────────────────────────────────────────────
-export function drawMidnightDarkness(lt, d, t) {
-  // Depth transition gradient from blue to absolute void
-  const bg = ctx.createLinearGradient(0, 0, 0, H);
-  bg.addColorStop(0, '#002B49'); bg.addColorStop(0.3, '#001326'); bg.addColorStop(0.65, '#000000');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+// ── 4. BLAZING SUN (वर्ड: सूरज की एक भी किरण नहीं पहुँचती) ───────────────────────────
+export function drawSunRays(lt, d, t) {
+  ctx.fillStyle = '#02050A'; ctx.fillRect(0, 0, W, H);
 
-  // Sunlight Rays dying out at 1000m
+  hudHeader('SOLAR LIGHT EXTINCTION', 'सूरज की एक भी किरण नहीं पहुँचती', '#FF9900');
+
   ctx.save();
-  const rayAlpha = Math.max(0, 0.45 - lt * 0.15);
-  ctx.fillStyle = `rgba(255, 235, 160, ${rayAlpha})`;
-  for (let i = 0; i < 5; i++) {
-    const x = 160 + i * 190;
-    ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x + 120, 680); ctx.lineTo(x + 40, 680); ctx.fill();
+  const sx = 540, sy = 560;
+
+  // Radiating Solar Flares
+  const numRays = 16;
+  const pulse = 1 + 0.1 * Math.sin(t * 5);
+  for (let i = 0; i < numRays; i++) {
+    const ang = (i * TAU) / numRays + t * 0.3;
+    const len = (i % 2 === 0 ? 250 : 180) * pulse;
+    ctx.strokeStyle = i % 2 === 0 ? '#FFE600' : '#FF6600'; ctx.lineWidth = 14;
+    ctx.beginPath();
+    ctx.moveTo(sx + Math.cos(ang) * 120, sy + Math.sin(ang) * 120);
+    ctx.lineTo(sx + Math.cos(ang) * len, sy + Math.sin(ang) * len);
+    ctx.stroke();
   }
 
-  // 1000m Barrier Line
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 4; ctx.setLineDash([16, 12]);
-  ctx.beginPath(); ctx.moveTo(80, 720); ctx.lineTo(W - 80, 720); ctx.stroke(); ctx.setLineDash([]);
-  ctx.font = F(32, '800'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
-  ctx.fillText('1,000 M // SUNLIGHT EXTINCTION LEVEL', 540, 690);
+  // Corona Glow
+  const glow = ctx.createRadialGradient(sx, sy, 50, sx, sy, 240);
+  glow.addColorStop(0, '#FFF5CC'); glow.addColorStop(0.5, '#FFB300'); glow.addColorStop(1, 'rgba(255,80,0,0)');
+  ctx.fillStyle = glow;
+  ctx.beginPath(); ctx.arc(sx, sy, 240, 0, TAU); ctx.fill();
 
-  // Warning Skull / Danger Alert in Pitch Black
-  hudBox(200, 840, 680, 280, 'SUNLIGHT = 0%', '#FF3366');
-  ctx.font = F(68, '900'); ctx.fillStyle = '#FFF';
-  ctx.fillText('खौफनाक अंधेरा', 540, 950);
-  ctx.font = F(36, '800'); ctx.fillStyle = '#A0B2C6';
-  ctx.fillText('सूरज की एक भी किरण नहीं पहुँचती', 540, 1020);
+  // Solid Core
+  circle(sx, sy, 115, '#FFE600'); circle(sx, sy, 90, '#FFF8E7');
+
+  // Red "NO LIGHT" Prohibition Stamp
+  const banAlpha = clamp((lt - 0.5) / 0.5);
+  if (banAlpha > 0) {
+    ctx.save(); ctx.globalAlpha = banAlpha;
+    ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 18;
+    ctx.beginPath(); ctx.arc(sx, sy, 200, 0, TAU); ctx.stroke();
+    line([[sx - 140, sy - 140], [sx + 140, sy + 140]], '#FF3366', 18);
+    ctx.restore();
+  }
+
+  // Label card
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
+  ctx.fillText('1,000 M नीचे = 0% सूरज की रोशनी', 540, 960);
 
   ctx.restore();
-  marineSnow(t, 25, 'rgba(80, 150, 200, 0.3)');
-  filmAtmosphere(t);
 }
 
-// ── 5. SUBMARINE HIGH-POWER SEARCHLIGHT ───────────────────────────────────────────
+// ── 5. SUBMARINE WITH DUAL SEARCHLIGHTS (वर्ड: खौफनाक अंधेरा) ─────────────────────────
 export function drawSubmarineSearchlight(lt, d, t) {
-  ctx.fillStyle = '#000206'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#000104'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('DEEP-SEA SUBMERSIBLE // SEARCHLIGHTS', 'खौफनाक अंधेरे में पनडुब्बी', '#00F2FE');
 
   ctx.save();
-  const subX = 540, subY = 620;
+  const subX = 540, subY = 640;
 
-  // Powerful Volumetric Cone Beams sweeping slowly
-  const sweep = Math.sin(t * 1.5) * 80;
-  const beam = ctx.createRadialGradient(subX, subY, 40, subX + sweep, subY + 700, 600);
-  beam.addColorStop(0, 'rgba(180, 240, 255, 0.85)');
-  beam.addColorStop(0.3, 'rgba(0, 200, 255, 0.4)');
+  // Dual High-Power Conical Beams
+  const sweep = Math.sin(t * 1.6) * 90;
+  const beam = ctx.createRadialGradient(subX, subY, 40, subX + sweep, subY + 500, 500);
+  beam.addColorStop(0, 'rgba(180, 245, 255, 0.9)');
+  beam.addColorStop(0.4, 'rgba(0, 210, 255, 0.4)');
   beam.addColorStop(1, 'rgba(0, 0, 0, 0)');
   ctx.fillStyle = beam;
   ctx.beginPath();
-  ctx.moveTo(subX - 40, subY + 20);
-  ctx.lineTo(subX - 350 + sweep, subY + 800);
-  ctx.lineTo(subX + 350 + sweep, subY + 800);
-  ctx.lineTo(subX + 40, subY + 20);
+  ctx.moveTo(subX - 50, subY + 30);
+  ctx.lineTo(subX - 320 + sweep, subY + 520);
+  ctx.lineTo(subX + 320 + sweep, subY + 520);
+  ctx.lineTo(subX + 50, subY + 30);
   ctx.fill();
 
-  // Submarine Chassis
-  ctx.fillStyle = '#1B263B'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.ellipse(subX, subY, 220, 95, 0, 0, TAU); ctx.fill(); ctx.stroke();
-  // Cockpit viewing sphere (golden titanium)
-  ctx.fillStyle = '#FFE600'; ctx.beginPath(); ctx.arc(subX, subY + 25, 45, 0, TAU); ctx.fill();
+  // Submarine Hull (Steel Titanium)
+  ctx.fillStyle = '#1A2A3E'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.ellipse(subX, subY, 230, 105, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  // Conning Tower
+  ctx.fillRect(subX - 45, subY - 145, 90, 50); ctx.strokeRect(subX - 45, subY - 145, 90, 50);
+  // Observation Golden Dome Viewport
+  circle(subX, subY + 20, 50, '#FFE600'); circle(subX, subY + 20, 36, '#FFF8E7');
 
-  // Illuminated Ocean Floor Sediment revealed below
-  ctx.fillStyle = '#0B1726';
-  ctx.beginPath(); ctx.ellipse(subX + sweep * 0.5, subY + 780, 420, 120, 0, 0, TAU); ctx.fill();
-  ctx.strokeStyle = 'rgba(0, 242, 254, 0.4)'; ctx.lineWidth = 3; ctx.stroke();
+  // Searchlight Pods
+  circle(subX - 70, subY + 80, 22, '#FFF'); circle(subX + 70, subY + 80, 22, '#FFF');
 
-  hudBox(240, 1020, 600, 160, 'SUBMERSIBLE SEARCHLIGHT', '#00F2FE');
-  ctx.font = F(48, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
-  ctx.fillText('गहरी अंधेरी दुनिया', 540, 1120);
+  // Label card
+  ctx.font = F(40, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
+  ctx.fillText('अंधेरे को चीरती शक्तिशाली लाइट', 540, 1020);
 
   ctx.restore();
-  marineSnow(t, 60);
-  filmAtmosphere(t);
+  marineSnow(t, 45);
 }
 
-// ── 6. HYDRAULIC PRESSURE SLAM (1,086 ATM) ─────────────────────────────────────────
+// ── 6. INDUSTRIAL PRESSURE GAUGE (वर्ड: पानी का दबाव इतना भयंकर) ─────────────────────
 export function drawPressureSlam(lt, d, t) {
   ctx.fillStyle = '#060B14'; ctx.fillRect(0, 0, W, H);
 
+  hudHeader('PRESSURE SENSOR // CRITICAL ALERT', 'पानी का भयंकर दबाव', '#FF3366');
+
   ctx.save();
-  // Circular Heavy Industrial Gauge
-  const cx = 540, cy = 780, R = 280;
+  const cx = 540, cy = 680, R = 270;
+
+  // Gauge Outer Ring
   ctx.fillStyle = '#111927'; ctx.strokeStyle = '#4FD1E8'; ctx.lineWidth = 14;
   ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fill(); ctx.stroke();
-  // Red Danger Arc from 200° to 340°
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 26;
-  ctx.beginPath(); ctx.arc(cx, cy, R - 24, Math.PI * 0.9, Math.PI * 1.8); ctx.stroke();
 
-  // Ticks
-  for (let a = 0; a < TAU; a += Math.PI / 10) {
-    const x1 = cx + Math.cos(a) * (R - 40), y1 = cy + Math.sin(a) * (R - 40);
-    const x2 = cx + Math.cos(a) * (R - 65), y2 = cy + Math.sin(a) * (R - 65);
+  // Red Danger Zone Arc
+  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 28;
+  ctx.beginPath(); ctx.arc(cx, cy, R - 26, Math.PI * 0.9, Math.PI * 1.85); ctx.stroke();
+
+  // Dial Ticks
+  for (let a = 0; a < TAU; a += Math.PI / 8) {
+    const x1 = cx + Math.cos(a) * (R - 35), y1 = cy + Math.sin(a) * (R - 35);
+    const x2 = cx + Math.cos(a) * (R - 60), y2 = cy + Math.sin(a) * (R - 60);
     line([[x1, y1], [x2, y2]], a > Math.PI ? '#FF3366' : '#718296', 6);
   }
 
-  // Needle slamming violently into the Red Zone
-  const shake = rnd(t * 10) * 12 - 6;
-  const targetAngle = Math.PI * 1.65 + (shake * Math.PI) / 180;
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 12;
-  const nx = cx + Math.cos(targetAngle) * (R - 45), ny = cy + Math.sin(targetAngle) * (R - 45);
-  line([[cx, cy], [nx, ny]], '#FF3366', 12);
+  // Needle violently slamming into Red Zone
+  const shake = rnd(t * 12) * 10 - 5;
+  const targetAngle = Math.PI * 1.68 + (shake * Math.PI) / 180;
+  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 14;
+  line([[cx, cy], [cx + Math.cos(targetAngle) * (R - 40), cy + Math.sin(targetAngle) * (R - 40)]], '#FF3366', 14);
   circle(cx, cy, 32, '#FFE600');
 
-  // Center Gauge Readout
+  // Digital Bar Display
   ctx.font = F(76, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
-  ctx.fillText('1,086 BAR', cx, cy + 120);
-
-  // Inward Pressure Force Arrows Squeezing Gauge
-  const arrP = (t * 80) % 60;
-  for (let k = 0; k < 4; k++) {
-    const ang = (k * Math.PI) / 2;
-    const ax = cx + Math.cos(ang) * (R + 120 - arrP);
-    const ay = cy + Math.sin(ang) * (R + 120 - arrP);
-    ctx.fillStyle = '#FF3366';
-    ctx.beginPath(); ctx.arc(ax, ay, 18, 0, TAU); ctx.fill();
-  }
-
-  hudBox(180, 1180, 720, 190, 'CRUSHING HYDROSTATIC PRESSURE', '#FF3366');
-  ctx.font = F(52, '900'); ctx.fillStyle = '#FFF';
-  ctx.fillText('1000 गुना भयंकर दबाव!', cx, 1290);
-
-  ctx.restore();
-  filmAtmosphere(t);
-}
-
-// ── 7. 1000 ELEPHANTS CRUSH FORCE ────────────────────────────────────────────────
-export function drawElephantWeight(lt, d, t) {
-  ctx.fillStyle = '#080005'; ctx.fillRect(0, 0, W, H);
-
-  ctx.save();
-  // Heavy Compression Hydraulic Press Block slamming down
-  const slam = eo(clamp(lt / 0.35));
-  const pressY = lerp(100, 480, slam);
-
-  ctx.fillStyle = '#2B141E'; ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 8;
-  ctx.fillRect(160, pressY, 760, 240);
-  ctx.strokeRect(160, pressY, 760, 240);
-
-  // Big Text on Press
-  ctx.font = F(78, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('1,000 HATHI', 540, pressY + 110);
+  ctx.fillText('1,086 BAR', cx, cy + 110);
   ctx.font = F(38, '800'); ctx.fillStyle = '#FFF';
-  ctx.fillText('सिर पर 1000 हाथियों का वजन!', 540, pressY + 180);
-
-  // Crushed Titanium Sphere with glowing stress cracks below
-  const sphereY = 960;
-  ctx.fillStyle = '#1F2A38'; ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 10;
-  ctx.beginPath(); ctx.ellipse(540, sphereY, 200, 140, 0, 0, TAU); ctx.fill(); ctx.stroke();
-
-  // Dynamic Stress Fractures
-  ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 6;
-  ctx.beginPath();
-  ctx.moveTo(480, sphereY - 80); ctx.lineTo(520, sphereY - 20); ctx.lineTo(500, sphereY + 40);
-  ctx.moveTo(560, sphereY - 90); ctx.lineTo(540, sphereY - 10); ctx.lineTo(580, sphereY + 50);
-  ctx.stroke();
-
-  // Crushing Force Arrows
-  for (let x = 240; x <= 840; x += 150) {
-    line([[x, pressY + 240], [x, sphereY - 140]], '#FF3366', 12);
-  }
-
-  hudBox(200, 1220, 680, 160, 'HYDRAULIC FORCE VECTOR', '#FF3366');
-  ctx.font = F(46, '900'); ctx.fillStyle = '#FFF';
-  ctx.fillText('हड्डियों का चूरा बन जाएगा', 540, 1315);
+  ctx.fillText('सामान्य से 1,000 गुना अधिक दबाव!', cx, 1020);
 
   ctx.restore();
-  filmAtmosphere(t);
 }
 
-// ── 8. NAVAL SONAR RADAR SWEEP ────────────────────────────────────────────────────
-export function drawSonarRadar(lt, d, t) {
-  ctx.fillStyle = '#020C0E'; ctx.fillRect(0, 0, W, H);
+// ── 7. 1000 ELEPHANTS (वर्ड: जैसे आपके सिर पर 1000 हाथी खड़े हों) ────────────────────
+export function drawElephantWeight(lt, d, t) {
+  ctx.fillStyle = '#080205'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('WEIGHT COMPARISON // 1000 ELEPHANTS', 'सिर पर 1000 हाथियों का वजन', '#FFE600');
 
   ctx.save();
-  const cx = 540, cy = 760, R = 340;
+  const ex = 540, ey = 660, s = 1.35;
+  ctx.translate(ex, ey); ctx.scale(s, s);
 
-  // Radar Grid Circles
-  ctx.strokeStyle = 'rgba(0, 255, 170, 0.35)'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx, cy, R * 0.66, 0, TAU); ctx.stroke();
-  ctx.beginPath(); ctx.arc(cx, cy, R * 0.33, 0, TAU); ctx.stroke();
-  // Crosshairs
-  line([[cx - R - 30, cy], [cx + R + 30, cy]], 'rgba(0, 255, 170, 0.35)', 3);
-  line([[cx, cy - R - 30], [cx, cy + R + 30]], 'rgba(0, 255, 170, 0.35)', 3);
-
-  // Rotating Radar Beam
-  const ang = (t * 3.5) % TAU;
-  const sweep = ctx.createRadialGradient(cx, cy, 20, cx, cy, R);
-  sweep.addColorStop(0, 'rgba(0, 255, 170, 0.7)'); sweep.addColorStop(1, 'rgba(0, 0, 0, 0)');
-  ctx.fillStyle = sweep;
-  ctx.beginPath(); ctx.moveTo(cx, cy); ctx.arc(cx, cy, R, ang, ang + 0.75); ctx.closePath(); ctx.fill();
-
-  // Target Blip detected at bottom
-  const bx = cx + 140, by = cy + 180;
-  const p = 1 + 0.25 * Math.sin(t * 8);
-  circle(bx, by, 16 * p, '#FF3366');
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.arc(bx, by, 40 * p, 0, TAU); ctx.stroke();
-  ctx.font = F(28, '800'); ctx.fillStyle = '#FF3366';
-  ctx.fillText('UNKNOWN CONTACT', bx + 60, by + 10);
-
-  hudBox(200, 1200, 680, 180, 'ACOUSTIC SONAR SCANNER', '#00FFAA');
-  ctx.font = F(54, '900'); ctx.fillStyle = '#00FFAA'; ctx.textAlign = 'center';
-  ctx.fillText('गहराई में हलचल!', cx, 1310);
+  // Realistic Elephant Silhouette
+  ctx.fillStyle = '#6B7A8F'; ctx.strokeStyle = '#3C4858'; ctx.lineWidth = 6;
+  // Body
+  ctx.beginPath(); ctx.ellipse(20, 0, 160, 115, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  // Head
+  ctx.beginPath(); ctx.ellipse(-120, -35, 90, 85, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  // Large Ear
+  ctx.fillStyle = '#5A687C';
+  ctx.beginPath(); ctx.ellipse(-95, -45, 65, 80, 0.2, 0, TAU); ctx.fill(); ctx.stroke();
+  // Trunk curving up
+  ctx.strokeStyle = '#6B7A8F'; ctx.lineWidth = 36; ctx.lineCap = 'round';
+  ctx.beginPath(); ctx.moveTo(-160, -15);
+  ctx.quadraticCurveTo(-240, 50, -210, 120);
+  ctx.quadraticCurveTo(-190, 155, -165, 130);
+  ctx.stroke();
+  // White Curved Tusk
+  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 14;
+  ctx.beginPath(); ctx.moveTo(-150, -5); ctx.quadraticCurveTo(-195, 35, -180, 75); ctx.stroke();
+  // Eye
+  circle(-145, -55, 8, '#FFE600'); circle(-145, -55, 4, '#000');
+  // Legs
+  ctx.fillStyle = '#5A687C';
+  ctx.fillRect(-100, 70, 44, 115); ctx.strokeRect(-100, 70, 44, 115);
+  ctx.fillRect(-40, 70, 44, 115); ctx.strokeRect(-40, 70, 44, 115);
+  ctx.fillRect(40, 70, 44, 115); ctx.strokeRect(40, 70, 44, 115);
+  ctx.fillRect(100, 70, 44, 115); ctx.strokeRect(100, 70, 44, 115);
 
   ctx.restore();
-  filmAtmosphere(t);
+
+  // Crushing Downward Force Arrows
+  const slamY = 880 + Math.sin(t * 8) * 12;
+  ctx.fillStyle = '#FF3366'; ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 5;
+  for (let x = 200; x <= 880; x += 170) {
+    line([[x, 420], [x, 470]], '#FF3366', 14);
+  }
+
+  // Label card
+  ctx.font = F(52, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('1,000 हाथियों का भार!', 540, 1020);
 }
 
-// ── 9. BIOLUMINESCENT ALIEN CREATURE ──────────────────────────────────────────────
+// ── 8. BIOLUMINESCENT ANGLERFISH (वर्ड: तैरते हुए चमकते जीव मिले) ─────────────────────
 export function drawAlienCreature(lt, d, t) {
   ctx.fillStyle = '#010206'; ctx.fillRect(0, 0, W, H);
 
+  hudHeader('BIOLUMINESCENT ANGLERFISH', 'तैरते हुए चमकते जीव मिले', '#00F2FE');
+
   ctx.save();
-  const cx = 540, cy = 720;
+  const cx = 540, cy = 680;
 
-  // Bioluminescent Glowing Lure (Pulsing Light Bulb)
-  const glowR = 120 + Math.sin(t * 5) * 35;
-  const lureG = ctx.createRadialGradient(cx - 180, cy - 220, 10, cx - 180, cy - 220, glowR);
-  lureG.addColorStop(0, '#FFFFFF');
-  lureG.addColorStop(0.25, '#00F2FE');
-  lureG.addColorStop(0.7, 'rgba(0, 242, 254, 0.35)');
-  lureG.addColorStop(1, 'rgba(0,0,0,0)');
+  // Glowing Cyan Lantern Bulb on Antenna
+  const glowR = 130 + Math.sin(t * 6) * 35;
+  const lureG = ctx.createRadialGradient(cx - 170, cy - 200, 10, cx - 170, cy - 200, glowR);
+  lureG.addColorStop(0, '#FFFFFF'); lureG.addColorStop(0.3, '#00F2FE'); lureG.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = lureG;
-  ctx.beginPath(); ctx.arc(cx - 180, cy - 220, glowR, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.arc(cx - 170, cy - 200, glowR, 0, TAU); ctx.fill();
 
-  // Esca Stalk
-  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.moveTo(cx - 40, cy - 80); ctx.quadraticCurveTo(cx - 140, cy - 180, cx - 180, cy - 220); ctx.stroke();
+  // Curved Antenna Stalk
+  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.moveTo(cx - 40, cy - 70); ctx.quadraticCurveTo(cx - 130, cy - 160, cx - 170, cy - 200); ctx.stroke();
 
-  // Deep Sea Ghostly Fish Silhouette
-  ctx.fillStyle = '#0A1826'; ctx.strokeStyle = 'rgba(0, 242, 254, 0.6)'; ctx.lineWidth = 6;
+  // Predatory Fish Body
+  ctx.fillStyle = '#0F1E2E'; ctx.strokeStyle = 'rgba(0, 242, 254, 0.7)'; ctx.lineWidth = 6;
   ctx.beginPath();
-  ctx.moveTo(cx - 120, cy);
-  ctx.quadraticCurveTo(cx + 80, cy - 160, cx + 320, cy - 40); // tail top
-  ctx.lineTo(cx + 420, cy - 120); // fin top
-  ctx.lineTo(cx + 360, cy);
-  ctx.lineTo(cx + 420, cy + 120); // fin bottom
-  ctx.lineTo(cx + 320, cy + 40);
-  ctx.quadraticCurveTo(cx + 60, cy + 180, cx - 120, cy); // jaw bottom
+  ctx.moveTo(cx - 110, cy);
+  ctx.quadraticCurveTo(cx + 80, cy - 140, cx + 300, cy - 30);
+  ctx.lineTo(cx + 390, cy - 100); ctx.lineTo(cx + 340, cy); ctx.lineTo(cx + 390, cy + 100);
+  ctx.lineTo(cx + 300, cy + 30);
+  ctx.quadraticCurveTo(cx + 60, cy + 160, cx - 110, cy);
   ctx.fill(); ctx.stroke();
 
-  // Menacing Razor Translucent Teeth
-  ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 5;
+  // Sharp Translucent Teeth
   for (let i = 0; i < 7; i++) {
-    const tx = cx - 100 + i * 28;
-    line([[tx, cy - 30], [tx + 10, cy + 25]], '#FFF', 5);
-    line([[tx + 14, cy + 40], [tx + 22, cy - 15]], '#FFF', 5);
+    const tx = cx - 90 + i * 26;
+    line([[tx, cy - 25], [tx + 10, cy + 20]], '#FFF', 6);
+    line([[tx + 12, cy + 35], [tx + 20, cy - 10]], '#FFF', 6);
   }
 
-  // Glowing Eye
-  circle(cx - 20, cy - 50, 18, '#00F2FE');
-  circle(cx - 20, cy - 50, 7, '#FFF');
+  // Glowing Blue Eye
+  circle(cx - 20, cy - 40, 18, '#00F2FE'); circle(cx - 20, cy - 40, 7, '#FFF');
 
-  hudBox(180, 1140, 720, 220, 'BIOLUMINESCENT EXTREMOPHILE', '#00F2FE');
-  ctx.font = F(58, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('जीवित रोशनी (BIOLUMINESCENCE)', cx, 1240);
-  ctx.font = F(36, '800'); ctx.fillStyle = '#FFF';
-  ctx.fillText('बिना सूरज और ऑक्सीजन के ज़िंदा!', cx, 1310);
+  // Label card
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('बायोल्यूमिनिसेंस (जीवित रोशनी)', 540, 1020);
 
   ctx.restore();
-  marineSnow(t, 45, 'rgba(0, 242, 254, 0.45)');
-  filmAtmosphere(t);
+  marineSnow(t, 40);
 }
 
-// ── 10. PLASTIC DEBRIS EVIDENCE AT 10,928M ─────────────────────────────────────────
+// ── 9. PLASTIC BOTTLE AT 11,000M (वर्ड: इंसानी प्लास्टिक कचरा मिला) ──────────────────
 export function drawPlasticDiscovery(lt, d, t) {
-  ctx.fillStyle = '#000205'; ctx.fillRect(0, 0, W, H);
+  ctx.fillStyle = '#02050A'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('SHOCKING POLLUTION // 11,000M', 'इंसानी प्लास्टिक कचरा मिला!', '#FF3366');
 
   ctx.save();
-  const cx = 540, cy = 820;
+  const bx = 540, by = 680, s = 1.3;
+  ctx.translate(bx, by); ctx.scale(s, s);
 
-  // Harsh Forensic Spotlight Beam focused on ocean floor
-  const spot = ctx.createRadialGradient(cx, cy - 40, 30, cx, cy, 380);
-  spot.addColorStop(0, 'rgba(255, 255, 255, 0.95)');
-  spot.addColorStop(0.3, 'rgba(200, 230, 255, 0.6)');
+  // Seafloor Sediment Bed
+  ctx.fillStyle = '#141E28'; ctx.beginPath(); ctx.ellipse(0, 70, 320, 90, 0, 0, TAU); ctx.fill();
+
+  // Realistic Plastic Bottle
+  ctx.fillStyle = 'rgba(0, 210, 255, 0.45)'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-45, -70, 90, 160, 15); ctx.fill(); ctx.stroke();
+  // Bottle Neck & Red Cap
+  ctx.fillRect(-22, -100, 44, 30); ctx.strokeRect(-22, -100, 44, 30);
+  ctx.fillStyle = '#FF3366'; ctx.fillRect(-26, -118, 52, 20);
+
+  // Label Band on Bottle
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.85)'; ctx.fillRect(-43, -10, 86, 45);
+  ctx.font = '900 16px Inter, sans-serif'; ctx.fillStyle = '#000'; ctx.textAlign = 'center';
+  ctx.fillText('PLASTIC', 0, 18);
+
+  // Red Prohibition Warning Circle
+  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 10;
+  ctx.beginPath(); ctx.arc(0, 0, 135, 0, TAU); ctx.stroke();
+  line([[-95, -95], [95, 95]], '#FF3366', 10);
+
+  ctx.restore();
+
+  // Forensic Evidence Marker
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
+  ctx.fillText('11,000 मीटर नीचे भी इंसानी गंदगी!', 540, 1020);
+}
+
+// ── 10. YOUTUBE SUBSCRIBE & OUTRO (वर्ड: कमेंट में बताएं और सब्सक्राइब करें) ───────────
+export function drawOutroCTA(lt, d, t) {
+  ctx.fillStyle = '#030814'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('ANCHOR AADHYA OFFICIAL', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
+
+  ctx.save();
+  const ox = 540, oy = 660, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Red YouTube Button
+  ctx.fillStyle = '#FF0000'; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  // White Play Arrow
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  // "SUBSCRIBE" text
+  ctx.font = '900 34px Inter, sans-serif'; ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('SUBSCRIBE', 0, 105);
+
+  // Golden Ringing Notification Bell
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = '#FFE600';
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, '#FFE600');
+  ctx.restore();
+
+  // Comment Bubble above
+  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-140, -180, 280, 85, 20); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
+  ctx.font = '900 28px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000'; ctx.textAlign = 'center';
+  ctx.fillText('कमेंट्स में बताओ! ✍️', 0, -135);
+
+  ctx.restore();
+
+  ctx.font = F(38, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
+  ctx.fillText('क्या इंसान हर जगह तबाhi मचाएगा?', 540, 1030);
+}
+
+// ===================================================================================
+// CHERNOBYL 300-SECOND DEATH ROOM (ELEPHANT'S FOOT) SCENES
+// ===================================================================================
+
+// ── C1. CHERNOBYL REACTOR NO. 4 // RADIATION HAZARD ────────────────────────────────
+export function drawChernobylPlant(lt, d, t) {
+  ctx.fillStyle = '#06070B'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('CHERNOBYL ZONE // REACTOR NO. 4', 'दुनिया का सबसे खतरनाक कमरा', '#FFCC00');
+
+  ctx.save();
+  const cx = 540, cy = 680;
+
+  // Giant Glowing Yellow Radiation Trefoil Symbol (☢)
+  const pulse = 1 + 0.1 * Math.sin(t * 6);
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(pulse, pulse);
+
+  // Outer warning triangle
+  ctx.fillStyle = '#FFCC00';
+  ctx.beginPath();
+  ctx.moveTo(0, -220); ctx.lineTo(210, 160); ctx.lineTo(-210, 160); ctx.closePath();
+  ctx.fill(); ctx.strokeStyle = '#000'; ctx.lineWidth = 14; ctx.stroke();
+
+  // Black 3 Radiation Blades
+  ctx.fillStyle = '#000000';
+  for (let k = 0; k < 3; k++) {
+    const a = (k * TAU) / 3 - Math.PI / 2;
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.arc(0, 0, 150, a - 0.52, a + 0.52);
+    ctx.closePath(); ctx.fill();
+  }
+  // Center circle cutout
+  circle(0, 0, 48, '#FFCC00'); circle(0, 0, 26, '#000000');
+  ctx.restore();
+
+  // Toxic green radiation mist
+  const mist = ctx.createRadialGradient(cx, cy + 200, 40, cx, cy + 200, 400);
+  mist.addColorStop(0, 'rgba(0, 255, 120, 0.3)'); mist.addColorStop(1, 'rgba(0,0,0,0)');
+  ctx.fillStyle = mist; ctx.beginPath(); ctx.ellipse(cx, cy + 200, 420, 160, 0, 0, TAU); ctx.fill();
+
+  ctx.font = F(48, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
+  ctx.fillText('LETHAL RADIATION ZONE', cx, 1020);
+
+  ctx.restore();
+  marineSnow(t, 25, 'rgba(255, 200, 0, 0.4)');
+}
+
+// ── C2. 300-SECOND DEATH COUNTDOWN TIMER ───────────────────────────────────────────
+export function drawCountdownTimer(lt, d, t) {
+  ctx.fillStyle = '#080004'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('TIME TO LETHAL DOSE // COUNTDOWN', 'सिर्फ 300 सेकंड में मौत तय!', '#FF3366');
+
+  ctx.save();
+  const cx = 540, cy = 680;
+
+  // Heavy Red Digital Clock Display Box
+  ctx.fillStyle = '#180208'; ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 10;
+  ctx.beginPath(); ctx.roundRect(140, cy - 180, 800, 260, 32); ctx.fill(); ctx.stroke();
+
+  // Large Red Glowing Digital Text
+  const shake = rnd(t * 14) * 8 - 4;
+  const secs = Math.max(0, Math.round(300 - (lt / d) * 15));
+  ctx.font = F(140, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
+  ctx.fillText(`${secs}s`, cx + shake, cy + 8);
+
+  // Skull death indicator
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600';
+  ctx.fillText('300 सेकंड = 100% FATAL DOSE', cx, cy + 170);
+
+  // Flashing Emergency Beacon Lights
+  const strobe = Math.sin(t * 12) > 0;
+  circle(180, cy - 180, 26, strobe ? '#FF1744' : '#550011');
+  circle(W - 180, cy - 180, 26, strobe ? '#FF1744' : '#550011');
+
+  ctx.font = F(40, '900'); ctx.fillStyle = '#FFF';
+  ctx.fillText('इतने समय में शरीर के अंग फेल!', cx, 1020);
+
+  ctx.restore();
+}
+
+// ── C3. NUCLEAR REACTOR FIREBALL EXPLOSION (1986) ──────────────────────────────────
+export function drawReactorExplosion(lt, d, t) {
+  ctx.fillStyle = '#0F0302'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('HISTORICAL DISASTER // APRIL 1986', 'चेरनोबिल रिएक्टर में भयानक विस्फोट', '#FF5500');
+
+  ctx.save();
+  const cx = 540, cy = 680;
+
+  // Expanding Fireball Core
+  const boom = eo(clamp(lt / 0.4));
+  const R = lerp(80, 320, boom);
+  const fire = ctx.createRadialGradient(cx, cy, 30, cx, cy, R);
+  fire.addColorStop(0, '#FFFFFF');
+  fire.addColorStop(0.25, '#FFE600');
+  fire.addColorStop(0.65, '#FF3300');
+  fire.addColorStop(1, 'rgba(50, 0, 0, 0)');
+  ctx.fillStyle = fire;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fill();
+
+  // Flying Debris particles
+  ctx.fillStyle = '#FFCC00';
+  for (let i = 0; i < 20; i++) {
+    const a = (i * TAU) / 20;
+    const dist = (R + 60) * (0.8 + rnd(i) * 0.4);
+    circle(cx + Math.cos(a) * dist, cy + Math.sin(a) * dist, 8 + rnd(i) * 12, '#FF5500');
+  }
+
+  // Broken Reactor Concrete Silhouette
+  ctx.fillStyle = '#1A1A1A'; ctx.strokeStyle = '#FF3300'; ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(160, 950); ctx.lineTo(260, 780); ctx.lineTo(340, 840);
+  ctx.lineTo(440, 720); ctx.lineTo(540, 800); ctx.lineTo(660, 700);
+  ctx.lineTo(760, 850); ctx.lineTo(920, 950); ctx.lineTo(160, 950);
+  ctx.fill(); ctx.stroke();
+
+  ctx.font = F(44, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('26 अप्रैल 1986 // इतिहास का काला दिन', cx, 1020);
+
+  ctx.restore();
+}
+
+// ── C4. CORIUM LAVA FLOWING (पिघला हुआ परमाणु लावा) ─────────────────────────────────
+export function drawCoriumLavaFlow(lt, d, t) {
+  ctx.fillStyle = '#050204'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('MOLTEN CORIUM LAVA // BASEMENT', 'पिघला हुआ रेडियोएक्टिव लावा', '#FF6600');
+
+  ctx.save();
+  const cx = 540, cy = 660;
+
+  // Broken Concrete & Steel Pipes in Basement
+  ctx.fillStyle = '#222'; ctx.strokeStyle = '#555'; ctx.lineWidth = 12;
+  // Large vertical pipe dripping lava
+  ctx.fillRect(480, 270, 120, 240); ctx.strokeRect(480, 270, 120, 240);
+
+  // Viscous Glowing Corium Magma Dripping Down
+  const dripY = lerp(510, 850, (t * 1.5) % 1);
+  const lava = ctx.createLinearGradient(cx - 80, 480, cx + 80, 880);
+  lava.addColorStop(0, '#FFE600'); lava.addColorStop(0.5, '#FF3300'); lava.addColorStop(1, '#660000');
+  ctx.fillStyle = lava;
+
+  // Molten stream
+  ctx.beginPath();
+  ctx.moveTo(500, 500);
+  ctx.quadraticCurveTo(cx - 30, 650, 510, 820);
+  ctx.lineTo(570, 820);
+  ctx.quadraticCurveTo(cx + 40, 650, 580, 500);
+  ctx.fill();
+
+  // Spreading Lava Pool on Basement Floor
+  ctx.fillStyle = '#FF3300';
+  ctx.beginPath(); ctx.ellipse(cx, 840, 360, 95, 0, 0, TAU); ctx.fill();
+  circle(cx, 840, 65, '#FFE600');
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('पिघला हुआ यूरेनियम और ग्रेफाइट', cx, 1020);
+
+  ctx.restore();
+}
+
+// ── C5. THE ELEPHANT'S FOOT MONSTER (हाथी का पैर) ──────────────────────────────────
+export function drawElephantsFoot(lt, d, t) {
+  ctx.fillStyle = '#020306'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("THE ELEPHANT'S FOOT // DEADLIEST OBJECT", 'हाथी का पैर: 2 मीटर चौड़ा लावा राक्षस', '#FF3366');
+
+  ctx.save();
+  const cx = 540, cy = 660;
+
+  // Harsh Forensic Spotlight Beam focused on the monster
+  const spot = ctx.createRadialGradient(cx, cy, 40, cx, cy, 380);
+  spot.addColorStop(0, 'rgba(255, 230, 180, 0.9)');
+  spot.addColorStop(0.4, 'rgba(255, 120, 0, 0.4)');
   spot.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = spot;
-  ctx.beginPath(); ctx.ellipse(cx, cy, 420, 220, 0, 0, TAU); ctx.fill();
+  ctx.beginPath(); ctx.ellipse(cx, cy + 40, 420, 240, 0, 0, TAU); ctx.fill();
 
-  // Virgin Seafloor Mud
-  ctx.fillStyle = '#141E28'; ctx.beginPath(); ctx.ellipse(cx, cy + 60, 480, 160, 0, 0, TAU); ctx.fill();
-
-  // Crushed Plastic Bottle / Shopping Bag Evidence
-  ctx.fillStyle = '#FFE600'; ctx.strokeStyle = '#FFFFFF'; ctx.lineWidth = 5;
+  // The Wrinkled Massive Lava Mass ("Elephant's Foot")
+  ctx.fillStyle = '#2C272B'; ctx.strokeStyle = '#FF3300'; ctx.lineWidth = 8;
   ctx.beginPath();
-  ctx.moveTo(cx - 120, cy - 30);
-  ctx.lineTo(cx - 40, cy - 65);
-  ctx.lineTo(cx + 80, cy - 20);
-  ctx.lineTo(cx + 140, cy + 10);
-  ctx.lineTo(cx + 110, cy + 50);
-  ctx.lineTo(cx - 20, cy + 30);
-  ctx.lineTo(cx - 90, cy + 45);
-  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.moveTo(cx - 260, cy + 80);
+  ctx.quadraticCurveTo(cx - 240, cy - 120, cx - 120, cy - 180);
+  ctx.quadraticCurveTo(cx, cy - 220, cx + 130, cy - 160);
+  ctx.quadraticCurveTo(cx + 250, cy - 90, cx + 270, cy + 80);
+  ctx.quadraticCurveTo(cx + 180, cy + 180, cx, cy + 190);
+  ctx.quadraticCurveTo(cx - 190, cy + 180, cx - 260, cy + 80);
+  ctx.fill(); ctx.stroke();
 
-  // Plastic Bottle Cap
-  circle(cx + 140, cy + 10, 16, '#FF3366');
+  // Lava wrinkles and glowing ember folds
+  ctx.strokeStyle = '#FF5500'; ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(cx - 180, cy - 40); ctx.quadraticCurveTo(cx - 80, cy + 40, cx, cy + 20);
+  ctx.moveTo(cx - 100, cy - 110); ctx.quadraticCurveTo(cx, cy - 60, cx + 120, cy - 70);
+  ctx.moveTo(cx - 40, cy + 60); ctx.quadraticCurveTo(cx + 80, cy + 120, cx + 180, cy + 60);
+  ctx.stroke();
 
-  // Forensic Evidence Marker Frame
-  ctx.strokeStyle = '#FF3366'; ctx.lineWidth = 6; ctx.setLineDash([14, 10]);
-  ctx.strokeRect(cx - 180, cy - 100, 380, 200); ctx.setLineDash([]);
-  ctx.font = F(30, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'left';
-  ctx.fillText('EVIDENCE #01 // DEPTH: 10,928 M', cx - 170, cy - 115);
+  // Toxic green radiation spores drifting
+  circle(cx - 70, cy - 50, 12, '#FFE600');
+  circle(cx + 90, cy + 20, 14, '#FF3366');
 
-  // Big Shocking Banner
-  hudBox(160, 1150, 760, 240, 'CRITICAL DISCOVERY // POLLUTION', '#FF3366');
-  ctx.font = F(64, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('इंसानी प्लास्टिक कचरा मिला!', cx, 1250);
-  ctx.font = F(36, '800'); ctx.fillStyle = '#FFF';
-  ctx.fillText('धरती के सबसे गहरे कोने में भी बर्बादी', cx, 1330);
+  ctx.font = F(46, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText("हाथी का पैर (ELEPHANT'S FOOT)", cx, 1020);
 
   ctx.restore();
-  filmAtmosphere(t);
 }
 
-// ── 11. OUTRO CALLOUT & SUBSCRIBE ─────────────────────────────────────────────────
-export function drawOutroCTA(lt, d, t) {
-  const bg = ctx.createRadialGradient(540, 760, 100, 540, 760, 900);
-  bg.addColorStop(0, '#061C38'); bg.addColorStop(1, '#01050D');
-  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+// ── C6. GEIGER COUNTER MAX RADIATION (10,000 ROENTGENS/HR) ─────────────────────────
+export function drawGeigerCounter(lt, d, t) {
+  ctx.fillStyle = '#05070C'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('GEIGER COUNTER // MAXIMUM SCALE', 'रेडिएशन मीटर की सुई टूट गई!', '#FF3366');
 
   ctx.save();
-  const cx = 540, cy = 700;
+  const cx = 540, cy = 680, R = 270;
 
-  // Gold Holographic Badge
-  const p = 1 + 0.08 * Math.sin(t * 4);
-  ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 10;
-  ctx.beginPath(); ctx.arc(cx, cy, 140 * p, 0, TAU); ctx.stroke();
-  circle(cx, cy, 110, '#0B2238');
+  // Industrial Meter Dial
+  ctx.fillStyle = '#121A24'; ctx.strokeStyle = '#FFE600'; ctx.lineWidth = 14;
+  ctx.beginPath(); ctx.arc(cx, cy, R, 0, TAU); ctx.fill(); ctx.stroke();
 
-  // Play / Logo Symbol
-  ctx.fillStyle = '#FFE600';
-  ctx.beginPath(); ctx.moveTo(cx - 30, cy - 45); ctx.lineTo(cx + 45, cy); ctx.lineTo(cx - 30, cy + 45); ctx.fill();
+  // Red Danger Arc
+  ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 26;
+  ctx.beginPath(); ctx.arc(cx, cy, R - 24, Math.PI * 0.9, Math.PI * 1.85); ctx.stroke();
 
-  // Channel Name
-  ctx.font = F(72, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
-  ctx.fillText('ANCHOR AADHYA', cx, cy + 240);
+  // Ticks
+  for (let a = 0; a < TAU; a += Math.PI / 8) {
+    const x1 = cx + Math.cos(a) * (R - 35), y1 = cy + Math.sin(a) * (R - 35);
+    const x2 = cx + Math.cos(a) * (R - 60), y2 = cy + Math.sin(a) * (R - 60);
+    line([[x1, y1], [x2, y2]], a > Math.PI ? '#FF1744' : '#8899AA', 6);
+  }
 
-  // Engagement Question Card
-  hudBox(160, 1060, 760, 260, 'QUESTION OF THE DAY', '#00F2FE');
-  ctx.font = F(48, '900'); ctx.fillStyle = '#FFE600';
-  ctx.fillText('क्या इंसान हर जगह तबाही मचाएगा?', cx, 1160);
-  ctx.font = F(40, '800'); ctx.fillStyle = '#FFF';
-  ctx.fillText('कमेंट्स में बताएं! 👇', cx, 1250);
+  // Needle Vibrating at Absolute Max
+  const shake = rnd(t * 14) * 8 - 4;
+  const targetAngle = Math.PI * 1.76 + (shake * Math.PI) / 180;
+  ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 14;
+  line([[cx, cy], [cx + Math.cos(targetAngle) * (R - 35), cy + Math.sin(targetAngle) * (R - 35)]], '#FF1744', 14);
+  circle(cx, cy, 32, '#FFE600');
+
+  // Readout
+  ctx.font = F(72, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
+  ctx.fillText('10,000 R/HR', cx, cy + 110);
+  ctx.font = F(36, '800'); ctx.fillStyle = '#FFF';
+  ctx.fillText('जानलेवा खुराक से 10,000 गुना ज्यादा!', cx, 1020);
 
   ctx.restore();
-  marineSnow(t, 50, 'rgba(255, 230, 0, 0.4)');
-  filmAtmosphere(t);
 }
+
+// ── C7. MELTING CAMERAS & ROBOTS ──────────────────────────────────────────────────
+export function drawMeltingCameraRobot(lt, d, t) {
+  ctx.fillStyle = '#060608'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('EQUIPMENT FAILURE // RADIATION BURNOUT', 'कैमरे और रोबोट्स पिघल गए!', '#FFCC00');
+
+  ctx.save();
+  const cx = 540, cy = 680;
+
+  // Mechanical Camera Box on Tripod
+  ctx.fillStyle = '#222B35'; ctx.strokeStyle = '#FFCC00'; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.roundRect(cx - 150, cy - 120, 300, 200, 18); ctx.fill(); ctx.stroke();
+  // Lens
+  circle(cx, cy - 20, 65, '#0F1720');
+  ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(cx, cy - 20, 65, 0, TAU); ctx.stroke();
+  circle(cx, cy - 20, 35, '#FFE600');
+
+  // Melting drips dripping from camera
+  ctx.fillStyle = '#FF5500';
+  for (let i = -100; i <= 100; i += 40) {
+    const dripLen = 50 + rnd(i + t) * 70;
+    line([[cx + i, cy + 80], [cx + i, cy + 80 + dripLen]], '#FF5500', 8);
+  }
+
+  // Radiation static noise lines cutting across screen (Gamma ray snow)
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.45)';
+  for (let k = 0; k < 12; k++) {
+    const ry = cy - 200 + rnd(k + t * 5) * 400;
+    ctx.fillRect(80, ry, W - 160, 4 + rnd(k) * 6);
+  }
+
+  ctx.font = F(42, '900'); ctx.fillStyle = '#FF3366'; ctx.textAlign = 'center';
+  ctx.fillText('गामा किरणों ने कैमरों की रील जला दी!', cx, 1020);
+
+  ctx.restore();
+}
+
+// ── C8. RADIOTROPHIC BLACK FUNGUS (काला फंगस) ──────────────────────────────────────
+export function drawRadiotrophicFungus(lt, d, t) {
+  ctx.fillStyle = '#020408'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('RADIOTROPHIC FUNGUS // NATURE WINS', 'रेडिएशन खाकर उगता काला फंगस!', '#00FF99');
+
+  ctx.save();
+  const cx = 540, cy = 680;
+
+  // Petri Dish / Microscopic Glowing Circle
+  ctx.fillStyle = '#0A141E'; ctx.strokeStyle = '#00FF99'; ctx.lineWidth = 12;
+  circle(cx, cy, 270, '#0A141E');
+  ctx.stroke();
+
+  // Spreading Black Fungus Colony
+  ctx.fillStyle = '#000000'; ctx.strokeStyle = '#00FF99'; ctx.lineWidth = 5;
+  for (let i = 0; i < 9; i++) {
+    const fa = (i * TAU) / 9;
+    const fx = cx + Math.cos(fa) * 90, fy = cy + Math.sin(fa) * 90;
+    const fr = 55 + Math.sin(t * 3 + i) * 15;
+    ctx.beginPath(); ctx.arc(fx, fy, fr, 0, TAU); ctx.fill(); ctx.stroke();
+  }
+  circle(cx, cy, 75, '#000000'); ctx.stroke();
+
+  // Melanin energy absorption rays (green/yellow glowing dots)
+  for (let k = 0; k < 20; k++) {
+    const a = (k * TAU) / 20;
+    const r = 210 + Math.sin(t * 5 + k) * 20;
+    circle(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 8, '#00FF99');
+  }
+
+  ctx.font = F(44, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
+  ctx.fillText('रेडिएशन को भोजन बनाने वाला फंगस!', cx, 1020);
+
+  ctx.restore();
+}
+
+// ── C9. CHERNOBYL OUTRO CTA ───────────────────────────────────────────────────────
+export function drawChernobylOutro(lt, d, t) {
+  ctx.fillStyle = '#040710'; ctx.fillRect(0, 0, W, H);
+
+  hudHeader('ANCHOR AADHYA OFFICIAL', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
+
+  ctx.save();
+  const ox = 540, oy = 660, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Red YouTube Button
+  ctx.fillStyle = '#FF0000'; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  // White Play Arrow
+  ctx.fillStyle = '#FFFFFF';
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  ctx.font = '900 34px Inter, sans-serif'; ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
+  ctx.fillText('SUBSCRIBE', 0, 105);
+
+  // Golden Bell Ringing
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = '#FFE600';
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, '#FFE600');
+  ctx.restore();
+
+  // Comment Bubble
+  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-150, -180, 300, 85, 20); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
+  ctx.font = '900 28px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000'; ctx.textAlign = 'center';
+  ctx.fillText('क्या प्रकृति इंसान से बड़ी है? ✍️', 0, -135);
+
+  ctx.restore();
+
+  ctx.font = F(38, '900'); ctx.fillStyle = '#FFF'; ctx.textAlign = 'center';
+  ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
+}
+

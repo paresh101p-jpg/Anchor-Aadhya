@@ -24,6 +24,23 @@ const CINEMA_POOL = [
   Cinema.drawOutroCTA,
 ];
 
+const CHERNOBYL_POOL = [
+  Cinema.drawChernobylPlant,
+  Cinema.drawCountdownTimer,
+  Cinema.drawReactorExplosion,
+  Cinema.drawCoriumLavaFlow,
+  Cinema.drawElephantsFoot,
+  Cinema.drawGeigerCounter,
+  Cinema.drawCountdownTimer,
+  Cinema.drawGeigerCounter,
+  Cinema.drawMeltingCameraRobot,
+  Cinema.drawElephantsFoot,
+  Cinema.drawRadiotrophicFungus,
+  Cinema.drawRadiotrophicFungus,
+  Cinema.drawChernobylPlant,
+  Cinema.drawChernobylOutro,
+];
+
 export function buildShots(script = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
@@ -31,9 +48,10 @@ export function buildShots(script = {}) {
   const n = (script.lines || []).length || 1;
 
   // Use Rapid-Cut Cinematic Engine for 30s Documentary Shorts
-  const isCinematic = script.id === 'mariana_trench_abyss' || script.is_30s || script.is_cinematic;
+  const isCinematic = script.id === 'mariana_trench_abyss' || script.id === 'chernobyl_300s_room' || script.is_30s || script.is_cinematic;
 
   if (isCinematic) {
+    const pool = script.id === 'chernobyl_300s_room' ? CHERNOBYL_POOL : CINEMA_POOL;
     let shotIdx = 0;
     for (let i = 0; i < n; i++) {
       const ws = lineWords(i);
@@ -49,7 +67,7 @@ export function buildShots(script = {}) {
       }
 
       cutPoints.forEach((atTime, subIdx) => {
-        const drawFn = CINEMA_POOL[shotIdx % CINEMA_POOL.length];
+        const drawFn = pool[shotIdx % pool.length];
         const nextAt = subIdx + 1 < cutPoints.length ? cutPoints[subIdx + 1] : lineEnd;
         const shotDur = Math.max(0.8, nextAt - atTime);
 

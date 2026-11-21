@@ -639,6 +639,14 @@ async def main():
     except Exception:
         pass
 
+    # Post-Upload Auto-Cleanup: Wipe all video renders, temp audios, and cached files from GitHub
+    print("\n🧹 [Auto-Cleanup]: Removing all temporary video renders and audio cache...", flush=True)
+    clean_all_temp_assets()
+    if os.path.exists(meta_path_short):
+        try: os.remove(meta_path_short)
+        except Exception: pass
+    print("✅ [Clean Slate]: All temporary assets wiped! Next video will be 100% fresh.", flush=True)
+
     print("\n==============================================================", flush=True)
     print("  🎉 2-STAGE FUNNEL FULLY COMPLETED!", flush=True)
     print(f"  1. Full 16:9 Video: {full_video_url}", flush=True)

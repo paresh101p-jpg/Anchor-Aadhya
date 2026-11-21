@@ -84,13 +84,15 @@ jobs:
           echo "Starting 2D Rick's Clips Engine (topic=$TOPIC_ID)..."
           python -u generate_evergreen_short.py 2>&1 | tee run_debug.log
 
-      - name: Commit Run Logs & Trackers
+      - name: Post-Run Auto-Cleanup & Commit Trackers
         if: always()
         run: |
+          echo "🧹 Cleaning up all temporary video renders, audio files, and cache..."
+          rm -rf engine/renders/* engine/temp_audio/* engine/review/* metadata_short.json
           git config user.name "Anchor Aadhya Bot"
           git config user.email "bot@anchoraadhya.com"
-          git add -A
-          git diff --cached --quiet || git commit -m "Update run debug log & tracker [skip ci]"
+          git add used_topics_tracker.json uploaded_bulletins_tracker.txt
+          git diff --cached --quiet || git commit -m "Update tracker & clean temporary assets [skip ci]"
           for i in 1 2 3 4 5; do
             git pull --rebase origin master || { git rebase --abort || true; git pull --rebase origin master || true; }
             git push origin master && break || sleep 3
