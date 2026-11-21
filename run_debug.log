@@ -1,96 +1,72 @@
 🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!
 ==============================================================
-  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: दांत में कीड़ा (Cavity) असल में कोई कीड़ा नहीं होता! 🦷 #Shorts
-  Topic ID: tooth_cavity_acid
+  ANCHOR AADHYA 2-STAGE VIDEO FUNNEL: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  Topic ID: holding_sneeze
 ==============================================================
   🎨 [Visual Engine Selected]: 2D Graphic / Inside-Out Cutaway Engine (engine)
 
 📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<
 
-[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: दांत में कीड़ा (Cavity) असल में कोई कीड़ा नहीं होता! 🦷 #Shorts
-  -> Line 1/6: 'दांत में कीड़ा लग गया? रुकिए! ...'
+[Voice Synthesis - Short Reel (9:16)] (Cartesia-Aadhya (Sonic)) for: छींक को जबरदस्ती रोकने की गलती कभी मत करना! 😱 #Shorts
+  -> Line 1/6: 'अरे बाप रे! क्या आप भी कभी-कभा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'दांत में कीड़ा लग गया? रुकिए! ...'
-  -> Line 2/6: 'जब आप मीठा या खाना खाते हैं और...'
+    [Edge-TTS Swara Backup]: 'अरे बाप रे! क्या आप भी कभी-कभा...'
+  -> Line 2/6: 'रुकिए! जब आप छींकते हैं, तो हव...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'जब आप मीठा या खाना खाते हैं और...'
-  -> Line 3/6: 'तो मुँह में बैठे अरबों स्ट्रेप...'
+    [Edge-TTS Swara Backup]: 'रुकिए! जब आप छींकते हैं, तो हव...'
+  -> Line 3/6: 'लेकिन जैसे ही आपने नाक और मुंह...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'तो मुँह में बैठे अरबों स्ट्रेप...'
-  -> Line 4/6: 'और दावत के बाद ये बैक्टीरिया ए...'
+    [Edge-TTS Swara Backup]: 'लेकिन जैसे ही आपने नाक और मुंह...'
+  -> Line 4/6: 'तो ये भयंकर प्रेशर बाहर निकलने...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'और दावत के बाद ये बैक्टीरिया ए...'
-  -> Line 5/6: 'यह एसिड शरीर के सबसे मजबूत हिस...'
+    [Edge-TTS Swara Backup]: 'तो ये भयंकर प्रेशर बाहर निकलने...'
+  -> Line 5/6: 'ये भारी दबाव सबसे पहले आपके का...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
-    [Edge-TTS Swara Backup]: 'यह एसिड शरीर के सबसे मजबूत हिस...'
+    [Edge-TTS Swara Backup]: 'ये भारी दबाव सबसे पहले आपके का...'
   -> Line 6/6: 'लेकिन इसके पीछे का असली वैज्ञा...'
     ⚠️ Cartesia voice fallback note: HTTP Error 402: Payment Required
     [Edge-TTS Swara Backup]: 'लेकिन इसके पीछे का असली वैज्ञा...'
-  -> Assembling master narration.wav (47.50s)...
-  --> Voice & Timing Complete (Short Reel (9:16)): 47.50s across 6 cuts.
+  -> Assembling master narration.wav (49.21s)...
+  --> Voice & Timing Complete (Short Reel (9:16)): 49.21s across 6 cuts.
 
 [2/5] Building Procedural Sound Effects & Music Mix...
   -> Running node tools/capture.mjs cues...
-data/cues.json: 41 cues, 47.50 s
-  -> Running python tools/mix.py...
-data/mix.wav: 47.50 s · voice: yes · music: bed · 41 cues
-  --> mix.wav ready!
+file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82
+    if (typeof st === 'string') throw new Error('boot failed: ' + st + '\n' + logs.join('\n'));
+                                      ^
 
-[Rendering Native 3D 9:16 MP4: aadhya_short_9_16.mp4] via Headless Chromium Three.js...
-0/1188 frames150/1188 frames300/1188 frames450/1188 frames600/1188 frames750/1188 frames900/1188 frames1050/1188 frames/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (1188 frames, with data/mix.wav, 33 s)
-  --> Native 9:16 3D MP4 Rendered Successfully: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (7.38 MB)
-/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16
-  --> Native 9:16 Cover Frame Extracted: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg
+Error: boot failed: ERR:ReferenceError: d is not defined
+    at buildShots (http://127.0.0.1:44891/src/shots.js:133:81)
+    at http://127.0.0.1:44891/src/main.js:39:29
+ERROR ReferenceError: d is not defined
+    at buildShots (http://127.0.0.1:44891/src/shots.js:133:81)
+    at http://127.0.0.1:44891/src/main.js:39:29
+    at openPage (file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:82:39)
+    at async file:///home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/tools/capture.mjs:95:13
 
-[QA Pre-Flight Inspector] Auditing 9:16 video: aadhya_short_9_16.mp4...
-  ✅ Resolution: 1080x1920 (100% Native 9:16)
-  ✅ Duration: 47.48s (Audio-Visual Synced)
-  ✅ Zero Fake Blur & Zero Black Padding Verified!
-Generating Viral High-CTR Curiosity Thumbnail for: दांत में कीड़ा (Cavity) असल में कोई कीड़...
-ffmpeg version 8.0.1-3ubuntu2 Copyright (c) 2000-2025 the FFmpeg developers
-  built with gcc 15 (Ubuntu 15.2.0-13ubuntu3)
-  configuration: --prefix=/usr --extra-version=3ubuntu2 --toolchain=hardened --libdir=/usr/lib/x86_64-linux-gnu --incdir=/usr/include/x86_64-linux-gnu --arch=amd64 --enable-gpl --disable-stripping --disable-pocketsphinx --disable-libcaca --disable-libmfx --disable-omx --enable-gnutls --enable-libaom --enable-libass --enable-libbs2b --enable-libcdio --enable-libcodec2 --enable-libdav1d --enable-libflite --enable-libfontconfig --enable-libfreetype --enable-libfribidi --enable-libglslang --enable-libgme --enable-libgsm --enable-libharfbuzz --enable-libmp3lame --enable-libmysofa --enable-libopenjpeg --enable-libopenmpt --enable-libopus --enable-librubberband --enable-libshine --enable-libsnappy --enable-libsoxr --enable-libspeex --enable-libtheora --enable-libtwolame --enable-libvidstab --enable-libvorbis --enable-libvpx --enable-libwebp --enable-libx265 --enable-libxml2 --enable-libxvid --enable-libzimg --enable-openal --enable-opencl --enable-opengl --disable-sndio --enable-libvpl --enable-libdc1394 --enable-libdrm --enable-libiec61883 --enable-chromaprint --enable-frei0r --enable-ladspa --enable-libbluray --enable-libdvdnav --enable-libdvdread --enable-libjack --enable-libjxl --enable-libpulse --enable-librabbitmq --enable-librist --enable-libsrt --enable-libssh --enable-libsvtav1 --enable-libx264 --enable-libzmq --enable-libzvbi --enable-lv2 --enable-sdl2 --enable-libplacebo --enable-librav1e --enable-librsvg --enable-shared
-  libavutil      60.  8.100 / 60.  8.100
-  libavcodec     62. 11.100 / 62. 11.100
-  libavformat    62.  3.100 / 62.  3.100
-  libavdevice    62.  1.100 / 62.  1.100
-  libavfilter    11.  4.100 / 11.  4.100
-  libswscale      9.  1.100 /  9.  1.100
-  libswresample   6.  1.100 /  6.  1.100
-Input #0, image2, from '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/t6.50.jpg':
-  Duration: 00:00:00.04, start: 0.000000, bitrate: 22095 kb/s
-  Stream #0:0: Video: mjpeg (Baseline), yuvj420p(pc, bt470bg/unknown/unknown), 1080x1920 [SAR 1:1 DAR 9:16], 25 fps, 25 tbr, 25 tbn
-Stream mapping:
-  Stream #0:0 -> #0:0 (mjpeg (native) -> mjpeg (native))
-Press [q] to stop, [?] for help
-[swscaler @ 0x7ca95c052180] deprecated pixel format used, make sure you did set range correctly
-Output #0, image2, to '/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg':
-  Metadata:
-    encoder         : Lavf62.3.100
-  Stream #0:0: Video: mjpeg, yuv420p(pc, bt470bg/unknown/unknown, progressive), 1920x1080 [SAR 81:256 DAR 9:16], q=2-31, 200 kb/s, 25 fps, 25 tbn
-    Metadata:
-      encoder         : Lavc62.11.100 mjpeg
-    Side data:
-      ICC Profile
-      cpb: bitrate max/min/avg: 0/0/200000 buffer size: 0 vbv_delay: N/A
-[out#0/image2 @ 0x5bcf678ef000] video:182KiB audio:0KiB subtitle:0KiB other streams:0KiB global headers:0KiB muxing overhead: unknown
-frame=    1 fps=0.0 q=2.0 Lsize=N/A time=00:00:00.04 bitrate=N/A speed= 1.2x elapsed=0:00:00.03    
-✅ High-CTR Curiosity Thumbnail Ready: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg (182.4 KB)
-  --> ✅ Attached Short High-CTR Curiosity Thumbnail ($0 Zero Cost): /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/review/cover_9_16/high_ctr_short_thumb.jpg
+Node.js v22.23.5
 
-[Stage 2 Upload] Uploading 9:16 Short with Auto-Link to Full Video...
-  --> Title: दांत में कीड़ा (Cavity) असल में कोई कीड़ा नहीं होता! 🦷 #Shorts
-  --> Video File: /home/runner/work/Anchor-Aadhya/Anchor-Aadhya/engine/renders/aadhya_short_9_16.mp4 (7.38 MB)
-  --> Uploading video stream to YouTube...
-  --> Upload Progress: 54%
 
-[SUCCESS] VIDEO UPLOADED! Video ID: pkgrP-IDEDU
-  --> Live URL: https://www.youtube.com/watch?v=pkgrP-IDEDU
-  --> [SUCCESS] Custom Thumbnail Attached!
-  --> [Notice] Comment posting skipped or failed: <HttpError 403 when requesting https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet&alt=json returned "Request had insufficient authentication scopes.". Details: "[{'message': 'Insufficient Permission', 'domain': 'global', 'reason': 'insufficientPermissions'}]">
+!!!!!!!!!!!!!!!!!!! CRITICAL PIPELINE ERROR !!!!!!!!!!!!!!!!!!!
+Traceback (most recent call last):
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 602, in <module>
+    asyncio.run(main())
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 190, in run
+    return runner.run(main)
+           ^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/runners.py", line 118, in run
+    return self._loop.run_until_complete(task)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/asyncio/base_events.py", line 654, in run_until_complete
+    return future.result()
+           ^^^^^^^^^^^^^^^
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 541, in main
+    build_audio_mix()
+  File "/home/runner/work/Anchor-Aadhya/Anchor-Aadhya/generate_evergreen_short.py", line 259, in build_audio_mix
+    subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
+  File "/opt/hostedtoolcache/Python/3.11.18/x64/lib/python3.11/subprocess.py", line 571, in run
+    raise CalledProcessError(retcode, process.args,
+subprocess.CalledProcessError: Command '['node', 'tools/capture.mjs', 'cues']' returned non-zero exit status 1.
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
-==============================================================
-  🎉 2-STAGE FUNNEL FULLY COMPLETED!
-  1. Full 16:9 Video: https://www.youtube.com/@AnchorAadhya
-  2. Viral 30-40s Short: https://www.youtube.com/watch?v=pkgrP-IDEDU
-==============================================================
+
