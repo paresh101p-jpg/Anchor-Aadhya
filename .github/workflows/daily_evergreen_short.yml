@@ -20,13 +20,13 @@ on:
         type: boolean
   repository_dispatch:
     types: [daily_short, post_aadhya_short]
-  push:
-    paths:
-      - 'TRIGGER_AADHYA_POST.txt'
-  schedule:
-    # 02:30 UTC = 08:00 AM IST & 11:30 UTC = 05:00 PM IST
-    - cron: '30 2 * * *'
-    - cron: '30 11 * * *'
+  # Auto triggers disabled: no upload without an explicit manual run.
+  # push:
+  #   paths:
+  #     - 'TRIGGER_AADHYA_POST.txt'
+  # schedule:
+  #   - cron: '30 2 * * *'
+  #   - cron: '30 11 * * *'
 
 concurrency:
   group: aadhya-evergreen-short
