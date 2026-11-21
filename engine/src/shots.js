@@ -114,6 +114,7 @@ export function buildShots(script = {}) {
 
   for (let i = 0; i < n; i++) {
     const st = cut(i);
+    const dur = (i + 1 < n ? L(i + 1) - 0.08 : T.dur) - st;
     const info = lineInfo(script, i);
     const style = (i + (seed % 4)) % 4;
     const anchor = i % 2 === 0;
@@ -130,7 +131,7 @@ export function buildShots(script = {}) {
       },
     });
     cue(st, 'whoosh', { gain: 0.45 });
-    if (info.danger) cue(st + 0.12, 'alarm', { dur: Math.min(1.2, Math.max(0.4, d - 0.2)), gain: 0.5 });
+    if (info.danger) cue(st + 0.12, 'alarm', { dur: Math.min(1.2, Math.max(0.4, dur - 0.2)), gain: 0.5 });
     else cue(st + 0.18, 'pop', { gain: 0.4 });
     info.words.slice(0, 4).forEach((w, k) => cue(w.s, 'pop', { gain: 0.25 }));
   }
