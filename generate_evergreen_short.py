@@ -408,11 +408,16 @@ This video is created strictly for educational, informative, and curiosity purpo
 def create_short_topic_from_full(full_topic):
     """
     Creates a high-retention 30-40s Short / Reel from the full curiosity topic:
-    - Slices the first 4-5 lines of the mystery/hook (approx 20-25 seconds).
+    - If is_30s or no_slice is set, preserves all lines for a complete 30s story.
+    - Otherwise slices the first 4-5 lines of the mystery/hook (approx 20-25 seconds).
     - Appends a high-stakes psychological cliffhanger CTA line (~7-8 seconds) directing viewers to the full video link!
     """
     short_topic = dict(full_topic)
     short_topic["is_short"] = True
+
+    if full_topic.get("is_30s") or full_topic.get("no_slice"):
+        short_topic["lines"] = list(full_topic.get("lines", []))
+        return short_topic
     
     full_lines = full_topic.get("lines", [])
     # Slice first 5 lines (Hook + Setup + Core Mystery)
