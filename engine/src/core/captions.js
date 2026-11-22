@@ -38,7 +38,18 @@ export function buildCaptions(script) {
       let idx = j === 0 ? 0 : ws.findIndex((w, k) => k > from && first && (nm(w.w) === first || (first.length > 2 && nm(w.w).startsWith(first))));
       if (idx < 0) idx = Math.max(from + (j ? 1 : 0), Math.min(ws.length - 1, Math.round(acc * ws.length / N)));
       acc += counts[j]; from = idx;
-      caps.push({ line: i, s: ws[idx].s - 0.05, words: c.split(/\s+/).map((w) => ({ txt: w.replace('*', ''), hi: w.startsWith('*') })) });
+
+      const wordsInChunk = c.split(/\s+/).map((w, wi) => {
+        const wMatch = ws[Math.min(ws.length - 1, idx + wi)];
+        return {
+          txt: w.replace('*', ''),
+          hi: w.startsWith('*'),
+          s: wMatch ? wMatch.s : ws[idx].s + wi * 0.25,
+          e: wMatch ? wMatch.e : ws[idx].s + (wi + 1) * 0.25,
+        };
+      });
+
+      caps.push({ line: i, s: ws[idx].s - 0.05, words: wordsInChunk });
     });
   });
   caps.forEach((c, k) => {
@@ -107,15 +118,33 @@ export function drawCaption(t) {
 
     let x = -lw / 2;
     for (const w of ln) {
+      // Kinetic Word-Level Animation: Active spoken word springs up dynamically!
+      const isActiveWord = (t >= w.s && t <= w.e);
+      const wProgress = clamp((t - w.s) / Math.max(0.01, (w.e - w.s)));
+      const wScale = isActiveWord ? (1 + 0.14 * Math.sin(wProgress * Math.PI)) : 1.0;
+
+      ctx.save();
+      ctx.translate(x + w.w / 2, lineY);
+      ctx.scale(wScale, wScale);
+
+      // Micro-glow behind the currently spoken word
+      if (isActiveWord) {
+        ctx.fillStyle = 'rgba(255, 230, 0, 0.25)';
+        ctx.beginPath();
+        ctx.roundRect(-w.w / 2 - 6, -lh * 0.40, w.w + 12, lh * 0.80, 10);
+        ctx.fill();
+      }
+
       // 8px crisp black outline - strong legibility without character bleed
-      ctx.lineWidth = 8;
+      ctx.lineWidth = isActiveWord ? 9 : 7;
       ctx.strokeStyle = '#000000';
-      ctx.strokeText(w.txt, x, lineY);
+      ctx.strokeText(w.txt, -w.w / 2, 0);
 
-      // Yellow for highlighted keyword, pure white for other words
-      ctx.fillStyle = w.hi ? '#FFE600' : '#FFFFFF';
-      ctx.fillText(w.txt, x, lineY);
+      // Currently spoken word lights up bright neon yellow, keywords stay gold, others pure white
+      ctx.fillStyle = isActiveWord ? '#FFE600' : (w.hi ? '#FFD700' : '#FFFFFF');
+      ctx.fillText(w.txt, -w.w / 2, 0);
 
+      ctx.restore();
       x += w.w + sp;
     }
   });

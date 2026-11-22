@@ -63,6 +63,26 @@ const TOPIC_SEQUENCES = {
     Cinema.drawGta6RobberyInteriorBank,
     Cinema.drawGta6OutroCTA,
   ],
+  bermuda_triangle_secret: [
+    Cinema.drawBermudaTriangleMap,
+    Cinema.drawBermudaPerimeterRadar,
+    Cinema.drawMethaneBubblesEruption,
+    Cinema.drawShipSinkingAbyss,
+    Cinema.drawHexagonalCloudAirBombs,
+    Cinema.drawAirplaneStormDisaster,
+    Cinema.drawMagneticCompassChaos,
+    Cinema.drawBermudaOutroCTA,
+  ],
+  deepest_hole_kola_superdeep: [
+    Cinema.drawKolaBoreholeDrillDepth,
+    Cinema.drawKolaCrustCrossSection,
+    Cinema.drawKolaThermalInferno180C,
+    Cinema.drawKolaMeltingSteelDrill,
+    Cinema.drawKolaBoilingWaterTrapped,
+    Cinema.drawKolaAncientMicrofossils,
+    Cinema.drawKolaSealedSteelDoorCap,
+    Cinema.drawKolaOutroCTA,
+  ],
 };
 
 // Thematic procedural pools for dynamic topics or longer scripts (1 min, 2 min)
@@ -87,6 +107,13 @@ const POOL_OCEAN = [
   Cinema.drawElephantWeight,
   Cinema.drawAlienCreature,
   Cinema.drawPlasticDiscovery,
+  Cinema.drawBermudaTriangleMap,
+  Cinema.drawBermudaPerimeterRadar,
+  Cinema.drawMethaneBubblesEruption,
+  Cinema.drawShipSinkingAbyss,
+  Cinema.drawHexagonalCloudAirBombs,
+  Cinema.drawAirplaneStormDisaster,
+  Cinema.drawMagneticCompassChaos,
 ];
 
 const POOL_PHYSICS_DANGER = [
@@ -98,6 +125,13 @@ const POOL_PHYSICS_DANGER = [
   Cinema.drawGeigerCounter,
   Cinema.drawMeltingCameraRobot,
   Cinema.drawRadiotrophicFungus,
+  Cinema.drawKolaBoreholeDrillDepth,
+  Cinema.drawKolaCrustCrossSection,
+  Cinema.drawKolaThermalInferno180C,
+  Cinema.drawKolaMeltingSteelDrill,
+  Cinema.drawKolaBoilingWaterTrapped,
+  Cinema.drawKolaAncientMicrofossils,
+  Cinema.drawKolaSealedSteelDoorCap,
 ];
 
 const POOL_BIOLOGY_BODY = [
@@ -138,6 +172,8 @@ function getOutroScene(script) {
   if (script.id === 'mariana_trench_abyss') return Cinema.drawOutroCTA;
   if (script.id === 'sinking_car_door_physics') return Cinema.drawCarEscapeCTA;
   if (script.id === 'gta_6_vice_city_secrets') return Cinema.drawGta6OutroCTA;
+  if (script.id === 'bermuda_triangle_secret') return Cinema.drawBermudaOutroCTA;
+  if (script.id === 'deepest_hole_kola_superdeep') return Cinema.drawKolaOutroCTA;
   return Cinema.drawUniversalOutroCTA;
 }
 
@@ -191,27 +227,35 @@ export function buildShots(script = {}) {
 
     usedScenes.add(sceneFn);
 
-    // Fast-pacing sub-cuts within Line i (without scene cycling!)
+    // High-dopamine kinetic cuts within Line i (synced to spoken word cadence)
     const ws = lineWords(i);
     const text = String(lines[i]?.text || '');
     const lineStart = ws.length ? ws[0].s : L(i);
     const lineEnd = ws.length ? ws[ws.length - 1].e : (i + 1 < n ? L(i + 1) : T.dur);
 
     const cutPoints = [lineStart];
-    if (ws.length >= 4) {
+    if (ws.length >= 8) {
+      const idx1 = Math.floor(ws.length * 0.35);
+      const idx2 = Math.floor(ws.length * 0.70);
+      cutPoints.push(ws[idx1].s);
+      cutPoints.push(ws[idx2].s);
+    } else if (ws.length >= 4) {
       const midIdx = Math.floor(ws.length * 0.5);
       cutPoints.push(ws[midIdx].s);
     }
 
     cutPoints.forEach((atTime, subIdx) => {
       const nextAt = subIdx + 1 < cutPoints.length ? cutPoints[subIdx + 1] : lineEnd;
-      const shotDur = Math.max(0.8, nextAt - atTime);
+      const shotDur = Math.max(0.7, nextAt - atTime);
+
+      const cams = [[540, 960], [540, 910], [540, 870]];
+      const zooms = [0.04, 0.12, 0.18];
 
       add({
         id: `L${String(i + 1).padStart(2, '0')}_S${subIdx + 1}`,
         at: Math.max(0, atTime - 0.04),
-        cam: subIdx === 0 ? [540, 960] : [540, 910],
-        zoom: subIdx === 0 ? 0.04 : 0.12,
+        cam: cams[Math.min(subIdx, cams.length - 1)],
+        zoom: zooms[Math.min(subIdx, zooms.length - 1)],
         zoomFast: subIdx > 0,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
         draw(lt, d, t) {
@@ -221,11 +265,18 @@ export function buildShots(script = {}) {
         },
       });
 
-      // Rapid-cut audio cues
-      cue(atTime, 'whoosh', { gain: subIdx === 0 ? 0.45 : 0.35 });
+      // Rapid-cut audio cues synced to word cadence
+      cue(atTime, 'whoosh', { gain: subIdx === 0 ? 0.45 : 0.38 });
       if (subIdx === 0 && /[?！!]/.test(text)) {
-        cue(atTime + 0.08, 'pop', { gain: 0.3 });
+        cue(atTime + 0.08, 'pop', { gain: 0.32 });
+      } else if (subIdx > 0) {
+        cue(atTime + 0.05, 'pop', { gain: 0.25 });
       }
+    });
+
+    // Micro pop sound cue on every second spoken word
+    ws.forEach((w, wi) => {
+      if (wi % 3 === 1) cue(w.s, 'pop', { gain: 0.18 });
     });
   }
 

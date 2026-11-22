@@ -25,6 +25,26 @@ export const eob = (t) => { const c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Mat
 export const rnd = (i) => { const x = Math.sin(i * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 export const TAU = Math.PI * 2;
 
+// Motion Graphics Elastic & Spring Physics
+export const spring = (t, damp = 0.5, freq = 14) => {
+  t = clamp(t);
+  return 1 - Math.exp(-damp * t * 10) * Math.cos(freq * t);
+};
+export const easeOutExpo = (t) => (t === 1 ? 1 : 1 - Math.pow(2, -10 * t));
+
+// Animated Data Counter (Smoothly interpolates numbers with commas)
+export function countUp(from, to, p, decimals = 0) {
+  const val = lerp(from, to, easeOutExpo(clamp(p)));
+  return decimals > 0 ? val.toFixed(decimals) : Math.round(val).toLocaleString();
+}
+
+// Organic Handheld Camera Shake (Perlin/sinusoidal micro-noise)
+export function cameraShake(t, intensity = 5) {
+  const sx = (Math.sin(t * 11) + Math.sin(t * 19.3) * 0.5) * intensity;
+  const sy = (Math.cos(t * 13) + Math.sin(t * 23.7) * 0.5) * intensity;
+  return [sx, sy];
+}
+
 // ---------- primitives ----------
 export function rr(x, y, w, h, r) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
 export function circle(x, y, r, fill) { ctx.beginPath(); ctx.arc(x, y, r, 0, TAU); ctx.fillStyle = fill; ctx.fill(); }

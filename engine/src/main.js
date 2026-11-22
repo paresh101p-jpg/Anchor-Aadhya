@@ -1,6 +1,6 @@
 // Boot: fonts → script + timing → captions → shots. Then draw(t) renders film time t (pure function of t).
 // window.OP is the API tools/capture.mjs drives: ready, bootError, duration(), draw(t), frame(t, q), cues(), shots().
-import { W, H, setCtx, ctx, clamp, eo, eio } from './core/lib.js';
+import { W, H, setCtx, ctx, clamp, eo, eio, cameraShake } from './core/lib.js';
 import { T, loadTiming } from './core/timing.js';
 import { buildCaptions, drawCaption, captionList } from './core/captions.js';
 import { buildShots } from './shots.js';
@@ -15,14 +15,16 @@ function draw(t) {
   ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
   const S = OP._shots; let i = S.length - 1; while (i > 0 && S[i].at > t) i--;
   const sh = S[i], end = i < S.length - 1 ? S[i + 1].at : T.dur, d = end - sh.at, lt = t - sh.at;
-  // camera: punch-in on the cut + a slow push across the shot ("camera always moving")
-  const punch = 1 + 0.13 * (1 - eo(clamp(lt / 0.32)));
+  // Cinematic Camera Rig: Handheld breathing + Spring Punch-in on cut
+  const punch = 1 + 0.14 * (1 - eo(clamp(lt / 0.30)));
   const driftP = sh.zoomFast ? clamp(lt / 0.4) : clamp(lt / d);
   let scale = punch * (1 + (sh.zoom ?? 0.06) * eio(driftP));
   let [cx, cy] = sh.cam || [540, 900];
+  const [shakeX, shakeY] = cameraShake(t, 2.2);
+  cx += shakeX; cy += shakeY;
   if (sh.camAt) {
     const [x, y, s] = sh.camAt(clamp(lt / Math.max(d, 0.001)), lt, d);
-    cx = x; cy = y; scale = punch * s;
+    cx = x + shakeX; cy = y + shakeY; scale = punch * s;
   }
   ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale); ctx.translate(-cx, -cy);
   sh.draw(lt, d, t);
