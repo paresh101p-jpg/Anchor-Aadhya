@@ -51,6 +51,18 @@ const TOPIC_SEQUENCES = {
     Cinema.drawHeadrestGlassBreaker,
     Cinema.drawCarEscapeCTA,
   ],
+  gta_6_vice_city_secrets: [
+    Cinema.drawGta6LogoBudget,
+    Cinema.drawGta6ViceCityMap,
+    Cinema.drawGta6LuciaJasonMugshot,
+    Cinema.drawGta6WaterPhysicsRaytracing,
+    Cinema.drawGta6SmartNpcAi,
+    Cinema.drawGta6PoliceWantedHelicopter,
+    Cinema.drawGta6SocialMediaFeed,
+    Cinema.drawGta6SupercarAndAlligator,
+    Cinema.drawGta6RobberyInteriorBank,
+    Cinema.drawGta6OutroCTA,
+  ],
 };
 
 // Thematic procedural pools for dynamic topics or longer scripts (1 min, 2 min)
@@ -125,6 +137,7 @@ function getOutroScene(script) {
   if (script.id === 'chernobyl_300s_room') return Cinema.drawChernobylOutro;
   if (script.id === 'mariana_trench_abyss') return Cinema.drawOutroCTA;
   if (script.id === 'sinking_car_door_physics') return Cinema.drawCarEscapeCTA;
+  if (script.id === 'gta_6_vice_city_secrets') return Cinema.drawGta6OutroCTA;
   return Cinema.drawUniversalOutroCTA;
 }
 

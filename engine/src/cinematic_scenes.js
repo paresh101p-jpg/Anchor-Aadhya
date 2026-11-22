@@ -7,27 +7,99 @@ import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, 
 
 const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
-// Utility: HUD Title Card (top safe area)
+// Utility: HUD Title Card (top safe area) - Auto-fit: text NEVER overflows the box!
 function hudHeader(title, subtitle = '', color = '#00F2FE') {
   ctx.save();
-  // Semi-transparent backdrop for title box
-  ctx.fillStyle = 'rgba(2, 8, 18, 0.75)';
-  ctx.beginPath(); ctx.roundRect(80, 130, W - 160, 120, 16); ctx.fill();
+  const boxX = 70, boxY = 125, boxW = W - 140, boxH = 130;
+  ctx.fillStyle = 'rgba(2, 8, 18, 0.82)';
+  ctx.beginPath(); ctx.roundRect(boxX, boxY, boxW, boxH, 18); ctx.fill();
   ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.stroke();
 
   // Corner tech brackets
   ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.moveTo(80, 155); ctx.lineTo(80, 130); ctx.lineTo(105, 130); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W - 105, 130); ctx.lineTo(W - 80, 130); ctx.lineTo(W - 80, 155); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(80, 225); ctx.lineTo(80, 250); ctx.lineTo(105, 250); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(W - 105, 250); ctx.lineTo(W - 80, 250); ctx.lineTo(W - 80, 225); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(boxX, boxY + 25); ctx.lineTo(boxX, boxY); ctx.lineTo(boxX + 25, boxY); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(boxX + boxW - 25, boxY); ctx.lineTo(boxX + boxW, boxY); ctx.lineTo(boxX + boxW, boxY + 25); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(boxX, boxY + boxH - 25); ctx.lineTo(boxX, boxY + boxH); ctx.lineTo(boxX + 25, boxY + boxH); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(boxX + boxW - 25, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH); ctx.lineTo(boxX + boxW, boxY + boxH - 25); ctx.stroke();
 
-  ctx.font = F(42, '900'); ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
-  ctx.fillText(title, 540, 172);
+  // Auto-fit Title: scale down if needed so it NEVER overflows box margins
+  const maxTextW = boxW - 70;
+  ctx.font = F(36, '900');
+  let titleW = ctx.measureText(title).width;
+  let tScale = Math.min(1, maxTextW / Math.max(titleW, 1));
+  ctx.save();
+  ctx.translate(540, subtitle ? boxY + 44 : boxY + 65);
+  ctx.scale(tScale, tScale);
+  ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+  ctx.fillText(title, 0, 0);
+  ctx.restore();
+
+  // Auto-fit Subtitle: scale down if needed
   if (subtitle) {
-    ctx.font = F(24, '800'); ctx.fillStyle = '#FFFFFF';
-    ctx.fillText(subtitle, 540, 215);
+    ctx.font = F(24, '800');
+    let subW = ctx.measureText(subtitle).width;
+    let sScale = Math.min(1, maxTextW / Math.max(subW, 1));
+    ctx.save();
+    ctx.translate(540, boxY + 92);
+    ctx.scale(sScale, sScale);
+    ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+    ctx.fillText(subtitle, 0, 0);
+    ctx.restore();
   }
+  ctx.restore();
+}
+
+// Auto-fit Tech Card: draws text inside a pill/box that dynamically sizes and NEVER overflows
+export function drawAutoTechCard(text, cx, cy, color = '#00F2FE', fontSize = 28) {
+  ctx.save();
+  ctx.font = F(fontSize, '900');
+  const textW = ctx.measureText(text).width;
+  const maxW = W - 140;
+  const fit = Math.min(1, (maxW - 60) / Math.max(textW, 1));
+  const cardW = Math.min(maxW, textW * fit + 60);
+  const cardH = fontSize * 1.85;
+
+  ctx.fillStyle = 'rgba(2, 8, 18, 0.85)';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.roundRect(cx - cardW / 2, cy - cardH / 2, cardW, cardH, 14);
+  ctx.fill(); ctx.stroke();
+
+  ctx.translate(cx, cy);
+  ctx.scale(fit, fit);
+  ctx.fillStyle = color;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(text, 0, 0);
+  ctx.restore();
+}
+
+// Auto-fit Outro Question Bubble: dynamically sizes around question so text NEVER hangs outside!
+function drawOutroQuestionBubble(question) {
+  ctx.save();
+  ctx.font = F(24, '900');
+  const qW = ctx.measureText(question).width;
+  const maxW = 540;
+  const fit = Math.min(1, (maxW - 60) / Math.max(qW, 1));
+  const bw = Math.min(maxW, qW * fit + 70);
+
+  ctx.fillStyle = '#00F2FE';
+  ctx.beginPath();
+  ctx.roundRect(-bw / 2, -180, bw, 80, 20);
+  ctx.fill();
+
+  // Pointer
+  ctx.beginPath();
+  ctx.moveTo(-20, -100); ctx.lineTo(0, -75); ctx.lineTo(15, -100);
+  ctx.fill();
+
+  ctx.translate(0, -140);
+  ctx.scale(fit, fit);
+  ctx.fillStyle = '#000000';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(question, 0, 0);
   ctx.restore();
 }
 
@@ -536,11 +608,7 @@ export function drawOutroCTA(lt, d, t) {
   circle(0, 26, 8, '#FFE600');
   ctx.restore();
 
-  // Comment Bubble
-  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-140, -180, 280, 85, 20); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
-  ctx.font = '900 28px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000000'; ctx.textAlign = 'center';
-  ctx.fillText('कमेंट्स में बताओ! ✍️', 0, -135);
+  drawOutroQuestionBubble('कमेंट्स में बताओ! ✍️');
 
   ctx.restore();
 }
@@ -875,11 +943,7 @@ export function drawChernobylOutro(lt, d, t) {
   circle(0, 26, 8, '#FFE600');
   ctx.restore();
 
-  // Comment Bubble
-  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-150, -180, 300, 85, 20); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
-  ctx.font = '900 28px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000000'; ctx.textAlign = 'center';
-  ctx.fillText('क्या प्रकृति इंसान से बड़ी है? ✍️', 0, -135);
+  drawOutroQuestionBubble('क्या प्रकृति इंसान से बड़ी है? ✍️');
 
   ctx.restore();
 }
@@ -986,11 +1050,7 @@ export function drawEventHorizonLaserGrid(lt, d, t) {
   ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 6;
   ctx.beginPath(); ctx.arc(cx, cy, 112, 0, TAU); ctx.stroke();
 
-  // Tech readout box
-  ctx.fillStyle = 'rgba(255, 23, 68, 0.15)'; ctx.strokeStyle = '#FF1744'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.roundRect(cx - 240, 850, 480, 75, 14); ctx.fill(); ctx.stroke();
-  ctx.font = F(30, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('ESCAPE VELOCITY > SPEED OF LIGHT (c)', cx, 897);
+  drawAutoTechCard("ESCAPE VELOCITY > SPEED OF LIGHT (c)", cx, 880, "#FF1744", 24);
 
   ctx.restore();
 
@@ -1163,11 +1223,7 @@ export function drawFrozenTimeDilation(lt, d, t) {
   line([[cx, cy], [cx + Math.sin(vib) * 160, cy - Math.cos(vib) * 160]], '#FF1744', 3.5);
   circle(cx, cy, 14, '#FF1744');
 
-  // Digital readout card
-  ctx.fillStyle = 'rgba(0, 242, 254, 0.12)'; ctx.strokeStyle = '#00F2FE'; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.roundRect(cx - 250, 840, 500, 75, 14); ctx.fill(); ctx.stroke();
-  ctx.font = F(32, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('TIME DILATION: Δt_ext / Δt_0 = ∞', cx, 888);
+  drawAutoTechCard("TIME DILATION: Δt_ext / Δt_0 = ∞", cx, 875, "#00F2FE", 24);
 
   ctx.restore();
 
@@ -1200,11 +1256,7 @@ export function drawBlackHoleSingularityCTA(lt, d, t) {
   circle(0, 26, 8, '#FFE600');
   ctx.restore();
 
-  // Question Callout Bubble
-  ctx.fillStyle = '#00F2FE'; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
-  ctx.font = '900 27px Inter, "Noto Sans Devanagari", sans-serif'; ctx.fillStyle = '#000000'; ctx.textAlign = 'center';
-  ctx.fillText('क्या ब्लैक होल में दूसरी दुनिया है? 🕳️', 0, -135);
+  drawOutroQuestionBubble('क्या ब्लैक होल में दूसरी दुनिया है? 🕳️');
 
   ctx.restore();
 
@@ -1309,11 +1361,7 @@ export function drawDoorPressureLock(lt, d, t) {
     ctx.fill();
   }
 
-  // Pressure readout box
-  ctx.fillStyle = "rgba(255, 23, 68, 0.18)"; ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3;
-  ctx.beginPath(); ctx.roundRect(cx - 240, cy + 225, 480, 70, 14); ctx.fill(); ctx.stroke();
-  ctx.font = F(30, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
-  ctx.fillText("OUTSIDE WATER PRESSURE: 800 KG!", cx, cy + 268);
+  drawAutoTechCard("OUTSIDE WATER PRESSURE: 800 KG!", cx, cy + 245, "#FF1744", 24);
 
   ctx.restore();
   filmAtmosphere(t);
@@ -1377,13 +1425,7 @@ export function drawTrappedPassenger(lt, d, t) {
   ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 14;
   line([[cx + 90, cy - 200], [cx + 90, cy + 180]], "#FF1744", 14);
 
-  // Warning flashing pulse
-  const blink = Math.sin(t * 12) > 0;
-  ctx.fillStyle = blink ? "rgba(255, 23, 68, 0.2)" : "rgba(255, 23, 68, 0.05)";
-  ctx.beginPath(); ctx.roundRect(cx - 240, cy + 170, 480, 70, 14); ctx.fill();
-  ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3; ctx.stroke();
-  ctx.font = F(30, "900"); ctx.fillStyle = "#FF1744"; ctx.textAlign = "center";
-  ctx.fillText("DO NOT PANIC // DO NOT PUSH DOOR", cx, cy + 213);
+  drawAutoTechCard("DO NOT PANIC // DO NOT PUSH DOOR", cx, cy + 205, "#FF1744", 24);
 
   ctx.restore();
   filmAtmosphere(t);
@@ -1503,11 +1545,7 @@ export function drawCarEscapeCTA(lt, d, t) {
   circle(0, 26, 8, "#FFE600");
   ctx.restore();
 
-  // Question Callout Bubble
-  ctx.fillStyle = "#00F2FE"; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
-  ctx.font = F(24, "900"); ctx.fillStyle = "#000000"; ctx.textAlign = "center";
-  ctx.fillText("क्या आपको यह हेडरेस्ट ट्रिक पता थी? 🚗", 0, -135);
+  drawOutroQuestionBubble("क्या आपको यह हेडरेस्ट ट्रिक पता थी? 🚗");
 
   ctx.restore();
   filmAtmosphere(t);
@@ -1906,12 +1944,430 @@ export function drawUniversalOutroCTA(lt, d, t) {
   circle(0, 26, 8, "#FFE600");
   ctx.restore();
 
-  // Question Bubble
-  ctx.fillStyle = "#00F2FE"; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
-  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
-  ctx.font = F(24, "900"); ctx.fillStyle = "#000000"; ctx.textAlign = "center";
-  ctx.fillText("आपकी क्या राय है? कमेंट्स में बताएं! ✍️", 0, -135);
+  drawOutroQuestionBubble("आपकी क्या राय है? कमेंट्स में बताएं! ✍️");
 
   ctx.restore();
   filmAtmosphere(t);
+}
+
+// ── G. GRAND THEFT AUTO VI (GTA 6) DEDICATED SUITE (1080x1920 9:16) ───────────────
+
+// ── G1. GTA 6 LOGO & $2 BILLION RECORD BUDGET ────────────────────────────────────
+export function drawGta6LogoBudget(lt, d, t) {
+  ctx.fillStyle = "#0A0112"; ctx.fillRect(0, 0, W, H);
+
+  // Miami Vice City Sunset & Neon Gradient Sky
+  const sky = ctx.createLinearGradient(0, 100, 0, 950);
+  sky.addColorStop(0, "#190226");
+  sky.addColorStop(0.5, "#4A044E");
+  sky.addColorStop(0.8, "#BE185D");
+  sky.addColorStop(1, "#0A0112");
+  ctx.fillStyle = sky; ctx.fillRect(0, 100, W, 850);
+
+  hudHeader("GRAND THEFT AUTO VI // RECORD BUDGET", "इतिहास का सबसे महंगा गेम: 16,000 करोड़!", "#FF007F");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Palm Trees Silhouettes in background
+  ctx.fillStyle = "#050008";
+  for (let s of [-360, -220, 220, 360]) {
+    ctx.beginPath();
+    ctx.moveTo(cx + s - 10, 850); ctx.quadraticCurveTo(cx + s, cy + 50, cx + s + 20, cy - 80);
+    ctx.lineTo(cx + s + 30, cy - 80); ctx.quadraticCurveTo(cx + s + 10, cy + 50, cx + s + 10, 850);
+    ctx.fill();
+    // Palm fronds
+    for (let a = -1.2; a <= 1.2; a += 0.45) {
+      ctx.beginPath();
+      ctx.moveTo(cx + s + 25, cy - 80);
+      ctx.quadraticCurveTo(cx + s + 25 + Math.cos(a) * 80, cy - 80 + Math.sin(a) * 60, cx + s + 25 + Math.cos(a) * 110, cy - 50 + Math.sin(a) * 80);
+      ctx.lineWidth = 6; ctx.strokeStyle = "#050008"; ctx.stroke();
+    }
+  }
+
+  // Giant Neon "VI" Roman Numeral
+  const neonPulse = 1 + 0.05 * Math.sin(t * 8);
+  ctx.save(); ctx.translate(cx, cy - 20); ctx.scale(neonPulse, neonPulse);
+
+  // Pink/Cyan Neon Glow
+  ctx.shadowColor = "#FF007F"; ctx.shadowBlur = 45;
+  ctx.font = "900 240px Inter, Impact, sans-serif";
+  ctx.fillStyle = "#FF007F"; ctx.textAlign = "center"; ctx.textBaseline = "middle";
+  ctx.fillText("VI", 0, 0);
+
+  // Inner White Core
+  ctx.shadowBlur = 0;
+  ctx.font = "900 240px Inter, Impact, sans-serif";
+  ctx.fillStyle = "#FFF0F5";
+  ctx.fillText("VI", 0, 0);
+
+  // "GRAND THEFT AUTO" Subtitle Banner
+  ctx.font = "900 38px Inter, sans-serif"; ctx.fillStyle = "#00F0FF";
+  ctx.letterSpacing = "4px";
+  ctx.fillText("GRAND THEFT AUTO", 0, 140);
+  ctx.letterSpacing = "0px";
+  ctx.restore();
+
+  drawAutoTechCard("$2,000,000,000 PRODUCTION BUDGET", cx, 860, "#FFD700", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 600, "rgba(255, 0, 127, 0.35)");
+}
+
+// ── G2. VICE CITY HOLOGRAPHIC MAP (3X GTA 5) ──────────────────────────────────────
+export function drawGta6ViceCityMap(lt, d, t) {
+  ctx.fillStyle = "#020712"; ctx.fillRect(0, 0, W, H);
+  hudHeader("STATE OF LEONIDA // VICE CITY MAP", "GTA 5 से तीन गुना बड़ा सीमलेस मैप!", "#00F0FF");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Holographic Map Grid
+  ctx.strokeStyle = "rgba(0, 240, 255, 0.25)"; ctx.lineWidth = 1.5;
+  for (let x = 120; x <= W - 120; x += 65) {
+    line([[x, 260], [x, 880]], "rgba(0, 240, 255, 0.2)", 1.5);
+  }
+  for (let y = 260; y <= 880; y += 65) {
+    line([[120, y], [W - 120, y]], "rgba(0, 240, 255, 0.2)", 1.5);
+  }
+
+  // Island Landmasses (Vice Beach, Downtown, Port Gellhorn, Keys)
+  ctx.fillStyle = "#0C2338"; ctx.strokeStyle = "#00F0FF"; ctx.lineWidth = 4;
+  // Mainland Leonida
+  ctx.beginPath();
+  ctx.moveTo(cx - 280, 340);
+  ctx.lineTo(cx - 60, 320); ctx.lineTo(cx - 20, 520); ctx.lineTo(cx - 140, 720);
+  ctx.lineTo(cx - 320, 680); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+
+  // Vice Beach Island (Ocean side)
+  ctx.beginPath();
+  ctx.moveTo(cx + 60, 340); ctx.lineTo(cx + 240, 360); ctx.lineTo(cx + 260, 680);
+  ctx.lineTo(cx + 90, 720); ctx.lineTo(cx + 50, 520); ctx.closePath();
+  ctx.fill(); ctx.stroke();
+
+  // Causeway Bridges
+  line([[cx - 40, 420], [cx + 65, 420]], "#FF007F", 4);
+  line([[cx - 30, 560], [cx + 70, 560]], "#FF007F", 4);
+
+  // Radar Scan Sweep
+  const sweep = t * 2;
+  ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 3;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * 260, cy + Math.sin(sweep) * 260);
+  ctx.stroke();
+
+  drawAutoTechCard("MAP SCALE: 3X GTA V // NO LOADING SCREENS", cx, 860, "#00F0FF", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 600, "rgba(0, 240, 255, 0.2)");
+}
+
+// ── G3. LUCIA & JASON DUAL PROTAGONISTS MUGSHOT ───────────────────────────────────
+export function drawGta6LuciaJasonMugshot(lt, d, t) {
+  ctx.fillStyle = "#060309"; ctx.fillRect(0, 0, W, H);
+  hudHeader("DUAL PROTAGONISTS // LUCIA & JASON", "पहली महिला लीड और बोनी-एंड-क्लाइड जोड़ी!", "#FF007F");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Police Mugshot Measurement Grid (Behind characters)
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.15)"; ctx.lineWidth = 2;
+  for (let y = 300; y <= 780; y += 40) {
+    line([[140, y], [W - 140, y]], "rgba(255, 255, 255, 0.15)", 2);
+    ctx.font = F(18, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.35)";
+    ctx.fillText(`${Math.round((800 - y) / 10 + 120)} CM`, 170, y - 5);
+  }
+
+  // Left: Lucia (Female Lead in Prison Orange Jumpsuit)
+  const lx = cx - 160;
+  circle(lx, cy - 80, 52, "#F5D0C5"); // Head
+  // Hair
+  ctx.fillStyle = "#1E1010"; ctx.beginPath();
+  ctx.arc(lx, cy - 90, 56, Math.PI * 0.8, TAU * 0.95); ctx.fill();
+  // Orange Inmate Suit
+  ctx.fillStyle = "#EA580C"; ctx.strokeStyle = "#C2410C"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(lx - 65, cy - 25, 130, 230, [18, 18, 0, 0]); ctx.fill(); ctx.stroke();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("LUCIA", lx, cy + 80);
+
+  // Right: Jason (Male Lead with Cap)
+  const jx = cx + 160;
+  circle(jx, cy - 80, 54, "#F8D7C4");
+  // Cap
+  ctx.fillStyle = "#1E293B";
+  ctx.beginPath(); ctx.ellipse(jx, cy - 115, 60, 24, 0, 0, TAU); ctx.fill();
+  ctx.fillRect(jx - 55, cy - 120, 110, 25);
+  // Tank Top / Jacket
+  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#1E293B"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(jx - 70, cy - 25, 140, 230, [18, 18, 0, 0]); ctx.fill(); ctx.stroke();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("JASON", jx, cy + 80);
+
+  drawAutoTechCard("DYNAMIC DUAL CHARACTER SWITCHING", cx, 860, "#FF007F", 24);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── G4. WATER PHYSICS & RAYTRACED GRAPHICS ────────────────────────────────────────
+export function drawGta6WaterPhysicsRaytracing(lt, d, t) {
+  ctx.fillStyle = "#020B1A"; ctx.fillRect(0, 0, W, H);
+  hudHeader("NEXT-GEN ENGINE // RAY-TRACED FLUIDS", "अल्ट्रा-रियलिस्टिक वॉटर और सनलाइट रिफ्लेक्शन!", "#00F0FF");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Sunset Horizon
+  const sunG = ctx.createRadialGradient(cx, 440, 30, cx, 440, 240);
+  sunG.addColorStop(0, "rgba(255, 120, 0, 0.95)");
+  sunG.addColorStop(0.5, "rgba(255, 0, 128, 0.6)");
+  sunG.addColorStop(1, "rgba(0, 0, 0, 0)");
+  ctx.fillStyle = sunG; ctx.fillRect(100, 280, W - 200, 320);
+
+  // Ocean Water with Wave Curves
+  for (let row = 0; row < 5; row++) {
+    const wy = 520 + row * 65;
+    const waveGrad = ctx.createLinearGradient(0, wy, 0, wy + 65);
+    waveGrad.addColorStop(0, row % 2 === 0 ? "#0284C7" : "#0369A1");
+    waveGrad.addColorStop(1, "#082F49");
+    ctx.fillStyle = waveGrad;
+    ctx.beginPath();
+    ctx.moveTo(100, wy);
+    for (let x = 100; x <= W - 100; x += 40) {
+      const h = Math.sin(x * 0.02 + t * 4 + row) * 16;
+      ctx.lineTo(x, wy + h);
+    }
+    ctx.lineTo(W - 100, wy + 80); ctx.lineTo(100, wy + 80); ctx.closePath();
+    ctx.fill();
+  }
+
+  // Ray-Traced Sunlight Golden Shimmer on Water
+  for (let k = 0; k < 18; k++) {
+    const sx = cx - 80 + Math.sin(t * 5 + k) * 60;
+    const sy = 540 + k * 16;
+    line([[sx - 40, sy], [sx + 40, sy]], "rgba(255, 230, 0, 0.65)", 3);
+  }
+
+  drawAutoTechCard("REAL-TIME SUB-SURFACE SCATTERING", cx, 860, "#00F0FF", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 440, "rgba(255, 120, 0, 0.3)");
+}
+
+// ── G5. 10,000 NEXT-GEN SMART AI NPCS ─────────────────────────────────────────────
+export function drawGta6SmartNpcAi(lt, d, t) {
+  ctx.fillStyle = "#04050E"; ctx.fillRect(0, 0, W, H);
+  hudHeader("COGNITIVE NPC AI // 10,000+ UNIQUE BRAINS", "हर नागरिक की अपनी सोच और याददाश्त!", "#10B981");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // City Sidewalk Pedestrians with AI Target Reticles
+  const npcs = [
+    { x: cx - 220, y: cy + 40, label: "RECORDING LIVE 📹", color: "#38BDF8" },
+    { x: cx, y: cy - 40, label: "CALLING POLICE 📞", color: "#EF4444" },
+    { x: cx + 220, y: cy + 20, label: "FLEEING IN PANIC 🏃", color: "#F59E0B" }
+  ];
+
+  npcs.forEach((npc, idx) => {
+    // Pedestrian Silhouette
+    circle(npc.x, npc.y - 70, 32, "#E2E8F0");
+    ctx.fillStyle = "#475569";
+    ctx.beginPath(); ctx.roundRect(npc.x - 26, npc.y - 35, 52, 120, 12); ctx.fill();
+
+    // AI Cognitive Scan Circle
+    const p = 1 + 0.12 * Math.sin(t * 6 + idx);
+    ctx.strokeStyle = npc.color; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(npc.x, npc.y - 30, 85 * p, 0, TAU); ctx.stroke();
+
+    // Behavioral Status Tag
+    drawAutoTechCard(npc.label, npc.x, npc.y + 125, npc.color, 18);
+  });
+
+  drawAutoTechCard("DYNAMIC PERCEPTION & MEMORY ENGINE", cx, 860, "#10B981", 24);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── G6. 5-STAR POLICE WANTED SWAT & HELICOPTER ────────────────────────────────────
+export function drawGta6PoliceWantedHelicopter(lt, d, t) {
+  ctx.fillStyle = "#04020A"; ctx.fillRect(0, 0, W, H);
+  hudHeader("WANTED LEVEL // 5-STAR TACTICAL RESPONSE", "SWAT टीम और सर्चलाइट हेलीकॉप्टर!", "#EF4444");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // 5 Gold Stars
+  ctx.font = F(48, "900"); ctx.fillStyle = "#FFD700"; ctx.textAlign = "center";
+  ctx.fillText("★ ★ ★ ★ ★", cx, 340);
+
+  // Police Emergency Lights Flash (Red & Blue alternating)
+  const redOn = Math.sin(t * 16) > 0;
+  const flareG = ctx.createLinearGradient(0, cy - 100, W, cy - 100);
+  flareG.addColorStop(0, redOn ? "rgba(239, 68, 68, 0.4)" : "rgba(37, 99, 235, 0.4)");
+  flareG.addColorStop(1, redOn ? "rgba(37, 99, 235, 0.4)" : "rgba(239, 68, 68, 0.4)");
+  ctx.fillStyle = flareG; ctx.fillRect(100, cy - 160, W - 200, 120);
+
+  // Police Helicopter Searchlight Cone
+  const cone = ctx.createLinearGradient(cx, 380, cx - 120, 780);
+  cone.addColorStop(0, "rgba(255, 255, 255, 0.85)");
+  cone.addColorStop(1, "rgba(255, 255, 255, 0.05)");
+  ctx.fillStyle = cone;
+  ctx.beginPath();
+  ctx.moveTo(cx, 380); ctx.lineTo(cx - 240, 780); ctx.lineTo(cx + 80, 780); ctx.closePath();
+  ctx.fill();
+
+  // Hovering Helicopter Silhouette
+  circle(cx, 380, 24, "#020617");
+  // Rotor Blade
+  const rotor = Math.sin(t * 30) * 120;
+  line([[cx - rotor, 360], [cx + rotor, 360]], "#94A3B8", 4);
+
+  drawAutoTechCard("K-9 UNITS & HIGH-SPEED TACTICAL PURSUIT", cx, 860, "#EF4444", 24);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── G7. IN-GAME VIRAL SOCIAL MEDIA FEED ───────────────────────────────────────────
+export function drawGta6SocialMediaFeed(lt, d, t) {
+  ctx.fillStyle = "#08010E"; ctx.fillRect(0, 0, W, H);
+  hudHeader("VICE CITY NET // SOCIAL MEDIA SATIRE", "इन-गेम वायरल रील्स और लाइव स्ट्रीमिंग!", "#EC4899");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Smartphone Mockup Frame
+  ctx.fillStyle = "#18181B"; ctx.strokeStyle = "#EC4899"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(cx - 180, cy - 240, 360, 480, 32); ctx.fill(); ctx.stroke();
+
+  // Screen Video Area
+  ctx.fillStyle = "#27272A";
+  ctx.beginPath(); ctx.roundRect(cx - 165, cy - 225, 330, 450, 24); ctx.fill();
+
+  // Live Red Badge
+  ctx.fillStyle = "#EF4444";
+  ctx.beginPath(); ctx.roundRect(cx - 145, cy - 205, 75, 32, 8); ctx.fill();
+  ctx.font = F(16, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("LIVE", cx - 108, cy - 188);
+
+  ctx.font = F(18, "800"); ctx.fillStyle = "#A1A1AA";
+  ctx.fillText("👁️ 1.4M VIEWS", cx + 70, cy - 188);
+
+  // Floating Reaction Hearts (Animated rising up right side)
+  for (let k = 0; k < 6; k++) {
+    const hy = cy + 160 - ((k * 45 + t * 90) % 300);
+    const hx = cx + 110 + Math.sin(t * 4 + k) * 15;
+    ctx.font = F(24, "900"); ctx.fillStyle = "#EC4899";
+    ctx.fillText("❤️", hx, hy);
+  }
+
+  drawAutoTechCard("DYNAMIC VIRAL REPUTATION SYSTEM", cx, 860, "#EC4899", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 600, "rgba(236, 72, 153, 0.2)");
+}
+
+// ── G8. SUPERCARS & FLORIDA EVERGLADES ALLIGATOR ──────────────────────────────────
+export function drawGta6SupercarAndAlligator(lt, d, t) {
+  ctx.fillStyle = "#0A0502"; ctx.fillRect(0, 0, W, H);
+  hudHeader("WILDLIFE & VELOCITY // LEONIDA SWAMPS", "सुपरकारों की रफ्तार और दलदल में मगरमच्छ!", "#F59E0B");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Drifting Sports Car Silhouette
+  ctx.fillStyle = "#F59E0B"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(cx - 240, cy - 40); ctx.lineTo(cx - 140, cy - 90); ctx.lineTo(cx + 80, cy - 90);
+  ctx.lineTo(cx + 200, cy - 40); ctx.lineTo(cx + 220, cy + 20); ctx.lineTo(cx - 240, cy + 20);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  // Wheels
+  circle(cx - 140, cy + 20, 32, "#0F172A"); circle(cx + 120, cy + 20, 32, "#0F172A");
+
+  // Everglades Swamp Water Layer
+  ctx.fillStyle = "#14532D"; ctx.fillRect(100, cy + 70, W - 200, 110);
+
+  // Alligator Head & Glowing Yellow Eyes in Water
+  ctx.fillStyle = "#052E16";
+  ctx.beginPath();
+  ctx.moveTo(cx - 120, cy + 130); ctx.lineTo(cx + 40, cy + 120); ctx.lineTo(cx + 140, cy + 140);
+  ctx.lineTo(cx - 60, cy + 155); ctx.closePath(); ctx.fill();
+  circle(cx + 20, cy + 125, 8, "#FBBF24"); // Glowing Eye
+
+  drawAutoTechCard("DYNAMIC DANGEROUS WILDLIFE ENCOUNTERS", cx, 860, "#F59E0B", 24);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── G9. 70% ACCESSIBLE INTERIORS & BANK HEISTS ────────────────────────────────────
+export function drawGta6RobberyInteriorBank(lt, d, t) {
+  ctx.fillStyle = "#07040B"; ctx.fillRect(0, 0, W, H);
+  hudHeader("OPEN WORLD HEISTS // ACCESSIBLE BUILDINGS", "70% इमारतों के अंदर घुसकर लूट की आजादी!", "#A855F7");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+
+  // Bank Vault Massive Round Steel Door (Cracked Open)
+  circle(cx, cy - 20, 220, "#1E293B");
+  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 12;
+  ctx.beginPath(); ctx.arc(cx, cy - 20, 220, 0, TAU); ctx.stroke();
+
+  // Locking Vault Bolts
+  for (let a = 0; a < TAU; a += TAU / 8) {
+    const bx = cx + Math.cos(a) * 190, by = cy - 20 + Math.sin(a) * 190;
+    circle(bx, by, 16, "#F1F5F9");
+  }
+
+  // Security Laser Tripwires
+  ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 3;
+  line([[160, cy - 100], [cx + 120, cy + 80]], "#EF4444", 3);
+  line([[cx - 120, cy + 80], [W - 160, cy - 100]], "#EF4444", 3);
+
+  // Cash Stacks in Duffle Bag
+  ctx.fillStyle = "#10B981";
+  ctx.beginPath(); ctx.roundRect(cx - 80, cy + 70, 160, 65, 8); ctx.fill();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("$$$ CASH", cx, cy + 112);
+
+  drawAutoTechCard("UNPRECEDENTED INTERIOR FREEDOM", cx, 860, "#A855F7", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 580, "rgba(168, 85, 247, 0.25)");
+}
+
+// ── G10. GTA 6 OUTRO CTA (VICE CITY VIBES) ────────────────────────────────────────
+export function drawGta6OutroCTA(lt, d, t) {
+  ctx.fillStyle = "#0A0112"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ANCHOR AADHYA OFFICIAL // GTA 6", "कमेंट में बताएं और सब्सक्राइब करें!", "#FF007F");
+
+  ctx.save();
+  const ox = 540, oy = 640, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Red YouTube Button
+  ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  ctx.fillStyle = "#FFFFFF";
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("SUBSCRIBE", 0, 105);
+
+  // Bell
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = "#FFE600";
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, "#FFE600");
+  ctx.restore();
+
+  // Dynamic Auto-fit Question Bubble: Text NEVER hangs outside!
+  drawOutroQuestionBubble("क्या आप GTA 6 खेलेंगे? 🎮✍️");
+
+  ctx.restore();
+  filmAtmosphere(t, 640, "rgba(255, 0, 127, 0.25)");
 }

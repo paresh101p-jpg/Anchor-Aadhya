@@ -4,7 +4,7 @@
 import { ctx, C, clamp, lerp, seg, eob } from './lib.js';
 import { T, lineWords } from './timing.js';
 
-export const CAP = { y: 1420, size: 82, maxW: 960 };
+export const CAP = { y: 1420, size: 80, maxW: 900 };
 let caps = [];
 
 function autoChunks(text) {
@@ -89,15 +89,19 @@ export function drawCaption(t) {
   const y0 = -(lines.length - 1) * lh / 2;
 
   lines.forEach((ln, li) => {
-    const lw = width(ln);
+    // Measure line text as whole string to guarantee accurate bounding box
+    const lineText = ln.map((w) => w.txt).join(' ');
+    const stringW = ctx.measureText(lineText).width;
+    const lw = Math.max(width(ln), stringW);
     const lineY = y0 + li * lh;
 
-    // Dark pill container with ample breathing room
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.88)';
+    // Dark pill container with generous 42px padding: text NEVER overflows or touches pill borders!
+    const padX = 42;
+    ctx.fillStyle = 'rgba(0, 0, 0, 0.90)';
     ctx.beginPath();
-    ctx.roundRect(-lw / 2 - 28, lineY - lh * 0.42, lw + 56, lh * 0.84, 18);
+    ctx.roundRect(-lw / 2 - padX, lineY - lh * 0.44, lw + padX * 2, lh * 0.88, 22);
     ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.22)';
+    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
     ctx.lineWidth = 2.5;
     ctx.stroke();
 
