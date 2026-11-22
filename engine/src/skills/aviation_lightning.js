@@ -54,8 +54,67 @@ export function drawStormEnvironment(t) {
   ctx.restore();
 }
 
+/** Fixed Screen-Space Infographic Card: 100% stable, zero camera drift, zero screen cutoff */
+export function drawFixedScreenCard({
+  tag = 'CRUISE TELEMETRY // 35,000 FT ALTITUDE',
+  status = 'SPEED: 850 KM/H // NOMINAL',
+  statusColor = '#22C55E',
+  headline = 'PASSENGERS 100% PROTECTED BY FARADAY CAGE ALUMINUM SHELL',
+  borderColor = '#00F0FF'
+}) {
+  ctx.save();
+  // 1. Reset transform matrix directly to absolute screen pixels (1080x1920)
+  ctx.setTransform(1, 0, 0, 1, 0, 0);
+
+  // 2. Safe Zone: y = 1260 to 1420 (Center X = 540)
+  const cardW = 960, cardH = 160;
+  const cardX = (W - cardW) / 2; // 60px margin on each side
+  const cardY = 1260; // 1260 + 160 = 1420 (leaves 500px clearance above bottom Shorts UI)
+
+  // Sleek Glass Card Body
+  ctx.fillStyle = 'rgba(2, 6, 23, 0.94)';
+  ctx.beginPath();
+  ctx.roundRect(cardX, cardY, cardW, cardH, 20);
+  ctx.fill();
+  ctx.strokeStyle = borderColor;
+  ctx.lineWidth = 3.5;
+  ctx.stroke();
+
+  // Header Left (Category / Law)
+  ctx.font = '900 22px Inter, sans-serif';
+  ctx.fillStyle = '#38BDF8';
+  ctx.textAlign = 'left';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(tag, cardX + 32, cardY + 42);
+
+  // Header Right (Dynamic Telemetry / Status)
+  ctx.font = '900 26px Inter, sans-serif';
+  ctx.fillStyle = statusColor;
+  ctx.textAlign = 'right';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(status, cardX + cardW - 32, cardY + 42);
+
+  // Divider Line
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.16)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath();
+  ctx.moveTo(cardX + 24, cardY + 68);
+  ctx.lineTo(cardX + cardW - 24, cardY + 68);
+  ctx.stroke();
+
+  // Main Scientific Fact / Headline (Centered, clear, readable, zero overlap)
+  ctx.font = '800 24px Inter, "Noto Sans Devanagari", sans-serif';
+  ctx.fillStyle = '#F8FAFC';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(headline, W / 2, cardY + 114);
+
+  ctx.restore();
+}
+
 export const AviationSkill = {
   drawStormEnvironment,
+  drawFixedScreenCard,
 
   /** Line 1 & 2: Giant 880px Commercial Jetliner cruising in storm + Lightning Strike */
   drawAirlinerLightningStrike(t, cx, cy, lt, subIdx = 0) {
@@ -155,37 +214,16 @@ export const AviationSkill = {
       PixelFX.drawSparks(t, 60, -240, 20, '#FFE600');
     }
 
-    // 4. Live Flight HUD Telemetry Card
-    const hudW = 860, hudH = 125;
-    ctx.save();
-    ctx.translate(-cx, -planeY); // reset to canvas root coordinates
-    const hudX = cx - hudW / 2, hudY = cy + 460;
-
-    ctx.fillStyle = 'rgba(2, 6, 23, 0.92)';
-    ctx.beginPath();
-    ctx.roundRect(hudX, hudY, hudW, hudH, 16);
-    ctx.fill();
-    ctx.strokeStyle = isStriking ? '#FFE600' : '#38BDF8';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    ctx.font = '900 22px Inter, sans-serif';
-    ctx.fillStyle = '#38BDF8';
-    ctx.textAlign = 'left';
-    ctx.fillText('CRUISE TELEMETRY // 35,000 FT ALTITUDE', hudX + 30, hudY + 40);
-
-    ctx.font = '900 34px Inter, sans-serif';
-    ctx.fillStyle = isStriking ? '#FFE600' : '#22C55E';
-    ctx.textAlign = 'right';
-    ctx.fillText(isStriking ? '⚡ LIGHTNING STRIKE DETECTED' : 'SPEED: 850 KM/H // NOMINAL', hudX + hudW - 30, hudY + 45);
-
-    ctx.font = '800 18px Inter, sans-serif';
-    ctx.fillStyle = '#CBD5E1';
-    ctx.textAlign = 'center';
-    ctx.fillText('PASSENGERS 100% PROTECTED BY FARADAY CAGE ALUMINUM SHELL', cx, hudY + 95);
     ctx.restore();
 
-    ctx.restore();
+    // 4. Fixed Screen-Space Flight HUD Telemetry Card (ZERO camera drift, ZERO screen cutoff)
+    drawFixedScreenCard({
+      tag: 'CRUISE TELEMETRY // 35,000 FT ALTITUDE',
+      status: isStriking ? '⚡ LIGHTNING STRIKE DETECTED' : 'SPEED: 850 KM/H // NOMINAL',
+      statusColor: isStriking ? '#FFE600' : '#22C55E',
+      headline: 'PASSENGERS 100% PROTECTED BY FARADAY CAGE ALUMINUM SHELL',
+      borderColor: isStriking ? '#FFE600' : '#38BDF8',
+    });
   },
 
   /** Line 2 & 3: High-Tech Glass Cockpit Avionics & Weather Radar operating safely during storm */
@@ -393,35 +431,16 @@ export const AviationSkill = {
     ctx.fillText('RANGE: 40 NM  //  TILT: -1.5°', ndCX, mfdY + mfdH - 18);
 
     endCutout();
-
-    // 3. Telemetry HUD Card
-    const hudW = 860, hudH = 130;
-    const hudX = cx - hudW / 2, hudY = cy + 470;
-
-    ctx.fillStyle = 'rgba(2, 6, 23, 0.95)';
-    ctx.beginPath();
-    ctx.roundRect(hudX, hudY, hudW, hudH, 16);
-    ctx.fill();
-    ctx.strokeStyle = '#22C55E';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    ctx.font = '900 22px Inter, sans-serif';
-    ctx.fillStyle = '#38BDF8';
-    ctx.textAlign = 'left';
-    ctx.fillText('AVIONICS INTEGRITY // 100% SHIELDED', hudX + 30, hudY + 40);
-
-    ctx.font = '900 32px Inter, sans-serif';
-    ctx.fillStyle = '#22C55E';
-    ctx.textAlign = 'right';
-    ctx.fillText('NO CRASH // ZERO GLITCH', hudX + hudW - 30, hudY + 45);
-
-    ctx.font = '800 19px Inter, sans-serif';
-    ctx.fillStyle = '#E2E8F0';
-    ctx.textAlign = 'center';
-    ctx.fillText('SURGE ARRESTERS & COAXIAL CAGES PREVENT HIGH-VOLTAGE CURRENT IN COMPUTERS', cx, hudY + 95);
-
     ctx.restore();
+
+    // 3. Fixed Screen-Space Cockpit Avionics Card (ZERO camera drift, ZERO screen cutoff)
+    drawFixedScreenCard({
+      tag: 'AVIONICS INTEGRITY // 100% SHIELDED',
+      status: 'NO CRASH // ZERO GLITCH',
+      statusColor: '#22C55E',
+      headline: 'SURGE ARRESTERS PREVENT HIGH-VOLTAGE CURRENT IN COMPUTERS',
+      borderColor: '#22C55E',
+    });
   },
 
   /** Line 3, 4 & 5: Faraday Cage Aluminum Skin Current Conduction Mesh */
@@ -494,35 +513,16 @@ export const AviationSkill = {
     PixelFX.drawSparks(t, shX + shW - 40, cy, 16, '#38BDF8');
 
     endCutout();
-
-    // 4. Faraday Physics Law Telemetry Card
-    const hudW = 860, hudH = 130;
-    const hudX = cx - hudW / 2, hudY = cy + 470;
-
-    ctx.fillStyle = 'rgba(2, 6, 23, 0.95)';
-    ctx.beginPath();
-    ctx.roundRect(hudX, hudY, hudW, hudH, 16);
-    ctx.fill();
-    ctx.strokeStyle = '#00F0FF';
-    ctx.lineWidth = 3;
-    ctx.stroke();
-
-    ctx.font = '900 22px Inter, sans-serif';
-    ctx.fillStyle = '#38BDF8';
-    ctx.textAlign = 'left';
-    ctx.fillText('PHYSICS LAW // FARADAY CAGE CONDUCTIVE SHIELD', hudX + 30, hudY + 40);
-
-    ctx.font = '900 32px Inter, sans-serif';
-    ctx.fillStyle = '#FFE600';
-    ctx.textAlign = 'right';
-    ctx.fillText('1,000,000 VOLTS SKIMS EXTERIOR', hudX + hudW - 30, hudY + 45);
-
-    ctx.font = '800 19px Inter, sans-serif';
-    ctx.fillStyle = '#E2E8F0';
-    ctx.textAlign = 'center';
-    ctx.fillText('CURRENT FLOWS AROUND METALLIC CONTOUR WITHOUT ENTERING INTERIOR', cx, hudY + 95);
-
     ctx.restore();
+
+    // 4. Fixed Screen-Space Faraday Physics Law Card (ZERO camera drift, ZERO screen cutoff)
+    drawFixedScreenCard({
+      tag: 'PHYSICS LAW // FARADAY CAGE CONDUCTIVE SHIELD',
+      status: '1,000,000 VOLTS SKIMS EXTERIOR',
+      statusColor: '#FFE600',
+      headline: 'CURRENT FLOWS AROUND METALLIC CONTOUR WITHOUT ENTERING INTERIOR',
+      borderColor: '#00F0FF',
+    });
   },
 
   /** Line 6: Wingtip Static Discharge Wicks safely dissipating charge into clouds */
@@ -583,28 +583,15 @@ export const AviationSkill = {
     circle(cx + 80, cy - 120, 16, strobe ? '#FF0055' : '#880022');
 
     endCutout();
-
-    // Status Telemetry Card
-    const hudW = 860, hudH = 130;
-    const hudX = cx - hudW / 2, hudY = cy + 470;
-
-    ctx.fillStyle = 'rgba(2, 6, 23, 0.95)';
-    ctx.beginPath();
-    ctx.roundRect(hudX, hudY, hudW, hudH, 16);
-    ctx.fill();
-    ctx.strokeStyle = '#22C55E';
-    ctx.lineWidth = 3.5;
-    ctx.stroke();
-
-    ctx.font = '900 24px Inter, sans-serif';
-    ctx.fillStyle = '#22C55E';
-    ctx.textAlign = 'center';
-    ctx.fillText('✅ STATIC DISCHARGE WICKS // CHARGE DISSIPATED', cx, hudY + 50);
-
-    ctx.font = '800 19px Inter, sans-serif';
-    ctx.fillStyle = '#DCFCE7';
-    ctx.fillText('RESIDUAL CURRENT DISCHARGED SAFELY INTO ATMOSPHERE WITHIN SECONDS', cx, hudY + 95);
-
     ctx.restore();
+
+    // Status Telemetry Card (ZERO camera drift, ZERO screen cutoff)
+    drawFixedScreenCard({
+      tag: 'WINGTIP DISCHARGE // SAFETY DISSIPATION',
+      status: '✅ CHARGE SAFELY DISSIPATED',
+      statusColor: '#22C55E',
+      headline: 'RESIDUAL CURRENT DISCHARGED SAFELY INTO ATMOSPHERE WITHIN SECONDS',
+      borderColor: '#22C55E',
+    });
   }
 };

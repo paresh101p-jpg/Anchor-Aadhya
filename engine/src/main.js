@@ -46,7 +46,7 @@ function draw(t) {
   if (fade < 1) { ctx.fillStyle = '#000'; ctx.globalAlpha = 1 - fade; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
   drawAudioVisualizer(t, 1660, 95);
   drawBroadcastFrame(t);
-  drawCaption(t);
+  // drawCaption(t); // Spoken speech captions disabled per user request: visual cards take center stage
 }
 
 (async () => {
