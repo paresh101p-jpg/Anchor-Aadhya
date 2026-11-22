@@ -17,6 +17,29 @@ import traceback
 import subprocess
 from datetime import datetime
 
+def git_push_clean_state(message="chore: cleanup after upload [skip ci]"):
+    """
+    Upload ke baad repo ko GitHub par clean state mein push kare:
+    - tracker.json aur koi bhi badlaav stage kare
+    - commit kare
+    - origin par push kare
+    Agar git up-to-date hai ya koi error aaye toh silent fail karega (pipeline nahi rokega).
+    """
+    try:
+        subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True, capture_output=True)
+        res = subprocess.run(["git", "commit", "-m", message], cwd=BASE_DIR, capture_output=True, text=True)
+        if "nothing to commit" in (res.stdout + res.stderr):
+            print("  📦 [GitHub]: Nothing new to commit, repo already clean.", flush=True)
+        else:
+            print(f"  📦 [GitHub]: Committed: {res.stdout.strip() or res.stderr.strip()}", flush=True)
+        push_res = subprocess.run(["git", "push", "origin", "HEAD"], cwd=BASE_DIR, capture_output=True, text=True, timeout=60)
+        if push_res.returncode == 0:
+            print("  🚀 [GitHub]: Pushed to origin successfully.", flush=True)
+        else:
+            print(f"  ⚠️ [GitHub]: Push note: {(push_res.stdout + push_res.stderr).strip()[:200]}", flush=True)
+    except Exception as e:
+        print(f"  ⚠️ [GitHub]: Sync skipped ({e})", flush=True)
+
 if sys.platform == "win32":
     sys.stdout.reconfigure(encoding="utf-8")
 
@@ -282,20 +305,169 @@ def build_audio_mix():
     subprocess.run([sys.executable, "tools/mix.py", "."], cwd=ENGINE_DIR, check=True)
     print("  --> mix.wav ready!", flush=True)
 
+def generate_visual_prompt_for_line(text, topic_title=""):
+    """
+    Generates a 2D illustration visual prompt from the spoken line text.
+    Uses Gemini if available, else falls back to keyword-based mapping.
+    """
+    # Try Gemini first
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if api_key:
+        try:
+            import urllib.request, json
+            prompt = f"""Given this Hindi narration line from a YouTube video about "{topic_title}":
+"{text}"
+
+Generate a single concise English visual description (max 30 words) for a 2D flat illustration that matches this line. The illustration should be educational, clean, colorful, and directly related to what is being spoken. Do NOT include any text in the image. Respond with ONLY the visual description, nothing else."""
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
+            payload = {"contents": [{"parts": [{"text": prompt}]}]}
+            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                desc = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                if desc and len(desc) > 10:
+                    return desc
+        except Exception as e:
+            print(f"    [Gemini prompt note: {e}]", flush=True)
+
+    # Keyword-based fallback
+    text_lower = text.lower()
+    keyword_map = [
+        (["दिमाग", "brain", "न्यूरो", "सोच"], "human brain cross-section with glowing neural pathways and synapses"),
+        (["दिल", "heart", "खून", "धड़कन"], "anatomical human heart with blood vessels and pulse waves"),
+        (["पृथ्वी", "earth", "ग्रह", "धरती"], "planet Earth from space with blue oceans and green continents"),
+        (["समुद्र", "ocean", "पानी", "गहराई"], "deep ocean abyss with bioluminescent creatures and pressure gradients"),
+        (["कार", "car", "दरवाज़ा", "खिड़की"], "sinking car underwater with pressure arrows and escape route"),
+        (["बिजली", "lightning", "करंट", "electric"], "electric lightning bolt striking with glowing energy arcs"),
+        (["एटीएम", "atm", "नोट", "पैसे"], "ATM machine internal mechanism with cash rollers and sensors"),
+        (["नाच", "dance", "नृत्य"], "medieval European town square with people dancing in a circle"),
+        (["सुपरमार्केट", "supermarket", "दुकान", "store"], "supermarket interior with colorful aisles and shopping carts"),
+        (["दांत", "tooth", "दांत"], "human tooth cross-section showing decay and bacteria"),
+        (["प्लास्टिक", "plastic", "कचरा"], "ocean floor covered in plastic waste with marine life"),
+        (["ब्लैक होल", "black hole", "सिंगुलैरिटी"], "black hole with accretion disk and gravitational lensing"),
+        (["चेरनोबिल", "chernobyl", "रेडिएशन", "परमाणु"], "nuclear reactor core with glowing radiation and warning signs"),
+        (["ड्रिल", "drill", "गड्ढा", "बोरहोल"], "deep drilling rig penetrating through earth crust layers"),
+        (["हवाई जहाज", "airplane", "विमान", "फ्लाइट"], "commercial airplane flying through storm clouds with lightning"),
+        (["जहाज", "ship", "नाव", "बोट"], "cargo ship sinking in rough ocean waves"),
+        (["टैटू", "tattoo", "इंक"], "tattoo needle injecting ink into skin with immune cells"),
+        (["छींक", "sneeze"], "person sneezing with visible air particles and pressure waves"),
+        (["चुइंगम", "gum", "खाना"], "human digestive system showing gum traveling through intestines"),
+        (["बादल", "cloud", "तूफान", "storm"], "dark storm clouds with lightning bolts and rain"),
+        (["पहाड़", "mountain", "एवरेस्ट"], "Mount Everest peak with snow and clouds"),
+        (["खाई", "trench", "गहराई"], "deep ocean trench cross-section with depth markers"),
+        (["जीव", "creature", "प्राणी"], "bioluminescent deep sea creature with glowing features"),
+    ]
+    for keywords, desc in keyword_map:
+        if any(kw in text_lower for kw in keywords):
+            return f"2D flat illustration, {desc}, clean educational diagram style, vibrant colors, white background"
+    return f"2D flat illustration, educational science concept related to: {text[:40]}, clean diagram style, vibrant colors, white background"
+
+def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
+    """
+    Generates a 2D illustration image using Pollinations AI.
+    Falls back to a solid color canvas if API fails.
+    """
+    import random, urllib.request, urllib.parse
+    if seed is None:
+        seed = random.randint(100000, 999999999)
+    style_prefix = "2D flat vector illustration, clean educational diagram, vibrant colors, white background, no text: "
+    styled_prompt = style_prefix + prompt
+    encoded = urllib.parse.quote(styled_prompt)
+    try:
+        url = f"https://image.pollinations.ai/prompt/{encoded}?model=turbo&seed={seed}&width={width}&height={height}&nologo=true"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+        with urllib.request.urlopen(req, timeout=45) as resp:
+            content = resp.read()
+            if len(content) > 5000:
+                with open(output_jpg, "wb") as f:
+                    f.write(content)
+                print(f"  ✓ Image generated via Pollinations ({len(content)//1024} KB)", flush=True)
+                return True
+    except Exception as e:
+        print(f"  --> [Image gen note: {e}], using canvas fallback", flush=True)
+    # Fallback: solid color canvas with text
+    try:
+        from PIL import Image, ImageDraw
+        img = Image.new("RGB", (width, height), color=(240, 245, 250))
+        draw = ImageDraw.Draw(img)
+        draw.text((50, height//2), prompt[:80], fill=(50, 50, 80))
+        img.save(output_jpg, quality=95)
+        print("  ✓ Fallback canvas image created", flush=True)
+        return True
+    except Exception:
+        return False
+
 def render_native_2d_video(aspect="9:16"):
     filename = "aadhya_short_9_16.mp4" if aspect == "9:16" else "aadhya_video_16_9.mp4"
     out_mp4 = os.path.join(RENDERS_DIR, filename)
     if os.path.exists(out_mp4):
         try: os.remove(out_mp4)
         except Exception: pass
+    
+    # Check if we have AI-generated images (image-based rendering)
+    img_dir = os.path.join(RENDERS_DIR, "line_images")
+    has_images = os.path.exists(img_dir) and len([f for f in os.listdir(img_dir) if f.endswith(".jpg")]) > 0
+    
+    if has_images:
+        print(f"\n[Rendering Native 2D {aspect} MP4: {filename}] via FFmpeg image slideshow...", flush=True)
+        # Build concat file with image durations
+        concat_path = os.path.join(RENDERS_DIR, "img_concat.txt")
+        lines_json_path = os.path.join(DATA_DIR, "lines.json")
+        try:
+            with open(lines_json_path, "r", encoding="utf-8") as f:
+                lines_data = json.load(f)
+            lines_meta = lines_data.get("lines", [])
+            total_dur = lines_data.get("duration", 30.0)
+        except Exception:
+            lines_meta = []
+            total_dur = 30.0
         
-    env = os.environ.copy()
-    env["FPS"] = "25"
-    env["ASPECT"] = aspect
-    print(f"\n[Rendering Native 2D {aspect} MP4: {filename}] via Headless Chromium canvas...", flush=True)
-    subprocess.run(["node", "tools/capture.mjs", "video", f"renders/{filename}"], cwd=ENGINE_DIR, env=env, check=True)
-    print(f"  --> Native {aspect} 2D MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
-    return out_mp4
+        # Build image list with durations
+        img_files = sorted([f for f in os.listdir(img_dir) if f.endswith(".jpg")])
+        with open(concat_path, "w") as cf:
+            for img_f in img_files:
+                img_path = os.path.join(img_dir, img_f)
+                # Find corresponding line duration
+                idx = int(img_f.split("_")[1].split(".")[0]) if "_" in img_f else 0
+                dur = 5.0  # default
+                if idx < len(lines_meta):
+                    lm = lines_meta[idx]
+                    dur = max(1.0, lm.get("end", 0) - lm.get("start", 0))
+                cf.write(f"file '{img_path}'\n")
+                cf.write(f"duration {dur:.3f}\n")
+            # Last image needs to be repeated for concat demuxer
+            if img_files:
+                cf.write(f"file '{os.path.join(img_dir, img_files[-1])}'\n")
+        
+        # Render with ffmpeg
+        mix_wav = os.path.join(DATA_DIR, "mix.wav")
+        audio_input = mix_wav if os.path.exists(mix_wav) else os.path.join(DATA_DIR, "narration.wav")
+        if aspect == "16:9":
+            scale_filter = "scale=1920:1080:force_original_aspect_ratio=decrease,pad=1920:1080:(ow-iw)/2:(oh-ih)/2"
+        else:
+            scale_filter = "scale=1080:1920:force_original_aspect_ratio=decrease,pad=1080:1920:(ow-iw)/2:(oh-ih)/2"
+        cmd = [
+            "ffmpeg", "-y",
+            "-f", "concat", "-safe", "0", "-i", concat_path,
+            "-i", audio_input,
+            "-vf", scale_filter,
+            "-c:v", "libx264", "-pix_fmt", "yuv420p",
+            "-c:a", "aac", "-b:a", "192k",
+            "-shortest",
+            out_mp4
+        ]
+        subprocess.run(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL, check=True)
+        print(f"  --> Native {aspect} 2D MP4 Rendered Successfully (image-based): {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
+        return out_mp4
+    else:
+        # Fallback to Chrome canvas rendering
+        env = os.environ.copy()
+        env["FPS"] = "25"
+        env["ASPECT"] = aspect
+        print(f"\n[Rendering Native 2D {aspect} MP4: {filename}] via Headless Chromium canvas...", flush=True)
+        subprocess.run(["node", "tools/capture.mjs", "video", f"renders/{filename}"], cwd=ENGINE_DIR, env=env, check=True)
+        print(f"  --> Native {aspect} 2D MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
+        return out_mp4
 
 def extract_native_thumbnail(aspect="9:16"):
     sub_dir = "cover_9_16" if aspect == "9:16" else "cover_16_9"
@@ -603,7 +775,33 @@ async def main():
     full_topic = ensure_2min_topic(topic)
 
     dur_long = await build_voice_and_timing(full_topic, is_short=False)
-    build_audio_mix()
+    try:
+        build_audio_mix()
+    except Exception as ame:
+        print(f"  [Audio mix note: {ame}]", flush=True)
+
+    # Generate AI 2D illustration images per line (topic-matching visuals)
+    print("\n[Generating AI 2D Illustration Images per line...]", flush=True)
+    img_dir = os.path.join(RENDERS_DIR, "line_images")
+    os.makedirs(img_dir, exist_ok=True)
+    # Clean old images
+    for old in os.listdir(img_dir):
+        try: os.remove(os.path.join(img_dir, old))
+        except Exception: pass
+    title_clean = full_topic.get("title", "").split("#")[0].strip()
+    lines_meta_for_img = []
+    try:
+        with open(os.path.join(DATA_DIR, "lines.json"), "r", encoding="utf-8") as f:
+            lines_meta_for_img = json.load(f).get("lines", [])
+    except Exception:
+        lines_meta_for_img = [{"text": l.get("text", "")} for l in full_topic.get("lines", [])]
+    for i, lm in enumerate(lines_meta_for_img):
+        text = lm.get("text", "")
+        prompt = generate_visual_prompt_for_line(text, title_clean)
+        img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
+        print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
+        generate_line_image(prompt, img_path, seed=42+i, width=1920, height=1080)
+    print(f"  ✅ {len(lines_meta_for_img)} images generated", flush=True)
 
     video_16_9 = render_native_2d_video(aspect="16:9")
 
@@ -655,7 +853,32 @@ async def main():
     short_topic = create_short_topic_from_full(full_topic)
 
     dur_short = await build_voice_and_timing(short_topic, is_short=True)
-    build_audio_mix()
+    try:
+        build_audio_mix()
+    except Exception as ame:
+        print(f"  [Audio mix note: {ame}]", flush=True)
+
+    # Generate AI 2D illustration images per line (topic-matching visuals)
+    print("\n[Generating AI 2D Illustration Images per line (Short)...]", flush=True)
+    img_dir = os.path.join(RENDERS_DIR, "line_images")
+    os.makedirs(img_dir, exist_ok=True)
+    for old in os.listdir(img_dir):
+        try: os.remove(os.path.join(img_dir, old))
+        except Exception: pass
+    title_clean = short_topic.get("title", "").split("#")[0].strip()
+    lines_meta_for_img = []
+    try:
+        with open(os.path.join(DATA_DIR, "lines.json"), "r", encoding="utf-8") as f:
+            lines_meta_for_img = json.load(f).get("lines", [])
+    except Exception:
+        lines_meta_for_img = [{"text": l.get("text", "")} for l in short_topic.get("lines", [])]
+    for i, lm in enumerate(lines_meta_for_img):
+        text = lm.get("text", "")
+        prompt = generate_visual_prompt_for_line(text, title_clean)
+        img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
+        print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
+        generate_line_image(prompt, img_path, seed=100+i, width=1080, height=1920)
+    print(f"  ✅ {len(lines_meta_for_img)} images generated", flush=True)
 
     short_mp4 = render_native_2d_video(aspect="9:16")
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
@@ -722,6 +945,9 @@ async def main():
         try: os.remove(meta_path_16_9)
         except Exception: pass
     print("✅ [Clean Slate]: All temporary assets wiped! Next video will be 100% fresh.", flush=True)
+
+    # Upload ke baad repo ko GitHub par clean state mein sync kare (tracker + state)
+    git_push_clean_state()
 
     print("\n==============================================================", flush=True)
     print("  🎉 2-STAGE FUNNEL FULLY COMPLETED!", flush=True)
