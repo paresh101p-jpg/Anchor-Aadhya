@@ -999,7 +999,9 @@
       "Shorts"
     ],
     "description": "ATM मशीन सेकंडों में असली-नकली नोट और उनकी मोटाई कैसे पहचान लेती है? जानिए अंदर का पूरा मेकैनिज्म!\n\n#AnchorAadhya #ATMMachine #Technology #ScienceFacts #HindiShorts",
-    "engagement_question": "क्या कभी ATM ने पैसे काट लिए और कैश बाहर नहीं आया? कमेंट्स में बताओ! 👇"
+    "engagement_question": "क्या कभी ATM ने पैसे काट लिए और कैश बाहर नहीं आया? कमेंट्स में बताओ! 👇",
+    "no_slice": true,
+    "is_30s": true
   },
   {
     "id": "airplane_lightning_physics",

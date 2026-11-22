@@ -135,12 +135,17 @@ export function drawStyleBackground(style, t) {
 
     case STYLES.SCIENTIFIC_BLUEPRINT:
     default: {
-      // Precision Technical CAD Blueprint Grid
-      ctx.fillStyle = '#060B14';
+      // Precision Technical CAD Blueprint with Full-Screen Brushed Steel & Ambient Light
+      const bgGrad = ctx.createRadialGradient(W / 2, 400, 80, W / 2, H / 2, H * 0.85);
+      bgGrad.addColorStop(0, '#1E293B');
+      bgGrad.addColorStop(0.45, '#0F172A');
+      bgGrad.addColorStop(0.85, '#060B14');
+      bgGrad.addColorStop(1, '#020408');
+      ctx.fillStyle = bgGrad;
       ctx.fillRect(0, 0, W, H);
 
-      // Fine Isometric / Orthogonal Grid
-      ctx.strokeStyle = 'rgba(0, 240, 255, 0.07)';
+      // Fine Isometric / Orthogonal Grid with Technical Coordinates
+      ctx.strokeStyle = 'rgba(0, 240, 255, 0.09)';
       ctx.lineWidth = 1;
       const step = 60;
       ctx.beginPath();
@@ -148,13 +153,23 @@ export function drawStyleBackground(style, t) {
       for (let y = 0; y <= H; y += step) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
       ctx.stroke();
 
-      // Technical Axis Origin Markers
-      ctx.strokeStyle = 'rgba(245, 158, 11, 0.25)';
+      // Technical Axis Origin Markers & Crosshairs
+      ctx.strokeStyle = 'rgba(245, 158, 11, 0.35)';
       ctx.lineWidth = 2;
       ctx.beginPath();
-      ctx.moveTo(W / 2, 100); ctx.lineTo(W / 2, H - 100);
+      ctx.moveTo(W / 2, 80); ctx.lineTo(W / 2, H - 80);
       ctx.moveTo(80, H / 2); ctx.lineTo(W - 80, H / 2);
       ctx.stroke();
+
+      // Top Volumetric Ambient Light Beam
+      ctx.save();
+      ctx.globalCompositeOperation = 'screen';
+      const beamGrad = ctx.createLinearGradient(0, 0, 0, 800);
+      beamGrad.addColorStop(0, 'rgba(56, 189, 248, 0.16)');
+      beamGrad.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = beamGrad;
+      ctx.fillRect(0, 0, W, 800);
+      ctx.restore();
       break;
     }
   }

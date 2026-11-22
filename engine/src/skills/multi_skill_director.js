@@ -71,18 +71,20 @@ export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
   // 2. ATM CASH & BANKING TECHNOLOGY TOPIC
   if (/atm|कैश|नोट|पैसे|currency/i.test(id + ' ' + text)) {
     return (lt, d, t, subIdx) => {
+      TechSkill.drawFullVaultEnvironment(t);
       if (isLastLine) {
         Cinema.drawUniversalOutroCTA(lt, d, t);
+        PixelFX.drawFloatingCurrency(t, 540, 700, 16);
         return;
       }
-      if (lineIdx === 0) {
+      if (lineIdx === 0 || /कार्ड|शुरू|काउंटडाउन|card|insert/i.test(text)) {
         TechSkill.drawAtmCardSlotCountdown(t, 540, 650, lt, d);
-      } else if (lineIdx === 1 || lineIdx === 2) {
-        TechSkill.drawAtmOpticalThicknessScanner(t, 540, 650);
-      } else if (lineIdx === 3) {
+      } else if (/चिपके|रिजेक्ट|नकली|रोक|reject|stuck|vault/i.test(text)) {
         TechSkill.drawAtmRejectDiverterGate(t, 540, 650);
-      } else {
+      } else if (/गेट|हाथ में आते|कड़क नोट|डिस्पेंस|dispense|shutter/i.test(text)) {
         TechSkill.drawAtmDispenserGate(t, 540, 650);
+      } else {
+        TechSkill.drawAtmOpticalThicknessScanner(t, 540, 650);
       }
     };
   }
