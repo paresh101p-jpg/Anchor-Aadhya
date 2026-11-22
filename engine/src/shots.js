@@ -148,6 +148,17 @@ const POOL_BIOLOGY_BODY = [
   Cinema.drawTattooInkMacrophage,
 ];
 
+const POOL_NEUTRAL_SCIENCE = [
+  Cinema.drawEarthGlobe,
+  Cinema.drawCountdownTimer,
+  Cinema.drawBermudaPerimeterRadar,
+  Cinema.drawPressureSlam,
+  Cinema.drawWaterWeightPress,
+  Cinema.drawElephantWeight,
+  Cinema.drawMountEverest,
+  Cinema.drawSunRays,
+];
+
 const POOL_TECH_SURVIVAL = [
   Cinema.drawAtmCashMechanics,
   Cinema.drawAirplaneCockpitRadar,
@@ -160,16 +171,20 @@ const POOL_TECH_SURVIVAL = [
 ];
 
 const GLOBAL_FALLBACK_POOL = [
-  ...POOL_SPACE,
+  ...POOL_NEUTRAL_SCIENCE,
+  ...POOL_TECH_SURVIVAL,
   ...POOL_OCEAN,
   ...POOL_PHYSICS_DANGER,
   ...POOL_BIOLOGY_BODY,
-  ...POOL_TECH_SURVIVAL,
+  ...POOL_SPACE,
 ];
 
 // Direct Object-to-Scene Mappings (Guarantees literal object alignment for spoken words)
 const DIRECT_OBJECT_MAPPINGS = [
   { test: /(?:पृथ्वी|धरती|ग्लोब|planet\s*earth)/i, scene: Cinema.drawEarthGlobe },
+  { test: /(?:इतिहास|सन\s*\d{4}|साल|वर्ष|1919|1997|history|time)/i, scene: Cinema.drawCountdownTimer },
+  { test: /(?:लहर|बाढ़|गुड़|तरल|नदी|flood|liquid|fluid)/i, scene: Cinema.drawWaterWeightPress },
+  { test: /(?:टैंक|धातु|इस्पात|लोहा|tank|steel|rivet)/i, scene: Cinema.drawDoorPressureLock },
   { test: /(?:जहाज|नाव|बोट|कश्ती|cargo\s*ship)/i, scene: Cinema.drawShipSinkingAbyss },
   { test: /(?:बादल|तूफान|बिजली|storm\s*cloud|air[- ]?bomb)/i, scene: Cinema.drawHexagonalCloudAirBombs },
   { test: /(?:हवाई\s*जहाज|विमान|फ्लाइट|airplane)/i, scene: Cinema.drawAirplaneStormDisaster },
@@ -183,13 +198,27 @@ const DIRECT_OBJECT_MAPPINGS = [
   { test: /(?:हाथी\s*का\s*पैर|corium|लावा)/i, scene: Cinema.drawElephantsFoot },
   { test: /(?:ब्लैक\s*होल|सिंगुलैरिटी|इवेंट\s*होराइजन)/i, scene: Cinema.drawBlackHoleGargantua },
   { test: /(?:गहराई|खाई|मारियाना|चैलेंजर|ocean\s*abyss)/i, scene: Cinema.drawMarianaChasm },
-  { test: /(?:पनडुब्बी|सर्चलाइट|submarine)/i, scene: Cinema.drawSubmarineSearchlight },
+  { test: /(?:पनडुब्बी|सर्चलाइट|submarine|submersible)/i, scene: Cinema.drawSubmarineSearchlight },
+  { test: /(?:राडार|रडार|तरंग|radar|पेरीमीटर|सोनार|हाइड्रोफोन|सिग्नल|acoustic)/i, scene: Cinema.drawBermudaPerimeterRadar },
+  { test: /(?:बुलबुले|गैस|मीथेन|bubbles)/i, scene: Cinema.drawMethaneBubblesEruption },
+  { test: /(?:जीव|प्राणी|राक्षस|व्हेल|मछली|creature|monster|whale)/i, scene: Cinema.drawAlienCreature },
+  { test: /(?:दबाव|प्रेशर|वजन|कुचल|pressure|slam)/i, scene: Cinema.drawPressureSlam },
+  { test: /(?:प्लास्टिक|कचरा|खोज|मलबे|plastic)/i, scene: Cinema.drawPlasticDiscovery },
+  { test: /(?:सूरज|सौर|किरणें|रोशनी|प्रकाश|sun|flare)/i, scene: Cinema.drawSolarFlareCoronalMass },
+  { test: /(?:पल्सर|न्यूट्रॉन|तारा|pulsar|star)/i, scene: Cinema.drawNeutronStarPulsar },
+  { test: /(?:एवरेस्ट|पहाड़|चोटी|mount\s*everest)/i, scene: Cinema.drawMountEverest },
   { test: /(?:ड्रिल|बोरहोल|12,262|गड्ढा)/i, scene: Cinema.drawKolaBoreholeDrillDepth },
   { test: /(?:क्रस्ट|परत|मेंटल|भूविज्ञान|strata)/i, scene: Cinema.drawKolaCrustCrossSection },
   { test: /(?:पिघलने|पिघल|ड्रिल-बिट|टंगस्टन)/i, scene: Cinema.drawKolaMeltingSteelDrill },
   { test: /(?:भाप|खौलता|गीजर)/i, scene: Cinema.drawKolaBoilingWaterTrapped },
   { test: /(?:जीवाश्म|सूक्ष्मजीव|माइक्रोफ़ॉसिल्स|microfossil)/i, scene: Cinema.drawKolaAncientMicrofossils },
   { test: /(?:सील|नट-बोल्ट|12\s*बोल्ट|SG-3)/i, scene: Cinema.drawKolaSealedSteelDoorCap },
+  { test: /(?:बैक्टीरिया|कीटाणु|संक्रमण|bacteria)/i, scene: Cinema.drawMicroscopicBacteria },
+  { test: /(?:कान|पर्दा|ध्वनि|सुनना|ear|acoustic)/i, scene: Cinema.drawEarCanalCrossSection },
+  { test: /(?:दांत|कैविटी|एसिड|tooth|decay)/i, scene: Cinema.drawToothAcidCavityDecay },
+  { test: /(?:पानी\s*की\s*कमी|डिहाइड्रेशन|अंग|dehydration)/i, scene: Cinema.drawDehydrationOrganFailure },
+  { test: /(?:छींक|दबाना|विस्फोट|sneeze)/i, scene: Cinema.drawSneezeBlastPressure },
+  { test: /(?:टैटू|इंक|स्याही|इम्यून|tattoo)/i, scene: Cinema.drawTattooInkMacrophage },
 ];
 
 function getOutroScene(script) {
@@ -228,8 +257,50 @@ export function buildShots(script = {}) {
       sceneFn = topicCurated[i];
     } else {
       const text = String(lines[i]?.text || '');
-      // High-Precision Multi-Skill Fusion Compositor (3-5 simultaneous skills per line, 0% cross-contamination)
-      sceneFn = composeMultiSkillScene(script, i, text, isLastLine);
+
+      // 1. High-Precision Multi-Skill Fusion Compositor (Bio, ATM, Aviation, Kola)
+      const multiSkill = composeMultiSkillScene(script, i, text, isLastLine);
+      if (multiSkill) {
+        sceneFn = multiSkill;
+      } else {
+        // 2. Direct Object Matching Priority (Checks if an exact spoken physical entity is requested)
+        const directMatch = DIRECT_OBJECT_MAPPINGS.find((m) => m.test.test(text) && !usedScenes.has(m.scene));
+        if (directMatch) {
+          sceneFn = directMatch.scene;
+        } else {
+          // 3. Keyword semantic category matching
+          let candidatePool = POOL_NEUTRAL_SCIENCE;
+          const fullContext = (script.id + ' ' + (script.title || '') + ' ' + text).toLowerCase();
+
+          if (/अंतरिक्ष|तारा|ब्लैक\s*होल|ग्रेविटी|रोशनी|प्रकाश|ब्रह्मांड|ग्रह|space|black\s*hole|star|astronomy|galaxy/i.test(fullContext)) {
+            candidatePool = POOL_SPACE;
+          } else if (/समुद्र|पानी|गहराई|दबाव|महासागर|मछली|जहाज|आवाज़|ध्वनि|लहर|गुड़|बाढ़|नदी|तरल|flood|wave|liquid|fluid|ocean|abyss|marine|water|sound/i.test(fullContext)) {
+            candidatePool = POOL_OCEAN;
+          } else if (/रेडिएशन|परमाणु|विस्फोट|धमाका|जहर|केमिकल|लावा|हादसा|आपदा|टैंक|फट|chernobyl|radiation|toxic|hazard|disaster|explosion|burst/i.test(fullContext)) {
+            candidatePool = POOL_PHYSICS_DANGER;
+          } else if (/शरीर|दिमाग|खून|दिल|नस|हड्डी|आंत|दांत|कोशिका|इंसान|सांस|नाक|कान|बॉडी|मांसपेशी|body|heart|brain|shock|muscle/i.test(fullContext)) {
+            candidatePool = POOL_BIOLOGY_BODY;
+          } else if (/कार|दरवाज़ा|कांच|खिड़की|हथौड़ा|एटीएम|फ्लाइट|हवाई|मशीन|इंजीनियरिंग|इतिहास|car|airplane|atm|survive|tech|history|engineering/i.test(fullContext)) {
+            candidatePool = POOL_TECH_SURVIVAL;
+          }
+
+          // Find first unused scene in candidate pool
+          sceneFn = candidatePool.find((fn) => !usedScenes.has(fn));
+
+          // If all candidate pool scenes are used, find any unused scene in global pool
+          if (!sceneFn) {
+            sceneFn = GLOBAL_FALLBACK_POOL.find((fn) => !usedScenes.has(fn));
+          }
+
+          // Strict Fallback (Never select outroCTA during non-last lines!)
+          if (!sceneFn) {
+            const safePool = candidatePool.filter(fn => fn !== outroScene && fn !== Cinema.drawUniversalOutroCTA);
+            sceneFn = (safePool.length > 0)
+              ? safePool[i % safePool.length]
+              : GLOBAL_FALLBACK_POOL[i % GLOBAL_FALLBACK_POOL.length];
+          }
+        }
+      }
     }
 
     usedScenes.add(sceneFn);
@@ -282,6 +353,7 @@ export function buildShots(script = {}) {
         zoom: zooms[subIdx % zooms.length],
         zoomFast: subIdx > 0,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
+        sceneName: sceneFn ? (sceneFn.name || 'custom_lambda') : 'none',
         draw(lt, d, t) {
           if (typeof sceneFn === 'function') {
             sceneFn(lt, d, t, subIdx);

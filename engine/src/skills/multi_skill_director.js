@@ -16,20 +16,19 @@ import * as Cinema from '../cinematic_scenes.js';
 import { ctx, W, H, lerp, clamp } from '../core/lib.js';
 
 export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
+  // Outro is strictly reserved for the final line by shots.js getOutroScene
+  if (isLastLine) {
+    return null;
+  }
+
   const text = String(lineText || '').toLowerCase();
   const id = String(script.id || '').toLowerCase();
 
   // 1. BIOLOGY / MEDICAL / COLD WATER DIVE REFLEX TOPIC
-  if (/dive|reflex|पानी|बर्फील|दिल|धड़कन|चेहरा|नर्व|नसें|ऑक्सीजन|blood|heart|brain|hypothermia/i.test(id + ' ' + text)) {
+  if (/mammalian_dive|dive_reflex|diving_reflex|ice_water_dive/i.test(id) || (/गोता|डाइव/i.test(text) && /रिफ्लेक्स|चेहरा/i.test(text))) {
     return (lt, d, t, subIdx) => {
       // Skill A: Environmental Frost Shading
       ThermalSkill.drawFrostVignette(t, 0.75);
-
-      if (isLastLine) {
-        // Universal Outro
-        Cinema.drawUniversalOutroCTA(lt, d, t);
-        return;
-      }
 
       // Line-specific multi-skill layering
       if (/चेहरा|बर्फीले|डूबता|ठंडा|ice|face|water/i.test(text)) {
@@ -70,14 +69,9 @@ export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
   }
 
   // 2. ATM CASH & BANKING TECHNOLOGY TOPIC
-  if (/atm|कैश|नोट|पैसे|currency/i.test(id + ' ' + text)) {
+  if (/atm_cash|atm_dispenser|atm_reject|cash_dispense/i.test(id) || (/एटीएम|atm/i.test(text) && /कैश|नोट|रुपये|पैसे|करेंसी/i.test(text))) {
     return (lt, d, t, subIdx) => {
       TechSkill.drawFullVaultEnvironment(t);
-      if (isLastLine) {
-        Cinema.drawUniversalOutroCTA(lt, d, t);
-        PixelFX.drawFloatingCurrency(t, 540, 700, 16);
-        return;
-      }
       if (lineIdx === 0 || /कार्ड|शुरू|काउंटडाउन|card|insert/i.test(text)) {
         TechSkill.drawAtmCardSlotCountdown(t, 540, 650, lt, d);
       } else if (/चिपके|रिजेक्ट|नकली|रोक|reject|stuck|vault/i.test(text)) {
@@ -91,14 +85,8 @@ export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
   }
 
   // 3. AIRPLANE & LIGHTNING DISASTER / AVIATION SCIENCE TOPIC
-  if (/airplane|विमान|हवाई\s*जहाज|फ्लाइट|बिजली|lightning|faraday/i.test(id + ' ' + text)) {
+  if (/airplane_lightning|aircraft_lightning|aviation_storm/i.test(id) || (/विमान|हवाई\s*जहाज|फ्लाइट/i.test(text) && /बिजली|lightning/i.test(text))) {
     return (lt, d, t, subIdx) => {
-      if (isLastLine) {
-        AviationSkill.drawStormEnvironment(t);
-        Cinema.drawUniversalOutroCTA(lt, d, t);
-        return;
-      }
-
       if (/क्रैश|crash|बचते|नहीं होती|cockpit|पायलट/i.test(text)) {
         AviationSkill.drawCockpitRadarView(t, 540, 680);
       } else if (/फैराडे|केज|faraday|cage|एल्युमिनियम|aluminum|स्किन|skin|करेंट|करंट|volts|volt|conductive|बॉडी/i.test(text)) {
@@ -106,29 +94,19 @@ export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
       } else if (/विस्क|डिस्चार्ज|wicks|static|विंग्स|हवा में/i.test(text)) {
         AviationSkill.drawStaticDischargeWicks(t, 540, 680);
       } else {
-        // Line 0, 1, or default: Giant airliner in storm with lightning strike & sub-shot zoom
+        // Giant airliner in storm with lightning strike & sub-shot zoom
         AviationSkill.drawAirlinerLightningStrike(t, 540, 680, lt, subIdx);
       }
     };
   }
 
   // 4. KOLA BOREHOLE & DRILL TOPIC
-  if (/kola|बोरहोल|12,262|गड्ढा|drill/i.test(id + ' ' + text)) {
+  if (/kola|बोरहोल|12,262/i.test(id)) {
     return (lt, d, t, subIdx) => {
-      if (isLastLine) {
-        Cinema.drawKolaOutroCTA(lt, d, t);
-        return;
-      }
       Cinema.drawKolaBoreholeDrillDepth(lt, d, t);
     };
   }
 
-  // Universal Fallback (Clean Tech Card & Ambient Scene - NO UNRELATED BLACK HOLES)
-  return (lt, d, t, subIdx) => {
-    if (isLastLine) {
-      Cinema.drawUniversalOutroCTA(lt, d, t);
-      return;
-    }
-    Cinema.drawUniversalOutroCTA(lt, d, t);
-  };
+  // If none of the specialized multi-skills match, return null so shots.js uses direct object mapping & thematic pools
+  return null;
 }
