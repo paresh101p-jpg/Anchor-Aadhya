@@ -166,6 +166,31 @@ const GLOBAL_FALLBACK_POOL = [
   ...POOL_TECH_SURVIVAL,
 ];
 
+// Direct Object-to-Scene Mappings (Guarantees literal object alignment for spoken words)
+const DIRECT_OBJECT_MAPPINGS = [
+  { test: /(?:पृथ्वी|धरती|ग्लोब|planet\s*earth)/i, scene: Cinema.drawEarthGlobe },
+  { test: /(?:जहाज|नाव|बोट|कश्ती|cargo\s*ship)/i, scene: Cinema.drawShipSinkingAbyss },
+  { test: /(?:बादल|तूफान|बिजली|storm\s*cloud|air[- ]?bomb)/i, scene: Cinema.drawHexagonalCloudAirBombs },
+  { test: /(?:हवाई\s*जहाज|विमान|फ्लाइट|airplane)/i, scene: Cinema.drawAirplaneStormDisaster },
+  { test: /(?:कंपास|दिशा\s*सूचक|चुंबकीय|compass)/i, scene: Cinema.drawMagneticCompassChaos },
+  { test: /(?:एटीएम|कैश|करेंसी|नोट\s*गिन|atm\s*machine)/i, scene: Cinema.drawAtmCashMechanics },
+  { test: /(?:कार|दरवाज़ा|कांच\s*तोड़|खिड़की|विंडो)/i, scene: Cinema.drawDoorPressureLock },
+  { test: /(?:दिमाग|न्यूरॉन|सोच|brain)/i, scene: Cinema.drawHumanBrainSynapse },
+  { test: /(?:दिल|धड़कन|खून|धमनी|heart)/i, scene: Cinema.drawHeartArteryPressure },
+  { test: /(?:डीएनए|dna|जीन)/i, scene: Cinema.drawCellularDNAStructure },
+  { test: /(?:चेरनोबिल|रेडिएशन|परमाणु|रिएक्टर|गीगर)/i, scene: Cinema.drawChernobylPlant },
+  { test: /(?:हाथी\s*का\s*पैर|corium|लावा)/i, scene: Cinema.drawElephantsFoot },
+  { test: /(?:ब्लैक\s*होल|सिंगुलैरिटी|इवेंट\s*होराइजन)/i, scene: Cinema.drawBlackHoleGargantua },
+  { test: /(?:गहराई|खाई|मारियाना|चैलेंजर|ocean\s*abyss)/i, scene: Cinema.drawMarianaChasm },
+  { test: /(?:पनडुब्बी|सर्चलाइट|submarine)/i, scene: Cinema.drawSubmarineSearchlight },
+  { test: /(?:ड्रिल|बोरहोल|12,262|गड्ढा)/i, scene: Cinema.drawKolaBoreholeDrillDepth },
+  { test: /(?:क्रस्ट|परत|मेंटल|भूविज्ञान|strata)/i, scene: Cinema.drawKolaCrustCrossSection },
+  { test: /(?:पिघलने|पिघल|ड्रिल-बिट|टंगस्टन)/i, scene: Cinema.drawKolaMeltingSteelDrill },
+  { test: /(?:भाप|खौलता|गीजर)/i, scene: Cinema.drawKolaBoilingWaterTrapped },
+  { test: /(?:जीवाश्म|सूक्ष्मजीव|माइक्रोफ़ॉसिल्स|microfossil)/i, scene: Cinema.drawKolaAncientMicrofossils },
+  { test: /(?:सील|नट-बोल्ट|12\s*बोल्ट|SG-3)/i, scene: Cinema.drawKolaSealedSteelDoorCap },
+];
+
 function getOutroScene(script) {
   if (script.id === 'black_hole_spaghettification') return Cinema.drawBlackHoleSingularityCTA;
   if (script.id === 'chernobyl_300s_room') return Cinema.drawChernobylOutro;
@@ -201,27 +226,34 @@ export function buildShots(script = {}) {
     } else if (topicCurated && i < topicCurated.length - 1 && !usedScenes.has(topicCurated[i])) {
       sceneFn = topicCurated[i];
     } else {
-      // Keyword semantic matching
       const text = String(lines[i]?.text || '');
-      let candidatePool = GLOBAL_FALLBACK_POOL;
 
-      if (/अंतरिक्ष|तारा|ब्लैक होल|ग्रेविटी|रोशनी|प्रकाश|ब्रह्मांड|ग्रह/.test(text)) candidatePool = POOL_SPACE;
-      else if (/समुद्र|पानी|गहराई|दबाव|महासागर|मछली|जहाज/.test(text)) candidatePool = POOL_OCEAN;
-      else if (/रेडिएशन|परमाणु|विस्फोट|धमाका|जहर|केमिकल|लावा/.test(text)) candidatePool = POOL_PHYSICS_DANGER;
-      else if (/शरीर|दिमाग|खून|दिल|आंत|दांत|कोशिका|इंसान|सांस|नाक|कान|पेशाब|छींक|टैटू/.test(text)) candidatePool = POOL_BIOLOGY_BODY;
-      else if (/कार|दरवाज़ा|कांच|खिड़की|हथौड़ा|एटीएम|फ्लाइट|हवाई/.test(text)) candidatePool = POOL_TECH_SURVIVAL;
+      // 1. Literal Object Director Priority (Checks if an exact spoken physical entity is requested)
+      const directMatch = DIRECT_OBJECT_MAPPINGS.find((m) => m.test.test(text) && !usedScenes.has(m.scene));
+      if (directMatch) {
+        sceneFn = directMatch.scene;
+      } else {
+        // 2. Keyword semantic category matching
+        let candidatePool = GLOBAL_FALLBACK_POOL;
 
-      // Find first unused scene in candidate pool
-      sceneFn = candidatePool.find((fn) => !usedScenes.has(fn));
+        if (/अंतरिक्ष|तारा|ब्लैक होल|ग्रेविटी|रोशनी|प्रकाश|ब्रह्मांड|ग्रह/.test(text)) candidatePool = POOL_SPACE;
+        else if (/समुद्र|पानी|गहराई|दबाव|महासागर|मछली|जहाज/.test(text)) candidatePool = POOL_OCEAN;
+        else if (/रेडिएशन|परमाणु|विस्फोट|धमाका|जहर|केमिकल|लावा/.test(text)) candidatePool = POOL_PHYSICS_DANGER;
+        else if (/शरीर|दिमाग|खून|दिल|आंत|दांत|कोशिका|इंसान|सांस|नाक|कान|पेशाब|छींक|टैटू/.test(text)) candidatePool = POOL_BIOLOGY_BODY;
+        else if (/कार|दरवाज़ा|कांच|खिड़की|हथौड़ा|एटीएम|फ्लाइट|हवाई/.test(text)) candidatePool = POOL_TECH_SURVIVAL;
 
-      // If all candidate pool scenes are used, find any unused scene in global pool
-      if (!sceneFn) {
-        sceneFn = GLOBAL_FALLBACK_POOL.find((fn) => !usedScenes.has(fn));
-      }
+        // Find first unused scene in candidate pool
+        sceneFn = candidatePool.find((fn) => !usedScenes.has(fn));
 
-      // Safety fallback (guaranteed function)
-      if (!sceneFn) {
-        sceneFn = candidatePool[i % candidatePool.length];
+        // If all candidate pool scenes are used, find any unused scene in global pool
+        if (!sceneFn) {
+          sceneFn = GLOBAL_FALLBACK_POOL.find((fn) => !usedScenes.has(fn));
+        }
+
+        // Safety fallback (guaranteed function)
+        if (!sceneFn) {
+          sceneFn = candidatePool[i % candidatePool.length];
+        }
       }
     }
 
@@ -265,18 +297,11 @@ export function buildShots(script = {}) {
         },
       });
 
-      // Rapid-cut audio cues synced to word cadence
-      cue(atTime, 'whoosh', { gain: subIdx === 0 ? 0.45 : 0.38 });
-      if (subIdx === 0 && /[?！!]/.test(text)) {
-        cue(atTime + 0.08, 'pop', { gain: 0.32 });
-      } else if (subIdx > 0) {
-        cue(atTime + 0.05, 'pop', { gain: 0.25 });
+      // Clean, professional audio: No recurring sound clutter or mid-sentence pops!
+      // Only an occasional subtle transition whoosh on line changes
+      if (subIdx === 0 && i > 0 && i % 2 === 0) {
+        cue(atTime, 'whoosh', { gain: 0.20 });
       }
-    });
-
-    // Micro pop sound cue on every second spoken word
-    ws.forEach((w, wi) => {
-      if (wi % 3 === 1) cue(w.s, 'pop', { gain: 0.18 });
     });
   }
 

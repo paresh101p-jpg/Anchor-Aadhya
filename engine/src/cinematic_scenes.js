@@ -2895,6 +2895,36 @@ export function drawKolaBoreholeDrillDepth(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
+  // 3D GLOWING PLANET EARTH (PRITHVI GLOBE) - Strictly matches "पृथ्वी के पेट में..."
+  const er = 175;
+  const ex = -110, ey = 10;
+  // Atmospheric Blue Scattering Halo
+  const halo = ctx.createRadialGradient(ex, ey, er * 0.85, ex, ey, er * 1.4);
+  halo.addColorStop(0, 'rgba(0, 220, 255, 0.55)');
+  halo.addColorStop(0.5, 'rgba(0, 100, 255, 0.22)');
+  halo.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  circle(ex, ey, er * 1.4, halo);
+
+  // 3D Spherical Ocean Body
+  const ocean = ctx.createRadialGradient(ex - er * 0.35, ey - er * 0.35, 30, ex, ey, er);
+  ocean.addColorStop(0, '#29B6F6');
+  ocean.addColorStop(0.4, '#0288D1');
+  ocean.addColorStop(0.75, '#01579B');
+  ocean.addColorStop(1, '#00132C');
+  circle(ex, ey, er, ocean);
+
+  // Rotating Continents on Earth
+  ctx.save();
+  ctx.beginPath(); ctx.arc(ex, ey, er, 0, TAU); ctx.clip();
+  const shift = (t * 22) % (er * 2.2);
+  for (let k = -1; k <= 1; k++) {
+    const lx = ex + k * er * 2.1 + shift;
+    ctx.fillStyle = '#2E7D32';
+    ctx.beginPath(); ctx.ellipse(lx - 40, ey - 30, 85, 55, 0.35, 0, TAU); ctx.fill();
+    ctx.beginPath(); ctx.ellipse(lx + 65, ey + 40, 75, 48, -0.25, 0, TAU); ctx.fill();
+  }
+  ctx.restore();
+
   // Background Depth Ruler & Calibration Ticks
   ctx.strokeStyle = "rgba(245, 158, 11, 0.35)"; ctx.lineWidth = 2.5;
   line([[-280, -280], [-280, 260]], "rgba(245, 158, 11, 0.45)", 2.5);
@@ -2906,37 +2936,34 @@ export function drawKolaBoreholeDrillDepth(lt, d, t) {
   // 3D ISOLATED DRILL DERRICK TOWER CUTOUT
   startCutout(42, 0.85, 12, 22);
 
-  // Structural Steel Lattice Truss Tower Legs
+  // Structural Steel Lattice Truss Tower Legs (Targeting Earth's Crust)
   ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 5;
-  line([[-90, -280], [-150, 240]], "#F59E0B", 6);
-  line([[90, -280], [150, 240]], "#F59E0B", 6);
+  line([[40, -280], [0, -40]], "#F59E0B", 6);
+  line([[180, -280], [220, -40]], "#F59E0B", 6);
 
   // Cross-bracing Girders
   ctx.strokeStyle = "#64748B"; ctx.lineWidth = 3.5;
-  for (let gy = -260; gy < 220; gy += 60) {
-    line([[-100, gy], [100, gy + 60]], "#94A3B8", 3.5);
-    line([[100, gy], [-100, gy + 60]], "#94A3B8", 3.5);
-    line([[-110, gy], [110, gy]], "#64748B", 4);
+  for (let gy = -260; gy < -50; gy += 50) {
+    line([[30, gy], [190, gy + 50]], "#94A3B8", 3.5);
+    line([[190, gy], [30, gy + 50]], "#94A3B8", 3.5);
   }
 
   // Heavy Crown Pulley Block at top
-  ctx.fillStyle = "#1E293B"; ctx.fillRect(-45, -310, 90, 35);
-  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 3; ctx.strokeRect(-45, -310, 90, 35);
+  ctx.fillStyle = "#1E293B"; ctx.fillRect(75, -310, 80, 35);
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 3; ctx.strokeRect(75, -310, 80, 35);
 
-  // High-tensile Steel Drill String Shaft plunging down
+  // High-tensile Steel Drill String Shaft plunging down directly into Earth's belly
   const spinOffset = (t * 90) % 35;
   ctx.fillStyle = "#E2E8F0";
-  ctx.fillRect(-22, -140, 44, 400);
+  ctx.fillRect(100, -140, 24, 380);
   ctx.strokeStyle = "#334155"; ctx.lineWidth = 3.5;
-  for (let sy = -130 + spinOffset; sy < 250; sy += 35) {
-    line([[-22, sy], [22, sy + 18]], "#F59E0B", 3.5);
+  for (let sy = -130 + spinOffset; sy < 230; sy += 35) {
+    line([[100, sy], [124, sy + 18]], "#F59E0B", 3.5);
   }
 
-  // Spinning Tungsten Rotary Drill Bit Head at Bottom
-  ctx.fillStyle = "#EF4444";
-  ctx.beginPath();
-  ctx.moveTo(-42, 250); ctx.lineTo(42, 250); ctx.lineTo(0, 320);
-  ctx.closePath(); ctx.fill();
+  // Laser Target Line Pointing into Earth's Core
+  line([[112, 240], [ex + 60, ey - 20]], "#EF4444", 4);
+  circle(ex + 60, ey - 20, 8, "#FFE600");
 
   endCutout();
 

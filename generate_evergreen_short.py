@@ -58,6 +58,18 @@ def configure_engine_for_topic(topic=None):
     os.makedirs(TEMP_DIR, exist_ok=True)
     os.makedirs(RENDERS_DIR, exist_ok=True)
     os.makedirs(REVIEW_DIR, exist_ok=True)
+
+    if topic and topic.get("lines"):
+        try:
+            from visual_director import audit_script_visual_director
+            report = audit_script_visual_director(topic)
+            print("  🎬 [Visual Director]: Auditing Mandatory Object Alignment per Line...", flush=True)
+            for item in report:
+                objs = ", ".join(item["required_objects"]) if item["required_objects"] else "Thematic Ambient Scene"
+                print(f"    Line {item['line_idx']}: '{item['text'][:32]}...' -> HERO: [{objs}]", flush=True)
+        except Exception as e:
+            print(f"  [Visual Director Notice]: {e}", flush=True)
+
     return ENGINE_DIR
 
 TOPICS_FILE = os.path.join(BASE_DIR, "curiosity_topics.json")
