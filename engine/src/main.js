@@ -32,22 +32,27 @@ function draw(t) {
     const [x, y, s] = sh.camAt(clamp(lt / Math.max(d, 0.001)), lt, d);
     cx = x + shakeX; cy = y + shakeY; scale = punch * s;
   }
-  ctx.save();
-  if (W > H) {
+  if (sh.isMedia) {
+    sh.draw(lt, d, t);
+  } else if (W > H) {
     // ── 16:9 NATIVE WIDESCREEN BROADCAST ADAPTER ──
     // Center portrait coordinates (540, 640) directly at widescreen center (960, 540)
     // Scale by 1.12x so hero illustration comfortably fills the 1080 height
+    ctx.save();
     ctx.translate(W / 2 + shakeX, H / 2 + shakeY);
     ctx.scale(scale * 1.12, scale * 1.12);
     ctx.translate(-540, -640);
+    sh.draw(lt, d, t);
+    ctx.restore();
   } else {
     // ── 9:16 VERTICAL SHORTS ADAPTER ──
+    ctx.save();
     ctx.translate(cx, cy);
     ctx.scale(scale, scale);
     ctx.translate(-cx, -cy);
+    sh.draw(lt, d, t);
+    ctx.restore();
   }
-  sh.draw(lt, d, t);
-  ctx.restore();
 
   // 2. Multi-Pass Cinematic Post-Processing (Bloom, Chromatic Aberration, Vignette & Grain)
   applyPostProcessing(t, style, lt);
@@ -69,7 +74,27 @@ function draw(t) {
     const script = await (await fetch('script.json', { cache: 'no-store' })).json();
     await loadTiming();
     buildCaptions(script);
-    const { shots, cues } = buildShots(script);
+
+    // Preload dynamic documentary media if present in engine/media/
+    const loadedMedia = {};
+    try {
+      const mRes = await fetch('media/manifest.json', { cache: 'no-store' });
+      if (mRes.ok) {
+        const manifest = await mRes.json();
+        await Promise.all(Object.entries(manifest).map(([k, info]) => {
+          return new Promise((resolve) => {
+            const img = new Image();
+            img.onload = () => { loadedMedia[k] = img; resolve(); };
+            img.onerror = () => { resolve(); };
+            img.src = info.file;
+          });
+        }));
+      }
+    } catch (me) {
+      console.log('Media manifest load notice:', me);
+    }
+
+    const { shots, cues } = buildShots(script, loadedMedia);
     shots.sort((a, b) => a.at - b.at);
     OP._shots = shots; OP.script = script;
     OP._style = detectFilmStyle(script);

@@ -3551,3 +3551,57 @@ export function drawKolaOutroCTA(lt, d, t) {
   drawAutoTechCard("SUBSCRIBE FOR DAILY VIRAL SCIENCE FACTS", 540, 1180, "#F59E0B", 26);
   filmAtmosphere(t, 700, "rgba(245, 158, 11, 0.25)");
 }
+
+// ── DYNAMIC DOCUMENTARY MEDIA COMPOSITOR ───────────────────────────────────────
+// Renders real high-definition documentary media with:
+// 1. Ken Burns continuous cinematic camera push (scale 1.0 -> 1.18 + slow drift)
+// 2. Cinematic 35mm dark vignette & grading
+// 3. Tech HUD Header + dynamic takeaway pill
+// 4. Subtle lens dust and atmosphere
+export function drawDynamicMediaShot(lt, d, t, img, lineIdx, lineText = '', topic = {}, subIdx = 0) {
+  if (!img || !img.complete || img.naturalWidth === 0) return;
+
+  const p = clamp(lt / Math.max(d, 0.001));
+
+  // Ken Burns: Beat-aware cinematic camera motion
+  const zoomFactor = subIdx === 1 ? 0.22 : 0.14;
+  const kbScale = 1.04 + p * zoomFactor + (subIdx > 0 ? 0.06 : 0);
+  const panX = Math.sin(t * 0.4 + lineIdx * 1.5 + subIdx) * 25;
+  const panY = Math.cos(t * 0.3 + lineIdx * 1.2 + subIdx) * 16;
+
+  ctx.save();
+  ctx.translate(W / 2 + panX, H / 2 + panY);
+  ctx.scale(kbScale, kbScale);
+
+  // Cover aspect fill: compute dimensions so image completely fills canvas WxH
+  const imgW = img.naturalWidth || img.width || 1920;
+  const imgH = img.naturalHeight || img.height || 1080;
+  const fillScale = Math.max(W / imgW, H / imgH);
+  const dw = imgW * fillScale;
+  const dh = imgH * fillScale;
+
+  ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh);
+  ctx.restore();
+
+  // Cinematic Documentary Dark Vignette & Edge Shadow
+  const vig = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.22, W / 2, H / 2, Math.max(W, H) * 0.72);
+  vig.addColorStop(0, 'rgba(0, 4, 12, 0.04)');
+  vig.addColorStop(0.55, 'rgba(2, 6, 18, 0.42)');
+  vig.addColorStop(1, 'rgba(1, 3, 10, 0.88)');
+  ctx.fillStyle = vig;
+  ctx.fillRect(0, 0, W, H);
+
+  // Top Tech HUD Header
+  const title = (topic.title || 'INSIDE OUT // DOCUMENTARY INVESTIGATION').split('#')[0].trim().toUpperCase();
+  const sub = `SECTION 0${lineIdx + 1} // CRITICAL DYNAMICS`;
+  hudHeader(title, sub, '#00F2FE');
+
+  // Dynamic takeaway tech card at bottom-center (above visualizer)
+  if (lineText) {
+    const cardY = H > 1200 ? 1520 : 900;
+    const cleanWord = lineText.split('।')[0].split(',')[0].slice(0, 36);
+    drawAutoTechCard(`⚡ ${cleanWord}`, W / 2, cardY, '#FFE600', 24);
+  }
+
+  filmAtmosphere(t);
+}

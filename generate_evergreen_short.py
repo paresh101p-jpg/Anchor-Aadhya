@@ -28,10 +28,10 @@ RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
 REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
 
 def clean_all_temp_assets():
-    """Wipes all previous video renders, cached audios, and old frames to guarantee 100% fresh assets on every run."""
+    """Wipes all previous video renders, cached audios, old frames, and media to guarantee 100% fresh assets on every run."""
     import shutil
     if os.path.exists(ENGINE_DIR):
-        for sub in ["renders", "review", "temp_audio", "data"]:
+        for sub in ["renders", "review", "temp_audio", "data", "media"]:
             p = os.path.join(ENGINE_DIR, sub)
             if os.path.exists(p):
                 try:
@@ -604,6 +604,13 @@ async def main():
 
     dur_long = await build_voice_and_timing(full_topic, is_short=False)
     build_audio_mix()
+
+    # Dynamic Documentary Media Fetcher (100% Free Openverse + Wikimedia)
+    try:
+        from dynamic_media_fetcher import fetch_media_for_topic
+        fetch_media_for_topic(full_topic)
+    except Exception as fe:
+        print(f"  -> [Dynamic Media Fetch Notice]: {fe}", flush=True)
 
     video_16_9 = render_native_2d_video(aspect="16:9")
 

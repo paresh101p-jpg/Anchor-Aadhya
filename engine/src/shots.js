@@ -337,7 +337,7 @@ function getSubShotScene(script, lineIdx, subIdx, numSubShots, text, primaryFn, 
   return cand !== primaryFn ? cand : pool[(offset + 1) % pool.length];
 }
 
-export function buildShots(script = {}) {
+export function buildShots(script = {}, loadedMedia = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
   const cue = (t, type, o = {}) => CUES.push({ t: +t.toFixed(3), type, ...o });
@@ -493,6 +493,8 @@ export function buildShots(script = {}) {
       const zooms = [0.05, 0.28, 0.18, 0.32];
 
       const beatSceneFn = getSubShotScene(script, i, subIdx, cutPoints.length, text, sceneFn, isLastLine);
+      const mediaKey = 'L' + String(i + 1).padStart(2, '0');
+      const mediaImg = (!isLastLine && loadedMedia && loadedMedia[mediaKey]) ? loadedMedia[mediaKey] : null;
 
       add({
         id: `L${String(i + 1).padStart(2, '0')}_S${subIdx + 1}`,
@@ -500,10 +502,13 @@ export function buildShots(script = {}) {
         cam: cams[subIdx % cams.length],
         zoom: zooms[subIdx % zooms.length],
         zoomFast: subIdx > 0,
+        isMedia: !!mediaImg,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
-        sceneName: beatSceneFn ? (beatSceneFn.name || 'custom_lambda') : 'none',
+        sceneName: mediaImg ? `dynamic_media_${mediaKey}` : (beatSceneFn ? (beatSceneFn.name || 'custom_lambda') : 'none'),
         draw(lt, d, t) {
-          if (typeof beatSceneFn === 'function') {
+          if (mediaImg) {
+            Cinema.drawDynamicMediaShot(lt, d, t, mediaImg, i, text, script, subIdx);
+          } else if (typeof beatSceneFn === 'function') {
             beatSceneFn(lt, d, t, subIdx);
           }
         },
