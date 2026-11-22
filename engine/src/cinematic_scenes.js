@@ -3,7 +3,7 @@
 // Earth, Mount Everest, Sun, Submarine, 1000 Elephants, Anglerfish, Plastic Bottle,
 // Chernobyl Reactor, Elephant's Foot, Geiger Counter, Nixie Countdown, Corium Lava.
 // All visuals placed safely above y=1200 to guarantee ZERO caption overlap.
-import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU, countUp, spring, easeOutExpo, drawFullCanvasBackground } from './core/lib.js';
+import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU, countUp, spring, easeOutExpo, drawFullCanvasBackground, startCutout, endCutout } from './core/lib.js';
 
 const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
@@ -2372,7 +2372,7 @@ export function drawGta6OutroCTA(lt, d, t) {
   filmAtmosphere(t, 640, "rgba(255, 0, 127, 0.25)");
 }
 
-// ── H. BERMUDA TRIANGLE FULL-CANVAS MOTION GRAPHICS SUITE (1080x1920 9:16) ────────
+// ── H. BERMUDA TRIANGLE 2.5D REALISTIC CUTOUT MOTION GRAPHICS SUITE (1080x1920 9:16) ──
 
 // ── H1. BERMUDA TRIANGLE HOLOGRAPHIC MAP ─────────────────────────────────────────
 export function drawBermudaTriangleMap(lt, d, t) {
@@ -2542,7 +2542,7 @@ export function drawMethaneBubblesEruption(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(34, 197, 94, 0.25)");
 }
 
-// ── H4. SHIP SINKING IN ABYSS (LOSS OF BUOYANCY) ──────────────────────────────────
+// ── H4. REALISTIC ISOLATED CUTOUT: CARGO SHIP SINKING IN ABYSS ────────────────────
 export function drawShipSinkingAbyss(lt, d, t) {
   drawFullCanvasBackground(t, 'bermuda');
   hudHeader("NAUTICAL CATASTROPHE // ZERO BUOYANCY", "पानी की डेंसिटी खत्म: सेकंडों में जहाज डूबा!", "#EF4444");
@@ -2554,30 +2554,79 @@ export function drawShipSinkingAbyss(lt, d, t) {
   ctx.scale(pop * 1.25, pop * 1.25);
 
   // Giant Oceanic Vortex / Sinking Funnel
-  ctx.fillStyle = "rgba(3, 105, 161, 0.35)";
+  ctx.fillStyle = "rgba(3, 105, 161, 0.45)";
   ctx.beginPath();
-  ctx.ellipse(0, 100, 360, 180, 0, 0, TAU);
+  ctx.ellipse(0, 110, 360, 180, 0, 0, TAU);
   ctx.fill();
-  ctx.strokeStyle = "rgba(56, 189, 248, 0.5)"; ctx.lineWidth = 4; ctx.stroke();
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.6)"; ctx.lineWidth = 4.5; ctx.stroke();
 
-  // Sinking Cargo Ship Hull Plunging Bow-First into Abyss
+  // 3D ISOLATED REALISTIC CARGO SHIP CUTOUT
+  startCutout(40, 0.85, 12, 22);
+
   ctx.save();
   ctx.translate(0, 40);
-  ctx.rotate(0.42 + Math.sin(t * 3) * 0.08);
+  ctx.rotate(0.44 + Math.sin(t * 3) * 0.08);
 
-  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#E2E8F0"; ctx.lineWidth = 5;
+  // Lower Hull (Crimson red anti-fouling paint)
+  ctx.fillStyle = "#991B1B";
   ctx.beginPath();
-  ctx.moveTo(-220, -35); ctx.lineTo(150, -35); ctx.lineTo(220, 50); ctx.lineTo(-170, 50);
-  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.moveTo(-240, 0); ctx.lineTo(160, 0); ctx.lineTo(240, 70); ctx.lineTo(-180, 70);
+  ctx.closePath(); ctx.fill();
 
-  // Bridge Cabin & Smokestack
-  ctx.fillStyle = "#DC2626"; ctx.fillRect(-75, -100, 110, 65);
-  ctx.fillStyle = "#0F172A"; ctx.fillRect(-25, -140, 30, 40);
+  // Upper Hull (Charcoal industrial steel with white sheer line)
+  ctx.fillStyle = "#1E293B";
+  ctx.beginPath();
+  ctx.moveTo(-240, -45); ctx.lineTo(160, -45); ctx.lineTo(160, 0); ctx.lineTo(-240, 0);
+  ctx.closePath(); ctx.fill();
+  line([[-240, 0], [160, 0]], "#F1F5F9", 3.5); // Waterline stripe
+
+  // Cargo Containers stacked on deck
+  const containerColors = ["#DC2626", "#2563EB", "#D97706", "#16A34A", "#4F46E5"];
+  for (let c = 0; c < 5; c++) {
+    const cxBox = -210 + c * 55;
+    ctx.fillStyle = containerColors[c % containerColors.length];
+    ctx.fillRect(cxBox, -95, 48, 50);
+    ctx.strokeStyle = "#0F172A"; ctx.lineWidth = 2;
+    ctx.strokeRect(cxBox, -95, 48, 50);
+  }
+
+  // Bridge Superstructure (White multi-tier cabin)
+  ctx.fillStyle = "#F8FAFC";
+  ctx.fillRect(75, -125, 80, 80);
+  ctx.strokeStyle = "#64748B"; ctx.lineWidth = 2; ctx.strokeRect(75, -125, 80, 80);
+
+  // Lit Bridge Windows
+  ctx.fillStyle = "#38BDF8";
+  for (let w = 0; w < 3; w++) ctx.fillRect(85 + w * 22, -115, 16, 12);
+
+  // Smokestack Exhaust Funnel
+  ctx.fillStyle = "#DC2626"; ctx.fillRect(115, -165, 26, 40);
+  ctx.fillStyle = "#0F172A"; ctx.fillRect(115, -175, 26, 10);
+
+  // Billowing Exhaust Smoke Plume
+  for (let sm = 0; sm < 4; sm++) {
+    const smY = -185 - sm * 22;
+    const smX = 125 - sm * 18 + Math.sin(t * 6 + sm) * 10;
+    circle(smX, smY, 14 + sm * 6, "rgba(226, 232, 240, 0.45)");
+  }
+
+  // Forward Mast & Rigging
+  line([[-200, -45], [-200, -120]], "#94A3B8", 4);
+  line([[-200, -120], [-170, -45]], "#94A3B8", 2);
+
+  // White Churning Bow Wake & Splash Foam
+  for (let wf = 0; wf < 6; wf++) {
+    const fx = 230 + wf * 14 + Math.sin(t * 8 + wf) * 8;
+    const fy = 65 + (wf % 2) * 10;
+    circle(fx, fy, 12, "rgba(255, 255, 255, 0.85)");
+  }
+
   ctx.restore();
+  endCutout();
 
   // Violent Hydrodynamic Suction Downward Vectors
   for (let s of [-200, -70, 70, 200]) {
-    const arrY = 140 + Math.sin(t * 8 + s) * 20;
+    const arrY = 150 + Math.sin(t * 8 + s) * 20;
     line([[s, arrY], [s, arrY + 90]], "#EF4444", 6);
     ctx.fillStyle = "#EF4444";
     ctx.beginPath(); ctx.moveTo(s, arrY + 110); ctx.lineTo(s - 14, arrY + 85); ctx.lineTo(s + 14, arrY + 85); ctx.fill();
@@ -2589,7 +2638,7 @@ export function drawShipSinkingAbyss(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.25)");
 }
 
-// ── H5. HEXAGONAL CLOUDS & 270 KM/H AIR BOMBS ────────────────────────────────────
+// ── H5. REALISTIC ISOLATED CUTOUT: VOLUMETRIC STORM CLOUD & LIGHTNING ────────────
 export function drawHexagonalCloudAirBombs(lt, d, t) {
   drawFullCanvasBackground(t, 'bermuda');
   hudHeader("METEOROLOGY // HEXAGONAL MICROBURSTS", "270 KM/H के तूफानी एयर-बॉम्ब्स!", "#38BDF8");
@@ -2600,22 +2649,52 @@ export function drawHexagonalCloudAirBombs(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Giant Geometric Hexagonal Storm Cloud Formation
-  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 8;
-  ctx.fillStyle = "rgba(14, 165, 233, 0.35)";
-  ctx.beginPath();
-  for (let i = 0; i < 6; i++) {
-    const a = (i * TAU) / 6 - Math.PI / 6;
-    const hx = Math.cos(a) * 260, hy = -80 + Math.sin(a) * 260;
-    if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
-  }
-  ctx.closePath(); ctx.fill(); ctx.stroke();
+  // REALISTIC VOLUMETRIC STORM CLOUD CUTOUT (Puffy, multi-lobe thundercloud)
+  startCutout(45, 0.85, 10, 25);
 
-  // Vertical Air-Bomb Shockwave Jetstreams Dropping Downward
+  const cloudPuffs = [
+    [-180, -100, 110], [-90, -150, 130], [50, -160, 140], [180, -110, 120],
+    [-240, -40, 95], [-120, -60, 120], [0, -70, 135], [140, -50, 115], [240, -30, 90],
+    [-60, -20, 110], [80, -10, 105],
+  ];
+
+  // Draw dark storm cloud base and body with volumetric radial lighting
+  cloudPuffs.forEach(([px, py, pr]) => {
+    const cGrad = ctx.createRadialGradient(px - pr * 0.25, py - pr * 0.35, 10, px, py, pr);
+    cGrad.addColorStop(0, "#475569");
+    cGrad.addColorStop(0.5, "#1E293B");
+    cGrad.addColorStop(1, "#090D16");
+    circle(px, py, pr, cGrad);
+    ctx.strokeStyle = "rgba(148, 163, 184, 0.35)"; ctx.lineWidth = 2.5;
+    ctx.beginPath(); ctx.arc(px, py, pr, 0, TAU); ctx.stroke();
+  });
+
+  endCutout();
+
+  // Branching Jagged Electric Lightning Bolts
+  if (Math.sin(t * 12) > 0.4) {
+    ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 4;
+    ctx.shadowColor = "#38BDF8"; ctx.shadowBlur = 25;
+    const lightningBranches = [
+      [[0, 40], [-40, 110], [10, 180], [-30, 260]],
+      [[100, 30], [70, 100], [120, 170], [90, 240]],
+      [[-120, 20], [-150, 90], [-100, 160], [-140, 230]],
+    ];
+    lightningBranches.forEach((branch) => {
+      ctx.beginPath();
+      branch.forEach(([lx, ly], li) => {
+        if (li === 0) ctx.moveTo(lx, ly); else ctx.lineTo(lx, ly);
+      });
+      ctx.stroke();
+    });
+    ctx.shadowBlur = 0;
+  }
+
+  // Vertical Air-Bomb Microburst Blast Streams Dropping Downward
   for (let i = -2; i <= 2; i++) {
     const ax = i * 90;
-    const dy = 20 + ((t * 260 + (i + 2) * 70) % 280);
-    line([[ax, -40], [ax, dy]], "#FACC15", 7);
+    const dy = 80 + ((t * 280 + (i + 2) * 70) % 240);
+    line([[ax, 40], [ax, dy]], "#FACC15", 7);
     ctx.fillStyle = "#FACC15";
     ctx.beginPath(); ctx.moveTo(ax, dy); ctx.lineTo(ax - 18, dy - 26); ctx.lineTo(ax + 18, dy - 26); ctx.fill();
   }
@@ -2623,9 +2702,9 @@ export function drawHexagonalCloudAirBombs(lt, d, t) {
   // Live Wind Velocity Gauge
   const speedVal = countUp(80, 270, clamp(lt / Math.max(0.1, d * 0.75)));
   ctx.font = F(42, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "center";
-  ctx.fillText(`${speedVal} KM/H`, 0, -80);
+  ctx.fillText(`${speedVal} KM/H`, 0, -100);
   ctx.font = F(18, "800"); ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("MICROBURST DOWNDRAFT", 0, -40);
+  ctx.fillText("MICROBURST DOWNDRAFT", 0, -60);
 
   ctx.restore();
 
@@ -2633,7 +2712,7 @@ export function drawHexagonalCloudAirBombs(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(56, 189, 248, 0.25)");
 }
 
-// ── H6. AIRPLANE SEVERE STORM DISASTER ───────────────────────────────────────────
+// ── H6. REALISTIC ISOLATED CUTOUT: COMMERCIAL AIRPLANE NOSE DIVE ──────────────────
 export function drawAirplaneStormDisaster(lt, d, t) {
   drawFullCanvasBackground(t, 'bermuda');
   hudHeader("AERODYNAMICS // AIR-BOMB DOWNBURST", "उड़ते विमान सीधे समुद्र में क्रैश!", "#EF4444");
@@ -2644,24 +2723,48 @@ export function drawAirplaneStormDisaster(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Lightning Flashes
+  // Storm Lightning Flash Ambient
   if (Math.sin(t * 14) > 0.85) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.28)"; ctx.fillRect(-380, -320, 760, 640);
   }
 
-  // Commercial Flight 19 Airplane Silhouette Pitching Down
+  // 3D ISOLATED AIRPLANE CUTOUT
+  startCutout(42, 0.85, 15, 22);
+
   ctx.save();
   ctx.rotate(0.55 + Math.sin(t * 4) * 0.08);
 
-  ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#64748B"; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.ellipse(0, 0, 190, 34, 0, 0, TAU); ctx.fill(); ctx.stroke();
-  // Wings
-  line([[0, -170], [25, 170]], "#CBD5E1", 24);
-  // Tail fin
-  line([[-160, 0], [-200, -80]], "#CBD5E1", 18);
-  ctx.restore();
+  // Fuselage (Silver aerodynamic commercial jet body)
+  const fuseGrad = ctx.createLinearGradient(0, -35, 0, 35);
+  fuseGrad.addColorStop(0, "#F8FAFC");
+  fuseGrad.addColorStop(0.5, "#E2E8F0");
+  fuseGrad.addColorStop(1, "#94A3B8");
+  ctx.fillStyle = fuseGrad;
+  ctx.beginPath(); ctx.ellipse(0, 0, 210, 36, 0, 0, TAU); ctx.fill();
+  ctx.strokeStyle = "#475569"; ctx.lineWidth = 4; ctx.stroke();
 
-  // Violent Wind Turbulence Vectors
+  // Cockpit Windshield Visor (Tinted blue reflective glass)
+  ctx.fillStyle = "#0284C7";
+  ctx.beginPath();
+  ctx.moveTo(140, -18); ctx.lineTo(185, -8); ctx.lineTo(170, 8); ctx.lineTo(135, 4);
+  ctx.closePath(); ctx.fill();
+
+  // Swept-back Wings with Jet Engines
+  ctx.fillStyle = "#CBD5E1";
+  line([[0, -180], [25, 180]], "#CBD5E1", 26);
+  line([[0, -180], [25, 180]], "#64748B", 4);
+
+  // Jet Turbofan Engines mounted under wings
+  ctx.fillStyle = "#1E293B"; ctx.fillRect(20, -100, 45, 24);
+  ctx.fillStyle = "#1E293B"; ctx.fillRect(45, 80, 45, 24);
+
+  // Vertical Tail Stabilizer
+  line([[-180, 0], [-225, -90]], "#CBD5E1", 22);
+
+  ctx.restore();
+  endCutout();
+
+  // Severe Wind Turbulence Streamlines
   for (let k = 0; k < 12; k++) {
     const wx = -280 + ((k * 63 + t * 280) % 560);
     const wy = -180 + ((k * 47) % 360);
@@ -2674,7 +2777,7 @@ export function drawAirplaneStormDisaster(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.25)");
 }
 
-// ── H7. MAGNETIC COMPASS ANOMALY (SPINNING NEEDLE) ───────────────────────────────
+// ── H7. REALISTIC ISOLATED CUTOUT: 3D BRASS MARITIME COMPASS ─────────────────────
 export function drawMagneticCompassChaos(lt, d, t) {
   drawFullCanvasBackground(t, 'bermuda');
   hudHeader("GEOMAGNETIC DISTORTION // COMPASS ERROR", "कंपास की सुई पूरी तरह पागल हो जाती है!", "#F59E0B");
@@ -2685,36 +2788,57 @@ export function drawMagneticCompassChaos(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Giant Brass Compass Housing
-  circle(0, 0, 260, "#291804");
-  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 16;
-  ctx.beginPath(); ctx.arc(0, 0, 260, 0, TAU); ctx.stroke();
+  // 3D ISOLATED BRASS COMPASS HOUSING
+  startCutout(45, 0.85, 12, 22);
 
-  // Inner Degree Marks
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.4)"; ctx.lineWidth = 3.5;
-  for (let a = 0; a < TAU; a += TAU / 12) {
-    line([[Math.cos(a) * 210, Math.sin(a) * 210], [Math.cos(a) * 240, Math.sin(a) * 240]], "#FFFFFF", 3.5);
+  // Heavy Antiqued Brass Binnacle Housing Ring
+  const brassGrad = ctx.createRadialGradient(0, 0, 180, 0, 0, 270);
+  brassGrad.addColorStop(0, "#291804");
+  brassGrad.addColorStop(0.7, "#D97706");
+  brassGrad.addColorStop(0.85, "#FDE68A");
+  brassGrad.addColorStop(1, "#78350F");
+  circle(0, 0, 270, brassGrad);
+
+  // Inner Parchment Compass Face Dial
+  circle(0, 0, 220, "#1E1610");
+  ctx.strokeStyle = "#FDE68A"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.arc(0, 0, 220, 0, TAU); ctx.stroke();
+
+  // 360 Degree Marks
+  ctx.strokeStyle = "rgba(253, 230, 138, 0.6)"; ctx.lineWidth = 3.5;
+  for (let a = 0; a < TAU; a += TAU / 16) {
+    line([[Math.cos(a) * 190, Math.sin(a) * 190], [Math.cos(a) * 215, Math.sin(a) * 215]], "#FDE68A", 3.5);
   }
 
   // Compass Cardinal Labels (N, E, S, W)
-  ctx.font = F(36, "900"); ctx.fillStyle = "#FF1744"; ctx.textAlign = "center";
-  ctx.fillText("N", 0, -170);
+  ctx.font = F(38, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "center";
+  ctx.fillText("N", 0, -160);
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("S", 0, 190);
-  ctx.fillText("E", 190, 12);
-  ctx.fillText("W", -190, 12);
+  ctx.fillText("S", 0, 180);
+  ctx.fillText("E", 175, 12);
+  ctx.fillText("W", -175, 12);
 
-  // Erratically Spinning Needle
+  // Erratically Spinning 3D Enamel Needle
   const spin = t * 14 + Math.sin(t * 8) * 4;
   ctx.save(); ctx.rotate(spin);
-  // Red North Needle
+  // Red North Needle with Beveled Shading
   ctx.fillStyle = "#EF4444";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, 0); ctx.lineTo(0, -180); ctx.lineTo(22, 0); ctx.closePath(); ctx.fill();
-  // Silver South Needle
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-24, 0); ctx.lineTo(0, -190); ctx.lineTo(24, 0); ctx.closePath(); ctx.fill();
+  ctx.fillStyle = "#B91C1C";
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, -190); ctx.lineTo(24, 0); ctx.closePath(); ctx.fill();
+
+  // Silver South Needle with Beveled Shading
+  ctx.fillStyle = "#E2E8F0";
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-24, 0); ctx.lineTo(0, 190); ctx.lineTo(24, 0); ctx.closePath(); ctx.fill();
   ctx.fillStyle = "#94A3B8";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, 0); ctx.lineTo(0, 180); ctx.lineTo(22, 0); ctx.closePath(); ctx.fill();
-  circle(0, 0, 18, "#F59E0B");
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(0, 190); ctx.lineTo(24, 0); ctx.closePath(); ctx.fill();
+
+  // Center Jeweled Pivot Cap
+  circle(0, 0, 22, "#F59E0B");
+  circle(0, 0, 10, "#EF4444");
   ctx.restore();
+
+  endCutout();
 
   ctx.restore();
 
@@ -2731,10 +2855,12 @@ export function drawBermudaOutroCTA(lt, d, t) {
   const ox = 540, oy = 700, s = 1.45;
   ctx.translate(ox, oy); ctx.scale(s, s);
 
-  // Red YouTube Button
+  // 3D Isolated YouTube Button Cutout
+  startCutout(35, 0.8, 10, 16);
   ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
   ctx.fillStyle = "#FFFFFF";
   ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+  endCutout();
 
   ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
   ctx.fillText("SUBSCRIBE", 0, 105);
@@ -2756,9 +2882,9 @@ export function drawBermudaOutroCTA(lt, d, t) {
   filmAtmosphere(t, 700, "rgba(0, 240, 255, 0.25)");
 }
 
-// ── I. KOLA SUPERDEEP BOREHOLE FULL-CANVAS MOTION GRAPHICS SUITE (1080x1920 9:16) ─
+// ── I. KOLA SUPERDEEP BOREHOLE 2.5D REALISTIC CUTOUT SUITE (1080x1920 9:16) ───────
 
-// ── I1. KOLA BOREHOLE DRILL DEPTH GAUGE (12,262 METERS) ───────────────────────────
+// ── I1. REALISTIC ISOLATED CUTOUT: ARCTIC DRILL DERRICK TOWER & 12,262M GAUGE ─────
 export function drawKolaBoreholeDrillDepth(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("DEEPEST MAN-MADE HOLE // 12,262M", "पृथ्वी के पेट में 12,262 मीटर गहरा गड्ढा!", "#F59E0B");
@@ -2769,43 +2895,58 @@ export function drawKolaBoreholeDrillDepth(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Background Depth Ruler & Ticks
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.3)"; ctx.lineWidth = 2.5;
+  // Background Depth Ruler & Calibration Ticks
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.35)"; ctx.lineWidth = 2.5;
   line([[-280, -280], [-280, 260]], "rgba(245, 158, 11, 0.45)", 2.5);
   for (let dy = -280; dy <= 260; dy += 45) {
-    const tickLen = dy % 90 === 0 ? 36 : 20;
+    const tickLen = dy % 90 === 0 ? 38 : 20;
     line([[-280, dy], [-280 + tickLen, dy]], "rgba(245, 158, 11, 0.7)", 2.5);
   }
 
-  // Heavy Industrial Drill Derrick Tower
-  ctx.fillStyle = "#1E293B";
-  ctx.beginPath();
-  ctx.moveTo(-80, -280); ctx.lineTo(80, -280); ctx.lineTo(140, -140); ctx.lineTo(-140, -140);
-  ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 4.5; ctx.stroke();
+  // 3D ISOLATED DRILL DERRICK TOWER CUTOUT
+  startCutout(42, 0.85, 12, 22);
 
-  // Spinning Drill Pipe Shaft plunging downward
-  const spinOffset = (t * 90) % 35;
-  ctx.fillStyle = "#94A3B8";
-  ctx.fillRect(-20, -140, 40, 400);
-  ctx.strokeStyle = "#475569"; ctx.lineWidth = 3.5;
-  for (let sy = -130 + spinOffset; sy < 250; sy += 35) {
-    line([[-20, sy], [20, sy + 18]], "#F59E0B", 3.5);
+  // Structural Steel Lattice Truss Tower Legs
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 5;
+  line([[-90, -280], [-150, 240]], "#F59E0B", 6);
+  line([[90, -280], [150, 240]], "#F59E0B", 6);
+
+  // Cross-bracing Girders
+  ctx.strokeStyle = "#64748B"; ctx.lineWidth = 3.5;
+  for (let gy = -260; gy < 220; gy += 60) {
+    line([[-100, gy], [100, gy + 60]], "#94A3B8", 3.5);
+    line([[100, gy], [-100, gy + 60]], "#94A3B8", 3.5);
+    line([[-110, gy], [110, gy]], "#64748B", 4);
   }
 
-  // Spinning Drill Teeth Head
+  // Heavy Crown Pulley Block at top
+  ctx.fillStyle = "#1E293B"; ctx.fillRect(-45, -310, 90, 35);
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 3; ctx.strokeRect(-45, -310, 90, 35);
+
+  // High-tensile Steel Drill String Shaft plunging down
+  const spinOffset = (t * 90) % 35;
+  ctx.fillStyle = "#E2E8F0";
+  ctx.fillRect(-22, -140, 44, 400);
+  ctx.strokeStyle = "#334155"; ctx.lineWidth = 3.5;
+  for (let sy = -130 + spinOffset; sy < 250; sy += 35) {
+    line([[-22, sy], [22, sy + 18]], "#F59E0B", 3.5);
+  }
+
+  // Spinning Tungsten Rotary Drill Bit Head at Bottom
   ctx.fillStyle = "#EF4444";
   ctx.beginPath();
-  ctx.moveTo(-38, 250); ctx.lineTo(38, 250); ctx.lineTo(0, 310);
+  ctx.moveTo(-42, 250); ctx.lineTo(42, 250); ctx.lineTo(0, 320);
   ctx.closePath(); ctx.fill();
+
+  endCutout();
 
   // Dynamic Animated Depth Counter
   const countP = clamp(lt / Math.max(0.1, d * 0.85));
   const depthVal = countUp(0, 12262, countP);
-  ctx.font = F(52, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
-  ctx.fillText(`${depthVal} M`, 150, 20);
+  ctx.font = F(54, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
+  ctx.fillText(`${depthVal} M`, 180, 20);
   ctx.font = F(22, "800"); ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("DRILL DEPTH (SG-3)", 150, 70);
+  ctx.fillText("DRILL DEPTH (SG-3)", 180, 70);
 
   ctx.restore();
 
@@ -2813,7 +2954,7 @@ export function drawKolaBoreholeDrillDepth(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(245, 158, 11, 0.25)");
 }
 
-// ── I2. EARTH CRUST PENETRATION CROSS-SECTION ──────────────────────────────────────
+// ── I2. REALISTIC ISOLATED CUTOUT: EARTH CRUST 3D GEOLOGICAL BLOCK ────────────────
 export function drawKolaCrustCrossSection(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("EARTH CRUST PENETRATION // 20 YEARS", "20 साल तक लगातार धरती की परत को चीरा!", "#38BDF8");
@@ -2824,32 +2965,36 @@ export function drawKolaCrustCrossSection(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Geological Strata Bands
+  // 3D ISOLATED GEOLOGICAL CRUST BLOCK CUTOUT
+  startCutout(45, 0.85, 12, 25);
+
   const layers = [
-    { y: -260, h: 120, fill: "#334155", label: "SEDIMENTARY CRUST // 0-4 KM" },
-    { y: -140, h: 160, fill: "#1E293B", label: "GRANITIC BASEMENT // 4-9 KM" },
-    { y: 20,   h: 180, fill: "#0F172A", label: "FRACTURED BASALT // 9-12 KM" },
-    { y: 200,  h: 90,  fill: "#7F1D1D", label: "MANTLE TRANSITION (MOHO)" },
+    { y: -260, h: 120, fill: "#334155", stroke: "#64748B", label: "SEDIMENTARY CRUST // 0-4 KM" },
+    { y: -140, h: 160, fill: "#1E293B", stroke: "#475569", label: "GRANITIC BASEMENT // 4-9 KM" },
+    { y: 20,   h: 180, fill: "#0F172A", stroke: "#334155", label: "FRACTURED BASALT // 9-12 KM" },
+    { y: 200,  h: 90,  fill: "#7F1D1D", stroke: "#EF4444", label: "MANTLE TRANSITION (MOHO)" },
   ];
   layers.forEach((l) => {
     ctx.fillStyle = l.fill;
     ctx.fillRect(-340, l.y, 680, l.h);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.lineWidth = 2.5;
+    ctx.strokeStyle = l.stroke; ctx.lineWidth = 3;
     ctx.strokeRect(-340, l.y, 680, l.h);
 
-    ctx.font = F(18, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.75)"; ctx.textAlign = "left";
-    ctx.fillText(l.label, -320, l.y + 30);
+    ctx.font = F(18, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.85)"; ctx.textAlign = "left";
+    ctx.fillText(l.label, -320, l.y + 32);
   });
 
-  // Glowing Drill Shaft Penetrating Downward
+  // Glowing Drill Shaft Piercing Through Earth Strata
   const shaftProg = clamp(lt / Math.max(0.1, d * 0.75));
   const shaftEnd = lerp(-260, 180, shaftProg);
-  line([[0, -260], [0, shaftEnd]], "#38BDF8", 7);
-  circle(0, shaftEnd, 12, "#FFE600");
+  line([[0, -260], [0, shaftEnd]], "#38BDF8", 8);
+  circle(0, shaftEnd, 14, "#FFE600");
+
+  endCutout();
 
   // Year Timeline Counter: 1970 to 1990
   const yearVal = countUp(1970, 1990, shaftProg);
-  ctx.font = F(40, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "right";
+  ctx.font = F(42, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "right";
   ctx.fillText(`YEAR: ${yearVal}`, 320, -200);
 
   ctx.restore();
@@ -2858,7 +3003,7 @@ export function drawKolaCrustCrossSection(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(56, 189, 248, 0.25)");
 }
 
-// ── I3. THERMAL INFERNO 180°C (GEOTHERMAL GRADIENT) ───────────────────────────────
+// ── I3. REALISTIC ISOLATED CUTOUT: 3D CYLINDRICAL THERMOMETER & 180°C INFERNO ────
 export function drawKolaThermalInferno180C(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("GEOTHERMAL GRADIENT // 180°C INFERNO", "12 KM नीचे 180°C का खौलता तापमान!", "#EF4444");
@@ -2869,34 +3014,44 @@ export function drawKolaThermalInferno180C(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Massive Cylindrical Thermometer Housing
-  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.roundRect(-80, -260, 160, 520, 45); ctx.fill(); ctx.stroke();
+  // 3D ISOLATED THERMOMETER CUTOUT
+  startCutout(45, 0.85, 12, 22);
 
-  // Glass Tube Inside
+  // Heavy Brass/Steel Cylindrical Outer Frame
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-85, -260, 170, 520, 48); ctx.fill(); ctx.stroke();
+
+  // Transparent Pyrex Glass Tube Body
   ctx.fillStyle = "#0F172A";
-  ctx.beginPath(); ctx.roundRect(-30, -230, 60, 420, 24); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-32, -230, 64, 420, 26); ctx.fill();
 
-  // Rising Glowing Molten Red Mercury
+  // Glass Glare Specular Highlight Line
+  line([[-24, -220], [-24, 170]], "rgba(255, 255, 255, 0.4)", 4);
+
+  // Rising Incandescent Molten Red Mercury
   const heatProg = clamp(lt / Math.max(0.1, d * 0.8));
   const mercuryH = lerp(50, 400, heatProg);
   const mercGrad = ctx.createLinearGradient(0, 190, 0, 190 - mercuryH);
   mercGrad.addColorStop(0, "#EF4444");
-  mercGrad.addColorStop(1, "#FBBF24");
+  mercGrad.addColorStop(0.7, "#F97316");
+  mercGrad.addColorStop(1, "#FEF08A");
   ctx.fillStyle = mercGrad;
-  ctx.beginPath(); ctx.roundRect(-25, 190 - mercuryH, 50, mercuryH, 16); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-26, 190 - mercuryH, 52, mercuryH, 18); ctx.fill();
 
-  // Mercury Bulb at Bottom
-  circle(0, 200, 52, "#EF4444");
+  // Spherical Mercury Bulb at Base
+  circle(0, 200, 56, "#EF4444");
+  circle(0, 200, 46, "#F97316");
+
+  endCutout();
 
   // Dynamic Animated Temperature Counter
   const tempVal = countUp(20, 180, heatProg);
-  ctx.font = F(64, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
-  ctx.fillText(`${tempVal}°C`, 210, -20);
+  ctx.font = F(66, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
+  ctx.fillText(`${tempVal}°C`, 220, -20);
   ctx.font = F(24, "800"); ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("CORE HEAT", 210, 35);
+  ctx.fillText("CORE HEAT", 220, 35);
 
-  // Heat Waves radiating outward
+  // Radiating Heat Distortion Waves
   for (let k = 0; k < 6; k++) {
     const wy = -220 + k * 70;
     const waveOff = Math.sin(t * 8 + k) * 18;
@@ -2913,7 +3068,7 @@ export function drawKolaThermalInferno180C(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.28)");
 }
 
-// ── I4. METALLURGICAL MELTING DRILL BIT ───────────────────────────────────────────
+// ── I4. REALISTIC ISOLATED CUTOUT: MOLTEN TUNGSTEN CARBIDE DRILL BIT ───────────────
 export function drawKolaMeltingSteelDrill(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("METALLURGICAL FAILURE // MELTING BITS", "स्टील के ड्रिल मोम की तरह पिघलने लगे!", "#F97316");
@@ -2924,38 +3079,47 @@ export function drawKolaMeltingSteelDrill(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Tungsten Steel Drill Head
+  // 3D ISOLATED MELTING DRILL BIT CUTOUT
+  startCutout(45, 0.85, 14, 25);
+
   ctx.save();
   ctx.translate(0, -40);
 
-  // Drill Cone Body
-  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 5;
+  // Upper Industrial Steel Shank Body with Thread Joint
+  const shankGrad = ctx.createLinearGradient(-120, 0, 120, 0);
+  shankGrad.addColorStop(0, "#1E293B");
+  shankGrad.addColorStop(0.5, "#475569");
+  shankGrad.addColorStop(1, "#0F172A");
+  ctx.fillStyle = shankGrad;
   ctx.beginPath();
-  ctx.moveTo(-120, -200); ctx.lineTo(120, -200); ctx.lineTo(75, 50); ctx.lineTo(-75, 50);
-  ctx.closePath(); ctx.fill(); ctx.stroke();
+  ctx.moveTo(-125, -200); ctx.lineTo(125, -200); ctx.lineTo(80, 50); ctx.lineTo(-80, 50);
+  ctx.closePath(); ctx.fill();
+  ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 5; ctx.stroke();
 
-  // Glowing Molten Orange Teeth (Softening Point Exceeded)
-  const glow = 0.8 + 0.2 * Math.sin(t * 10);
+  // Conical Roller Cutters with Incandescent Molten Glow (Softening Point Exceeded)
+  const glow = 0.85 + 0.15 * Math.sin(t * 10);
   ctx.fillStyle = `rgba(249, 115, 22, ${glow})`;
   ctx.beginPath();
-  ctx.moveTo(-85, 50); ctx.lineTo(-50, 190); ctx.lineTo(0, 90); ctx.lineTo(50, 190); ctx.lineTo(85, 50);
+  ctx.moveTo(-90, 50); ctx.lineTo(-55, 195); ctx.lineTo(0, 95); ctx.lineTo(55, 195); ctx.lineTo(90, 50);
   ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = "#FEF08A"; ctx.lineWidth = 3.5; ctx.stroke();
+  ctx.strokeStyle = "#FEF08A"; ctx.lineWidth = 4; ctx.stroke();
 
-  // Dripping Molten Droplets
+  // Dripping Molten Steel Droplets
   for (let i = -1; i <= 1; i++) {
-    const dropY = 190 + ((t * 180 + (i + 1) * 90) % 160);
-    circle(i * 42, dropY, 9, "#F97316");
+    const dropY = 195 + ((t * 180 + (i + 1) * 90) % 160);
+    circle(i * 44, dropY, 10, "#F97316");
+    circle(i * 44, dropY, 5, "#FEF08A");
   }
 
   ctx.restore();
+  endCutout();
 
-  // Extreme Friction Sparks
-  for (let s = 0; s < 16; s++) {
+  // Extreme Friction Sparks Flying
+  for (let s = 0; s < 18; s++) {
     const sa = (s * 31 + t * 45) % TAU;
-    const sr = 140 + ((s * 47 + t * 200) % 160);
+    const sr = 145 + ((s * 47 + t * 200) % 160);
     const sx = Math.cos(sa) * sr, sy = 120 + Math.sin(sa) * 45;
-    circle(sx, sy, 4.5, "#FEF08A");
+    circle(sx, sy, 5, "#FEF08A");
   }
 
   ctx.restore();
@@ -2964,7 +3128,7 @@ export function drawKolaMeltingSteelDrill(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(249, 115, 22, 0.28)");
 }
 
-// ── I5. HYDROTHERMAL TRAPPED BOILING WATER ─────────────────────────────────────────
+// ── I5. REALISTIC ISOLATED CUTOUT: FRACTURED GRANITE ROCK & BOILING STEAM ────────
 export function drawKolaBoilingWaterTrapped(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("HYDROTHERMAL ANOMALY // TRAPPED WATER", "चट्टानों में कैद मिला खौलता हुआ पानी!", "#06B6D4");
@@ -2975,16 +3139,24 @@ export function drawKolaBoilingWaterTrapped(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Dense Porous Rock Matrix
-  ctx.fillStyle = "#0F172A"; ctx.strokeStyle = "#334155"; ctx.lineWidth = 5;
-  ctx.beginPath(); ctx.roundRect(-340, -250, 680, 500, 28); ctx.fill(); ctx.stroke();
+  // 3D ISOLATED FRACTURED GRANITE SPECIMEN CUTOUT
+  startCutout(45, 0.85, 12, 22);
 
-  // Jagged Micro-Fractures in Rock with Glowing Boiling Water
-  ctx.strokeStyle = "#06B6D4"; ctx.lineWidth = 9;
+  // Crystalline Granite Mineral Block
+  const rockGrad = ctx.createLinearGradient(-340, -250, 340, 250);
+  rockGrad.addColorStop(0, "#1E293B");
+  rockGrad.addColorStop(0.5, "#0F172A");
+  rockGrad.addColorStop(1, "#020617");
+  ctx.fillStyle = rockGrad;
+  ctx.beginPath(); ctx.roundRect(-340, -250, 680, 500, 28); ctx.fill();
+  ctx.strokeStyle = "#475569"; ctx.lineWidth = 5; ctx.stroke();
+
+  // Quartz Mineral Veins & Pressurized Fracture Fissures
+  ctx.strokeStyle = "#06B6D4"; ctx.lineWidth = 10;
   const fracturePaths = [
-    [[-240, -160], [-120, -90], [-50, -150], [90, -100], [220, -170]],
-    [[-220, 50], [-100, 0], [50, 70], [140, 15], [260, 60]],
-    [[-170, 160], [-40, 130], [70, 180], [220, 140]],
+    [[-250, -170], [-130, -90], [-50, -150], [90, -100], [240, -170]],
+    [[-230, 50], [-100, 0], [50, 70], [150, 15], [270, 60]],
+    [[-180, 165], [-40, 130], [80, 185], [230, 140]],
   ];
   fracturePaths.forEach((pts) => {
     ctx.beginPath();
@@ -2994,12 +3166,14 @@ export function drawKolaBoilingWaterTrapped(lt, d, t) {
     ctx.stroke();
   });
 
-  // Boiling Steam & Gas Micro-Bubbles escaping from fractures
-  for (let k = 0; k < 26; k++) {
-    const bx = -260 + ((k * 43 + t * 55) % 520);
-    const by = 210 - ((k * 39 + t * 160) % 420);
-    const br = 7 + (k % 4) * 5;
-    circle(bx, by, br, "rgba(6, 182, 212, 0.7)");
+  endCutout();
+
+  // Boiling Steam Jets & Pressurized Water Bubbles
+  for (let k = 0; k < 28; k++) {
+    const bx = -270 + ((k * 43 + t * 60) % 540);
+    const by = 220 - ((k * 41 + t * 180) % 440);
+    const br = 8 + (k % 4) * 6;
+    circle(bx, by, br, "rgba(6, 182, 212, 0.75)");
     ctx.strokeStyle = "#A5F3FC"; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.arc(bx, by, br, 0, TAU); ctx.stroke();
   }
@@ -3010,7 +3184,7 @@ export function drawKolaBoilingWaterTrapped(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(6, 182, 212, 0.25)");
 }
 
-// ── I6. 2 BILLION YEAR OLD MICROFOSSILS IN ABYSS ──────────────────────────────────
+// ── I6. REALISTIC ISOLATED CUTOUT: MICROSCOPIC ACRITARCH MICROFOSSIL ──────────────
 export function drawKolaAncientMicrofossils(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("DEEP BIOSPHERE // 2 BILLION YEARS OLD", "पाताल में मिले 2 अरब साल पुराने जीवाश्म!", "#A855F7");
@@ -3021,39 +3195,45 @@ export function drawKolaAncientMicrofossils(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Microscope HUD Reticle Circle
-  circle(0, 0, 260, "#1E112A");
-  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 7;
-  ctx.beginPath(); ctx.arc(0, 0, 260, 0, TAU); ctx.stroke();
+  // 3D ISOLATED DARK-FIELD MICROSCOPE RETICLE CUTOUT
+  startCutout(45, 0.85, 12, 22);
 
-  // Circular Measurement Grids
-  ctx.strokeStyle = "rgba(168, 85, 247, 0.3)"; ctx.lineWidth = 2.5;
-  circle(0, 0, 170, "rgba(0,0,0,0)"); ctx.stroke();
-  circle(0, 0, 85, "rgba(0,0,0,0)"); ctx.stroke();
-  line([[-260, 0], [260, 0]], "rgba(168, 85, 247, 0.35)", 2.5);
-  line([[0, -260], [0, 260]], "rgba(168, 85, 247, 0.35)", 2.5);
+  // Microscope Objective Barrel Ring
+  circle(0, 0, 270, "#1E112A");
+  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.arc(0, 0, 270, 0, TAU); ctx.stroke();
 
-  // Microscopic Planktonic Fossil Cells (Acritarchs) with organic pulse
+  // Grid Calibration Scale Reticle
+  ctx.strokeStyle = "rgba(168, 85, 247, 0.35)"; ctx.lineWidth = 2.5;
+  circle(0, 0, 180, "rgba(0,0,0,0)"); ctx.stroke();
+  circle(0, 0, 90, "rgba(0,0,0,0)"); ctx.stroke();
+  line([[-270, 0], [270, 0]], "rgba(168, 85, 247, 0.35)", 2.5);
+  line([[0, -270], [0, 270]], "rgba(168, 85, 247, 0.35)", 2.5);
+
+  // 2 Billion Year Old Planktonic Microfossils (Acritarchs) with Pulsing Organelles
   const pulse = 1 + 0.10 * Math.sin(t * 6);
   const fossilCenters = [
-    [-50, -40, 60],
-    [95, 60, 44],
-    [-110, 95, 35],
-    [75, -110, 38],
+    [-55, -45, 65],
+    [105, 65, 48],
+    [-120, 100, 38],
+    [80, -115, 42],
   ];
   fossilCenters.forEach(([fx, fy, fr]) => {
     ctx.save();
     ctx.translate(fx, fy); ctx.scale(pulse, pulse);
-    circle(0, 0, fr, "rgba(168, 85, 247, 0.45)");
+    circle(0, 0, fr, "rgba(168, 85, 247, 0.5)");
     ctx.strokeStyle = "#E879F9"; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.stroke();
 
+    // Spiky Organic Appendages
     for (let sp = 0; sp < 8; sp++) {
       const sa = (sp * TAU) / 8;
-      line([[Math.cos(sa) * fr, Math.sin(sa) * fr], [Math.cos(sa) * (fr + 18), Math.sin(sa) * (fr + 18)]], "#E879F9", 3.5);
+      line([[Math.cos(sa) * fr, Math.sin(sa) * fr], [Math.cos(sa) * (fr + 20), Math.sin(sa) * (fr + 20)]], "#E879F9", 4);
     }
     ctx.restore();
   });
+
+  endCutout();
 
   ctx.restore();
 
@@ -3061,7 +3241,7 @@ export function drawKolaAncientMicrofossils(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(168, 85, 247, 0.25)");
 }
 
-// ── I7. SEALED STEEL DOOR CAP (12 HEAVY BOLTS) ────────────────────────────────────
+// ── I7. REALISTIC ISOLATED CUTOUT: WELDED SG-3 STEEL CAP WITH 12 HEX BOLTS ─────────
 export function drawKolaSealedSteelDoorCap(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("ABANDONED BOREHOLE // 12 STEEL BOLTS", "पाताल का दरवाजा 12 भारी बोल्ट्स से सील!", "#94A3B8");
@@ -3072,30 +3252,39 @@ export function drawKolaSealedSteelDoorCap(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Heavy Industrial Steel Welded Cover Cap
-  circle(0, 0, 250, "#1E293B");
+  // 3D ISOLATED REALISTIC SEALED STEEL CAP CUTOUT
+  startCutout(48, 0.85, 14, 24);
+
+  // Heavy Cast-Iron Welded Cap with Metallic Bevel Rim
+  const capGrad = ctx.createRadialGradient(0, 0, 120, 0, 0, 260);
+  capGrad.addColorStop(0, "#1E293B");
+  capGrad.addColorStop(0.7, "#334155");
+  capGrad.addColorStop(1, "#0F172A");
+  circle(0, 0, 260, capGrad);
   ctx.strokeStyle = "#64748B"; ctx.lineWidth = 14;
-  ctx.beginPath(); ctx.arc(0, 0, 250, 0, TAU); ctx.stroke();
+  ctx.beginPath(); ctx.arc(0, 0, 260, 0, TAU); ctx.stroke();
 
-  // Rust & Weathering Texture Rings
+  // Weathering Texture Ring
   ctx.strokeStyle = "#475569"; ctx.lineWidth = 6;
-  circle(0, 0, 190, "rgba(0,0,0,0)"); ctx.stroke();
+  circle(0, 0, 195, "rgba(0,0,0,0)"); ctx.stroke();
 
-  // 12 Heavy Industrial Hexagonal Steel Bolts
+  // 12 Industrial Heavy Steel Hexagonal Bolts with 3D Facet Shading
   for (let b = 0; b < 12; b++) {
     const ba = (b * TAU) / 12;
-    const bx = Math.cos(ba) * 215, by = Math.sin(ba) * 215;
-    circle(bx, by, 18, "#F1F5F9");
-    ctx.strokeStyle = "#0F172A"; ctx.lineWidth = 3.5;
-    ctx.beginPath(); ctx.arc(bx, by, 18, 0, TAU); ctx.stroke();
-    circle(bx, by, 7, "#64748B");
+    const bx = Math.cos(ba) * 222, by = Math.sin(ba) * 222;
+    circle(bx, by, 20, "#F1F5F9");
+    ctx.strokeStyle = "#0F172A"; ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.arc(bx, by, 20, 0, TAU); ctx.stroke();
+    circle(bx, by, 8, "#64748B");
   }
 
-  // Welded Stencil Text on Cap
-  ctx.font = F(38, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "center";
+  // Welded Red Industrial Stencil Lettering
+  ctx.font = F(40, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "center";
   ctx.fillText("SG-3 // 12,262M", 0, -30);
   ctx.font = F(28, "900"); ctx.fillStyle = "#FFE600";
   ctx.fillText("WELDED & SEALED", 0, 30);
+
+  endCutout();
 
   ctx.restore();
 
@@ -3103,7 +3292,7 @@ export function drawKolaSealedSteelDoorCap(lt, d, t) {
   filmAtmosphere(t, 680, "rgba(148, 163, 184, 0.25)");
 }
 
-// ── I8. KOLA OUTRO CTA ────────────────────────────────────────────────────────────
+// ── I8. REALISTIC ISOLATED CUTOUT: KOLA OUTRO CTA ─────────────────────────────────
 export function drawKolaOutroCTA(lt, d, t) {
   drawFullCanvasBackground(t, 'kola');
   hudHeader("ANCHOR AADHYA OFFICIAL // EARTH CORE", "कमेंट में बताएं और सब्सक्राइब करें!", "#F59E0B");
@@ -3112,10 +3301,12 @@ export function drawKolaOutroCTA(lt, d, t) {
   const ox = 540, oy = 700, s = 1.45;
   ctx.translate(ox, oy); ctx.scale(s, s);
 
-  // Red YouTube Button
+  // 3D YouTube Button Cutout
+  startCutout(35, 0.8, 10, 16);
   ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
   ctx.fillStyle = "#FFFFFF";
   ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+  endCutout();
 
   ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
   ctx.fillText("SUBSCRIBE", 0, 105);

@@ -55,6 +55,17 @@ export function line(pts, color, w) {
   ctx.strokeStyle = color; ctx.lineWidth = w; ctx.lineCap = 'round'; ctx.lineJoin = 'round'; ctx.stroke();
 }
 export function fillAll(color) { ctx.fillStyle = color; ctx.fillRect(-300, -300, W + 600, H + 600); }
+/** 3D Cutout Sticker Effect: Adds realistic drop shadow to isolated objects */
+export function startCutout(blur = 35, alpha = 0.75, offX = 10, offY = 18) {
+  ctx.save();
+  ctx.shadowColor = `rgba(0, 0, 0, ${alpha})`;
+  ctx.shadowBlur = blur;
+  ctx.shadowOffsetX = offX;
+  ctx.shadowOffsetY = offY;
+}
+export function endCutout() {
+  ctx.restore();
+}
 /** outlined bold text (the caption look), centred at x, y */
 export function bigText(text, x, y, size, fill = C.white, rot = 0, sc = 1) {
   ctx.save(); ctx.translate(x, y); ctx.rotate(rot); ctx.scale(sc, sc);
