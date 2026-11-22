@@ -462,6 +462,468 @@ def render_native_2d_video(aspect="9:16"):
         try: os.remove(out_mp4)
         except Exception: pass
     
+    # Use Chrome canvas rendering (reliable on GitHub Actions)
+    env = os.environ.copy()
+    env["FPS"] = "25"
+    env["ASPECT"] = aspect
+    print(f"\n[Rendering Native 2D {aspect} MP4: {filename}] via Headless Chromium canvas...", flush=True)
+    subprocess.run(["node", "tools/capture.mjs", "video", f"renders/{filename}"], cwd=ENGINE_DIR, env=env, check=True)
+    print(f"  --> Native {aspect} 2D MP4 Rendered Successfully: {out_mp4} ({os.path.getsize(out_mp4)/(1024*1024):.2f} MB)", flush=True)
+    return out_mp4
+
+import os
+import sys
+import json
+import asyncio
+import traceback
+import subprocess
+from datetime import datetime
+
+def git_push_clean_state(message="chore: cleanup after upload [skip ci]"):
+    """
+    Upload ke baad repo ko GitHub par clean state mein push kare:
+    - tracker.json aur koi bhi badlaav stage kare
+    - commit kare
+    - origin par push kare
+    Agar git up-to-date hai ya koi error aaye toh silent fail karega (pipeline nahi rokega).
+    """
+    try:
+        subprocess.run(["git", "add", "-A"], cwd=BASE_DIR, check=True, capture_output=True)
+        res = subprocess.run(["git", "commit", "-m", message], cwd=BASE_DIR, capture_output=True, text=True)
+        if "nothing to commit" in (res.stdout + res.stderr):
+            print("  📦 [GitHub]: Nothing new to commit, repo already clean.", flush=True)
+        else:
+            print(f"  📦 [GitHub]: Committed: {res.stdout.strip() or res.stderr.strip()}", flush=True)
+        push_res = subprocess.run(["git", "push", "origin", "HEAD"], cwd=BASE_DIR, capture_output=True, text=True, timeout=60)
+        if push_res.returncode == 0:
+            print("  🚀 [GitHub]: Pushed to origin successfully.", flush=True)
+        else:
+            print(f"  ⚠️ [GitHub]: Push note: {(push_res.stdout + push_res.stderr).strip()[:200]}", flush=True)
+    except Exception as e:
+        print(f"  ⚠️ [GitHub]: Sync skipped ({e})", flush=True)
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8")
+
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+ENGINE_DIR = os.path.join(BASE_DIR, "engine")
+DATA_DIR = os.path.join(ENGINE_DIR, "data")
+TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
+RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
+REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
+
+def clean_all_temp_assets():
+    """Wipes all previous video renders, cached audios, old frames, and media to guarantee 100% fresh assets on every run."""
+    import shutil
+    if os.path.exists(ENGINE_DIR):
+        for sub in ["renders", "review", "temp_audio", "data", "media"]:
+            p = os.path.join(ENGINE_DIR, sub)
+            if os.path.exists(p):
+                try:
+                    shutil.rmtree(p)
+                except Exception:
+                    pass
+                os.makedirs(p, exist_ok=True)
+    print("🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!", flush=True)
+
+def clean_temp_audio_assets():
+    """Wipes temp audio and timing files between Stage 1 and Stage 2, keeping rendered mp4 intact."""
+    for sub in ["temp_audio", "data"]:
+        p = os.path.join(ENGINE_DIR, sub)
+        if os.path.exists(p):
+            for f in os.listdir(p):
+                try:
+                    os.remove(os.path.join(p, f))
+                except Exception:
+                    pass
+    print("🧹 [Audio Clean]: Audio cache reset for Stage 2 Reel generation.", flush=True)
+
+def configure_engine_for_topic(topic=None):
+    """
+    Configures 2D Rick's Clips / Inside-Out Cutaway Engine (100% 2D).
+    """
+    global ENGINE_DIR, DATA_DIR, TEMP_DIR, RENDERS_DIR, REVIEW_DIR
+    ENGINE_DIR = os.path.join(BASE_DIR, "engine")
+    print("  🎨 [Visual Engine Selected]: 2D Rick's Clips / Inside-Out Cutaway Engine (engine)", flush=True)
+
+    DATA_DIR = os.path.join(ENGINE_DIR, "data")
+    TEMP_DIR = os.path.join(ENGINE_DIR, "temp_audio")
+    RENDERS_DIR = os.path.join(ENGINE_DIR, "renders")
+    REVIEW_DIR = os.path.join(ENGINE_DIR, "review")
+
+    os.makedirs(DATA_DIR, exist_ok=True)
+    os.makedirs(TEMP_DIR, exist_ok=True)
+    os.makedirs(RENDERS_DIR, exist_ok=True)
+    os.makedirs(REVIEW_DIR, exist_ok=True)
+
+    if topic and topic.get("lines"):
+        try:
+            from visual_director import audit_script_visual_director
+            report = audit_script_visual_director(topic)
+            print("  🎬 [Visual Director]: Auditing Mandatory Object Alignment per Line...", flush=True)
+            for item in report:
+                objs = ", ".join(item["required_objects"]) if item["required_objects"] else "Thematic Ambient Scene"
+                print(f"    Line {item['line_idx']}: '{item['text'][:32]}...' -> HERO: [{objs}]", flush=True)
+        except Exception as e:
+            print(f"  [Visual Director Notice]: {e}", flush=True)
+
+    return ENGINE_DIR
+
+TOPICS_FILE = os.path.join(BASE_DIR, "curiosity_topics.json")
+TRACKER_FILE = os.path.join(BASE_DIR, "used_topics_tracker.json")
+
+# Cartesia Sonic Primary #1 (Real Native Hindi Female Voice - Aadhya)
+CARTESIA_API_KEY = os.environ.get("CARTESIA_API_KEY", "")
+CARTESIA_VOICE_ID = os.environ.get("CARTESIA_VOICE_ID", "f91ab3e6-5071-4e15-b016-cde6f2bcd222")  # Aadhya (Indian Female Real Voice)
+FALLBACK_VOICE = "hi-IN-SwaraNeural"
+VOICE_NAME = "Cartesia-Aadhya (Sonic)"
+
+os.makedirs(DATA_DIR, exist_ok=True)
+os.makedirs(TEMP_DIR, exist_ok=True)
+os.makedirs(RENDERS_DIR, exist_ok=True)
+os.makedirs(REVIEW_DIR, exist_ok=True)
+
+def load_topics():
+    with open(TOPICS_FILE, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+def load_tracker():
+    if os.path.exists(TRACKER_FILE):
+        try:
+            with open(TRACKER_FILE, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception:
+            return []
+    return []
+
+def save_tracker(tracker):
+    with open(TRACKER_FILE, "w", encoding="utf-8") as f:
+        json.dump(tracker, f, indent=2, ensure_ascii=False)
+
+def select_next_topic():
+    """Always return a genuinely unseen topic. Never recycle an old reel's topic."""
+    # 1) Live/audited fresh-topic researcher (Gemini -> deduped emergency pool).
+    try:
+        from dynamic_topic_researcher import research_fresh_rare_topic
+        fresh = research_fresh_rare_topic()
+        if fresh and fresh.get("lines"):
+            print(f"  🆕 [Fresh Topic] {fresh.get('id')} | {fresh.get('title')}", flush=True)
+            return fresh
+    except Exception as e:
+        print(f"  [Notice] Fresh topic researcher unavailable: {e}", flush=True)
+
+    # 2) Only if the researcher fails, use an unused curated topic.
+    topics = load_topics()
+    used_ids = set()
+    for item in load_tracker():
+        used_ids.add(item if isinstance(item, str) else item.get("id", ""))
+    available = [t for t in topics if t["id"] not in used_ids]
+    if not available:
+        raise RuntimeError("No unused topic available. Refusing to repeat an old reel topic.")
+    print(f"  🆕 [Fresh Topic - curated fallback] {available[0]['id']}", flush=True)
+    return available[0]
+
+def get_audio_duration(file_path):
+    cmd = ["ffprobe", "-v", "error", "-show_entries", "format=duration", "-of", "default=noprint_wrappers=1:nokey=1", file_path]
+    res = subprocess.run(cmd, capture_output=True, text=True, check=True)
+    return float(res.stdout.strip())
+
+async def generate_line_audio(text, outfile):
+    synthesized = False
+    if CARTESIA_API_KEY:
+        try:
+            import urllib.request, json
+            url = "https://api.cartesia.ai/tts/bytes"
+            payload = {
+                "model_id": "sonic-latest",
+                "transcript": text,
+                "voice": {"mode": "id", "id": CARTESIA_VOICE_ID},
+                "output_format": {"container": "mp3", "encoding": "mp3", "sample_rate": 44100},
+                "language": "hi"
+            }
+            req = urllib.request.Request(
+                url,
+                data=json.dumps(payload).encode("utf-8"),
+                headers={
+                    "X-API-Key": CARTESIA_API_KEY,
+                    "Cartesia-Version": "2024-06-10",
+                    "Content-Type": "application/json"
+                }
+            )
+            with urllib.request.urlopen(req, timeout=15) as resp:
+                with open(outfile, "wb") as f_out:
+                    f_out.write(resp.read())
+            synthesized = True
+            print(f"    [Cartesia Sonic Female #1 Primary (Aadhya)]: '{text[:30]}...'")
+        except Exception as ce:
+            print(f"    ⚠️ Cartesia voice fallback note: {ce}")
+
+    if not synthesized:
+        import edge_tts
+        # Energetic, witty, masti-bhara anchor delivery fallback: +8% rate, +4Hz pitch
+        comm = edge_tts.Communicate(text, FALLBACK_VOICE, rate="+8%", pitch="+4Hz")
+        await comm.save(outfile)
+        print(f"    [Edge-TTS Swara Backup]: '{text[:30]}...'")
+
+async def build_voice_and_timing(topic, is_short=False):
+    import numpy as np
+    from scipy.io import wavfile
+    import glob
+    
+    # Clean previous temp audio files to prevent cross-line bleed
+    for old_f in glob.glob(os.path.join(TEMP_DIR, "*.*")):
+        try: os.remove(old_f)
+        except Exception: pass
+
+    stage_tag = "Short Reel (9:16)" if is_short else "Full Video (16:9)"
+    print(f"\n[Voice Synthesis - {stage_tag}] ({VOICE_NAME}) for: {topic['title']}", flush=True)
+    lead = 0.45
+    outro = 0.90
+    lines_meta = []
+    all_words = []
+    line_files = []
+    
+    current_time = lead
+    for i, line_item in enumerate(topic["lines"]):
+        text = line_item["text"]
+        mp3_p = os.path.join(TEMP_DIR, f"line_{i:02d}.mp3")
+        wav_p = os.path.join(TEMP_DIR, f"line_{i:02d}.wav")
+        
+        print(f"  -> Line {i+1}/{len(topic['lines'])}: '{text[:30]}...'", flush=True)
+        await generate_line_audio(text, mp3_p)
+        subprocess.run(["ffmpeg", "-y", "-v", "error", "-i", mp3_p, "-ar", "48000", "-ac", "1", wav_p], check=True)
+        dur = get_audio_duration(wav_p)
+        
+        start_t = round(current_time, 3)
+        end_t = round(current_time + dur, 3)
+        lines_meta.append({
+            "i": i,
+            "text": text,
+            "start": start_t,
+            "end": end_t
+        })
+        
+        raw_words = text.replace(",", "").replace(".", "").replace("?", "").replace("!", "").split()
+        if raw_words:
+            total_chars = sum(len(w) for w in raw_words)
+            w_cur = start_t
+            for w in raw_words:
+                w_dur = (len(w) / max(1, total_chars)) * dur
+                all_words.append({
+                    "w": w,
+                    "line": i,
+                    "s": round(w_cur, 3),
+                    "e": round(w_cur + w_dur, 3)
+                })
+                w_cur += w_dur
+                
+        line_files.append((wav_p, dur))
+        current_time = end_t + 0.30
+        
+    total_dur = round(current_time + outro, 3)
+    print(f"  -> Assembling master narration.wav ({total_dur:.2f}s)...", flush=True)
+    
+    sr = 48000
+    master_samples = np.zeros(int(total_dur * sr), dtype=np.float32)
+    for i, (wav_p, dur) in enumerate(line_files):
+        _, data = wavfile.read(wav_p)
+        if data.dtype == np.int16:
+            data = data.astype(np.float32) / 32768.0
+        st_sample = int(lines_meta[i]["start"] * sr)
+        end_sample = min(len(master_samples), st_sample + len(data))
+        master_samples[st_sample:end_sample] = data[:end_sample - st_sample]
+        
+    narration_out = os.path.join(DATA_DIR, "narration.wav")
+    wavfile.write(narration_out, sr, (master_samples * 32767).astype(np.int16))
+    
+    script_obj = {
+        "id": topic["id"],
+        "title": topic["title"],
+        "voice": VOICE_NAME,
+        "speed": 1.0,
+        "lead": lead,
+        "outro": outro,
+        "music": topic.get("music", "bed"),
+        "is_short": is_short,
+        "lines": topic["lines"]
+    }
+    with open(os.path.join(ENGINE_DIR, "script.json"), "w", encoding="utf-8") as f:
+        json.dump(script_obj, f, ensure_ascii=False, indent=2)
+        
+    with open(os.path.join(DATA_DIR, "lines.json"), "w", encoding="utf-8") as f:
+        json.dump({"duration": total_dur, "voice": VOICE_NAME, "speed": 1.0, "lines": lines_meta}, f, ensure_ascii=False, indent=2)
+        
+    with open(os.path.join(DATA_DIR, "words.json"), "w", encoding="utf-8") as f:
+        json.dump(all_words, f, ensure_ascii=False, indent=2)
+        
+    print(f"  --> Voice & Timing Complete ({stage_tag}): {total_dur:.2f}s across {len(lines_meta)} cuts.", flush=True)
+    return total_dur
+
+def build_audio_mix():
+    print("\n[2/5] Building Procedural Sound Effects & Music Mix...", flush=True)
+    print("  -> Running node tools/capture.mjs cues...", flush=True)
+    subprocess.run(["node", "tools/capture.mjs", "cues"], cwd=ENGINE_DIR, check=True)
+    print("  -> Running python tools/mix.py...", flush=True)
+    subprocess.run([sys.executable, "tools/mix.py", "."], cwd=ENGINE_DIR, check=True)
+    print("  --> mix.wav ready!", flush=True)
+
+def generate_visual_prompt_for_line(text, topic_title=""):
+    """
+    Generates a 2D illustration visual prompt from the spoken line text.
+    Uses Gemini if available, else falls back to keyword-based mapping.
+    """
+    # Try Gemini first (with retry on 503)
+    api_key = os.environ.get("GEMINI_API_KEY")
+    if api_key:
+        for attempt in range(2):
+            try:
+                import urllib.request, json, time
+                prompt = f"""Given this Hindi narration line from a YouTube video about "{topic_title}":
+"{text}"
+
+Generate a single concise English visual description (max 30 words) for a 2D flat illustration that matches this line. The illustration should be educational, clean, colorful, and directly related to what is being spoken. Do NOT include any text in the image. Respond with ONLY the visual description, nothing else."""
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+                payload = {"contents": [{"parts": [{"text": prompt}]}]}
+                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    desc = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if desc and len(desc) > 10:
+                        return desc
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(2)
+                else:
+                    print(f"    [Gemini prompt note: {str(e)[:80]}]", flush=True)
+
+    # Keyword-based fallback
+    text_lower = text.lower()
+    keyword_map = [
+        (["दिमाग", "brain", "न्यूरो", "सोच"], "human brain cross-section with glowing neural pathways and synapses"),
+        (["दिल", "heart", "खून", "धड़कन"], "anatomical human heart with blood vessels and pulse waves"),
+        (["पृथ्वी", "earth", "ग्रह", "धरती"], "planet Earth from space with blue oceans and green continents"),
+        (["समुद्र", "ocean", "पानी", "गहराई"], "deep ocean abyss with bioluminescent creatures and pressure gradients"),
+        (["कार", "car", "दरवाज़ा", "खिड़की"], "sinking car underwater with pressure arrows and escape route"),
+        (["बिजली", "lightning", "करंट", "electric"], "electric lightning bolt striking with glowing energy arcs"),
+        (["एटीएम", "atm", "नोट", "पैसे"], "ATM machine internal mechanism with cash rollers and sensors"),
+        (["नाच", "dance", "नृत्य"], "medieval European town square with people dancing in a circle"),
+        (["सुपरमार्केट", "supermarket", "दुकान", "store"], "supermarket interior with colorful aisles and shopping carts"),
+        (["दांत", "tooth", "दांत"], "human tooth cross-section showing decay and bacteria"),
+        (["प्लास्टिक", "plastic", "कचरा"], "ocean floor covered in plastic waste with marine life"),
+        (["ब्लैक होल", "black hole", "सिंगुलैरिटी"], "black hole with accretion disk and gravitational lensing"),
+        (["चेरनोबिल", "chernobyl", "रेडिएशन", "परमाणु"], "nuclear reactor core with glowing radiation and warning signs"),
+        (["ड्रिल", "drill", "गड्ढा", "बोरहोल"], "deep drilling rig penetrating through earth crust layers"),
+        (["हवाई जहाज", "airplane", "विमान", "फ्लाइट"], "commercial airplane flying through storm clouds with lightning"),
+        (["जहाज", "ship", "नाव", "बोट"], "cargo ship sinking in rough ocean waves"),
+        (["टैटू", "tattoo", "इंक"], "tattoo needle injecting ink into skin with immune cells"),
+        (["छींक", "sneeze"], "person sneezing with visible air particles and pressure waves"),
+        (["चुइंगम", "gum", "खाना"], "human digestive system showing gum traveling through intestines"),
+        (["बादल", "cloud", "तूफान", "storm"], "dark storm clouds with lightning bolts and rain"),
+        (["पहाड़", "mountain", "एवरेस्ट"], "Mount Everest peak with snow and clouds"),
+        (["खाई", "trench", "गहराई"], "deep ocean trench cross-section with depth markers"),
+        (["जीव", "creature", "प्राणी"], "bioluminescent deep sea creature with glowing features"),
+    ]
+    for keywords, desc in keyword_map:
+        if any(kw in text_lower for kw in keywords):
+            return f"2D flat illustration, {desc}, clean educational diagram style, vibrant colors, white background"
+    return f"2D flat illustration, educational science concept related to: {text[:40]}, clean diagram style, vibrant colors, white background"
+
+def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
+    """
+    Generates a 2D illustration image using Pollinations AI.
+    Falls back to a solid color canvas if API fails.
+    """
+    import random, urllib.request, urllib.parse
+    if seed is None:
+        seed = random.randint(100000, 999999999)
+    style_prefix = "2D flat vector illustration, clean educational diagram, vibrant colors, white background, no text: "
+    styled_prompt = style_prefix + prompt
+    api_key = os.environ.get("GEMINI_API_KEY")
+    
+    # Tier 1: Gemini Imagen via google-genai SDK (if available)
+    if api_key:
+        try:
+            from google import genai
+            from google.genai import types
+            client = genai.Client(api_key=api_key)
+            response = client.models.generate_images(
+                model="imagen-3.0-fast-generate-001",
+                prompt=styled_prompt,
+                config=types.GenerateImagesConfig(
+                    number_of_images=1,
+                    output_mime_type="image/jpeg",
+                    aspect_ratio="16:9" if width > height else "9:16",
+                )
+            )
+            if response.generated_images:
+                img_bytes = response.generated_images[0].image.image_bytes
+                if len(img_bytes) > 5000:
+                    with open(output_jpg, "wb") as f:
+                        f.write(img_bytes)
+                    print(f"  ✓ Image generated via Gemini Imagen SDK ({len(img_bytes)//1024} KB)", flush=True)
+                    return True
+        except Exception as e:
+            print(f"  --> [Imagen SDK note: {str(e)[:100]}], trying Pollinations...", flush=True)
+    
+    # Tier 2: Gemini 2.0 Flash native image generation (REST)
+    if api_key:
+        try:
+            import base64
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={api_key}"
+            payload = {
+                "contents": [{"parts": [{"text": f"Generate a 2D flat vector illustration: {styled_prompt}"}]}],
+                "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}
+            }
+            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                candidates = data.get("candidates", [])
+                for cand in candidates:
+                    for part in cand.get("content", {}).get("parts", []):
+                        if "inlineData" in part and part["inlineData"].get("data"):
+                            img_bytes = base64.b64decode(part["inlineData"]["data"])
+                            if len(img_bytes) > 5000:
+                                with open(output_jpg, "wb") as f:
+                                    f.write(img_bytes)
+                                print(f"  ✓ Image generated via Gemini 2.0 Flash ({len(img_bytes)//1024} KB)", flush=True)
+                                return True
+        except Exception as e:
+            print(f"  --> [Gemini 2.0 note: {str(e)[:100]}], trying Pollinations...", flush=True)
+    
+    # Tier 2: Pollinations AI
+    try:
+        import urllib.parse
+        encoded = urllib.parse.quote(styled_prompt)
+        url = f"https://image.pollinations.ai/prompt/{encoded}?model=turbo&seed={seed}&width={width}&height={height}&nologo=true"
+        req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
+        with urllib.request.urlopen(req, timeout=45) as resp:
+            content = resp.read()
+            if len(content) > 5000:
+                with open(output_jpg, "wb") as f:
+                    f.write(content)
+                print(f"  ✓ Image generated via Pollinations ({len(content)//1024} KB)", flush=True)
+                return True
+    except Exception as e:
+        print(f"  --> [Pollinations note: {str(e)[:100]}], using canvas fallback", flush=True)
+    # Fallback: solid color canvas with text
+    try:
+        from PIL import Image, ImageDraw
+        img = Image.new("RGB", (width, height), color=(240, 245, 250))
+        draw = ImageDraw.Draw(img)
+        draw.text((50, height//2), prompt[:80], fill=(50, 50, 80))
+        img.save(output_jpg, quality=95)
+        print("  ✓ Fallback canvas image created", flush=True)
+        return True
+    except Exception:
+        return False
+
+def render_native_2d_video(aspect="9:16"):
+    filename = "aadhya_short_9_16.mp4" if aspect == "9:16" else "aadhya_video_16_9.mp4"
+    out_mp4 = os.path.join(RENDERS_DIR, filename)
+    if os.path.exists(out_mp4):
+        try: os.remove(out_mp4)
+        except Exception: pass
+    
     # Check if we have AI-generated images (image-based rendering)
     img_dir = os.path.join(RENDERS_DIR, "line_images")
     has_images = os.path.exists(img_dir) and len([f for f in os.listdir(img_dir) if f.endswith(".jpg")]) > 0
@@ -838,39 +1300,6 @@ async def main():
     except Exception as ame:
         print(f"  [Audio mix note: {ame}]", flush=True)
 
-    # Generate AI 2D illustration images per line (topic-matching visuals)
-    print("\n[Generating AI 2D Illustration Images per line...]", flush=True)
-    img_dir = os.path.join(RENDERS_DIR, "line_images")
-    os.makedirs(img_dir, exist_ok=True)
-    # Clean old images
-    for old in os.listdir(img_dir):
-        try: os.remove(os.path.join(img_dir, old))
-        except Exception: pass
-    title_clean = full_topic.get("title", "").split("#")[0].strip()
-    lines_meta_for_img = []
-    try:
-        with open(os.path.join(DATA_DIR, "lines.json"), "r", encoding="utf-8") as f:
-            lines_meta_for_img = json.load(f).get("lines", [])
-    except Exception:
-        lines_meta_for_img = [{"text": l.get("text", "")} for l in full_topic.get("lines", [])]
-    ai_success_count = 0
-    for i, lm in enumerate(lines_meta_for_img):
-        text = lm.get("text", "")
-        prompt = generate_visual_prompt_for_line(text, title_clean)
-        img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
-        print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
-        if generate_line_image(prompt, img_path, seed=42+i, width=1920, height=1080):
-            sz = os.path.getsize(img_path) if os.path.exists(img_path) else 0
-            if sz > 30000:
-                ai_success_count += 1
-    print(f"  ✅ {len(lines_meta_for_img)} images generated ({ai_success_count} via AI)", flush=True)
-    if ai_success_count < len(lines_meta_for_img) // 2:
-        print("  ⚠️ AI image generation mostly failed, falling back to Chrome canvas rendering", flush=True)
-        import shutil
-        try: shutil.rmtree(img_dir)
-        except Exception: pass
-        os.makedirs(img_dir, exist_ok=True)
-
     video_16_9 = render_native_2d_video(aspect="16:9")
 
     # High-CTR 16:9 Master Thumbnail
@@ -925,38 +1354,6 @@ async def main():
         build_audio_mix()
     except Exception as ame:
         print(f"  [Audio mix note: {ame}]", flush=True)
-
-    # Generate AI 2D illustration images per line (topic-matching visuals)
-    print("\n[Generating AI 2D Illustration Images per line (Short)...]", flush=True)
-    img_dir = os.path.join(RENDERS_DIR, "line_images")
-    os.makedirs(img_dir, exist_ok=True)
-    for old in os.listdir(img_dir):
-        try: os.remove(os.path.join(img_dir, old))
-        except Exception: pass
-    title_clean = short_topic.get("title", "").split("#")[0].strip()
-    lines_meta_for_img = []
-    try:
-        with open(os.path.join(DATA_DIR, "lines.json"), "r", encoding="utf-8") as f:
-            lines_meta_for_img = json.load(f).get("lines", [])
-    except Exception:
-        lines_meta_for_img = [{"text": l.get("text", "")} for l in short_topic.get("lines", [])]
-    ai_success_count = 0
-    for i, lm in enumerate(lines_meta_for_img):
-        text = lm.get("text", "")
-        prompt = generate_visual_prompt_for_line(text, title_clean)
-        img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
-        print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
-        if generate_line_image(prompt, img_path, seed=100+i, width=1080, height=1920):
-            sz = os.path.getsize(img_path) if os.path.exists(img_path) else 0
-            if sz > 30000:
-                ai_success_count += 1
-    print(f"  ✅ {len(lines_meta_for_img)} images generated ({ai_success_count} via AI)", flush=True)
-    if ai_success_count < len(lines_meta_for_img) // 2:
-        print("  ⚠️ AI image generation mostly failed, falling back to Chrome canvas rendering", flush=True)
-        import shutil
-        try: shutil.rmtree(img_dir)
-        except Exception: pass
-        os.makedirs(img_dir, exist_ok=True)
 
     short_mp4 = render_native_2d_video(aspect="9:16")
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
