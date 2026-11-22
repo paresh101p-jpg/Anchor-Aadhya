@@ -84,7 +84,7 @@ jobs:
         if: always()
         run: |
           echo "🧹 Cleaning up all temporary video renders, audio files, and cache..."
-          rm -rf engine/renders/* engine/temp_audio/* engine/review/* metadata_short.json
+          rm -rf engine/renders/* engine/temp_audio/* engine/review/* metadata_short.json metadata_16_9.json
           git config user.name "Anchor Aadhya Bot"
           git config user.email "bot@anchoraadhya.com"
           git add used_topics_tracker.json uploaded_bulletins_tracker.txt
