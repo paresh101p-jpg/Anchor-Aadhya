@@ -1502,6 +1502,735 @@ export function drawCarEscapeCTA(lt, d, t) {
   drawUniversalOutroCTA(lt, d, t);
 }
 
+// ── E8. CAR FUSE BOX & 12V BATTERY SHORT-CIRCUIT ─────────────────────────────────
+export function drawCarFuseBoxShort(lt, d, t) {
+  ctx.fillStyle = "#0A0502"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ELECTRICAL FAILURE // CENTRAL LOCK", "पानी में 12V बैटरी और फ्यूज बॉक्स शॉर्ट!", "#FF6B00");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // 12V Car Battery Body
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#FF6B00"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-180, -120, 360, 240, 18); ctx.fill(); ctx.stroke();
+
+  // Battery Terminal Posts (+ and -)
+  ctx.fillStyle = "#EF4444"; ctx.fillRect(-130, -160, 50, 40);
+  ctx.fillStyle = "#38BDF8"; ctx.fillRect(80, -160, 50, 40);
+  ctx.font = F(32, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("+", -105, -135); ctx.fillText("-", 105, -135);
+
+  // Center Gauge & Short-Circuit Voltmeter
+  circle(0, 0, 70, "#0F172A");
+  ctx.strokeStyle = "#FF6B00"; ctx.lineWidth = 4; ctx.stroke();
+  const volt = Math.max(0, 12 - (lt / d) * 12);
+  ctx.font = F(36, "900"); ctx.fillStyle = "#FF6B00";
+  ctx.fillText(`${volt.toFixed(1)}V`, 0, 8);
+  ctx.font = F(18, "800"); ctx.fillStyle = "#94A3B8";
+  ctx.fillText("POWER FAILING", 0, 36);
+
+  // Animated Electric Sparks emitting from terminals
+  PixelFX.drawSparks(t * 1.5, -105, -160, 24, "#FFE600");
+  PixelFX.drawSparks(t * 1.5, 105, -160, 18, "#38BDF8");
+
+  // Rising short-circuit smoke particles
+  for (let s = 0; s < 12; s++) {
+    const smY = -140 - ((t * 80 + s * 30) % 180);
+    const smX = Math.sin(t * 3 + s) * 45;
+    circle(smX, smY, 8 + (s % 6), "rgba(148, 163, 184, 0.25)");
+  }
+
+  drawAutoTechCard("CENTRAL LOCK SYSTEM DEAD", 0, 185, "#FF6B00", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(255, 107, 0, 0.2)");
+}
+
+// ── E9. HYDROSTATIC PRESSURE DEPTH FORMULA ───────────────────────────────────────
+export function drawHydrostaticFormula(lt, d, t) {
+  ctx.fillStyle = "#010814"; ctx.fillRect(0, 0, W, H);
+  hudHeader("HYDROSTATIC LAW // P = ρgh", "पानी की गहराई के साथ दबाव का भयानक नियम!", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Deep Water Column Column Graphic
+  const colW = 280, colH = 420;
+  const waterGrad = ctx.createLinearGradient(0, -colH / 2, 0, colH / 2);
+  waterGrad.addColorStop(0, "rgba(2, 132, 199, 0.3)");
+  waterGrad.addColorStop(1, "rgba(3, 105, 161, 0.95)");
+  ctx.fillStyle = waterGrad;
+  ctx.fillRect(-colW / 2, -colH / 2, colW, colH);
+  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 5;
+  ctx.strokeRect(-colW / 2, -colH / 2, colW, colH);
+
+  // Depth markers (1m, 2m, 3m, 4m)
+  ctx.font = F(20, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "left";
+  for (let m = 1; m <= 4; m++) {
+    const my = -colH / 2 + m * (colH / 5);
+    line([[-colW / 2, my], [-colW / 2 + 25, my]], "#38BDF8", 3);
+    ctx.fillText(`${m} METER DEPTH`, -colW / 2 + 35, my + 6);
+  }
+
+  // Glowing Formula Card in Center
+  ctx.fillStyle = "rgba(15, 23, 42, 0.9)"; ctx.strokeStyle = "#00F2FE"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-210, -50, 420, 100, 16); ctx.fill(); ctx.stroke();
+  ctx.font = F(48, "900"); ctx.fillStyle = "#00F2FE"; ctx.textAlign = "center";
+  ctx.fillText("P = ρ · g · h", 0, 12);
+
+  // Downward Heavy Force Vectors
+  for (let f = -120; f <= 120; f += 60) {
+    const arrY = colH / 2 - 40;
+    line([[f, arrY - 60], [f, arrY]], "#EF4444", 6);
+    ctx.fillStyle = "#EF4444";
+    ctx.beginPath(); ctx.moveTo(f, arrY); ctx.lineTo(f - 12, arrY - 18); ctx.lineTo(f + 12, arrY - 18); ctx.fill();
+  }
+
+  drawAutoTechCard("PRESSURE INCREASES EVERY SECOND", 0, 245, "#00F2FE", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(0, 242, 254, 0.2)");
+}
+
+// ── E10. DUAL-PAN BALANCE SCALE (800 KG BULL VS CAR DOOR) ─────────────────────────
+export function drawCarWeightBalanceScale(lt, d, t) {
+  ctx.fillStyle = "#080602"; ctx.fillRect(0, 0, W, H);
+  hudHeader("PHYSICAL FORCE COMPARISON // 800 KG", "दरवाज़ा धकेलना एक सांड को धकेलने जैसा!", "#F59E0B");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Central Fulcrum Tower
+  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.moveTo(0, -120); ctx.lineTo(-40, 120); ctx.lineTo(40, 120);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+  circle(0, -120, 20, "#F59E0B");
+
+  // Tilting Scale Beam (Heavily weighted on left 800kg side)
+  const tilt = -0.16 + Math.sin(t * 2) * 0.02;
+  ctx.save();
+  ctx.translate(0, -120);
+  ctx.rotate(tilt);
+  line([[-240, 0], [240, 0]], "#F8FAFC", 10);
+
+  // Left Pan: 800 KG Bull Weight (Heavy)
+  ctx.fillStyle = "#EF4444"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-290, 80, 140, 90, 12); ctx.fill(); ctx.stroke();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("800 KG", -220, 120);
+  ctx.font = F(16, "800"); ctx.fillText("HEAVY BULL", -220, 148);
+  line([[-220, 0], [-220, 80]], "#CBD5E1", 3);
+
+  // Right Pan: Human Strength (Weak ~40 KG)
+  ctx.fillStyle = "#10B981"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(150, 40, 140, 90, 12); ctx.fill(); ctx.stroke();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("40 KG", 220, 80);
+  ctx.font = F(16, "800"); ctx.fillText("HUMAN PUSH", 220, 108);
+  line([[220, 0], [220, 40]], "#CBD5E1", 3);
+
+  ctx.restore();
+
+  drawAutoTechCard("IMPOSSIBLE TO PUSH OUTWARD", 0, 215, "#EF4444", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(245, 158, 11, 0.2)");
+}
+
+// ── E11. DRIVER PANIC VITALS (ECG & OXYGEN DROP) ──────────────────────────────────
+export function drawDriverPanicVitals(lt, d, t) {
+  ctx.fillStyle = "#0A0204"; ctx.fillRect(0, 0, W, H);
+  hudHeader("PHYSIOLOGICAL CRISIS // PANIC STATE", "घबराहट में ऑक्सीजन तेजी से खत्म होती है!", "#EF4444");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Heart Rate Monitor Box
+  ctx.fillStyle = "rgba(15, 23, 42, 0.95)"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-240, -180, 480, 180, 18); ctx.fill(); ctx.stroke();
+
+  // ECG Pulse Line Animation
+  ctx.strokeStyle = "#22C55E"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  for (let px = -220; px <= 220; px += 4) {
+    const wave = (px + t * 240) % 180;
+    let py = -90;
+    if (wave > 70 && wave < 80) py = -135;
+    else if (wave >= 80 && wave < 95) py = -45;
+    else if (wave >= 95 && wave < 110) py = -105;
+    if (px === -220) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // BPM Readout
+  ctx.font = F(56, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "right";
+  ctx.fillText("145", 210, -120);
+  ctx.font = F(20, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("BPM // RACING", 210, -95);
+
+  // Oxygen Saturation Bar (SpO2: dropping 98% -> 65%)
+  ctx.fillStyle = "rgba(15, 23, 42, 0.95)"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-240, 20, 480, 90, 14); ctx.fill(); ctx.stroke();
+
+  const o2 = Math.max(65, 98 - (lt / d) * 33);
+  const barW = 320 * (o2 / 100);
+  ctx.fillStyle = o2 > 80 ? "#22C55E" : "#EF4444";
+  ctx.beginPath(); ctx.roundRect(-220, 45, barW, 40, 8); ctx.fill();
+
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "left";
+  ctx.fillText(`SpO2: ${o2.toFixed(0)}%`, 120, 72);
+
+  drawAutoTechCard("CALM DOWN // SAVE BREATH", 0, 180, "#EF4444", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(239, 68, 68, 0.2)");
+}
+
+// ── E12. SEATBELT MECHANICAL UNLATCH ──────────────────────────────────────────────
+export function drawSeatbeltLatchRelease(lt, d, t) {
+  ctx.fillStyle = "#020D09"; ctx.fillRect(0, 0, W, H);
+  hudHeader("STEP 1 // IMMEDIATE SEATBELT RELEASE", "तुरंत सीटबेल्ट खोलें और खुद को आज़ाद करें!", "#10B981");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Seatbelt Buckle Housing
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#10B981"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-160, -120, 320, 220, 20); ctx.fill(); ctx.stroke();
+
+  // Red PRESS Button (Pushed down)
+  const isPressed = lt > 0.4;
+  const btnY = isPressed ? -70 : -85;
+  ctx.fillStyle = "#EF4444"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(-100, btnY, 200, 55, 10); ctx.fill(); ctx.stroke();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("PRESS", 0, btnY + 36);
+
+  // Ejected Metal Buckle Tongue
+  const tongueY = isPressed ? 110 + Math.min(80, (lt - 0.4) * 140) : 70;
+  ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-60, tongueY, 120, 80, 8); ctx.fill(); ctx.stroke();
+  circle(0, tongueY + 40, 16, "#1E293B");
+
+  if (isPressed) {
+    PixelFX.drawSparks(t * 2, 0, 70, 18, "#10B981");
+  }
+
+  drawAutoTechCard("FREE FROM SEAT // ZERO RESTRAINT", 0, 235, "#10B981", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(16, 185, 129, 0.2)");
+}
+
+// ── E13. POWER WINDOW MOTOR JAMMED ────────────────────────────────────────────────
+export function drawPowerWindowMotorJam(lt, d, t) {
+  ctx.fillStyle = "#05060F"; ctx.fillRect(0, 0, W, H);
+  hudHeader("STEP 2 // ROLL DOWN WINDOW NOW", "इलेक्ट्रॉनिक विंडो स्विच तुरंत नीचे दबाएं!", "#38BDF8");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Window Door Frame
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-200, -220, 400, 420, 18); ctx.fill(); ctx.stroke();
+
+  // Glass Rolling Down
+  const glassDrop = Math.min(140, lt * 90);
+  ctx.fillStyle = "rgba(56, 189, 248, 0.45)"; ctx.strokeStyle = "#67E8F9"; ctx.lineWidth = 4;
+  ctx.fillRect(-170, -190 + glassDrop, 340, 200);
+  ctx.strokeRect(-170, -190 + glassDrop, 340, 200);
+
+  // Green Downward Directional Motion Arrows
+  for (let ax = -100; ax <= 100; ax += 100) {
+    const ay = -70 + (t * 60) % 90;
+    line([[ax, ay - 30], [ax, ay]], "#22C55E", 6);
+    ctx.fillStyle = "#22C55E";
+    ctx.beginPath(); ctx.moveTo(ax, ay); ctx.lineTo(ax - 12, ay - 14); ctx.lineTo(ax + 12, ay - 14); ctx.fill();
+  }
+
+  // Rising Murky Water Level Outside
+  const waterLevel = 180 - Math.min(220, lt * 100);
+  ctx.fillStyle = "rgba(2, 132, 199, 0.55)";
+  ctx.fillRect(-200, waterLevel, 400, 200 - waterLevel + 20);
+
+  drawAutoTechCard("ROLL DOWN BEFORE WATER REACHES SWITCH", 0, 235, "#38BDF8", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(56, 189, 248, 0.2)");
+}
+
+// ── E14. LAMINATED FRONT WINDSHIELD (UNBREAKABLE PLASTIC LAYER) ───────────────────
+export function drawLaminatedWindshieldGlass(lt, d, t) {
+  ctx.fillStyle = "#0A0305"; ctx.fillRect(0, 0, W, H);
+  hudHeader("NEVER BREAK FRONT WINDSHIELD // LAMINATED", "सामने का कांच बुलेटप्रूफ जैसा: कभी मत तोड़ें!", "#EF4444");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // 3-Layer Cross-Section: Glass + PVB Plastic Film + Glass
+  const layerH = 320;
+  // Layer 1: Outer Glass
+  ctx.fillStyle = "rgba(56, 189, 248, 0.35)"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(-210, -layerH / 2, 100, layerH, 10); ctx.fill(); ctx.stroke();
+  ctx.font = F(20, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("OUTER", -160, -30); ctx.fillText("GLASS", -160, 5);
+
+  // Layer 2: PVB Rubber / Plastic Membrane (Red & Resilient)
+  ctx.fillStyle = "rgba(239, 68, 68, 0.7)"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-70, -layerH / 2, 140, layerH, 10); ctx.fill(); ctx.stroke();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("PVB RESIN", 0, -30); ctx.fillText("MEMBRANE", 0, 5);
+  ctx.font = F(16, "800"); ctx.fillText("(UNBREAKABLE)", 0, 35);
+
+  // Layer 3: Inner Glass
+  ctx.fillStyle = "rgba(56, 189, 248, 0.35)"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(110, -layerH / 2, 100, layerH, 10); ctx.fill(); ctx.stroke();
+  ctx.font = F(20, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("INNER", 160, -30); ctx.fillText("GLASS", 160, 5);
+
+  // Red Bouncing Impact Hammer Symbol
+  const bounceX = -160 + Math.sin(t * 12) * 20;
+  ctx.fillStyle = "#EF4444"; circle(bounceX, -100, 24, "#EF4444");
+  ctx.font = F(22, "900"); ctx.fillStyle = "#FFFFFF"; ctx.fillText("❌", bounceX, -92);
+
+  drawAutoTechCard("DO NOT HIT FRONT WINDSHIELD // WILL NOT SHATTER", 0, 220, "#EF4444", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(239, 68, 68, 0.2)");
+}
+
+// ── E15. TEMPERED SIDE WINDOW (CRYSTAL LATTICE SHATTER GRID) ─────────────────────
+export function drawTemperedSideGlassStress(lt, d, t) {
+  ctx.fillStyle = "#030810"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ALWAYS BREAK SIDE WINDOW // TEMPERED", "साइड विंडो टेम्पर्ड ग्लास है जो तुरंत बिखर जाती है!", "#A855F7");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Tempered Glass Pane
+  ctx.fillStyle = "rgba(168, 85, 247, 0.15)"; ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.roundRect(-200, -180, 400, 340, 16); ctx.fill(); ctx.stroke();
+
+  // Internal Stress Lines / Granular Crystal Lattice
+  ctx.strokeStyle = "rgba(168, 85, 247, 0.4)"; ctx.lineWidth = 2;
+  for (let x = -170; x <= 170; x += 45) {
+    line([[x, -170], [x, 150]], "rgba(168, 85, 247, 0.4)", 2);
+  }
+  for (let y = -150; y <= 130; y += 45) {
+    line([[-190, y], [190, y]], "rgba(168, 85, 247, 0.4)", 2);
+  }
+
+  // Corner Impact Focal Point (Lower corner)
+  const cornerX = 140, cornerY = 100;
+  circle(cornerX, cornerY, 26, "#FFE600");
+  ctx.font = F(20, "900"); ctx.fillStyle = "#000000"; ctx.textAlign = "center";
+  ctx.fillText("TARGET", cornerX, cornerY + 6);
+
+  // Radiating Fracture Lines from Corner
+  ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 3;
+  for (let a = Math.PI; a <= Math.PI * 1.5; a += 0.18) {
+    line([[cornerX, cornerY], [cornerX + Math.cos(a) * 160, cornerY + Math.sin(a) * 160]], "#FFE600", 3);
+  }
+
+  drawAutoTechCard("TARGET LOWER CORNER // INSTANT SHATTER", 0, 220, "#A855F7", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(168, 85, 247, 0.2)");
+}
+
+// ── E16. SEAT HEADREST DUAL STEEL SPIKES ─────────────────────────────────────────
+export function drawHeadrestDualSpikes(lt, d, t) {
+  ctx.fillStyle = "#080501"; ctx.fillRect(0, 0, W, H);
+  hudHeader("STEP 3 // PULL HEADREST FROM SEAT", "हेडरेस्ट बाहर खींचें और लोहे की नुकीली रॉड्स लें!", "#F59E0B");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Car Seat Top
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#475569"; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.roundRect(-160, 50, 320, 180, [18, 18, 0, 0]); ctx.fill(); ctx.stroke();
+
+  // Headrest Cushion pulling up
+  const pullY = -80 - Math.min(80, lt * 100);
+  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(-130, pullY - 70, 260, 120, 20); ctx.fill(); ctx.stroke();
+
+  // Twin Polished Steel Rods
+  ctx.fillStyle = "#CBD5E1"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(-60, pullY + 50, 22, 130, 4); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(38, pullY + 50, 22, 130, 4); ctx.fill(); ctx.stroke();
+
+  // Beveled Sharp Steel Tips
+  ctx.fillStyle = "#FFFFFF";
+  ctx.beginPath(); ctx.moveTo(-60, pullY + 180); ctx.lineTo(-49, pullY + 200); ctx.lineTo(-38, pullY + 180); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(38, pullY + 180); ctx.lineTo(49, pullY + 200); ctx.lineTo(60, pullY + 180); ctx.fill();
+
+  // Upward Green Pull Arrows
+  for (let ax = -90; ax <= 90; ax += 180) {
+    line([[ax, 0], [ax, -50]], "#10B981", 6);
+    ctx.fillStyle = "#10B981";
+    ctx.beginPath(); ctx.moveTo(ax, -60); ctx.lineTo(ax - 12, -45); ctx.lineTo(ax + 12, -45); ctx.fill();
+  }
+
+  drawAutoTechCard("TWIN STEEL RODS = EMERGENCY BREAKER", 0, 225, "#F59E0B", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(245, 158, 11, 0.2)");
+}
+
+// ── E17. CORNER LEVER IMPACT FORCE (FULCRUM PHYSICS) ─────────────────────────────
+export function drawCornerLeverImpact(lt, d, t) {
+  ctx.fillStyle = "#0B0401"; ctx.fillRect(0, 0, W, H);
+  hudHeader("LEVERAGE PRINCIPLE // WEDGE INTO SEAM", "रॉड को कांच के कोने में फंसा कर जोर लगाएं!", "#FFE600");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Door Window Seam (Black Rubber Gasket)
+  ctx.fillStyle = "#0F172A"; ctx.strokeStyle = "#334155"; ctx.lineWidth = 6;
+  ctx.fillRect(-220, 20, 440, 140);
+  ctx.strokeRect(-220, 20, 440, 140);
+
+  // Window Glass Corner resting in seam
+  ctx.fillStyle = "rgba(56, 189, 248, 0.4)"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(-160, -180); ctx.lineTo(140, -180); ctx.lineTo(140, 40); ctx.lineTo(-160, 40);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  // Headrest Rod Wedged into Corner
+  ctx.save();
+  const rodAngle = -0.45 + (lt > 0.5 ? Math.sin(t * 16) * 0.05 : 0);
+  ctx.translate(130, 35);
+  ctx.rotate(rodAngle);
+  ctx.fillStyle = "#CBD5E1"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(-14, -180, 28, 200, 6); ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // Leverage Force Vector Arrow
+  ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 8;
+  line([[120, -120], [60, -90]], "#EF4444", 8);
+  ctx.fillStyle = "#EF4444";
+  ctx.beginPath(); ctx.moveTo(50, -85); ctx.lineTo(72, -80); ctx.lineTo(65, -105); ctx.fill();
+
+  ctx.font = F(24, "900"); ctx.fillStyle = "#FFE600"; ctx.textAlign = "center";
+  ctx.fillText("FULCRUM LEVER ACTION", 0, -140);
+
+  drawAutoTechCard("STRIKE CORNER // NEVER CENTER", 0, 215, "#FFE600", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(255, 230, 0, 0.2)");
+}
+
+// ── E18. GLASS SHATTER EXPLOSION PARTICLE BURST ─────────────────────────────────
+export function drawGlassShatterExplosion(lt, d, t) {
+  ctx.fillStyle = "#010815"; ctx.fillRect(0, 0, W, H);
+  hudHeader("IMPACT EXPLOSION // TEMPERED SHATTER", "कांच एक झटके में पूरी तरह बिखर जाता है!", "#38BDF8");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Exploding safety glass cubes flying in 360 degrees
+  const numCubes = 45;
+  for (let c = 0; c < numCubes; c++) {
+    const angle = (c / numCubes) * TAU;
+    const speed = 120 + (c % 7) * 45;
+    const dist = Math.min(320, (lt * speed));
+    const cubeX = Math.cos(angle) * dist;
+    const cubeY = Math.sin(angle) * dist;
+    const cubeSize = 8 + (c % 6) * 3;
+
+    ctx.save();
+    ctx.translate(cubeX, cubeY);
+    ctx.rotate(t * 8 + c);
+    ctx.fillStyle = "rgba(56, 189, 248, 0.85)"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 1.5;
+    ctx.fillRect(-cubeSize / 2, -cubeSize / 2, cubeSize, cubeSize);
+    ctx.strokeRect(-cubeSize / 2, -cubeSize / 2, cubeSize, cubeSize);
+    ctx.restore();
+  }
+
+  // Shockwave Rings Expanding
+  const waveRadius = Math.min(380, lt * 450);
+  const waveAlpha = Math.max(0, 1 - waveRadius / 380);
+  ctx.strokeStyle = `rgba(0, 242, 254, ${waveAlpha})`; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.arc(0, 0, waveRadius, 0, TAU); ctx.stroke();
+
+  // Central flash
+  if (lt < 0.25) {
+    ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
+    circle(0, 0, 90 * (1 - lt / 0.25), "#FFFFFF");
+  }
+
+  drawAutoTechCard("WINDOW COMPLETELY DESTROYED", 0, 230, "#38BDF8", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(56, 189, 248, 0.25)");
+}
+
+// ── E19. WATER FLOOD VORTEX FILLING CABIN ─────────────────────────────────────────
+export function drawWaterFloodVortex(lt, d, t) {
+  ctx.fillStyle = "#01091A"; ctx.fillRect(0, 0, W, H);
+  hudHeader("HYDRO-INFLOW // CABIN FILLING RAPIDLY", "कांच टूटते ही गहरा पानी अंदर घुसेगा: गहरी सांस लें!", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Rapid Rising Cabin Water Level
+  const cabinWaterH = Math.min(360, lt * 160);
+  const cabinGrad = ctx.createLinearGradient(0, 180 - cabinWaterH, 0, 180);
+  cabinGrad.addColorStop(0, "rgba(2, 132, 199, 0.4)");
+  cabinGrad.addColorStop(1, "rgba(1, 50, 110, 0.95)");
+  ctx.fillStyle = cabinGrad;
+  ctx.fillRect(-220, 180 - cabinWaterH, 440, cabinWaterH);
+
+  // Swirling Inflow Vortex from Window
+  ctx.save();
+  ctx.translate(140, -80);
+  ctx.rotate(t * 8);
+  for (let r = 20; r <= 140; r += 28) {
+    ctx.strokeStyle = `rgba(56, 189, 248, ${0.8 - r / 200})`;
+    ctx.lineWidth = 4;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, Math.PI * 1.4); ctx.stroke();
+  }
+  ctx.restore();
+
+  // Rapid Frothing Bubble Particles
+  for (let b = 0; b < 28; b++) {
+    const bx = -200 + ((b * 39 + t * 90) % 400);
+    const by = 180 - ((b * 47 + t * 180) % Math.max(80, cabinWaterH));
+    circle(bx, by, 3 + (b % 5), "rgba(255, 255, 255, 0.7)");
+  }
+
+  drawAutoTechCard("TAKE DEEP BREATH // PREPARE TO EXIT", 0, 225, "#00F2FE", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(0, 242, 254, 0.2)");
+}
+
+// ── E20. PRESSURE EQUALIZATION GAUGE (INSIDE = OUTSIDE) ──────────────────────────
+export function drawPressureEqualizationGauge(lt, d, t) {
+  ctx.fillStyle = "#010B08"; ctx.fillRect(0, 0, W, H);
+  hudHeader("HYDROSTATIC EQUILIBRIUM // EQUAL PRESSURE", "अंदर और बाहर का दबाव बराबर होते ही दरवाज़ा खुलेगा!", "#22C55E");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Outside Pressure Gauge (Left)
+  circle(-130, -30, 90, "#0F172A");
+  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 6; ctx.stroke();
+  ctx.font = F(36, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "center";
+  ctx.fillText("2.2", -130, -35);
+  ctx.font = F(18, "800"); ctx.fillText("OUTSIDE ATM", -130, -5);
+
+  // Inside Pressure Gauge (Right) - Equalizing to 2.2
+  const inP = Math.min(2.2, 1.0 + (lt / d) * 1.2);
+  circle(130, -30, 90, "#0F172A");
+  ctx.strokeStyle = inP >= 2.1 ? "#22C55E" : "#EF4444"; ctx.lineWidth = 6; ctx.stroke();
+  ctx.font = F(36, "900"); ctx.fillStyle = inP >= 2.1 ? "#22C55E" : "#EF4444";
+  ctx.fillText(inP.toFixed(1), 130, -35);
+  ctx.font = F(18, "800"); ctx.fillText("INSIDE ATM", 130, -5);
+
+  // Equal Sign in Center
+  ctx.font = F(54, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("=", 0, -25);
+
+  // Dynamic Status Banner
+  const isEq = inP >= 2.1;
+  ctx.fillStyle = isEq ? "#22C55E" : "#EF4444";
+  ctx.beginPath(); ctx.roundRect(-220, 100, 440, 70, 16); ctx.fill();
+  ctx.font = F(28, "900"); ctx.fillStyle = "#020617";
+  ctx.fillText(isEq ? "✅ PRESSURE EQUALIZED // PUSH DOOR" : "⏳ EQUALIZING IN PROGRESS...", 0, 145);
+
+  drawAutoTechCard("DOOR CAN NOW BE OPENED FREELY", 0, 220, "#22C55E", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(34, 197, 94, 0.2)");
+}
+
+// ── E21. UNDERWATER DOOR PUSH WITH LEGS ──────────────────────────────────────────
+export function drawUnderwaterDoorLegPush(lt, d, t) {
+  ctx.fillStyle = "#010C18"; ctx.fillRect(0, 0, W, H);
+  hudHeader("STEP 4 // LEG DRIVE DOOR BREACH", "अंतिम सांस में पैरों की पूरी ताकत से दरवाज़ा खोलें!", "#38BDF8");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Car Door Opening Outward into Water
+  const openAngle = Math.min(0.65, lt * 0.45);
+  ctx.save();
+  ctx.translate(-160, 0);
+  ctx.rotate(-openAngle);
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(0, -180, 40, 360, 8); ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // Silhouette of Diver pushing with legs against dashboard
+  line([[-60, -60], [20, -20]], "#CBD5E1", 18);
+  line([[20, -20], [-100, openAngle * 80]], "#38BDF8", 16);
+
+  // Big Outward Push Direction Arrow
+  ctx.strokeStyle = "#22C55E"; ctx.lineWidth = 8;
+  line([[-20, 40], [-180, 40]], "#22C55E", 8);
+  ctx.fillStyle = "#22C55E";
+  ctx.beginPath(); ctx.moveTo(-200, 40); ctx.lineTo(-175, 25); ctx.lineTo(-175, 55); ctx.fill();
+
+  drawAutoTechCard("DOOR OPENS FREELY ONCE EQUALIZED", 0, 225, "#38BDF8", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(56, 189, 248, 0.2)");
+}
+
+// ── E22. AIR BUBBLE TRAIL ESCAPE GUIDANCE ────────────────────────────────────────
+export function drawAirBubbleTrailEscape(lt, d, t) {
+  ctx.fillStyle = "#010818"; ctx.fillRect(0, 0, W, H);
+  hudHeader("FOLLOW BUBBLES UPWARD // ESCAPE ROUTE", "दिशा भूल जाएं तो हमेशा बुलबुलों के पीछे तैरें!", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Sunlight Beams penetrating surface from above
+  for (let s = -2; s <= 2; s++) {
+    const beamGrad = ctx.createLinearGradient(s * 90, -260, s * 140, 260);
+    beamGrad.addColorStop(0, "rgba(255, 230, 0, 0.35)");
+    beamGrad.addColorStop(1, "rgba(0, 242, 254, 0)");
+    ctx.fillStyle = beamGrad;
+    ctx.beginPath();
+    ctx.moveTo(s * 90 - 40, -260); ctx.lineTo(s * 90 + 40, -260);
+    ctx.lineTo(s * 140 + 100, 260); ctx.lineTo(s * 140 - 100, 260);
+    ctx.fill();
+  }
+
+  // Column of Rising Translucent Air Bubbles
+  for (let k = 0; k < 35; k++) {
+    const bubbleY = 220 - ((k * 43 + t * 160) % 480);
+    const bubbleX = Math.sin(t * 2 + k) * 60 + (k % 5) * 15;
+    const rad = 6 + (k % 7) * 3;
+    circle(bubbleX, bubbleY, rad, "rgba(255, 255, 255, 0.75)");
+    ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 1.5; ctx.stroke();
+  }
+
+  // Diver Silhouette Swimming Up
+  const diverY = 160 - Math.min(280, lt * 140);
+  ctx.fillStyle = "#F8FAFC";
+  circle(25, diverY, 18, "#F8FAFC");
+  line([[25, diverY + 12], [25, diverY + 60]], "#38BDF8", 12);
+  line([[25, diverY + 60], [10, diverY + 95]], "#CBD5E1", 8);
+  line([[25, diverY + 60], [40, diverY + 95]], "#CBD5E1", 8);
+
+  drawAutoTechCard("BUBBLES ALWAYS FLOAT TO SURFACE", 0, 235, "#00F2FE", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(0, 242, 254, 0.2)");
+}
+
+// ── E23. SURFACE BREACH & FRESH AIR BREATH ───────────────────────────────────────
+export function drawSurfaceBreachBreath(lt, d, t) {
+  ctx.fillStyle = "#0369A1"; ctx.fillRect(0, 0, W, H);
+  hudHeader("SURFACE BREACH // FRESH OXYGEN", "पानी की सतह पर आते ही गहरी ताज़ी सांस लें!", "#FFE600");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // Surface Water Line (Waving)
+  const waveY = -40;
+  ctx.fillStyle = "#0284C7";
+  ctx.beginPath();
+  ctx.moveTo(-280, waveY);
+  for (let wx = -280; wx <= 280; wx += 20) {
+    const wy = waveY + Math.sin(t * 6 + wx * 0.05) * 14;
+    ctx.lineTo(wx, wy);
+  }
+  ctx.lineTo(280, 260); ctx.lineTo(-280, 260); ctx.closePath();
+  ctx.fill();
+
+  // Sunny Blue Sky Above
+  const skyGrad = ctx.createLinearGradient(0, -260, 0, waveY);
+  skyGrad.addColorStop(0, "#38BDF8");
+  skyGrad.addColorStop(1, "#BAE6FD");
+  ctx.fillStyle = skyGrad;
+  ctx.fillRect(-280, -260, 560, waveY + 260);
+
+  // Golden Sun Lens Flare
+  circle(-140, -180, 50, "#FACC15");
+  PixelFX.drawSparks(t, -140, -180, 18, "#FFE600");
+
+  // Diver Breaching Head & Arms Above Surface
+  circle(0, waveY - 20, 32, "#E2E8F0");
+  line([[-30, waveY + 10], [-60, waveY - 40]], "#FFFFFF", 12);
+  line([[30, waveY + 10], [60, waveY - 40]], "#FFFFFF", 12);
+
+  // Water Splashes on Breach
+  for (let s = 0; s < 16; s++) {
+    const spX = Math.sin(s * 1.5) * 85;
+    const spY = waveY - 20 - ((t * 80 + s * 25) % 60);
+    circle(spX, spY, 4 + (s % 4), "rgba(255, 255, 255, 0.85)");
+  }
+
+  drawAutoTechCard("SURVIVAL ACCOMPLISHED // SAFE", 0, 215, "#FFE600", 26);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(255, 230, 0, 0.2)");
+}
+
+// ── E24. SURVIVAL PROTOCOL SUMMARY CHECKLIST ─────────────────────────────────────
+export function drawSurvivalProtocolChecklist(lt, d, t) {
+  ctx.fillStyle = "#020814"; ctx.fillRect(0, 0, W, H);
+  hudHeader("EMERGENCY TAKEAWAY // LIFE SAVING PROTOCOL", "यह 4 नियम किसी भी डूबती कार से जान बचा सकते हैं!", "#10B981");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+  ctx.translate(cx, cy);
+
+  // 4 Steps Cards
+  const steps = [
+    { num: "01", title: "SEATBELT OFF", desc: "तुरंत सीटबेल्ट खोलें और आज़ाद हों" },
+    { num: "02", title: "WINDOW DOWN", desc: "स्विच से तुरंत खिड़की नीचे करें" },
+    { num: "03", title: "HEADREST PRONGS", desc: "कांच के निचले कोने पर रॉड मारें" },
+    { num: "04", title: "FOLLOW BUBBLES", desc: "बुलबुलों के पीछे तैरकर सतह पर आएं" },
+  ];
+
+  for (let s = 0; s < 4; s++) {
+    const sy = -170 + s * 95;
+    ctx.fillStyle = "rgba(15, 23, 42, 0.9)";
+    ctx.strokeStyle = "#10B981"; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.roundRect(-240, sy, 480, 75, 14); ctx.fill(); ctx.stroke();
+
+    // Step Number Badge
+    ctx.fillStyle = "#10B981";
+    ctx.beginPath(); ctx.roundRect(-225, sy + 12, 50, 50, 10); ctx.fill();
+    ctx.font = F(24, "900"); ctx.fillStyle = "#020617"; ctx.textAlign = "center";
+    ctx.fillText(steps[s].num, -200, sy + 44);
+
+    // Title & Desc
+    ctx.font = F(24, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "left";
+    ctx.fillText(steps[s].title, -160, sy + 32);
+    ctx.font = F(18, "800"); ctx.fillStyle = "#94A3B8";
+    ctx.fillText(steps[s].desc, -160, sy + 58);
+  }
+
+  drawAutoTechCard("SHARE THIS PROTOCOL WITH EVERYONE", 0, 235, "#10B981", 24);
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(16, 185, 129, 0.2)");
+}
+
 // ── F. UNIVERSAL SCIENCE & HUMAN ANATOMY PROCEDURAL SUITE ─────────────────────────
 
 // ── F1. HUMAN BRAIN SYNAPSE FIRING ────────────────────────────────────────────────
@@ -3550,58 +4279,4 @@ export function drawKolaOutroCTA(lt, d, t) {
 
   drawAutoTechCard("SUBSCRIBE FOR DAILY VIRAL SCIENCE FACTS", 540, 1180, "#F59E0B", 26);
   filmAtmosphere(t, 700, "rgba(245, 158, 11, 0.25)");
-}
-
-// ── DYNAMIC DOCUMENTARY MEDIA COMPOSITOR ───────────────────────────────────────
-// Renders real high-definition documentary media with:
-// 1. Ken Burns continuous cinematic camera push (scale 1.0 -> 1.18 + slow drift)
-// 2. Cinematic 35mm dark vignette & grading
-// 3. Tech HUD Header + dynamic takeaway pill
-// 4. Subtle lens dust and atmosphere
-export function drawDynamicMediaShot(lt, d, t, img, lineIdx, lineText = '', topic = {}, subIdx = 0) {
-  if (!img || !img.complete || img.naturalWidth === 0) return;
-
-  const p = clamp(lt / Math.max(d, 0.001));
-
-  // Ken Burns: Beat-aware cinematic camera motion
-  const zoomFactor = subIdx === 1 ? 0.22 : 0.14;
-  const kbScale = 1.04 + p * zoomFactor + (subIdx > 0 ? 0.06 : 0);
-  const panX = Math.sin(t * 0.4 + lineIdx * 1.5 + subIdx) * 25;
-  const panY = Math.cos(t * 0.3 + lineIdx * 1.2 + subIdx) * 16;
-
-  ctx.save();
-  ctx.translate(W / 2 + panX, H / 2 + panY);
-  ctx.scale(kbScale, kbScale);
-
-  // Cover aspect fill: compute dimensions so image completely fills canvas WxH
-  const imgW = img.naturalWidth || img.width || 1920;
-  const imgH = img.naturalHeight || img.height || 1080;
-  const fillScale = Math.max(W / imgW, H / imgH);
-  const dw = imgW * fillScale;
-  const dh = imgH * fillScale;
-
-  ctx.drawImage(img, -dw / 2, -dh / 2, dw, dh);
-  ctx.restore();
-
-  // Cinematic Documentary Dark Vignette & Edge Shadow
-  const vig = ctx.createRadialGradient(W / 2, H / 2, Math.min(W, H) * 0.22, W / 2, H / 2, Math.max(W, H) * 0.72);
-  vig.addColorStop(0, 'rgba(0, 4, 12, 0.04)');
-  vig.addColorStop(0.55, 'rgba(2, 6, 18, 0.42)');
-  vig.addColorStop(1, 'rgba(1, 3, 10, 0.88)');
-  ctx.fillStyle = vig;
-  ctx.fillRect(0, 0, W, H);
-
-  // Top Tech HUD Header
-  const title = (topic.title || 'INSIDE OUT // DOCUMENTARY INVESTIGATION').split('#')[0].trim().toUpperCase();
-  const sub = `SECTION 0${lineIdx + 1} // CRITICAL DYNAMICS`;
-  hudHeader(title, sub, '#00F2FE');
-
-  // Dynamic takeaway tech card at bottom-center (above visualizer)
-  if (lineText) {
-    const cardY = H > 1200 ? 1520 : 900;
-    const cleanWord = lineText.split('।')[0].split(',')[0].slice(0, 36);
-    drawAutoTechCard(`⚡ ${cleanWord}`, W / 2, cardY, '#FFE600', 24);
-  }
-
-  filmAtmosphere(t);
 }

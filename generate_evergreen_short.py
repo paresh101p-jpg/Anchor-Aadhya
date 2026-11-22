@@ -605,13 +605,6 @@ async def main():
     dur_long = await build_voice_and_timing(full_topic, is_short=False)
     build_audio_mix()
 
-    # Dynamic Documentary Media Fetcher (100% Free Openverse + Wikimedia)
-    try:
-        from dynamic_media_fetcher import fetch_media_for_topic
-        fetch_media_for_topic(full_topic)
-    except Exception as fe:
-        print(f"  -> [Dynamic Media Fetch Notice]: {fe}", flush=True)
-
     video_16_9 = render_native_2d_video(aspect="16:9")
 
     # High-CTR 16:9 Master Thumbnail

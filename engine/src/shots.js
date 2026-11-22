@@ -45,11 +45,27 @@ const TOPIC_SEQUENCES = {
   ],
   sinking_car_door_physics: [
     Cinema.drawSinkingCarPlunge,
+    Cinema.drawCarFuseBoxShort,
+    Cinema.drawHydrostaticFormula,
     Cinema.drawDoorPressureLock,
+    Cinema.drawCarWeightBalanceScale,
     Cinema.drawWaterWeightPress,
     Cinema.drawTrappedPassenger,
-    Cinema.drawSeatbeltAndWindow,
-    Cinema.drawHeadrestGlassBreaker,
+    Cinema.drawDriverPanicVitals,
+    Cinema.drawSurvivalProtocolChecklist,
+    Cinema.drawCountdownTimer,
+    Cinema.drawSeatbeltLatchRelease,
+    Cinema.drawPowerWindowMotorJam,
+    Cinema.drawLaminatedWindshieldGlass,
+    Cinema.drawTemperedSideGlassStress,
+    Cinema.drawHeadrestDualSpikes,
+    Cinema.drawCornerLeverImpact,
+    Cinema.drawGlassShatterExplosion,
+    Cinema.drawWaterFloodVortex,
+    Cinema.drawPressureEqualizationGauge,
+    Cinema.drawUnderwaterDoorLegPush,
+    Cinema.drawAirBubbleTrailEscape,
+    Cinema.drawSurfaceBreachBreath,
     Cinema.drawCarEscapeCTA,
   ],
   gta_6_vice_city_secrets: [
@@ -232,112 +248,12 @@ function getOutroScene(script) {
   return Cinema.drawUniversalOutroCTA;
 }
 
-// Dynamic beat-level scene rotation: switches physical visual scene every 1.6-1.8s!
+// Dynamic camera punch-in on beats while preserving the line's dedicated visual concept
 function getSubShotScene(script, lineIdx, subIdx, numSubShots, text, primaryFn, isLastLine) {
-  if (isLastLine) return primaryFn;
-  if (subIdx === 0) return primaryFn;
-
-  if (script.id === 'sinking_car_door_physics') {
-    const carPool = [
-      Cinema.drawSinkingCarPlunge,
-      Cinema.drawDoorPressureLock,
-      Cinema.drawWaterWeightPress,
-      Cinema.drawTrappedPassenger,
-      Cinema.drawCountdownTimer,
-      Cinema.drawSeatbeltAndWindow,
-      Cinema.drawHeadrestGlassBreaker,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = carPool[offset % carPool.length];
-    return cand !== primaryFn ? cand : carPool[(offset + 1) % carPool.length];
-  }
-
-  if (script.id === 'mariana_trench_abyss') {
-    const oceanPool = [
-      Cinema.drawMarianaChasm,
-      Cinema.drawSubmarineSearchlight,
-      Cinema.drawPressureSlam,
-      Cinema.drawElephantWeight,
-      Cinema.drawAlienCreature,
-      Cinema.drawPlasticDiscovery,
-      Cinema.drawSunRays,
-      Cinema.drawEarthGlobe,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = oceanPool[offset % oceanPool.length];
-    return cand !== primaryFn ? cand : oceanPool[(offset + 1) % oceanPool.length];
-  }
-
-  if (script.id === 'chernobyl_300s_room') {
-    const chernobylPool = [
-      Cinema.drawChernobylPlant,
-      Cinema.drawCountdownTimer,
-      Cinema.drawReactorExplosion,
-      Cinema.drawCoriumLavaFlow,
-      Cinema.drawElephantsFoot,
-      Cinema.drawGeigerCounter,
-      Cinema.drawMeltingCameraRobot,
-      Cinema.drawRadiotrophicFungus,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = chernobylPool[offset % chernobylPool.length];
-    return cand !== primaryFn ? cand : chernobylPool[(offset + 1) % chernobylPool.length];
-  }
-
-  if (script.id === 'bermuda_triangle_secret') {
-    const bermudaPool = [
-      Cinema.drawBermudaTriangleMap,
-      Cinema.drawBermudaPerimeterRadar,
-      Cinema.drawMethaneBubblesEruption,
-      Cinema.drawShipSinkingAbyss,
-      Cinema.drawHexagonalCloudAirBombs,
-      Cinema.drawAirplaneStormDisaster,
-      Cinema.drawMagneticCompassChaos,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = bermudaPool[offset % bermudaPool.length];
-    return cand !== primaryFn ? cand : bermudaPool[(offset + 1) % bermudaPool.length];
-  }
-
-  if (script.id === 'gta_6_vice_city_secrets') {
-    const gtaPool = [
-      Cinema.drawGta6LogoBudget,
-      Cinema.drawGta6ViceCityMap,
-      Cinema.drawGta6LuciaJasonMugshot,
-      Cinema.drawGta6WaterPhysicsRaytracing,
-      Cinema.drawGta6SmartNpcAi,
-      Cinema.drawGta6PoliceWantedHelicopter,
-      Cinema.drawGta6SocialMediaFeed,
-      Cinema.drawGta6SupercarAndAlligator,
-      Cinema.drawGta6RobberyInteriorBank,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = gtaPool[offset % gtaPool.length];
-    return cand !== primaryFn ? cand : gtaPool[(offset + 1) % gtaPool.length];
-  }
-
-  if (script.id === 'deepest_hole_kola_superdeep') {
-    const kolaPool = [
-      Cinema.drawKolaBoreholeDrillDepth,
-      Cinema.drawKolaCrustCrossSection,
-      Cinema.drawKolaThermalInferno180C,
-      Cinema.drawKolaMeltingSteelDrill,
-      Cinema.drawKolaBoilingWaterTrapped,
-      Cinema.drawKolaAncientMicrofossils,
-      Cinema.drawKolaSealedSteelDoorCap,
-    ];
-    const offset = lineIdx * 3 + subIdx;
-    const cand = kolaPool[offset % kolaPool.length];
-    return cand !== primaryFn ? cand : kolaPool[(offset + 1) % kolaPool.length];
-  }
-
-  const pool = POOL_NEUTRAL_SCIENCE.concat(POOL_TECH_SURVIVAL);
-  const offset = lineIdx * 3 + subIdx;
-  const cand = pool[offset % pool.length];
-  return cand !== primaryFn ? cand : pool[(offset + 1) % pool.length];
+  return primaryFn;
 }
 
-export function buildShots(script = {}, loadedMedia = {}) {
+export function buildShots(script = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
   const cue = (t, type, o = {}) => CUES.push({ t: +t.toFixed(3), type, ...o });
@@ -358,17 +274,6 @@ export function buildShots(script = {}, loadedMedia = {}) {
 
     if (isLastLine) {
       sceneFn = outroScene;
-    } else if (script.id === 'sinking_car_door_physics') {
-      const text = String(lines[i]?.text || '');
-      if (i === 0 || /नदी\s*में\s*गिरे|डूबना\s*शुरू|कार\s*पानी\s*में/i.test(text)) sceneFn = Cinema.drawSinkingCarPlunge;
-      else if (/तैर|सतह|बाहर\s*निकल|एस्केप/i.test(text)) sceneFn = Cinema.drawSinkingCarPlunge;
-      else if (/हेडरेस्ट|रॉड|कांच\s*के\s*बीच|विंडशील्ड|टेम्पर्ड/i.test(text)) sceneFn = Cinema.drawHeadrestGlassBreaker;
-      else if (/वजन|800|किलो|सांड|दबाव\s*बराबर|पानी\s*भरने/i.test(text)) sceneFn = Cinema.drawWaterWeightPress;
-      else if (/सीटबेल्ट|विंडो|खिड़की|रोल/i.test(text)) sceneFn = Cinema.drawSeatbeltAndWindow;
-      else if (/गोल्डन|सेकंड|समय|30\s*से\s*60|चरण\s*1/i.test(text)) sceneFn = Cinema.drawCountdownTimer;
-      else if (/फंसा|यात्री|ऊर्जा|बर्बाद|पैनिक|धकेल/i.test(text)) sceneFn = Cinema.drawTrappedPassenger;
-      else if (/दरवाज़ा|प्रेशर|लॉक|दबाव|क्षेत्रफल|सेंट्रल/i.test(text)) sceneFn = Cinema.drawDoorPressureLock;
-      else sceneFn = Cinema.drawSinkingCarPlunge;
     } else if (script.id === 'mariana_trench_abyss') {
       const text = String(lines[i]?.text || '');
       if (/पृथ्वी|ग्लोब|धरती/i.test(text)) sceneFn = Cinema.drawEarthGlobe;
@@ -493,8 +398,6 @@ export function buildShots(script = {}, loadedMedia = {}) {
       const zooms = [0.05, 0.28, 0.18, 0.32];
 
       const beatSceneFn = getSubShotScene(script, i, subIdx, cutPoints.length, text, sceneFn, isLastLine);
-      const mediaKey = 'L' + String(i + 1).padStart(2, '0');
-      const mediaImg = (!isLastLine && loadedMedia && loadedMedia[mediaKey]) ? loadedMedia[mediaKey] : null;
 
       add({
         id: `L${String(i + 1).padStart(2, '0')}_S${subIdx + 1}`,
@@ -502,13 +405,10 @@ export function buildShots(script = {}, loadedMedia = {}) {
         cam: cams[subIdx % cams.length],
         zoom: zooms[subIdx % zooms.length],
         zoomFast: subIdx > 0,
-        isMedia: !!mediaImg,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
-        sceneName: mediaImg ? `dynamic_media_${mediaKey}` : (beatSceneFn ? (beatSceneFn.name || 'custom_lambda') : 'none'),
+        sceneName: beatSceneFn ? (beatSceneFn.name || 'custom_lambda') : 'none',
         draw(lt, d, t) {
-          if (mediaImg) {
-            Cinema.drawDynamicMediaShot(lt, d, t, mediaImg, i, text, script, subIdx);
-          } else if (typeof beatSceneFn === 'function') {
+          if (typeof beatSceneFn === 'function') {
             beatSceneFn(lt, d, t, subIdx);
           }
         },

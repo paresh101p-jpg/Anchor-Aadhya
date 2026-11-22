@@ -32,9 +32,7 @@ function draw(t) {
     const [x, y, s] = sh.camAt(clamp(lt / Math.max(d, 0.001)), lt, d);
     cx = x + shakeX; cy = y + shakeY; scale = punch * s;
   }
-  if (sh.isMedia) {
-    sh.draw(lt, d, t);
-  } else if (W > H) {
+  if (W > H) {
     // ── 16:9 NATIVE WIDESCREEN BROADCAST ADAPTER ──
     // Center portrait coordinates (540, 640) directly at widescreen center (960, 540)
     // Scale by 1.12x so hero illustration comfortably fills the 1080 height
@@ -74,27 +72,7 @@ function draw(t) {
     const script = await (await fetch('script.json', { cache: 'no-store' })).json();
     await loadTiming();
     buildCaptions(script);
-
-    // Preload dynamic documentary media if present in engine/media/
-    const loadedMedia = {};
-    try {
-      const mRes = await fetch('media/manifest.json', { cache: 'no-store' });
-      if (mRes.ok) {
-        const manifest = await mRes.json();
-        await Promise.all(Object.entries(manifest).map(([k, info]) => {
-          return new Promise((resolve) => {
-            const img = new Image();
-            img.onload = () => { loadedMedia[k] = img; resolve(); };
-            img.onerror = () => { resolve(); };
-            img.src = info.file;
-          });
-        }));
-      }
-    } catch (me) {
-      console.log('Media manifest load notice:', me);
-    }
-
-    const { shots, cues } = buildShots(script, loadedMedia);
+    const { shots, cues } = buildShots(script);
     shots.sort((a, b) => a.at - b.at);
     OP._shots = shots; OP.script = script;
     OP._style = detectFilmStyle(script);
