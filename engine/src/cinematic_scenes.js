@@ -4,6 +4,7 @@
 // Chernobyl Reactor, Elephant's Foot, Geiger Counter, Nixie Countdown, Corium Lava.
 // All visuals placed safely above y=1200 to guarantee ZERO caption overlap.
 import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU, countUp, spring, easeOutExpo, drawFullCanvasBackground, startCutout, endCutout } from './core/lib.js';
+import { PixelFX } from './core/pixelfx.js';
 
 const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
@@ -1651,11 +1652,13 @@ export function drawHeartArteryPressure(lt, d, t) {
 
 // ── F4. ATM CASH MECHANICS ────────────────────────────────────────────────────────
 export function drawAtmCashMechanics(lt, d, t) {
-  ctx.fillStyle = "#020914"; ctx.fillRect(0, 0, W, H);
   hudHeader("ATM MECHANISM // UV SENSOR SCAN", "नोट बाहर आने से पहले 3 सेकंड की जांच!", "#00F2FE");
 
   ctx.save();
   const cx = 540, cy = 620;
+
+  // 3D Cutout for ATM Machine & Rollers
+  startCutout(35, 0.75, 12, 20);
 
   // Machine Interior Rollers
   for (let i = -1; i <= 1; i++) {
@@ -1672,6 +1675,12 @@ export function drawAtmCashMechanics(lt, d, t) {
   // Purple UV Optical Laser Sensor Beam
   ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 6;
   line([[cx - 240, cy], [cx + 240, cy]], "#A855F7", 6);
+
+  endCutout();
+
+  // PixelFX: Tumbling currency & optical laser sparks
+  PixelFX.drawFloatingCurrency(t, cx, cy + 160, 10);
+  PixelFX.drawSparks(t, cx - 180, cy, 14, '#00F2FE');
 
   ctx.restore();
   filmAtmosphere(t, 620, "rgba(168, 85, 247, 0.25)");
@@ -2723,9 +2732,10 @@ export function drawAirplaneStormDisaster(lt, d, t) {
   ctx.translate(cx, cy);
   ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Storm Lightning Flash Ambient
-  if (Math.sin(t * 14) > 0.85) {
+  // Storm Lightning Flash Ambient & Electrical Discharge
+  if (Math.sin(t * 14) > 0.82) {
     ctx.fillStyle = "rgba(255, 255, 255, 0.28)"; ctx.fillRect(-380, -320, 760, 640);
+    PixelFX.drawLightningArc(-320, -260, 320, 220, 4, '#00F0FF');
   }
 
   // 3D ISOLATED AIRPLANE CUTOUT

@@ -4,6 +4,7 @@ import { W, H, setCtx, ctx, clamp, eo, eio, cameraShake, drawAudioVisualizer, dr
 import { T, loadTiming } from './core/timing.js';
 import { buildCaptions, drawCaption, captionList } from './core/captions.js';
 import { buildShots } from './shots.js';
+import { detectFilmStyle, drawStyleBackground, applyPostProcessing, STYLES } from './core/postprocessing.js';
 
 const cv = document.getElementById('cv');
 setCtx(cv.getContext('2d'));
@@ -12,9 +13,14 @@ const OP = (window.OP = { ready: false });
 function draw(t) {
   t = clamp(t, 0, T.dur - 1e-4);
   ctx.setTransform(1, 0, 0, 1, 0, 0); ctx.globalAlpha = 1; ctx.letterSpacing = '0px';
-  ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H);
+
+  // 1. Dynamic Lemo-Opuscar Topic Background (Unique per topic category)
+  const style = OP._style || STYLES.SCIENTIFIC_BLUEPRINT;
+  drawStyleBackground(style, t);
+
   const S = OP._shots; let i = S.length - 1; while (i > 0 && S[i].at > t) i--;
   const sh = S[i], end = i < S.length - 1 ? S[i + 1].at : T.dur, d = end - sh.at, lt = t - sh.at;
+
   // Cinematic Camera Rig: Handheld breathing + Spring Punch-in on cut
   const punch = 1 + 0.14 * (1 - eo(clamp(lt / 0.30)));
   const driftP = sh.zoomFast ? clamp(lt / 0.4) : clamp(lt / d);
@@ -29,6 +35,10 @@ function draw(t) {
   ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale); ctx.translate(-cx, -cy);
   sh.draw(lt, d, t);
   ctx.restore();
+
+  // 2. Multi-Pass Cinematic Post-Processing (Bloom, Chromatic Aberration, Vignette & Grain)
+  applyPostProcessing(t, style, lt);
+
   ctx.globalAlpha = 1; ctx.letterSpacing = '0px';
   if (i > 0 && lt < 0.12) { ctx.fillStyle = '#FFFFFF'; ctx.globalAlpha = 0.55 * (1 - lt / 0.12); ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
   // fade from / to black on the first and last 0.25 s
@@ -48,6 +58,7 @@ function draw(t) {
     const { shots, cues } = buildShots(script);
     shots.sort((a, b) => a.at - b.at);
     OP._shots = shots; OP.script = script;
+    OP._style = detectFilmStyle(script);
     OP.duration = () => T.dur;
     OP.draw = draw;
     OP.frame = (t, q = 0.92) => { draw(t); return cv.toDataURL('image/jpeg', q); };
