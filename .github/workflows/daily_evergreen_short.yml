@@ -72,7 +72,7 @@ jobs:
           DRY_RUN: ${{ inputs.dry_run }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
           CARTESIA_API_KEY: ${{ secrets.CARTESIA_API_KEY }}
-          FORCE_TOPIC_ID: ${{ inputs.topic_id || 'sinking_car_door_physics' }}
+          FORCE_TOPIC_ID: ${{ inputs.topic_id || '' }}
         run: |
           set -o pipefail
           TOPIC_ID="${{ github.event.inputs.topic_id || '' }}"

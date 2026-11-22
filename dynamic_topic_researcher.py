@@ -328,7 +328,26 @@ OUTPUT STRICT VALID JSON ONLY (NO MARKDOWN FENCES, NO PROSE):
             cand = inject_monetization_shield_metadata(cand)
             return cand
 
-    return inject_monetization_shield_metadata(EMERGENCY_RARE_POOL[0])
+    # Check curiosity_topics.json for unused topics
+    curiosity_path = os.path.join(BASE_DIR, "curiosity_topics.json")
+    if os.path.exists(curiosity_path):
+        try:
+            with open(curiosity_path, "r", encoding="utf-8") as f:
+                c_topics = json.load(f)
+            for cand in c_topics:
+                is_dup, _ = is_duplicate_topic(cand["id"], cand["title"], used_slugs, used_kw_sets)
+                if not is_dup:
+                    print(f"  -> Selected Unused Curated Candidate: [{cand['id']}] {cand['title']}", flush=True)
+                    cand = inject_monetization_shield_metadata(cand)
+                    return cand
+        except Exception as e:
+            print(f"  -> [Notice] Curiosity topics lookup: {e}", flush=True)
+
+    # All pools exhausted: Cycle to oldest covered topic
+    print("  -> All pools exhausted. Rotating to oldest covered topic...", flush=True)
+    tracker_order = {slug: idx for idx, slug in enumerate(used_slugs)}
+    best_cand = min(EMERGENCY_RARE_POOL, key=lambda c: tracker_order.get(c["id"], -1))
+    return inject_monetization_shield_metadata(best_cand)
 
 if __name__ == "__main__":
     t = research_fresh_rare_topic()

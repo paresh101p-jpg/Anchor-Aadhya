@@ -1,6 +1,6 @@
 // Boot: fonts → script + timing → captions → shots. Then draw(t) renders film time t (pure function of t).
 // window.OP is the API tools/capture.mjs drives: ready, bootError, duration(), draw(t), frame(t, q), cues(), shots().
-import { W, H, setCtx, ctx, clamp, eo, eio, cameraShake, drawAudioVisualizer, drawBroadcastFrame } from './core/lib.js';
+import { W, H, setCtx, ctx, clamp, eo, eio, cameraShake, drawBroadcastFrame } from './core/lib.js';
 import { T, loadTiming } from './core/timing.js';
 import { buildCaptions, drawCaption, captionList } from './core/captions.js';
 import { buildShots } from './shots.js';
@@ -60,8 +60,7 @@ function draw(t) {
   // fade from / to black on the first and last 0.25 s
   const fade = Math.min(clamp(t / 0.25), clamp((T.dur - t) / 0.35));
   if (fade < 1) { ctx.fillStyle = '#000'; ctx.globalAlpha = 1 - fade; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
-  const vizY = H > 1200 ? 1660 : 980;
-  drawAudioVisualizer(t, vizY, 95);
+  // Audio visualizer disabled per user request: clean documentary aesthetic
   drawBroadcastFrame(t);
   // drawCaption(t); // Spoken speech captions disabled per user request: visual cards take center stage
 }
