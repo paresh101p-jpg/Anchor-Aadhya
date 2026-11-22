@@ -378,35 +378,55 @@ def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
     styled_prompt = style_prefix + prompt
     api_key = os.environ.get("GEMINI_API_KEY")
     
-    # Tier 1: Gemini 2.0 Flash native image generation
+    # Tier 1: Gemini Imagen via google-genai SDK (if available)
     if api_key:
-        for attempt in range(2):
-            try:
-                import base64, time
-                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={api_key}"
-                payload = {
-                    "contents": [{"parts": [{"text": f"Generate a 2D flat vector illustration: {styled_prompt}"}]}],
-                    "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}
-                }
-                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
-                with urllib.request.urlopen(req, timeout=60) as resp:
-                    data = json.loads(resp.read().decode("utf-8"))
-                    candidates = data.get("candidates", [])
-                    for cand in candidates:
-                        for part in cand.get("content", {}).get("parts", []):
-                            if "inlineData" in part and part["inlineData"].get("data"):
-                                img_bytes = base64.b64decode(part["inlineData"]["data"])
-                                if len(img_bytes) > 5000:
-                                    with open(output_jpg, "wb") as f:
-                                        f.write(img_bytes)
-                                    print(f"  ✓ Image generated via Gemini 2.0 Flash ({len(img_bytes)//1024} KB)", flush=True)
-                                    return True
-                break
-            except Exception as e:
-                if attempt == 0:
-                    time.sleep(3)
-                else:
-                    print(f"  --> [Gemini img note: {str(e)[:100]}], trying Pollinations...", flush=True)
+        try:
+            from google import genai
+            from google.genai import types
+            client = genai.Client(api_key=api_key)
+            response = client.models.generate_images(
+                model="imagen-3.0-fast-generate-001",
+                prompt=styled_prompt,
+                config=types.GenerateImagesConfig(
+                    number_of_images=1,
+                    output_mime_type="image/jpeg",
+                    aspect_ratio="16:9" if width > height else "9:16",
+                )
+            )
+            if response.generated_images:
+                img_bytes = response.generated_images[0].image.image_bytes
+                if len(img_bytes) > 5000:
+                    with open(output_jpg, "wb") as f:
+                        f.write(img_bytes)
+                    print(f"  ✓ Image generated via Gemini Imagen SDK ({len(img_bytes)//1024} KB)", flush=True)
+                    return True
+        except Exception as e:
+            print(f"  --> [Imagen SDK note: {str(e)[:100]}], trying Pollinations...", flush=True)
+    
+    # Tier 2: Gemini 2.0 Flash native image generation (REST)
+    if api_key:
+        try:
+            import base64
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={api_key}"
+            payload = {
+                "contents": [{"parts": [{"text": f"Generate a 2D flat vector illustration: {styled_prompt}"}]}],
+                "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}
+            }
+            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                candidates = data.get("candidates", [])
+                for cand in candidates:
+                    for part in cand.get("content", {}).get("parts", []):
+                        if "inlineData" in part and part["inlineData"].get("data"):
+                            img_bytes = base64.b64decode(part["inlineData"]["data"])
+                            if len(img_bytes) > 5000:
+                                with open(output_jpg, "wb") as f:
+                                    f.write(img_bytes)
+                                print(f"  ✓ Image generated via Gemini 2.0 Flash ({len(img_bytes)//1024} KB)", flush=True)
+                                return True
+        except Exception as e:
+            print(f"  --> [Gemini 2.0 note: {str(e)[:100]}], trying Pollinations...", flush=True)
     
     # Tier 2: Pollinations AI
     try:
