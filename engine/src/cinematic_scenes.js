@@ -585,33 +585,7 @@ export function drawPlasticDiscovery(lt, d, t) {
 
 // ── 10. MARIANA OUTRO ─────────────────────────────────────────────────────────────
 export function drawOutroCTA(lt, d, t) {
-  ctx.fillStyle = '#030814'; ctx.fillRect(0, 0, W, H);
-
-  hudHeader('ANCHOR AADHYA OFFICIAL', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
-
-  ctx.save();
-  const ox = 540, oy = 660, s = 1.35;
-  ctx.translate(ox, oy); ctx.scale(s, s);
-
-  // Red YouTube Button
-  ctx.fillStyle = '#FF0000'; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
-  ctx.fillStyle = '#FFFFFF';
-  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
-
-  ctx.font = '900 34px Inter, sans-serif'; ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('SUBSCRIBE', 0, 105);
-
-  // Bell
-  const ring = Math.sin(t * 12) * 0.25;
-  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
-  ctx.fillStyle = '#FFE600';
-  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
-  circle(0, 26, 8, '#FFE600');
-  ctx.restore();
-
-  drawOutroQuestionBubble('कमेंट्स में बताओ! ✍️');
-
-  ctx.restore();
+  drawUniversalOutroCTA(lt, d, t);
 }
 
 // ===================================================================================
@@ -1930,30 +1904,266 @@ export function drawNeutronStarPulsar(lt, d, t) {
 
 // ── F15. UNIVERSAL OUTRO CTA ──────────────────────────────────────────────────────
 export function drawUniversalOutroCTA(lt, d, t) {
-  ctx.fillStyle = "#030612"; ctx.fillRect(0, 0, W, H);
-  hudHeader("ANCHOR AADHYA OFFICIAL", "कमेंट में बताएं और सब्सक्राइब करें!", "#FFE600");
+  ctx.save();
+
+  // 1. Cinematic Radial Ambient Atmosphere (Deep dark vignette with subtle gold/cyan aura)
+  const bgGrad = ctx.createRadialGradient(W / 2, H / 2, 80, W / 2, H / 2, H * 0.65);
+  bgGrad.addColorStop(0, '#0B132B');
+  bgGrad.addColorStop(0.5, '#040817');
+  bgGrad.addColorStop(1, '#02040A');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle floating golden celebratory dust particles
+  PixelFX.drawCosmicDust(t * 0.6, 28);
+
+  // 2. Top Channel Header Card (Centered at Y: 180)
+  hudHeader('ANCHOR AADHYA OFFICIAL', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
+
+  // 3. Center Hero Subscribe Card (Centered vertically at Y: 920)
+  const cx = W / 2; // 540
+  const cy = 920;   // Dead Center of 1080x1920 portrait canvas
 
   ctx.save();
-  const ox = 540, oy = 640, s = 1.35;
-  ctx.translate(ox, oy); ctx.scale(s, s);
+  ctx.translate(cx, cy);
 
-  // Red YouTube Button
-  ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
-  ctx.fillStyle = "#FFFFFF";
-  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+  // Spring entrance pop on scene transition
+  const entranceScale = lt < 0.45 ? lerp(0.65, 1.0, eob(seg(lt, 0, 0.45))) : 1.0;
+  ctx.scale(entranceScale, entranceScale);
 
-  ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
-  ctx.fillText("SUBSCRIBE", 0, 105);
+  // Floating gentle breathing oscillation
+  const floatY = Math.sin(t * 3.5) * 6;
+  ctx.translate(0, floatY);
 
-  // Bell
-  const ring = Math.sin(t * 12) * 0.25;
-  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
-  ctx.fillStyle = "#FFE600";
-  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
-  circle(0, 26, 8, "#FFE600");
+  // 3A. Channel Avatar & Verified Badge (at relative Y: -260)
+  const avatarY = -260;
+  // Outer Glowing Animated Orbit Ring
+  ctx.save();
+  ctx.rotate(t * 1.5);
+  ctx.strokeStyle = '#38BDF8';
+  ctx.lineWidth = 3.5;
+  ctx.setLineDash([18, 12]);
+  ctx.beginPath();
+  ctx.arc(0, avatarY, 68, 0, TAU);
+  ctx.stroke();
   ctx.restore();
 
-  drawOutroQuestionBubble("आपकी क्या राय है? कमेंट्स में बताएं! ✍️");
+  // Avatar Circle
+  circle(0, avatarY, 60, '#0F172A');
+  ctx.strokeStyle = '#FFE600';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Avatar Emblem (Microphone & Lightning A)
+  ctx.font = '900 42px Inter, sans-serif';
+  ctx.fillStyle = '#FFE600';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('A', -12, avatarY);
+  ctx.fillStyle = '#38BDF8';
+  ctx.fillText('⚡', 18, avatarY);
+
+  // Verified Badge (Tick)
+  circle(46, avatarY + 44, 18, '#0284C7');
+  ctx.strokeStyle = '#FFFFFF';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+  ctx.font = '900 18px Inter, sans-serif';
+  ctx.fillStyle = '#FFFFFF';
+  ctx.fillText('✓', 46, avatarY + 45);
+
+  // Channel Name & Subtitle
+  ctx.font = F(34, '900');
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('ANCHOR AADHYA', 0, avatarY + 95);
+
+  ctx.font = F(20, '800');
+  ctx.fillStyle = '#EF4444';
+  ctx.fillText('🔴 DAILY VIRAL SCIENCE & CURIOSITY SHORTS', 0, avatarY + 130);
+
+  // 3B. Dynamic Interactive Subscribe Button (at relative Y: 0)
+  const isClicked = (lt >= 1.2);
+  const clickPulse = (lt >= 1.2 && lt < 1.5) ? 0.93 : 1.0;
+  const btnW = 440, btnH = 110;
+
+  ctx.save();
+  ctx.scale(clickPulse, clickPulse);
+
+  if (!isClicked) {
+    // PRE-CLICK: Vibrant Red YouTube Button with pulsating neon glow
+    ctx.shadowColor = '#FF0033';
+    ctx.shadowBlur = 28 + Math.sin(t * 8) * 12;
+
+    const redGrad = ctx.createLinearGradient(0, -btnH / 2, 0, btnH / 2);
+    redGrad.addColorStop(0, '#FF0033');
+    redGrad.addColorStop(1, '#CC0000');
+    ctx.fillStyle = redGrad;
+
+    ctx.beginPath();
+    ctx.roundRect(-btnW / 2, -btnH / 2, btnW, btnH, 30);
+    ctx.fill();
+    ctx.strokeStyle = '#FFFFFF';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // White Play Triangle Icon
+    ctx.fillStyle = '#FFFFFF';
+    ctx.beginPath();
+    ctx.moveTo(-115, -24);
+    ctx.lineTo(-75, 0);
+    ctx.lineTo(-115, 24);
+    ctx.closePath();
+    ctx.fill();
+
+    // SUBSCRIBE Text
+    ctx.font = '900 36px Inter, sans-serif';
+    ctx.fillStyle = '#FFFFFF';
+    ctx.textAlign = 'left';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('SUBSCRIBE', -55, 2);
+  } else {
+    // POST-CLICK: Sleek Dark Graphite Button with Emerald Green Verified State!
+    ctx.shadowColor = '#22C55E';
+    ctx.shadowBlur = 24;
+
+    ctx.fillStyle = '#0F172A';
+    ctx.beginPath();
+    ctx.roundRect(-btnW / 2, -btnH / 2, btnW, btnH, 30);
+    ctx.fill();
+    ctx.strokeStyle = '#22C55E';
+    ctx.lineWidth = 3.5;
+    ctx.stroke();
+    ctx.shadowBlur = 0;
+
+    // Green Checkmark Icon
+    ctx.font = '900 38px Inter, sans-serif';
+    ctx.fillStyle = '#22C55E';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+    ctx.fillText('✓', -100, 2);
+
+    // SUBSCRIBED Text
+    ctx.font = '900 34px Inter, sans-serif';
+    ctx.fillStyle = '#F8FAFC';
+    ctx.textAlign = 'left';
+    ctx.fillText('SUBSCRIBED', -65, 2);
+
+    // Celebratory Sparks emitting from button on click
+    if (lt < 2.5) {
+      PixelFX.drawSparks(t, 0, 0, 32, '#FFE600');
+    }
+  }
+  ctx.restore();
+
+  // 3C. Animated Notification Bell (at relative X: 280, Y: 0)
+  const bellX = btnW / 2 + 55;
+  const bellRing = Math.sin(t * 16) * 0.35;
+
+  ctx.save();
+  ctx.translate(bellX, 0);
+
+  // Concentric Acoustic Sound Waves / Shockwaves emitting from the bell
+  ctx.lineWidth = 2.5;
+  for (let rw = 1; rw <= 3; rw++) {
+    const waveRadius = 35 + rw * 18 + ((t * 2) % 1) * 16;
+    const waveAlpha = Math.max(0, 1 - (waveRadius - 35) / 55);
+    ctx.strokeStyle = isClicked ? `rgba(250, 204, 21, ${waveAlpha * 0.7})` : `rgba(255, 255, 255, ${waveAlpha * 0.4})`;
+    ctx.beginPath();
+    ctx.arc(0, 0, waveRadius, -0.65, 0.65);
+    ctx.stroke();
+  }
+
+  // Bell Swing Rotation
+  ctx.rotate(bellRing);
+
+  // Bell Body
+  ctx.fillStyle = isClicked ? '#FACC15' : '#FFFFFF';
+  ctx.beginPath();
+  ctx.arc(0, -8, 26, Math.PI, TAU);
+  ctx.lineTo(28, 18);
+  ctx.lineTo(-28, 18);
+  ctx.closePath();
+  ctx.fill();
+  ctx.strokeStyle = isClicked ? '#EAB308' : '#64748B';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
+  // Clapper ball
+  circle(0, 24, 8, isClicked ? '#FACC15' : '#FFFFFF');
+
+  ctx.restore();
+
+  // 3D. Animated Pointer Cursor tapping the button (at 0.4s <= lt < 1.8s)
+  if (lt >= 0.4 && lt < 1.8) {
+    const cursorProgress = clamp((lt - 0.4) / 0.8);
+    const curX = lerp(160, 40, eio(cursorProgress));
+    const curY = lerp(180, 25, eio(cursorProgress));
+    const curPress = (lt >= 1.2 && lt < 1.45) ? 0.88 : 1.0;
+
+    ctx.save();
+    ctx.translate(curX, curY);
+    ctx.scale(curPress, curPress);
+
+    // Pointer Finger Cursor Drawing
+    ctx.fillStyle = '#FFFFFF';
+    ctx.shadowColor = 'rgba(0, 0, 0, 0.65)';
+    ctx.shadowBlur = 12;
+
+    ctx.beginPath();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(0, -42);
+    ctx.arc(10, -42, 10, Math.PI, 0);
+    ctx.lineTo(20, -18);
+    ctx.lineTo(34, -10);
+    ctx.arc(38, 0, 8, -Math.PI / 2, Math.PI / 2);
+    ctx.lineTo(20, 24);
+    ctx.lineTo(-8, 24);
+    ctx.closePath();
+    ctx.fill();
+    ctx.strokeStyle = '#0F172A';
+    ctx.lineWidth = 3;
+    ctx.stroke();
+
+    // Tap Ripple Effect on click
+    if (lt >= 1.2 && lt < 1.5) {
+      const ripRad = (lt - 1.2) * 160;
+      ctx.strokeStyle = 'rgba(255, 255, 255, 0.7)';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(10, -42, ripRad, 0, TAU);
+      ctx.stroke();
+    }
+
+    ctx.restore();
+  }
+
+  // 3E. Interactive Comment Engagement Card (at relative Y: +260)
+  const cardY = 250;
+  const cardW = 860, cardH = 145;
+
+  ctx.fillStyle = 'rgba(2, 6, 23, 0.94)';
+  ctx.beginPath();
+  ctx.roundRect(-cardW / 2, cardY, cardW, cardH, 22);
+  ctx.fill();
+  ctx.strokeStyle = '#38BDF8';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  // Speech bubble icon + Call to Action Text
+  ctx.font = F(28, '900');
+  ctx.fillStyle = '#FFE600';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText('💬 आपकी क्या राय है? कमेंट्स में बताएं! 👇', 0, cardY + 45);
+
+  ctx.font = F(21, '800');
+  ctx.fillStyle = '#E2E8F0';
+  ctx.fillText('अगला टॉपिक कौन सा देखना चाहते हैं? कमेंट करें और सब्सक्राइब करें!', 0, cardY + 95);
+
+  ctx.restore();
 
   ctx.restore();
   filmAtmosphere(t);
