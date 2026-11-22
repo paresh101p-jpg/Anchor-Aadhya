@@ -378,32 +378,35 @@ def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
     styled_prompt = style_prefix + prompt
     api_key = os.environ.get("GEMINI_API_KEY")
     
-    # Tier 1: Gemini Imagen 3 (best quality, topic-matching)
+    # Tier 1: Gemini 2.0 Flash native image generation
     if api_key:
-        try:
-            import base64
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-fast-generate-001:predict?key={api_key}"
-            payload = {
-                "instances": [{"prompt": styled_prompt}],
-                "parameters": {
-                    "sampleCount": 1,
-                    "aspectRatio": "16:9" if width > height else "9:16",
-                    "personGeneration": "ALLOW_ADULT"
+        for attempt in range(2):
+            try:
+                import base64, time
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key={api_key}"
+                payload = {
+                    "contents": [{"parts": [{"text": f"Generate a 2D flat vector illustration: {styled_prompt}"}]}],
+                    "generationConfig": {"responseModalities": ["IMAGE", "TEXT"]}
                 }
-            }
-            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=60) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                predictions = data.get("predictions", [])
-                if predictions and predictions[0].get("bytesBase64Encoded"):
-                    img_bytes = base64.b64decode(predictions[0]["bytesBase64Encoded"])
-                    if len(img_bytes) > 5000:
-                        with open(output_jpg, "wb") as f:
-                            f.write(img_bytes)
-                        print(f"  ✓ Image generated via Gemini Imagen ({len(img_bytes)//1024} KB)", flush=True)
-                        return True
-        except Exception as e:
-            print(f"  --> [Imagen note: {str(e)[:100]}], trying Pollinations...", flush=True)
+                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=60) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    candidates = data.get("candidates", [])
+                    for cand in candidates:
+                        for part in cand.get("content", {}).get("parts", []):
+                            if "inlineData" in part and part["inlineData"].get("data"):
+                                img_bytes = base64.b64decode(part["inlineData"]["data"])
+                                if len(img_bytes) > 5000:
+                                    with open(output_jpg, "wb") as f:
+                                        f.write(img_bytes)
+                                    print(f"  ✓ Image generated via Gemini 2.0 Flash ({len(img_bytes)//1024} KB)", flush=True)
+                                    return True
+                break
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(3)
+                else:
+                    print(f"  --> [Gemini img note: {str(e)[:100]}], trying Pollinations...", flush=True)
     
     # Tier 2: Pollinations AI
     try:
@@ -830,13 +833,23 @@ async def main():
             lines_meta_for_img = json.load(f).get("lines", [])
     except Exception:
         lines_meta_for_img = [{"text": l.get("text", "")} for l in full_topic.get("lines", [])]
+    ai_success_count = 0
     for i, lm in enumerate(lines_meta_for_img):
         text = lm.get("text", "")
         prompt = generate_visual_prompt_for_line(text, title_clean)
         img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
         print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
-        generate_line_image(prompt, img_path, seed=42+i, width=1920, height=1080)
-    print(f"  ✅ {len(lines_meta_for_img)} images generated", flush=True)
+        if generate_line_image(prompt, img_path, seed=42+i, width=1920, height=1080):
+            sz = os.path.getsize(img_path) if os.path.exists(img_path) else 0
+            if sz > 30000:
+                ai_success_count += 1
+    print(f"  ✅ {len(lines_meta_for_img)} images generated ({ai_success_count} via AI)", flush=True)
+    if ai_success_count < len(lines_meta_for_img) // 2:
+        print("  ⚠️ AI image generation mostly failed, falling back to Chrome canvas rendering", flush=True)
+        import shutil
+        try: shutil.rmtree(img_dir)
+        except Exception: pass
+        os.makedirs(img_dir, exist_ok=True)
 
     video_16_9 = render_native_2d_video(aspect="16:9")
 
@@ -907,13 +920,23 @@ async def main():
             lines_meta_for_img = json.load(f).get("lines", [])
     except Exception:
         lines_meta_for_img = [{"text": l.get("text", "")} for l in short_topic.get("lines", [])]
+    ai_success_count = 0
     for i, lm in enumerate(lines_meta_for_img):
         text = lm.get("text", "")
         prompt = generate_visual_prompt_for_line(text, title_clean)
         img_path = os.path.join(img_dir, f"line_{i:02d}.jpg")
         print(f"  Line {i+1}/{len(lines_meta_for_img)}: generating image...", flush=True)
-        generate_line_image(prompt, img_path, seed=100+i, width=1080, height=1920)
-    print(f"  ✅ {len(lines_meta_for_img)} images generated", flush=True)
+        if generate_line_image(prompt, img_path, seed=100+i, width=1080, height=1920):
+            sz = os.path.getsize(img_path) if os.path.exists(img_path) else 0
+            if sz > 30000:
+                ai_success_count += 1
+    print(f"  ✅ {len(lines_meta_for_img)} images generated ({ai_success_count} via AI)", flush=True)
+    if ai_success_count < len(lines_meta_for_img) // 2:
+        print("  ⚠️ AI image generation mostly failed, falling back to Chrome canvas rendering", flush=True)
+        import shutil
+        try: shutil.rmtree(img_dir)
+        except Exception: pass
+        os.makedirs(img_dir, exist_ok=True)
 
     short_mp4 = render_native_2d_video(aspect="9:16")
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
