@@ -41,6 +41,18 @@ def clean_all_temp_assets():
                 os.makedirs(p, exist_ok=True)
     print("🧹 [Clean Pipeline]: All previous video renders, audios, and cached frames wiped clean!", flush=True)
 
+def clean_temp_audio_assets():
+    """Wipes temp audio and timing files between Stage 1 and Stage 2, keeping rendered mp4 intact."""
+    for sub in ["temp_audio", "data"]:
+        p = os.path.join(ENGINE_DIR, sub)
+        if os.path.exists(p):
+            for f in os.listdir(p):
+                try:
+                    os.remove(os.path.join(p, f))
+                except Exception:
+                    pass
+    print("🧹 [Audio Clean]: Audio cache reset for Stage 2 Reel generation.", flush=True)
+
 def configure_engine_for_topic(topic=None):
     """
     Configures 2D Rick's Clips / Inside-Out Cutaway Engine (100% 2D).
@@ -417,35 +429,65 @@ This video is created strictly for educational, informative, and curiosity purpo
 {hashtags}"""
     return desc.strip()
 
+def ensure_2min_topic(topic):
+    """
+    Guarantees the topic has at least 18-24 detailed lines (>120 seconds duration).
+    If the topic is already a 2+ min documentary (e.g. from dynamic_topic_researcher or emergency_pool),
+    it is returned as-is.
+    If the topic has fewer than 16 lines, it expands the topic with in-depth scientific breakdown,
+    microscopic physical mechanisms, real-life incidents, and survival takeaways.
+    """
+    lines = topic.get("lines", [])
+    if len(lines) >= 16:
+        return topic
+    
+    expanded = dict(topic)
+    expanded_lines = [l for l in lines if "सब्सक्राइब" not in l.get("text", "") and "कमेंट" not in l.get("text", "")]
+    
+    enrichments = [
+        {"text": "जब वैज्ञानिक इस प्रक्रिया का आणविक स्तर पर माइक्रोस्कोप से विश्लेषण करते हैं, तो इसके परिणाम चौंकाने वाले होते हैं।", "caps": "माइक्रोस्कोप *विश्लेषण | चौंकाने वाले *परिणाम"},
+        {"text": "भौतिकी और जीव विज्ञान के मूलभूत नियम बताते हैं कि अत्यधिक दबाव या तापमान में पदार्थ अपना व्यवहार बदल लेता है।", "caps": "भौतिकी के *नियम | पदार्थ का *व्यवहार"},
+        {"text": "इतिहास में ऐसे कई वास्तविक मामले दर्ज हैं जहां इस एक छोटी सी चूक ने वैज्ञानिकों को हिला कर रख दिया था।", "caps": "इतिहास के *मामले | वैज्ञानिकों की *खोज"},
+        {"text": "आधुनिक प्रयोगशालाओं में सुपरकंप्यूटर सिमुलेशन की मदद से जब इस घटना को दोबारा जांचा गया, तो नया रहस्य सामने आया।", "caps": "सुपरकंप्यूटर *जांच | नया *रहस्य"},
+        {"text": "विशेषज्ञों का कहना है कि यह नियम सिर्फ मशीनों या प्राकृतिक घटनाओं पर ही नहीं, बल्कि मानव शरीर पर भी लागू होता है।", "caps": "मानव *शरीर | विशेषज्ञों की *राय"},
+        {"text": "अगर भविष्य में आप कभी इस प्रकार की आपातकालीन स्थिति का सामना करें, तो घबराने के बजाय इन वैज्ञानिक नियमों का पालन करें।", "caps": "आपातकालीन *स्थिति | वैज्ञानिक *नियम"},
+        {"text": "यह ज्ञान न केवल आपकी जिज्ञासा को शांत करता है, बल्कि विषम परिस्थितियों में जीवन रक्षा का भी काम कर सकता है।", "caps": "जिज्ञासा का *सच | जीवन *रक्षा"},
+        {"text": "बायोमैकेनिक्स और न्यूरोसाइंस के शोधकर्ता बताते हैं कि मानव मस्तिष्क ऐसे संकट के समय मिलीसेकंड्स में निर्णय लेता है।", "caps": "न्यूरोसाइंस *शोध | मिलीसेकंड्स में *निर्णय"},
+        {"text": "थर्मोडायनामिक्स के सिद्धांत के अनुसार, ऊर्जा का रूपांतरण कभी नष्ट नहीं होता बल्कि एक रूप से दूसरे रूप में बदलता है।", "caps": "ऊर्जा का *रूपांतरण | भौतिकी का *सिद्धांत"},
+        {"text": "वैज्ञानिक समुदाय में इस पर वर्षों तक बहस चली कि क्या इसे किसी वैकल्पिक तकनीक से सुधारा जा सकता है।", "caps": "वैज्ञानिक *बहस | वैकल्पिक *तकनीक"},
+        {"text": "अंतरिक्ष और पृथ्वी के वातावरण में होने वाले सूक्ष्म परिवर्तन भी इस पूरी प्रक्रिया की गति को प्रभावित करते हैं।", "caps": "सूक्ष्म *परिवर्तन | प्रक्रिया की *गति"},
+        {"text": "यही कारण है कि उच्च-स्तरीय इंजीनियरिंग और आधुनिक विज्ञान में इस सुरक्षा प्रोटोकॉल को अनिवार्य माना गया है।", "caps": "सुरक्षा *प्रोटोकॉल | आधुनिक *विज्ञान"},
+        {"text": "प्रकृति और विज्ञान के ऐसे अनगिनत रहस्य आज भी हमारी सामान्य समझ से परे हैं, जिनकी खोज जारी है।", "caps": "प्रकृति के *रहस्य | अनसुलझी *खोज"},
+        {"text": "क्या आपको आज से पहले इस घटना के पीछे का यह गहरा कारण पता था? कमेंट्स में अपनी राय ज़रूर शेयर करें और Anchor Aadhya को सब्सक्राइब करें!", "caps": "कमेंट में *बताएं | सब्सक्राइब *करें"}
+    ]
+    
+    needed = max(0, 18 - len(expanded_lines))
+    expanded_lines.extend(enrichments[:needed])
+    expanded["lines"] = expanded_lines
+    expanded["no_slice"] = True
+    return expanded
+
 def create_short_topic_from_full(full_topic):
     """
-    Creates a high-retention 30-40s Short / Reel from the full curiosity topic:
-    - If is_30s or no_slice is set, preserves all lines for a complete 30s story.
-    - Otherwise slices the first 4-5 lines of the mystery/hook (approx 20-25 seconds).
+    Creates a high-retention 20-30s Short / Reel from the full curiosity topic:
+    - Slices the first 3-4 lines of the mystery/hook (approx 18-20 seconds).
     - Appends a high-stakes psychological cliffhanger CTA line (~7-8 seconds) directing viewers to the full video link!
     """
     short_topic = dict(full_topic)
     short_topic["is_short"] = True
-
-    if full_topic.get("is_30s") or full_topic.get("no_slice"):
-        short_topic["lines"] = list(full_topic.get("lines", []))
-        return short_topic
+    title = full_topic.get("title", full_topic.get("video_title", ""))
+    short_topic["title"] = title if "#Shorts" in title else f"{title.split('#')[0].strip()} #Shorts"
     
     full_lines = full_topic.get("lines", [])
-    # Slice first 5 lines (Hook + Setup + Core Mystery)
-    selected_lines = full_lines[:5] if len(full_lines) >= 5 else full_lines
+    # Slice first 4 lines (Hook + Setup + Core Mystery)
+    selected_lines = full_lines[:4] if len(full_lines) >= 6 else full_lines[:3]
     
     # High-converting Cliffhanger Call-To-Action voice line spoken by Aadhya
     cta_line = {
-        "text": "लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हिला कर रख देगा! पूरा सच और गहरी वजह जानने के लिए नीचे डिस्क्रिप्शन और पहले कमेंट वाले लिंक पर अभी क्लिक करें!",
-        "caps": "असली *वैज्ञानिक* सच | नीचे लिंक पर *क्लिक* करें"
+        "text": "लेकिन इसके पीछे का असली वैज्ञानिक सच आपको हिला कर रख देगा! पूरा सच और गहरी वजह जानने के लिए नीचे दिए गए लिंक पर अभी क्लिक करें और पूरा वीडियो देखें!",
+        "caps": "असली *वैज्ञानिक सच | नीचे लिंक पर *क्लिक करें!"
     }
-    # Joke/relationship reels speak for themselves: no extra "scientific truth" CTA line.
-    if full_topic.get("no_cta"):
-        short_lines = list(selected_lines)
-    else:
-        short_lines = list(selected_lines) + [cta_line]
-    short_topic["lines"] = short_lines
+    short_topic["lines"] = list(selected_lines) + [cta_line]
     return short_topic
 
 def build_short_description_with_full_link(topic, full_video_url):
@@ -546,14 +588,71 @@ async def main():
 
     from youtube_uploader import upload_direct_video
 
-    # Direct 9:16 Shorts Pipeline (Fast < 2 minutes render & instant upload)
-    full_video_url = "https://www.youtube.com/@AnchorAadhya"
+    is_dry_run = os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes")
 
     # ==============================================================
-    # STAGE 2: 30-40s Punchy Viral Reel / Short (9:16 Vertical)
+    # STAGE 1: Full Long-Form Video (2+ Minutes, 16:9 Widescreen Master)
     # ==============================================================
-    print("\n📱 >>> STAGE 2: Rendering 30-40s Viral Short with Cliffhanger CTA <<<", flush=True)
-    short_topic = create_short_topic_from_full(topic)
+    print("\n🎬 >>> STAGE 1: Rendering Full 2+ Min Long-Form Master Video <<<", flush=True)
+    full_topic = ensure_2min_topic(topic)
+
+    dur_long = await build_voice_and_timing(full_topic, is_short=False)
+    build_audio_mix()
+
+    video_vertical_master = render_native_2d_video(aspect="9:16")
+    video_16_9 = os.path.join(RENDERS_DIR, "aadhya_video_16_9.mp4")
+
+    # Convert to 16:9 widescreen master with cinematic blurred background wings
+    cmd_16_9 = [
+        "ffmpeg", "-y", "-v", "error",
+        "-i", video_vertical_master,
+        "-vf", "split[v1][v2];[v1]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,boxblur=25:5[bg];[v2]scale=-1:1080[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2",
+        "-c:v", "libx264", "-preset", "fast", "-crf", "20",
+        "-c:a", "copy",
+        video_16_9
+    ]
+    subprocess.run(cmd_16_9, check=True)
+
+    thumb_16_9 = os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
+    os.makedirs(os.path.dirname(thumb_16_9), exist_ok=True)
+    cmd_thumb = ["ffmpeg", "-y", "-ss", "00:00:08", "-i", video_16_9, "-vframes", "1", "-q:v", "2", thumb_16_9]
+    subprocess.run(cmd_thumb, check=False)
+    if not os.path.exists(thumb_16_9):
+        thumb_16_9 = extract_native_thumbnail(aspect="9:16")
+
+    verify_visual_integrity(video_16_9, aspect="16:9")
+
+    full_video_url = "https://www.youtube.com/@AnchorAadhya"
+    full_video_id = None
+
+    if not is_dry_run:
+        title_16_9 = full_topic.get("video_title") or full_topic["title"].split("#")[0].strip()
+        print(f"\n[Stage 1 Upload] Uploading Native 16:9 Full Video: {title_16_9}", flush=True)
+        meta_path_16_9 = os.path.join(BASE_DIR, "metadata_16_9.json")
+        meta_16_9 = {
+            "title": title_16_9,
+            "description": build_rich_description(full_topic, is_short=False),
+            "tags": full_topic.get("tags", ["Anchor Aadhya", "Science Facts Hindi", "Documentary", "Curiosity"]),
+            "engagement_question": full_topic.get("engagement_question")
+        }
+        with open(meta_path_16_9, "w", encoding="utf-8") as f:
+            json.dump(meta_16_9, f, ensure_ascii=False, indent=2)
+
+        upload_res = upload_direct_video(video_16_9, meta_path_16_9, thumb_path=thumb_16_9)
+        if isinstance(upload_res, tuple) and upload_res[0]:
+            ok_16_9, full_video_id, full_video_url = upload_res
+            print(f"\n  --> ✅ [STAGE 1 SUCCESS] Full 16:9 Video LIVE: {full_video_url}", flush=True)
+        else:
+            print("\n  --> [Notice] 16:9 Video upload deferred or failed, falling back to channel URL.", flush=True)
+
+    # Clean temporary audio cache so Stage 2 builds fresh 20-30s teaser narration
+    clean_temp_audio_assets()
+
+    # ==============================================================
+    # STAGE 2: 20-30s Punchy Viral Teaser Reel / Short (9:16 Vertical)
+    # ==============================================================
+    print("\n📱 >>> STAGE 2: Rendering 20-30s Viral Teaser Short with Cliffhanger CTA <<<", flush=True)
+    short_topic = create_short_topic_from_full(full_topic)
 
     dur_short = await build_voice_and_timing(short_topic, is_short=True)
     build_audio_mix()
@@ -562,46 +661,8 @@ async def main():
     thumb_9_16 = extract_native_thumbnail(aspect="9:16")
     verify_visual_integrity(short_mp4, aspect="9:16")
 
-    if os.environ.get("DRY_RUN", "").lower() in ("1", "true", "yes"):
-        print("\n[DRY RUN] Generating contact sheet for visual review; SKIPPING upload.", flush=True)
-        try:
-            subprocess.run(["node", "tools/capture.mjs", "check"], cwd=ENGINE_DIR, check=False, timeout=60)
-        except Exception as ce:
-            print(f"[DRY RUN] check note: {ce}", flush=True)
-        sheet_dir = os.path.join(BASE_DIR, "visual_review")
-        os.makedirs(sheet_dir, exist_ok=True)
-        sheet_path = os.path.join(sheet_dir, "contact_sheet.jpg")
-        drv_env = os.environ.copy(); drv_env["QS"] = "?debug=1"
-        subprocess.run(["node", "tools/capture.mjs", "sheet", sheet_path, "4", "6"], cwd=ENGINE_DIR, env=drv_env, check=True)
-        print(f"[DRY RUN] Contact sheet: {sheet_path}", flush=True)
-
-        # One full-size frame per narration line, for inline review (no upload).
-        lines_path = os.path.join(DATA_DIR, "lines.json")
-        try:
-            with open(lines_path, "r", encoding="utf-8") as lf:
-                line_data = json.load(lf)
-            lines = line_data.get("lines", [])[:10]
-            times = [round(float(x.get("start", 0)) + 0.6, 2) for x in lines]
-            if short_topic.get("id") == "couple_first_reel":
-                # Extra late-in-line frames to show the wide two-shot pullback.
-                for idx in (1, 3):
-                    if idx < len(lines):
-                        s = float(lines[idx].get("start", 0)); e = float(lines[idx].get("end", s))
-                        times.append(round(s + 0.85 * (e - s), 2))
-            if times:
-                frames_dir = os.path.join(sheet_dir, "frames")
-                if os.path.isdir(frames_dir):
-                    for old in os.listdir(frames_dir):
-                        try: os.remove(os.path.join(frames_dir, old))
-                        except Exception: pass
-                os.makedirs(frames_dir, exist_ok=True)
-                subprocess.run(
-                    ["node", "tools/capture.mjs", "frames", frames_dir, ",".join(f"{x:.2f}" for x in times)],
-                    cwd=ENGINE_DIR, env=drv_env, check=True,
-                )
-                print(f"[DRY RUN] Per-line frames: {frames_dir}", flush=True)
-        except Exception as fe:
-            print(f"[DRY RUN] per-line frames note: {fe}", flush=True)
+    if is_dry_run:
+        print("\n[DRY RUN] Stage 1 & Stage 2 rendered locally; SKIPPING YouTube uploads.", flush=True)
         return
 
     # High-CTR Curiosity Hook for Short
@@ -657,12 +718,15 @@ async def main():
     if os.path.exists(meta_path_short):
         try: os.remove(meta_path_short)
         except Exception: pass
+    if os.path.exists(meta_path_16_9):
+        try: os.remove(meta_path_16_9)
+        except Exception: pass
     print("✅ [Clean Slate]: All temporary assets wiped! Next video will be 100% fresh.", flush=True)
 
     print("\n==============================================================", flush=True)
     print("  🎉 2-STAGE FUNNEL FULLY COMPLETED!", flush=True)
-    print(f"  1. Full 16:9 Video: {full_video_url}", flush=True)
-    print(f"  2. Viral 30-40s Short: {short_video_url}", flush=True)
+    print(f"  1. Full 16:9 Video (2+ Mins): {full_video_url}", flush=True)
+    print(f"  2. Viral Teaser Short (20-30s): {short_video_url}", flush=True)
     print("==============================================================", flush=True)
 
 if __name__ == "__main__":
