@@ -310,25 +310,29 @@ def generate_visual_prompt_for_line(text, topic_title=""):
     Generates a 2D illustration visual prompt from the spoken line text.
     Uses Gemini if available, else falls back to keyword-based mapping.
     """
-    # Try Gemini first
+    # Try Gemini first (with retry on 503)
     api_key = os.environ.get("GEMINI_API_KEY")
     if api_key:
-        try:
-            import urllib.request, json
-            prompt = f"""Given this Hindi narration line from a YouTube video about "{topic_title}":
+        for attempt in range(2):
+            try:
+                import urllib.request, json, time
+                prompt = f"""Given this Hindi narration line from a YouTube video about "{topic_title}":
 "{text}"
 
 Generate a single concise English visual description (max 30 words) for a 2D flat illustration that matches this line. The illustration should be educational, clean, colorful, and directly related to what is being spoken. Do NOT include any text in the image. Respond with ONLY the visual description, nothing else."""
-            url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key={api_key}"
-            payload = {"contents": [{"parts": [{"text": prompt}]}]}
-            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
-            with urllib.request.urlopen(req, timeout=15) as resp:
-                data = json.loads(resp.read().decode("utf-8"))
-                desc = data["candidates"][0]["content"]["parts"][0]["text"].strip()
-                if desc and len(desc) > 10:
-                    return desc
-        except Exception as e:
-            print(f"    [Gemini prompt note: {e}]", flush=True)
+                url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key={api_key}"
+                payload = {"contents": [{"parts": [{"text": prompt}]}]}
+                req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+                with urllib.request.urlopen(req, timeout=15) as resp:
+                    data = json.loads(resp.read().decode("utf-8"))
+                    desc = data["candidates"][0]["content"]["parts"][0]["text"].strip()
+                    if desc and len(desc) > 10:
+                        return desc
+            except Exception as e:
+                if attempt == 0:
+                    time.sleep(2)
+                else:
+                    print(f"    [Gemini prompt note: {str(e)[:80]}]", flush=True)
 
     # Keyword-based fallback
     text_lower = text.lower()
@@ -372,8 +376,39 @@ def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
         seed = random.randint(100000, 999999999)
     style_prefix = "2D flat vector illustration, clean educational diagram, vibrant colors, white background, no text: "
     styled_prompt = style_prefix + prompt
-    encoded = urllib.parse.quote(styled_prompt)
+    api_key = os.environ.get("GEMINI_API_KEY")
+    
+    # Tier 1: Gemini Imagen 3 (best quality, topic-matching)
+    if api_key:
+        try:
+            import base64
+            url = f"https://generativelanguage.googleapis.com/v1beta/models/imagen-3.0-fast-generate-001:predict?key={api_key}"
+            payload = {
+                "instances": [{"prompt": styled_prompt}],
+                "parameters": {
+                    "sampleCount": 1,
+                    "aspectRatio": "16:9" if width > height else "9:16",
+                    "personGeneration": "ALLOW_ADULT"
+                }
+            }
+            req = urllib.request.Request(url, data=json.dumps(payload).encode("utf-8"), headers={"Content-Type": "application/json"})
+            with urllib.request.urlopen(req, timeout=60) as resp:
+                data = json.loads(resp.read().decode("utf-8"))
+                predictions = data.get("predictions", [])
+                if predictions and predictions[0].get("bytesBase64Encoded"):
+                    img_bytes = base64.b64decode(predictions[0]["bytesBase64Encoded"])
+                    if len(img_bytes) > 5000:
+                        with open(output_jpg, "wb") as f:
+                            f.write(img_bytes)
+                        print(f"  ✓ Image generated via Gemini Imagen ({len(img_bytes)//1024} KB)", flush=True)
+                        return True
+        except Exception as e:
+            print(f"  --> [Imagen note: {str(e)[:100]}], trying Pollinations...", flush=True)
+    
+    # Tier 2: Pollinations AI
     try:
+        import urllib.parse
+        encoded = urllib.parse.quote(styled_prompt)
         url = f"https://image.pollinations.ai/prompt/{encoded}?model=turbo&seed={seed}&width={width}&height={height}&nologo=true"
         req = urllib.request.Request(url, headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"})
         with urllib.request.urlopen(req, timeout=45) as resp:
@@ -384,7 +419,7 @@ def generate_line_image(prompt, output_jpg, seed=None, width=1080, height=1920):
                 print(f"  ✓ Image generated via Pollinations ({len(content)//1024} KB)", flush=True)
                 return True
     except Exception as e:
-        print(f"  --> [Image gen note: {e}], using canvas fallback", flush=True)
+        print(f"  --> [Pollinations note: {str(e)[:100]}], using canvas fallback", flush=True)
     # Fallback: solid color canvas with text
     try:
         from PIL import Image, ImageDraw
