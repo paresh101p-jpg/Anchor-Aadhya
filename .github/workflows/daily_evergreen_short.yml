@@ -20,9 +20,9 @@ on:
         type: boolean
   repository_dispatch:
     types: [daily_short, post_aadhya_short]
-  schedule:
-    - cron: '30 2 * * *'   # Daily at 08:00 AM IST (02:30 UTC)
-    - cron: '30 11 * * *'  # Daily at 05:00 PM IST (11:30 UTC)
+  # schedule:
+  #   - cron: '30 2 * * *'   # Daily at 08:00 AM IST (02:30 UTC) - DISABLED
+  #   - cron: '30 11 * * *'  # Daily at 05:00 PM IST (11:30 UTC) - DISABLED
 
 concurrency:
   group: aadhya-evergreen-short
