@@ -62,3 +62,169 @@ export function bigText(text, x, y, size, fill = C.white, rot = 0, sc = 1) {
   ctx.lineWidth = size * 0.2; ctx.strokeStyle = C.ink; ctx.strokeText(text, 0, 0); ctx.fillStyle = fill; ctx.fillText(text, 0, 0);
   ctx.restore();
 }
+
+// ── FULL-CANVAS MOTION GRAPHICS SUITE (1080x1920 9:16) ───────────────────────────
+
+/** Dynamic Multi-Stop Gradient Background + Full-Screen Ambient Particles + Grid */
+export function drawFullCanvasBackground(t, theme = 'ocean') {
+  ctx.save();
+  // 1. Full-Height 1080x1920 Rich Ambient Gradient (NO plain black void!)
+  const bgGrad = ctx.createLinearGradient(0, 0, 0, H);
+  if (theme === 'ocean' || theme === 'bermuda') {
+    bgGrad.addColorStop(0, '#020C1B');
+    bgGrad.addColorStop(0.35, '#051937');
+    bgGrad.addColorStop(0.70, '#002B49');
+    bgGrad.addColorStop(1, '#010A14');
+  } else if (theme === 'inferno' || theme === 'kola') {
+    bgGrad.addColorStop(0, '#150604');
+    bgGrad.addColorStop(0.40, '#2D0D07');
+    bgGrad.addColorStop(0.75, '#1A0804');
+    bgGrad.addColorStop(1, '#0A0302');
+  } else if (theme === 'cyber' || theme === 'gta') {
+    bgGrad.addColorStop(0, '#16021E');
+    bgGrad.addColorStop(0.45, '#2A0845');
+    bgGrad.addColorStop(0.75, '#1A002C');
+    bgGrad.addColorStop(1, '#090014');
+  } else {
+    bgGrad.addColorStop(0, '#070C18');
+    bgGrad.addColorStop(0.40, '#0E1A32');
+    bgGrad.addColorStop(0.75, '#091224');
+    bgGrad.addColorStop(1, '#03060C');
+  }
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, W, H);
+
+  // 2. Dynamic Radial Core Glow (pulses subtly behind hero visual)
+  const glowY = 700 + Math.sin(t * 1.5) * 40;
+  const radGlow = ctx.createRadialGradient(W / 2, glowY, 50, W / 2, glowY, 680);
+  const glowColor = (theme === 'ocean' || theme === 'bermuda') ? 'rgba(0, 240, 255, 0.16)'
+                  : (theme === 'inferno' || theme === 'kola') ? 'rgba(249, 115, 22, 0.18)'
+                  : (theme === 'cyber' || theme === 'gta') ? 'rgba(255, 0, 128, 0.18)'
+                  : 'rgba(56, 189, 248, 0.14)';
+  radGlow.addColorStop(0, glowColor);
+  radGlow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+  ctx.fillStyle = radGlow;
+  ctx.fillRect(0, 0, W, H);
+
+  // 3. Ambient Flow Particles across ENTIRE 1080x1920 canvas (Zero dead areas!)
+  for (let k = 0; k < 42; k++) {
+    const px = (k * 137.5 + t * (15 + (k % 5) * 8)) % W;
+    const py = (H + ((k * 223.7 - t * (45 + (k % 4) * 18)) % H)) % H;
+    const pr = 2.0 + (k % 4) * 2.2;
+    const pAlpha = 0.25 + 0.35 * Math.sin(t * 3 + k * 1.7);
+    ctx.fillStyle = (theme === 'inferno' || theme === 'kola')
+      ? `rgba(254, 215, 170, ${pAlpha})`
+      : `rgba(186, 230, 253, ${pAlpha})`;
+    ctx.beginPath();
+    ctx.arc(px, py, pr, 0, TAU);
+    ctx.fill();
+  }
+
+  // 4. Subtle Dynamic Perspective Floor Grid (bottom region y: 1100 to 1920)
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.04)';
+  ctx.lineWidth = 1.5;
+  for (let x = 80; x < W; x += 130) {
+    line([[x, 1000], [540 + (x - 540) * 1.8, H]], 'rgba(255, 255, 255, 0.035)', 1.5);
+  }
+  for (let y = 1100; y < H; y += 120) {
+    line([[0, y], [W, y]], 'rgba(255, 255, 255, 0.035)', 1.5);
+  }
+
+  ctx.restore();
+}
+
+/** High-Energy Real-Time Audio Frequency Visualizer (Lower screen y: 1560 to 1700) */
+export function drawAudioVisualizer(t, baseY = 1640, height = 80) {
+  ctx.save();
+  const bars = 32;
+  const totalW = 860;
+  const barW = 18;
+  const startX = (W - totalW) / 2;
+  const stepX = totalW / bars;
+
+  ctx.lineCap = 'round';
+  for (let b = 0; b < bars; b++) {
+    const x = startX + b * stepX + barW / 2;
+    // Harmonic wave formula simulates high-energy speech/music rhythms
+    const wave = Math.abs(
+      Math.sin(t * 12 + b * 0.45) * 0.45 +
+      Math.sin(t * 22 + b * 0.85) * 0.35 +
+      Math.sin(t * 7 + b * 0.2) * 0.2
+    );
+    const barH = Math.max(12, wave * height);
+
+    // Glowing Equalizer Bar Gradient
+    const bGrad = ctx.createLinearGradient(0, baseY, 0, baseY - barH);
+    bGrad.addColorStop(0, '#00F0FF');
+    bGrad.addColorStop(0.6, '#22C55E');
+    bGrad.addColorStop(1, '#FFE600');
+
+    ctx.strokeStyle = bGrad;
+    ctx.lineWidth = barW - 5;
+    ctx.beginPath();
+    ctx.moveTo(x, baseY);
+    ctx.lineTo(x, baseY - barH);
+    ctx.stroke();
+
+    // Floating Peak Dot
+    const peakY = baseY - barH - 8;
+    ctx.fillStyle = '#FFE600';
+    ctx.beginPath();
+    ctx.arc(x, peakY, 2.5, 0, TAU);
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+/** Broadcast Viewport Framing & Top/Bottom Telemetry */
+export function drawBroadcastFrame(t) {
+  ctx.save();
+  // 1. Top Status Bar (y: 65)
+  ctx.font = '900 20px Inter, sans-serif';
+  ctx.textBaseline = 'middle';
+
+  // Red Blinking REC dot
+  const recBlink = Math.sin(t * 6) > 0;
+  if (recBlink) {
+    circle(95, 68, 7, '#FF1744');
+    ctx.fillStyle = 'rgba(255, 23, 68, 0.3)';
+    circle(95, 68, 14, 'rgba(255, 23, 68, 0.3)');
+  }
+  ctx.fillStyle = '#FFFFFF';
+  ctx.textAlign = 'left';
+  ctx.fillText('REC // 4K 60FPS', 115, 68);
+
+  // Center Channel Watermark
+  ctx.fillStyle = '#FFE600';
+  ctx.textAlign = 'center';
+  ctx.fillText('ANCHOR AADHYA VIRAL RADAR', W / 2, 68);
+
+  // Right Frame Timecode
+  const secs = Math.floor(t);
+  const frames = Math.floor((t % 1) * 30);
+  const timeStr = `00:${String(secs).padStart(2, '0')}:${String(frames).padStart(2, '0')}`;
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.75)';
+  ctx.textAlign = 'right';
+  ctx.fillText(timeStr, W - 95, 68);
+
+  // 2. Corner Viewport Brackets (Frame safe boundary)
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.3)';
+  ctx.lineWidth = 3;
+  const bLen = 30;
+  // Top-Left
+  ctx.beginPath(); ctx.moveTo(60, 60 + bLen); ctx.lineTo(60, 60); ctx.lineTo(60 + bLen, 60); ctx.stroke();
+  // Top-Right
+  ctx.beginPath(); ctx.moveTo(W - 60 - bLen, 60); ctx.lineTo(W - 60, 60); ctx.lineTo(W - 60, 60 + bLen); ctx.stroke();
+  // Bottom-Left
+  ctx.beginPath(); ctx.moveTo(60, H - 60 - bLen); ctx.lineTo(60, H - 60); ctx.lineTo(60 + bLen, H - 60); ctx.stroke();
+  // Bottom-Right
+  ctx.beginPath(); ctx.moveTo(W - 60 - bLen, H - 60); ctx.lineTo(W - 60, H - 60); ctx.lineTo(W - 60, H - 60 - bLen); ctx.stroke();
+
+  // 3. Bottom Telemetry Status Line (y: 1720)
+  ctx.font = '800 18px Inter, sans-serif';
+  ctx.fillStyle = 'rgba(255, 255, 255, 0.55)';
+  ctx.textAlign = 'center';
+  ctx.fillText('AUDIO TELEMETRY // AI FREQUENCY SPECTRUM // 48kHz HD', W / 2, 1720);
+
+  ctx.restore();
+}

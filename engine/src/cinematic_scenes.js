@@ -3,7 +3,7 @@
 // Earth, Mount Everest, Sun, Submarine, 1000 Elephants, Anglerfish, Plastic Bottle,
 // Chernobyl Reactor, Elephant's Foot, Geiger Counter, Nixie Countdown, Corium Lava.
 // All visuals placed safely above y=1200 to guarantee ZERO caption overlap.
-import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU, countUp, spring, easeOutExpo } from './core/lib.js';
+import { ctx, W, H, clamp, lerp, seg, eo, eio, eob, rnd, circle, ell, line, rr, TAU, countUp, spring, easeOutExpo, drawFullCanvasBackground } from './core/lib.js';
 
 const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal", sans-serif`;
 
@@ -2372,29 +2372,32 @@ export function drawGta6OutroCTA(lt, d, t) {
   filmAtmosphere(t, 640, "rgba(255, 0, 127, 0.25)");
 }
 
-// ── H. BERMUDA TRIANGLE MOTION GRAPHICS SUITE (1080x1920 9:16) ───────────────────
+// ── H. BERMUDA TRIANGLE FULL-CANVAS MOTION GRAPHICS SUITE (1080x1920 9:16) ────────
 
 // ── H1. BERMUDA TRIANGLE HOLOGRAPHIC MAP ─────────────────────────────────────────
 export function drawBermudaTriangleMap(lt, d, t) {
-  ctx.fillStyle = "#010814"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("NORTH ATLANTIC ANOMALY // 700,000 SQ KM", "बरमूडा ट्रायंगल का वो सच जो छुपाया गया!", "#00F0FF");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Atlantic Ocean Depth Grid
-  ctx.strokeStyle = "rgba(0, 240, 255, 0.15)"; ctx.lineWidth = 1.5;
-  for (let r = 80; r <= 320; r += 60) {
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+  // Atlantic Ocean Depth Radar Rings
+  ctx.strokeStyle = "rgba(0, 240, 255, 0.22)"; ctx.lineWidth = 2;
+  for (let r = 80; r <= 360; r += 70) {
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke();
   }
 
   // The 3 Triangle Vertices: Miami (west), Bermuda (north), Puerto Rico (south)
-  const pBermuda = [cx + 60, cy - 200];
-  const pMiami = [cx - 240, cy - 40];
-  const pPuerto = [cx + 80, cy + 180];
+  const pBermuda = [80, -260];
+  const pMiami = [-330, -30];
+  const pPuerto = [120, 250];
 
-  // Pulsing Triangle Border Lines
-  ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 5;
+  // Pulsing Triangle Glowing Border Lines
+  ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 6;
   ctx.beginPath();
   ctx.moveTo(pMiami[0], pMiami[1]);
   ctx.lineTo(pBermuda[0], pBermuda[1]);
@@ -2403,316 +2406,329 @@ export function drawBermudaTriangleMap(lt, d, t) {
   ctx.stroke();
 
   // Translucent glowing yellow fill inside the Bermuda Triangle
-  ctx.fillStyle = "rgba(255, 230, 0, 0.12)";
+  ctx.fillStyle = "rgba(255, 230, 0, 0.16)";
   ctx.fill();
 
+  // Dynamic Animated Ocean Current Flow Vectors inside triangle
+  for (let f = 0; f < 8; f++) {
+    const fx = -120 + ((f * 65 + t * 90) % 240);
+    const fy = -100 + ((f * 55 + t * 50) % 200);
+    line([[fx, fy], [fx + 40, fy + 20]], "rgba(0, 240, 255, 0.5)", 3);
+  }
+
   // Vertex Markers with Ping Radars
-  const ping = 1 + 0.18 * Math.sin(t * 8);
+  const ping = 1 + 0.22 * Math.sin(t * 8);
   for (const pt of [pMiami, pBermuda, pPuerto]) {
-    circle(pt[0], pt[1], 14, "#FF1744");
-    ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(pt[0], pt[1], 24 * ping, 0, TAU); ctx.stroke();
+    circle(pt[0], pt[1], 16, "#FF1744");
+    ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.arc(pt[0], pt[1], 28 * ping, 0, TAU); ctx.stroke();
   }
 
   // Vertex Labels
-  ctx.font = F(24, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
-  ctx.fillText("BERMUDA", pBermuda[0], pBermuda[1] - 35);
-  ctx.fillText("MIAMI", pMiami[0] - 65, pMiami[1]);
-  ctx.fillText("PUERTO RICO", pPuerto[0], pPuerto[1] + 45);
-
-  drawAutoTechCard("BERMUDA TRIANGLE // HIGH-RISK TRANSIT", cx, 860, "#FFE600", 24);
+  ctx.font = F(26, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("BERMUDA", pBermuda[0], pBermuda[1] - 40);
+  ctx.fillText("MIAMI", pMiami[0] - 80, pMiami[1]);
+  ctx.fillText("PUERTO RICO", pPuerto[0], pPuerto[1] + 50);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(0, 240, 255, 0.2)");
+
+  drawAutoTechCard("BERMUDA TRIANGLE // HIGH-RISK TRANSIT // 25°N 71°W", cx, 1180, "#FFE600", 26);
+  filmAtmosphere(t, 680, "rgba(0, 240, 255, 0.25)");
 }
 
 // ── H2. BERMUDA 700,000 SQ KM DANGER PERIMETER RADAR ─────────────────────────────
 export function drawBermudaPerimeterRadar(lt, d, t) {
-  ctx.fillStyle = "#020713"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("700,000 SQ KM DANGER ZONE", "दुनिया का सबसे खतरनाक समुद्री चक्रव्यूह!", "#FF0055");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Concentric Radar Distance Rings
-  for (let r = 80; r <= 280; r += 50) {
-    ctx.strokeStyle = "rgba(255, 0, 85, 0.22)"; ctx.lineWidth = 1.8;
-    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+  for (let r = 80; r <= 360; r += 60) {
+    ctx.strokeStyle = "rgba(255, 0, 85, 0.25)"; ctx.lineWidth = 2.2;
+    ctx.beginPath(); ctx.arc(0, 0, r, 0, TAU); ctx.stroke();
   }
   // Crosshairs
-  line([[cx - 280, cy], [cx + 280, cy]], "rgba(255, 0, 85, 0.25)", 1.5);
-  line([[cx, cy - 280], [cx, cy + 280]], "rgba(255, 0, 85, 0.25)", 1.5);
+  line([[-360, 0], [360, 0]], "rgba(255, 0, 85, 0.3)", 2);
+  line([[0, -360], [0, 360]], "rgba(255, 0, 85, 0.3)", 2);
 
-  // Rotating 360° Radar Sweep Beam
-  const sweepAngle = (t * 4.5) % TAU;
-  ctx.save();
-  ctx.translate(cx, cy);
-  const sweepGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 280);
-  sweepGrad.addColorStop(0, "rgba(255, 0, 85, 0.35)");
+  // Rotating 360° Military Radar Sweep Beam
+  const sweepAngle = (t * 5.0) % TAU;
+  const sweepGrad = ctx.createRadialGradient(0, 0, 10, 0, 0, 360);
+  sweepGrad.addColorStop(0, "rgba(255, 0, 85, 0.45)");
   sweepGrad.addColorStop(1, "rgba(255, 0, 85, 0.0)");
   ctx.fillStyle = sweepGrad;
   ctx.beginPath();
   ctx.moveTo(0, 0);
-  ctx.arc(0, 0, 280, sweepAngle - 0.5, sweepAngle);
+  ctx.arc(0, 0, 360, sweepAngle - 0.55, sweepAngle);
   ctx.closePath();
   ctx.fill();
-  // Sweep front line
-  line([[0, 0], [Math.cos(sweepAngle) * 280, Math.sin(sweepAngle) * 280]], "#FF0055", 3);
-  ctx.restore();
+  line([[0, 0], [Math.cos(sweepAngle) * 360, Math.sin(sweepAngle) * 360]], "#FF0055", 4);
 
   // Vanishing Radar Blips of Lost Vessels
-  const blipPositions = [
-    [cx - 120, cy - 80],
-    [cx + 140, cy - 130],
-    [cx - 60, cy + 150],
-    [cx + 110, cy + 90],
-    [cx - 170, cy + 40],
-  ];
+  const blipPositions = [[-140, -100], [160, -150], [-70, 180], [130, 110], [-200, 50], [80, -220]];
   blipPositions.forEach((pt, bi) => {
-    const blipPhase = Math.sin(t * 5 + bi * 1.8);
-    if (blipPhase > 0.2) {
-      circle(pt[0], pt[1], 8, "#FF0055");
-      ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 2;
-      ctx.beginPath(); ctx.arc(pt[0], pt[1], 18 * (1 - blipPhase * 0.5), 0, TAU); ctx.stroke();
+    const blipPhase = Math.sin(t * 5.5 + bi * 1.6);
+    if (blipPhase > 0.15) {
+      circle(pt[0], pt[1], 10, "#FF0055");
+      ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 2.5;
+      ctx.beginPath(); ctx.arc(pt[0], pt[1], 24 * (1 - blipPhase * 0.4), 0, TAU); ctx.stroke();
     }
   });
 
   // Dynamic Animated Area Counter
   const countP = clamp(lt / Math.max(0.1, d * 0.8));
   const areaVal = countUp(100000, 700000, countP);
-  ctx.font = F(42, "900"); ctx.fillStyle = "#FFE600"; ctx.textAlign = "center";
-  ctx.fillText(`${areaVal} KM²`, cx, cy - 20);
-  ctx.font = F(22, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.85)";
-  ctx.fillText("ACTIVE PERIMETER AREA", cx, cy + 25);
-
-  drawAutoTechCard("ACOUSTIC SONAR // 50+ VESSELS & CRAFT LOST", cx, 860, "#FF0055", 24);
+  ctx.font = F(48, "900"); ctx.fillStyle = "#FFE600"; ctx.textAlign = "center";
+  ctx.fillText(`${areaVal} KM²`, 0, -25);
+  ctx.font = F(22, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.9)";
+  ctx.fillText("ACTIVE PERIMETER AREA", 0, 30);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(255, 0, 85, 0.2)");
+
+  drawAutoTechCard("ACOUSTIC SONAR // 50+ VESSELS & AIRCRAFT LOST", cx, 1180, "#FF0055", 26);
+  filmAtmosphere(t, 680, "rgba(255, 0, 85, 0.25)");
 }
 
 // ── H3. METHANE HYDRATE GAS ERUPTION ──────────────────────────────────────────────
 export function drawMethaneBubblesEruption(lt, d, t) {
-  ctx.fillStyle = "#010712"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("OCEAN FLOOR GEOPHYSICS // METHANE ERUPTION", "समुद्र के पेट से मीथेन गैस का भयानक विस्फोट!", "#22C55E");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Sea Floor Bedrock
+  // Sea Floor Bedrock with Fractured Volcanic Vents
   ctx.fillStyle = "#0F172A";
   ctx.beginPath();
-  ctx.moveTo(100, cy + 220); ctx.lineTo(W - 100, cy + 220); ctx.lineTo(W - 100, 880); ctx.lineTo(100, 880); ctx.closePath();
+  ctx.moveTo(-380, 260); ctx.lineTo(380, 260); ctx.lineTo(380, 420); ctx.lineTo(-380, 420); ctx.closePath();
   ctx.fill();
+  ctx.strokeStyle = "#22C55E"; ctx.lineWidth = 4;
+  line([[-380, 260], [380, 260]], "#22C55E", 4);
 
-  // Giant Expanding Gas Bubbles Rising
-  for (let k = 0; k < 16; k++) {
-    const bx = cx - 180 + ((k * 43 + t * 40) % 360);
-    const by = cy + 200 - ((k * 67 + t * 180) % 480);
-    const br = 18 + (k % 4) * 12 + Math.sin(t * 6 + k) * 6;
+  // Erupting Hydrothermal Gas Chimneys
+  for (let vent of [-200, 0, 200]) {
+    ctx.fillStyle = "#1E293B";
+    ctx.beginPath();
+    ctx.moveTo(vent - 35, 260); ctx.lineTo(vent + 35, 260); ctx.lineTo(vent + 20, 180); ctx.lineTo(vent - 20, 180);
+    ctx.closePath(); ctx.fill();
+  }
 
-    // Glowing Gas Bubble
+  // Giant Expanding Glowing Methane Gas Bubbles Rising
+  for (let k = 0; k < 24; k++) {
+    const bx = -260 + ((k * 57 + t * 65) % 520);
+    const by = 260 - ((k * 73 + t * 240) % 620);
+    const br = 20 + (k % 4) * 14 + Math.sin(t * 7 + k) * 6;
+
     const bGrad = ctx.createRadialGradient(bx - br * 0.3, by - br * 0.3, 4, bx, by, br);
     bGrad.addColorStop(0, "rgba(74, 222, 128, 0.95)");
-    bGrad.addColorStop(0.6, "rgba(34, 197, 94, 0.6)");
+    bGrad.addColorStop(0.6, "rgba(34, 197, 94, 0.65)");
     bGrad.addColorStop(1, "rgba(0, 0, 0, 0)");
-    ctx.fillStyle = bGrad;
     circle(bx, by, br, bGrad);
-    ctx.strokeStyle = "#86EFAC"; ctx.lineWidth = 2;
+    ctx.strokeStyle = "#86EFAC"; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.arc(bx, by, br, 0, TAU); ctx.stroke();
   }
 
-  drawAutoTechCard("WATER DENSITY COLLAPSE: 1.0 -> 0.3 g/cm³", cx, 860, "#22C55E", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(34, 197, 94, 0.2)");
+
+  drawAutoTechCard("WATER DENSITY COLLAPSE: 1.0 -> 0.3 g/cm³", cx, 1180, "#22C55E", 26);
+  filmAtmosphere(t, 680, "rgba(34, 197, 94, 0.25)");
 }
 
-// ── H3. SHIP SINKING IN ABYSS (LOSS OF BUOYANCY) ──────────────────────────────────
+// ── H4. SHIP SINKING IN ABYSS (LOSS OF BUOYANCY) ──────────────────────────────────
 export function drawShipSinkingAbyss(lt, d, t) {
-  ctx.fillStyle = "#020713"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("NAUTICAL CATASTROPHE // ZERO BUOYANCY", "पानी की डेंसिटी खत्म: सेकंडों में जहाज डूबा!", "#EF4444");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Violent Water Surface Waves
-  ctx.fillStyle = "#0369A1";
+  // Giant Oceanic Vortex / Sinking Funnel
+  ctx.fillStyle = "rgba(3, 105, 161, 0.35)";
   ctx.beginPath();
-  ctx.moveTo(100, cy + 40);
-  for (let x = 100; x <= W - 100; x += 30) {
-    ctx.lineTo(x, cy + 40 + Math.sin(x * 0.04 + t * 6) * 22);
-  }
-  ctx.lineTo(W - 100, 880); ctx.lineTo(100, 880); ctx.closePath();
+  ctx.ellipse(0, 100, 360, 180, 0, 0, TAU);
   ctx.fill();
+  ctx.strokeStyle = "rgba(56, 189, 248, 0.5)"; ctx.lineWidth = 4; ctx.stroke();
 
-  // Ship Plunging Bow-First into Abyss
+  // Sinking Cargo Ship Hull Plunging Bow-First into Abyss
   ctx.save();
-  ctx.translate(cx, cy + 20);
-  ctx.rotate(0.35 + Math.sin(t * 3) * 0.06);
+  ctx.translate(0, 40);
+  ctx.rotate(0.42 + Math.sin(t * 3) * 0.08);
 
-  // Ship Hull
-  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#E2E8F0"; ctx.lineWidth = 4;
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#E2E8F0"; ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(-180, -30); ctx.lineTo(120, -30); ctx.lineTo(180, 40); ctx.lineTo(-140, 40);
+  ctx.moveTo(-220, -35); ctx.lineTo(150, -35); ctx.lineTo(220, 50); ctx.lineTo(-170, 50);
   ctx.closePath(); ctx.fill(); ctx.stroke();
 
   // Bridge Cabin & Smokestack
-  ctx.fillStyle = "#DC2626";
-  ctx.fillRect(-60, -85, 90, 55);
-  ctx.fillStyle = "#0F172A";
-  ctx.fillRect(-20, -115, 25, 30);
-
+  ctx.fillStyle = "#DC2626"; ctx.fillRect(-75, -100, 110, 65);
+  ctx.fillStyle = "#0F172A"; ctx.fillRect(-25, -140, 30, 40);
   ctx.restore();
 
-  // Downward Drag Arrows
-  for (let s of [-160, 0, 160]) {
-    const arrY = cy + 120 + Math.sin(t * 8 + s) * 15;
-    ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 6;
-    line([[cx + s, arrY], [cx + s, arrY + 70]], "#EF4444", 6);
+  // Violent Hydrodynamic Suction Downward Vectors
+  for (let s of [-200, -70, 70, 200]) {
+    const arrY = 140 + Math.sin(t * 8 + s) * 20;
+    line([[s, arrY], [s, arrY + 90]], "#EF4444", 6);
+    ctx.fillStyle = "#EF4444";
+    ctx.beginPath(); ctx.moveTo(s, arrY + 110); ctx.lineTo(s - 14, arrY + 85); ctx.lineTo(s + 14, arrY + 85); ctx.fill();
   }
 
-  drawAutoTechCard("HYDRODYNAMIC SUCTION: INSTANT PLUNGE", cx, 860, "#EF4444", 24);
-
   ctx.restore();
-  filmAtmosphere(t);
+
+  drawAutoTechCard("HYDRODYNAMIC SUCTION: INSTANT ABYSSAL PLUNGE", cx, 1180, "#EF4444", 26);
+  filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.25)");
 }
 
-// ── H4. HEXAGONAL CLOUDS & 270 KM/H AIR BOMBS ────────────────────────────────────
+// ── H5. HEXAGONAL CLOUDS & 270 KM/H AIR BOMBS ────────────────────────────────────
 export function drawHexagonalCloudAirBombs(lt, d, t) {
-  ctx.fillStyle = "#03060E"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("METEOROLOGY // HEXAGONAL MICROBURSTS", "270 KM/H के तूफानी एयर-बॉम्ब्स!", "#38BDF8");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Radar Rings
-  ctx.strokeStyle = "rgba(56, 189, 248, 0.2)"; ctx.lineWidth = 2;
-  circle(cx, cy, 260, "rgba(8, 47, 73, 0.35)");
-
-  // Giant Geometric Hexagonal Storm Cloud
-  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 7;
-  ctx.fillStyle = "rgba(14, 165, 233, 0.25)";
+  // Giant Geometric Hexagonal Storm Cloud Formation
+  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 8;
+  ctx.fillStyle = "rgba(14, 165, 233, 0.35)";
   ctx.beginPath();
   for (let i = 0; i < 6; i++) {
     const a = (i * TAU) / 6 - Math.PI / 6;
-    const hx = cx + Math.cos(a) * 210, hy = cy - 40 + Math.sin(a) * 210;
+    const hx = Math.cos(a) * 260, hy = -80 + Math.sin(a) * 260;
     if (i === 0) ctx.moveTo(hx, hy); else ctx.lineTo(hx, hy);
   }
   ctx.closePath(); ctx.fill(); ctx.stroke();
 
-  // Vertical Air Bomb Shockwave Dropping Downward
-  for (let i = -1; i <= 1; i++) {
-    const ax = cx + i * 110;
-    const dy = cy + 40 + ((t * 220 + i * 80) % 240);
-    ctx.strokeStyle = "#FACC15"; ctx.lineWidth = 6;
-    line([[ax, cy - 20], [ax, dy]], "#FACC15", 6);
+  // Vertical Air-Bomb Shockwave Jetstreams Dropping Downward
+  for (let i = -2; i <= 2; i++) {
+    const ax = i * 90;
+    const dy = 20 + ((t * 260 + (i + 2) * 70) % 280);
+    line([[ax, -40], [ax, dy]], "#FACC15", 7);
     ctx.fillStyle = "#FACC15";
-    ctx.beginPath(); ctx.moveTo(ax, dy); ctx.lineTo(ax - 16, dy - 24); ctx.lineTo(ax + 16, dy - 24); ctx.fill();
+    ctx.beginPath(); ctx.moveTo(ax, dy); ctx.lineTo(ax - 18, dy - 26); ctx.lineTo(ax + 18, dy - 26); ctx.fill();
   }
 
-  drawAutoTechCard("270 KM/H DOWNDRAFT VELOCITY", cx, 860, "#38BDF8", 24);
+  // Live Wind Velocity Gauge
+  const speedVal = countUp(80, 270, clamp(lt / Math.max(0.1, d * 0.75)));
+  ctx.font = F(42, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "center";
+  ctx.fillText(`${speedVal} KM/H`, 0, -80);
+  ctx.font = F(18, "800"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("MICROBURST DOWNDRAFT", 0, -40);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(56, 189, 248, 0.2)");
+
+  drawAutoTechCard("270 KM/H DOWNDRAFT VELOCITY // AIR-BOMB", cx, 1180, "#38BDF8", 26);
+  filmAtmosphere(t, 680, "rgba(56, 189, 248, 0.25)");
 }
 
-// ── H5. AIRPLANE SEVERE STORM DISASTER ───────────────────────────────────────────
+// ── H6. AIRPLANE SEVERE STORM DISASTER ───────────────────────────────────────────
 export function drawAirplaneStormDisaster(lt, d, t) {
-  ctx.fillStyle = "#04020A"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("AERODYNAMICS // AIR-BOMB DOWNBURST", "उड़ते विमान सीधे समुद्र में क्रैश!", "#EF4444");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Flash Lightning
+  // Lightning Flashes
   if (Math.sin(t * 14) > 0.85) {
-    ctx.fillStyle = "rgba(255, 255, 255, 0.22)"; ctx.fillRect(100, 260, W - 200, 620);
+    ctx.fillStyle = "rgba(255, 255, 255, 0.28)"; ctx.fillRect(-380, -320, 760, 640);
   }
 
   // Commercial Flight 19 Airplane Silhouette Pitching Down
   ctx.save();
-  ctx.translate(cx, cy);
-  ctx.rotate(0.55 + Math.sin(t * 4) * 0.08); // Extreme nose dive angle
+  ctx.rotate(0.55 + Math.sin(t * 4) * 0.08);
 
-  // Fuselage
-  ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#64748B"; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.ellipse(0, 0, 160, 28, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#E2E8F0"; ctx.strokeStyle = "#64748B"; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.ellipse(0, 0, 190, 34, 0, 0, TAU); ctx.fill(); ctx.stroke();
   // Wings
-  line([[0, -140], [20, 140]], "#CBD5E1", 20);
+  line([[0, -170], [25, 170]], "#CBD5E1", 24);
   // Tail fin
-  line([[-140, 0], [-175, -65]], "#CBD5E1", 16);
-
+  line([[-160, 0], [-200, -80]], "#CBD5E1", 18);
   ctx.restore();
 
   // Violent Wind Turbulence Vectors
-  for (let k = 0; k < 8; k++) {
-    const wx = cx - 220 + ((k * 63 + t * 240) % 440);
-    const wy = cy - 120 + ((k * 47) % 240);
-    line([[wx, wy], [wx + 60, wy + 25]], "rgba(255, 255, 255, 0.5)", 3);
+  for (let k = 0; k < 12; k++) {
+    const wx = -280 + ((k * 63 + t * 280) % 560);
+    const wy = -180 + ((k * 47) % 360);
+    line([[wx, wy], [wx + 70, wy + 30]], "rgba(255, 255, 255, 0.65)", 3.5);
   }
 
-  drawAutoTechCard("CRITICAL AERODYNAMIC LOSS OF LIFT", cx, 860, "#EF4444", 24);
-
   ctx.restore();
-  filmAtmosphere(t);
+
+  drawAutoTechCard("CRITICAL AERODYNAMIC LOSS OF LIFT // DIVE", cx, 1180, "#EF4444", 26);
+  filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.25)");
 }
 
-// ── H6. MAGNETIC COMPASS ANOMALY (SPINNING NEEDLE) ───────────────────────────────
+// ── H7. MAGNETIC COMPASS ANOMALY (SPINNING NEEDLE) ───────────────────────────────
 export function drawMagneticCompassChaos(lt, d, t) {
-  ctx.fillStyle = "#0A0502"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("GEOMAGNETIC DISTORTION // COMPASS ERROR", "कंपास की सुई पूरी तरह पागल हो जाती है!", "#F59E0B");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Brass Compass Housing
-  circle(cx, cy, 220, "#291804");
-  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 14;
-  ctx.beginPath(); ctx.arc(cx, cy, 220, 0, TAU); ctx.stroke();
+  // Giant Brass Compass Housing
+  circle(0, 0, 260, "#291804");
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 16;
+  ctx.beginPath(); ctx.arc(0, 0, 260, 0, TAU); ctx.stroke();
 
   // Inner Degree Marks
-  ctx.strokeStyle = "rgba(255, 255, 255, 0.35)"; ctx.lineWidth = 3;
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.4)"; ctx.lineWidth = 3.5;
   for (let a = 0; a < TAU; a += TAU / 12) {
-    line([[cx + Math.cos(a) * 180, cy + Math.sin(a) * 180], [cx + Math.cos(a) * 200, cy + Math.sin(a) * 200]], "#FFFFFF", 3);
+    line([[Math.cos(a) * 210, Math.sin(a) * 210], [Math.cos(a) * 240, Math.sin(a) * 240]], "#FFFFFF", 3.5);
   }
 
   // Compass Cardinal Labels (N, E, S, W)
-  ctx.font = F(32, "900"); ctx.fillStyle = "#FF1744"; ctx.textAlign = "center";
-  ctx.fillText("N", cx, cy - 145);
+  ctx.font = F(36, "900"); ctx.fillStyle = "#FF1744"; ctx.textAlign = "center";
+  ctx.fillText("N", 0, -170);
   ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("S", cx, cy + 165);
-  ctx.fillText("E", cx + 160, cy + 10);
-  ctx.fillText("W", cx - 160, cy + 10);
+  ctx.fillText("S", 0, 190);
+  ctx.fillText("E", 190, 12);
+  ctx.fillText("W", -190, 12);
 
   // Erratically Spinning Needle
   const spin = t * 14 + Math.sin(t * 8) * 4;
-  ctx.save(); ctx.translate(cx, cy); ctx.rotate(spin);
-
+  ctx.save(); ctx.rotate(spin);
   // Red North Needle
   ctx.fillStyle = "#EF4444";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-18, 0); ctx.lineTo(0, -150); ctx.lineTo(18, 0); ctx.closePath(); ctx.fill();
-
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, 0); ctx.lineTo(0, -180); ctx.lineTo(22, 0); ctx.closePath(); ctx.fill();
   // Silver South Needle
   ctx.fillStyle = "#94A3B8";
-  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-18, 0); ctx.lineTo(0, 150); ctx.lineTo(18, 0); ctx.closePath(); ctx.fill();
-
-  circle(0, 0, 16, "#F59E0B");
+  ctx.beginPath(); ctx.moveTo(0, 0); ctx.lineTo(-22, 0); ctx.lineTo(0, 180); ctx.lineTo(22, 0); ctx.closePath(); ctx.fill();
+  circle(0, 0, 18, "#F59E0B");
   ctx.restore();
 
-  drawAutoTechCard("TRUE NORTH VS MAGNETIC NORTH FAILURE", cx, 860, "#F59E0B", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(245, 158, 11, 0.2)");
+
+  drawAutoTechCard("TRUE NORTH VS MAGNETIC NORTH SYSTEMIC FAILURE", cx, 1180, "#F59E0B", 26);
+  filmAtmosphere(t, 680, "rgba(245, 158, 11, 0.25)");
 }
 
-// ── H7. BERMUDA OUTRO CTA ─────────────────────────────────────────────────────────
+// ── H8. BERMUDA OUTRO CTA ─────────────────────────────────────────────────────────
 export function drawBermudaOutroCTA(lt, d, t) {
-  ctx.fillStyle = "#010814"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'bermuda');
   hudHeader("ANCHOR AADHYA OFFICIAL // BERMUDA", "कमेंट में बताएं और सब्सक्राइब करें!", "#00F0FF");
 
   ctx.save();
-  const ox = 540, oy = 640, s = 1.35;
+  const ox = 540, oy = 700, s = 1.45;
   ctx.translate(ox, oy); ctx.scale(s, s);
 
   // Red YouTube Button
@@ -2735,343 +2751,365 @@ export function drawBermudaOutroCTA(lt, d, t) {
   drawOutroQuestionBubble("क्या आप बरमूडा ट्रायंगल जाएंगे? 🚢✍️");
 
   ctx.restore();
-  filmAtmosphere(t, 640, "rgba(0, 240, 255, 0.2)");
+
+  drawAutoTechCard("SUBSCRIBE FOR DAILY VIRAL SCIENCE FACTS", 540, 1180, "#00F0FF", 26);
+  filmAtmosphere(t, 700, "rgba(0, 240, 255, 0.25)");
 }
 
-// ── I. KOLA SUPERDEEP BOREHOLE MOTION GRAPHICS SUITE (1080x1920 9:16) ─────────────
+// ── I. KOLA SUPERDEEP BOREHOLE FULL-CANVAS MOTION GRAPHICS SUITE (1080x1920 9:16) ─
 
 // ── I1. KOLA BOREHOLE DRILL DEPTH GAUGE (12,262 METERS) ───────────────────────────
 export function drawKolaBoreholeDrillDepth(lt, d, t) {
-  ctx.fillStyle = "#020612"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("DEEPEST MAN-MADE HOLE // 12,262M", "पृथ्वी के पेट में 12,262 मीटर गहरा गड्ढा!", "#F59E0B");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Background Depth Ruler & Ticks
-  ctx.strokeStyle = "rgba(245, 158, 11, 0.25)"; ctx.lineWidth = 2;
-  line([[cx - 240, cy - 250], [cx - 240, cy + 220]], "rgba(245, 158, 11, 0.4)", 2);
-  for (let dy = -240; dy <= 220; dy += 40) {
-    const tickLen = dy % 80 === 0 ? 30 : 16;
-    line([[cx - 240, cy + dy], [cx - 240 + tickLen, cy + dy]], "rgba(245, 158, 11, 0.6)", 2);
+  ctx.strokeStyle = "rgba(245, 158, 11, 0.3)"; ctx.lineWidth = 2.5;
+  line([[-280, -280], [-280, 260]], "rgba(245, 158, 11, 0.45)", 2.5);
+  for (let dy = -280; dy <= 260; dy += 45) {
+    const tickLen = dy % 90 === 0 ? 36 : 20;
+    line([[-280, dy], [-280 + tickLen, dy]], "rgba(245, 158, 11, 0.7)", 2.5);
   }
 
   // Heavy Industrial Drill Derrick Tower
   ctx.fillStyle = "#1E293B";
   ctx.beginPath();
-  ctx.moveTo(cx - 70, cy - 260); ctx.lineTo(cx + 70, cy - 260); ctx.lineTo(cx + 120, cy - 140); ctx.lineTo(cx - 120, cy - 140);
+  ctx.moveTo(-80, -280); ctx.lineTo(80, -280); ctx.lineTo(140, -140); ctx.lineTo(-140, -140);
   ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 4; ctx.stroke();
+  ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 4.5; ctx.stroke();
 
   // Spinning Drill Pipe Shaft plunging downward
-  const spinOffset = (t * 80) % 30;
+  const spinOffset = (t * 90) % 35;
   ctx.fillStyle = "#94A3B8";
-  ctx.fillRect(cx - 16, cy - 140, 32, 360);
-  ctx.strokeStyle = "#475569"; ctx.lineWidth = 3;
-  for (let sy = cy - 130 + spinOffset; sy < cy + 220; sy += 30) {
-    line([[cx - 16, sy], [cx + 16, sy + 15]], "#F59E0B", 3);
+  ctx.fillRect(-20, -140, 40, 400);
+  ctx.strokeStyle = "#475569"; ctx.lineWidth = 3.5;
+  for (let sy = -130 + spinOffset; sy < 250; sy += 35) {
+    line([[-20, sy], [20, sy + 18]], "#F59E0B", 3.5);
   }
 
   // Spinning Drill Teeth Head
   ctx.fillStyle = "#EF4444";
   ctx.beginPath();
-  ctx.moveTo(cx - 32, cy + 220); ctx.lineTo(cx + 32, cy + 220); ctx.lineTo(cx, cy + 270);
+  ctx.moveTo(-38, 250); ctx.lineTo(38, 250); ctx.lineTo(0, 310);
   ctx.closePath(); ctx.fill();
 
   // Dynamic Animated Depth Counter
   const countP = clamp(lt / Math.max(0.1, d * 0.85));
   const depthVal = countUp(0, 12262, countP);
-  ctx.font = F(48, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
-  ctx.fillText(`${depthVal} M`, cx + 130, cy + 20);
-  ctx.font = F(20, "800"); ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("DRILL DEPTH (SG-3)", cx + 130, cy + 65);
-
-  drawAutoTechCard("KOLA BOREHOLE SG-3 // ARCTIC RUSSIA (1970-1994)", cx, 860, "#F59E0B", 24);
+  ctx.font = F(52, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
+  ctx.fillText(`${depthVal} M`, 150, 20);
+  ctx.font = F(22, "800"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("DRILL DEPTH (SG-3)", 150, 70);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(245, 158, 11, 0.2)");
+
+  drawAutoTechCard("KOLA BOREHOLE SG-3 // ARCTIC RUSSIA (1970-1994)", cx, 1180, "#F59E0B", 26);
+  filmAtmosphere(t, 680, "rgba(245, 158, 11, 0.25)");
 }
 
 // ── I2. EARTH CRUST PENETRATION CROSS-SECTION ──────────────────────────────────────
 export function drawKolaCrustCrossSection(lt, d, t) {
-  ctx.fillStyle = "#030611"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("EARTH CRUST PENETRATION // 20 YEARS", "20 साल तक लगातार धरती की परत को चीरा!", "#38BDF8");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
-  // Geological Strata Bands (Crust, Basalt, Moho Boundary)
+  // Geological Strata Bands
   const layers = [
-    { y: cy - 220, h: 100, fill: "#334155", label: "SEDIMENTARY CRUST // 0-4 KM" },
-    { y: cy - 120, h: 140, fill: "#1E293B", label: "GRANITIC BASEMENT // 4-9 KM" },
-    { y: cy + 20,  h: 180, fill: "#0F172A", label: "FRACTURED BASALT // 9-12 KM" },
-    { y: cy + 200, h: 80,  fill: "#7F1D1D", label: "MANTLE TRANSITION (MOHO)" },
+    { y: -260, h: 120, fill: "#334155", label: "SEDIMENTARY CRUST // 0-4 KM" },
+    { y: -140, h: 160, fill: "#1E293B", label: "GRANITIC BASEMENT // 4-9 KM" },
+    { y: 20,   h: 180, fill: "#0F172A", label: "FRACTURED BASALT // 9-12 KM" },
+    { y: 200,  h: 90,  fill: "#7F1D1D", label: "MANTLE TRANSITION (MOHO)" },
   ];
   layers.forEach((l) => {
     ctx.fillStyle = l.fill;
-    ctx.fillRect(cx - 280, l.y, 560, l.h);
-    ctx.strokeStyle = "rgba(255, 255, 255, 0.15)"; ctx.lineWidth = 2;
-    ctx.strokeRect(cx - 280, l.y, 560, l.h);
+    ctx.fillRect(-340, l.y, 680, l.h);
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)"; ctx.lineWidth = 2.5;
+    ctx.strokeRect(-340, l.y, 680, l.h);
 
-    ctx.font = F(16, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.65)"; ctx.textAlign = "left";
-    ctx.fillText(l.label, cx - 260, l.y + 26);
+    ctx.font = F(18, "800"); ctx.fillStyle = "rgba(255, 255, 255, 0.75)"; ctx.textAlign = "left";
+    ctx.fillText(l.label, -320, l.y + 30);
   });
 
   // Glowing Drill Shaft Penetrating Downward
   const shaftProg = clamp(lt / Math.max(0.1, d * 0.75));
-  const shaftEnd = lerp(cy - 220, cy + 180, shaftProg);
-  line([[cx, cy - 220], [cx, shaftEnd]], "#38BDF8", 6);
-  circle(cx, shaftEnd, 10, "#FFE600");
+  const shaftEnd = lerp(-260, 180, shaftProg);
+  line([[0, -260], [0, shaftEnd]], "#38BDF8", 7);
+  circle(0, shaftEnd, 12, "#FFE600");
 
   // Year Timeline Counter: 1970 to 1990
   const yearVal = countUp(1970, 1990, shaftProg);
-  ctx.font = F(36, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "right";
-  ctx.fillText(`YEAR: ${yearVal}`, cx + 260, cy - 170);
-
-  drawAutoTechCard("CONTINENTAL CRUST PIERCED: BALTIC SHIELD", cx, 860, "#38BDF8", 24);
+  ctx.font = F(40, "900"); ctx.fillStyle = "#38BDF8"; ctx.textAlign = "right";
+  ctx.fillText(`YEAR: ${yearVal}`, 320, -200);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(56, 189, 248, 0.2)");
+
+  drawAutoTechCard("CONTINENTAL CRUST PIERCED: BALTIC SHIELD", cx, 1180, "#38BDF8", 26);
+  filmAtmosphere(t, 680, "rgba(56, 189, 248, 0.25)");
 }
 
 // ── I3. THERMAL INFERNO 180°C (GEOTHERMAL GRADIENT) ───────────────────────────────
 export function drawKolaThermalInferno180C(lt, d, t) {
-  ctx.fillStyle = "#0A0302"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("GEOTHERMAL GRADIENT // 180°C INFERNO", "12 KM नीचे 180°C का खौलता तापमान!", "#EF4444");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Massive Cylindrical Thermometer Housing
-  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.roundRect(cx - 70, cy - 240, 140, 460, 40); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.roundRect(-80, -260, 160, 520, 45); ctx.fill(); ctx.stroke();
 
   // Glass Tube Inside
   ctx.fillStyle = "#0F172A";
-  ctx.beginPath(); ctx.roundRect(cx - 26, cy - 210, 52, 380, 20); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-30, -230, 60, 420, 24); ctx.fill();
 
   // Rising Glowing Molten Red Mercury
   const heatProg = clamp(lt / Math.max(0.1, d * 0.8));
-  const mercuryH = lerp(40, 360, heatProg);
-  const mercGrad = ctx.createLinearGradient(0, cy + 170, 0, cy + 170 - mercuryH);
+  const mercuryH = lerp(50, 400, heatProg);
+  const mercGrad = ctx.createLinearGradient(0, 190, 0, 190 - mercuryH);
   mercGrad.addColorStop(0, "#EF4444");
   mercGrad.addColorStop(1, "#FBBF24");
   ctx.fillStyle = mercGrad;
-  ctx.beginPath(); ctx.roundRect(cx - 22, cy + 170 - mercuryH, 44, mercuryH, 14); ctx.fill();
+  ctx.beginPath(); ctx.roundRect(-25, 190 - mercuryH, 50, mercuryH, 16); ctx.fill();
 
   // Mercury Bulb at Bottom
-  circle(cx, cy + 180, 46, "#EF4444");
+  circle(0, 200, 52, "#EF4444");
 
   // Dynamic Animated Temperature Counter
   const tempVal = countUp(20, 180, heatProg);
-  ctx.font = F(58, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
-  ctx.fillText(`${tempVal}°C`, cx + 180, cy - 20);
-  ctx.font = F(20, "800"); ctx.fillStyle = "#FFFFFF";
-  ctx.fillText("CORE HEAT", cx + 180, cy + 30);
+  ctx.font = F(64, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
+  ctx.fillText(`${tempVal}°C`, 210, -20);
+  ctx.font = F(24, "800"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("CORE HEAT", 210, 35);
 
   // Heat Waves radiating outward
   for (let k = 0; k < 6; k++) {
-    const wy = cy - 200 + k * 60;
-    const waveOff = Math.sin(t * 8 + k) * 15;
-    ctx.strokeStyle = "rgba(239, 68, 68, 0.4)"; ctx.lineWidth = 2.5;
+    const wy = -220 + k * 70;
+    const waveOff = Math.sin(t * 8 + k) * 18;
+    ctx.strokeStyle = "rgba(239, 68, 68, 0.45)"; ctx.lineWidth = 3;
     ctx.beginPath();
-    ctx.moveTo(cx - 160 + waveOff, wy);
-    ctx.quadraticCurveTo(cx - 110, wy - 15, cx - 80 + waveOff, wy);
+    ctx.moveTo(-180 + waveOff, wy);
+    ctx.quadraticCurveTo(-120, wy - 18, -90 + waveOff, wy);
     ctx.stroke();
   }
 
-  drawAutoTechCard("PREDICTED: 100°C // ACTUAL: 180°C HEAT SHOCK", cx, 860, "#EF4444", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(239, 68, 68, 0.25)");
+
+  drawAutoTechCard("PREDICTED: 100°C // ACTUAL: 180°C HEAT SHOCK", cx, 1180, "#EF4444", 26);
+  filmAtmosphere(t, 680, "rgba(239, 68, 68, 0.28)");
 }
 
 // ── I4. METALLURGICAL MELTING DRILL BIT ───────────────────────────────────────────
 export function drawKolaMeltingSteelDrill(lt, d, t) {
-  ctx.fillStyle = "#0A0401"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("METALLURGICAL FAILURE // MELTING BITS", "स्टील के ड्रिल मोम की तरह पिघलने लगे!", "#F97316");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Tungsten Steel Drill Head
   ctx.save();
-  ctx.translate(cx, cy - 40);
+  ctx.translate(0, -40);
 
   // Drill Cone Body
-  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 4;
+  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 5;
   ctx.beginPath();
-  ctx.moveTo(-100, -180); ctx.lineTo(100, -180); ctx.lineTo(60, 40); ctx.lineTo(-60, 40);
+  ctx.moveTo(-120, -200); ctx.lineTo(120, -200); ctx.lineTo(75, 50); ctx.lineTo(-75, 50);
   ctx.closePath(); ctx.fill(); ctx.stroke();
 
   // Glowing Molten Orange Teeth (Softening Point Exceeded)
   const glow = 0.8 + 0.2 * Math.sin(t * 10);
   ctx.fillStyle = `rgba(249, 115, 22, ${glow})`;
   ctx.beginPath();
-  ctx.moveTo(-70, 40); ctx.lineTo(-40, 160); ctx.lineTo(0, 70); ctx.lineTo(40, 160); ctx.lineTo(70, 40);
+  ctx.moveTo(-85, 50); ctx.lineTo(-50, 190); ctx.lineTo(0, 90); ctx.lineTo(50, 190); ctx.lineTo(85, 50);
   ctx.closePath(); ctx.fill();
-  ctx.strokeStyle = "#FEF08A"; ctx.lineWidth = 3; ctx.stroke();
+  ctx.strokeStyle = "#FEF08A"; ctx.lineWidth = 3.5; ctx.stroke();
 
   // Dripping Molten Droplets
   for (let i = -1; i <= 1; i++) {
-    const dropY = 160 + ((t * 160 + (i + 1) * 80) % 140);
-    circle(i * 35, dropY, 8, "#F97316");
+    const dropY = 190 + ((t * 180 + (i + 1) * 90) % 160);
+    circle(i * 42, dropY, 9, "#F97316");
   }
 
   ctx.restore();
 
   // Extreme Friction Sparks
-  for (let s = 0; s < 12; s++) {
-    const sa = (s * 31 + t * 40) % TAU;
-    const sr = 120 + ((s * 47 + t * 180) % 140);
-    const sx = cx + Math.cos(sa) * sr, sy = cy + 120 + Math.sin(sa) * 40;
-    circle(sx, sy, 4, "#FEF08A");
+  for (let s = 0; s < 16; s++) {
+    const sa = (s * 31 + t * 45) % TAU;
+    const sr = 140 + ((s * 47 + t * 200) % 160);
+    const sx = Math.cos(sa) * sr, sy = 120 + Math.sin(sa) * 45;
+    circle(sx, sy, 4.5, "#FEF08A");
   }
 
-  drawAutoTechCard("TUNGSTEN CARBIDE FAILURE: PLASTIC DEFORMATION", cx, 860, "#F97316", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(249, 115, 22, 0.25)");
+
+  drawAutoTechCard("TUNGSTEN CARBIDE FAILURE: PLASTIC DEFORMATION", cx, 1180, "#F97316", 26);
+  filmAtmosphere(t, 680, "rgba(249, 115, 22, 0.28)");
 }
 
 // ── I5. HYDROTHERMAL TRAPPED BOILING WATER ─────────────────────────────────────────
 export function drawKolaBoilingWaterTrapped(lt, d, t) {
-  ctx.fillStyle = "#010813"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("HYDROTHERMAL ANOMALY // TRAPPED WATER", "चट्टानों में कैद मिला खौलता हुआ पानी!", "#06B6D4");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Dense Porous Rock Matrix
-  ctx.fillStyle = "#0F172A"; ctx.strokeStyle = "#334155"; ctx.lineWidth = 4;
-  ctx.beginPath(); ctx.roundRect(cx - 280, cy - 220, 560, 440, 24); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = "#0F172A"; ctx.strokeStyle = "#334155"; ctx.lineWidth = 5;
+  ctx.beginPath(); ctx.roundRect(-340, -250, 680, 500, 28); ctx.fill(); ctx.stroke();
 
   // Jagged Micro-Fractures in Rock with Glowing Boiling Water
-  ctx.strokeStyle = "#06B6D4"; ctx.lineWidth = 8;
+  ctx.strokeStyle = "#06B6D4"; ctx.lineWidth = 9;
   const fracturePaths = [
-    [[-200, -140], [-100, -80], [-40, -130], [80, -90], [180, -150]],
-    [[-180, 40], [-80, 0], [40, 60], [120, 10], [220, 50]],
-    [[-140, 140], [-30, 110], [60, 160], [190, 120]],
+    [[-240, -160], [-120, -90], [-50, -150], [90, -100], [220, -170]],
+    [[-220, 50], [-100, 0], [50, 70], [140, 15], [260, 60]],
+    [[-170, 160], [-40, 130], [70, 180], [220, 140]],
   ];
   fracturePaths.forEach((pts) => {
     ctx.beginPath();
     pts.forEach(([px, py], pi) => {
-      if (pi === 0) ctx.moveTo(cx + px, cy + py); else ctx.lineTo(cx + px, cy + py);
+      if (pi === 0) ctx.moveTo(px, py); else ctx.lineTo(px, py);
     });
     ctx.stroke();
   });
 
   // Boiling Steam & Gas Micro-Bubbles escaping from fractures
-  for (let k = 0; k < 20; k++) {
-    const bx = cx - 220 + ((k * 41 + t * 50) % 440);
-    const by = cy + 180 - ((k * 37 + t * 140) % 360);
-    const br = 6 + (k % 4) * 4;
-    circle(bx, by, br, "rgba(6, 182, 212, 0.65)");
-    ctx.strokeStyle = "#A5F3FC"; ctx.lineWidth = 2;
+  for (let k = 0; k < 26; k++) {
+    const bx = -260 + ((k * 43 + t * 55) % 520);
+    const by = 210 - ((k * 39 + t * 160) % 420);
+    const br = 7 + (k % 4) * 5;
+    circle(bx, by, br, "rgba(6, 182, 212, 0.7)");
+    ctx.strokeStyle = "#A5F3FC"; ctx.lineWidth = 2.5;
     ctx.beginPath(); ctx.arc(bx, by, br, 0, TAU); ctx.stroke();
   }
 
-  drawAutoTechCard("HYDROGEN & OXYGEN TRAPPED AT 3,000 ATM PRESSURE", cx, 860, "#06B6D4", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(6, 182, 212, 0.2)");
+
+  drawAutoTechCard("HYDROGEN & OXYGEN TRAPPED AT 3,000 ATM PRESSURE", cx, 1180, "#06B6D4", 26);
+  filmAtmosphere(t, 680, "rgba(6, 182, 212, 0.25)");
 }
 
 // ── I6. 2 BILLION YEAR OLD MICROFOSSILS IN ABYSS ──────────────────────────────────
 export function drawKolaAncientMicrofossils(lt, d, t) {
-  ctx.fillStyle = "#06010D"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("DEEP BIOSPHERE // 2 BILLION YEARS OLD", "पाताल में मिले 2 अरब साल पुराने जीवाश्म!", "#A855F7");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Microscope HUD Reticle Circle
-  circle(cx, cy, 220, "#1E112A");
-  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 6;
-  ctx.beginPath(); ctx.arc(cx, cy, 220, 0, TAU); ctx.stroke();
+  circle(0, 0, 260, "#1E112A");
+  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 7;
+  ctx.beginPath(); ctx.arc(0, 0, 260, 0, TAU); ctx.stroke();
 
   // Circular Measurement Grids
-  ctx.strokeStyle = "rgba(168, 85, 247, 0.25)"; ctx.lineWidth = 2;
-  circle(cx, cy, 140, "rgba(0,0,0,0)"); ctx.stroke();
-  circle(cx, cy, 70, "rgba(0,0,0,0)"); ctx.stroke();
-  line([[cx - 220, cy], [cx + 220, cy]], "rgba(168, 85, 247, 0.3)", 2);
-  line([[cx, cy - 220], [cx, cy + 220]], "rgba(168, 85, 247, 0.3)", 2);
+  ctx.strokeStyle = "rgba(168, 85, 247, 0.3)"; ctx.lineWidth = 2.5;
+  circle(0, 0, 170, "rgba(0,0,0,0)"); ctx.stroke();
+  circle(0, 0, 85, "rgba(0,0,0,0)"); ctx.stroke();
+  line([[-260, 0], [260, 0]], "rgba(168, 85, 247, 0.35)", 2.5);
+  line([[0, -260], [0, 260]], "rgba(168, 85, 247, 0.35)", 2.5);
 
   // Microscopic Planktonic Fossil Cells (Acritarchs) with organic pulse
-  const pulse = 1 + 0.08 * Math.sin(t * 6);
+  const pulse = 1 + 0.10 * Math.sin(t * 6);
   const fossilCenters = [
-    [cx - 40, cy - 30, 50],
-    [cx + 80, cy + 50, 36],
-    [cx - 90, cy + 80, 28],
-    [cx + 60, cy - 90, 30],
+    [-50, -40, 60],
+    [95, 60, 44],
+    [-110, 95, 35],
+    [75, -110, 38],
   ];
   fossilCenters.forEach(([fx, fy, fr]) => {
     ctx.save();
     ctx.translate(fx, fy); ctx.scale(pulse, pulse);
-    circle(0, 0, fr, "rgba(168, 85, 247, 0.4)");
-    ctx.strokeStyle = "#E879F9"; ctx.lineWidth = 4;
+    circle(0, 0, fr, "rgba(168, 85, 247, 0.45)");
+    ctx.strokeStyle = "#E879F9"; ctx.lineWidth = 4.5;
     ctx.beginPath(); ctx.arc(0, 0, fr, 0, TAU); ctx.stroke();
 
-    // Spiky micro-appendages of acritarch
     for (let sp = 0; sp < 8; sp++) {
       const sa = (sp * TAU) / 8;
-      line([[Math.cos(sa) * fr, Math.sin(sa) * fr], [Math.cos(sa) * (fr + 16), Math.sin(sa) * (fr + 16)]], "#E879F9", 3);
+      line([[Math.cos(sa) * fr, Math.sin(sa) * fr], [Math.cos(sa) * (fr + 18), Math.sin(sa) * (fr + 18)]], "#E879F9", 3.5);
     }
     ctx.restore();
   });
 
-  drawAutoTechCard("24 EXTINCT SPECIES OF PLANKTONIC MICROFOSSILS", cx, 860, "#A855F7", 24);
-
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(168, 85, 247, 0.2)");
+
+  drawAutoTechCard("24 EXTINCT SPECIES OF PLANKTONIC MICROFOSSILS", cx, 1180, "#A855F7", 26);
+  filmAtmosphere(t, 680, "rgba(168, 85, 247, 0.25)");
 }
 
 // ── I7. SEALED STEEL DOOR CAP (12 HEAVY BOLTS) ────────────────────────────────────
 export function drawKolaSealedSteelDoorCap(lt, d, t) {
-  ctx.fillStyle = "#05060A"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("ABANDONED BOREHOLE // 12 STEEL BOLTS", "पाताल का दरवाजा 12 भारी बोल्ट्स से सील!", "#94A3B8");
 
   ctx.save();
-  const cx = 540, cy = 600;
+  const cx = 540, cy = 680;
+  const pop = spring(clamp(lt / 0.42));
+  ctx.translate(cx, cy);
+  ctx.scale(pop * 1.25, pop * 1.25);
 
   // Heavy Industrial Steel Welded Cover Cap
-  circle(cx, cy, 210, "#1E293B");
-  ctx.strokeStyle = "#64748B"; ctx.lineWidth = 12;
-  ctx.beginPath(); ctx.arc(cx, cy, 210, 0, TAU); ctx.stroke();
+  circle(0, 0, 250, "#1E293B");
+  ctx.strokeStyle = "#64748B"; ctx.lineWidth = 14;
+  ctx.beginPath(); ctx.arc(0, 0, 250, 0, TAU); ctx.stroke();
 
   // Rust & Weathering Texture Rings
-  ctx.strokeStyle = "#475569"; ctx.lineWidth = 5;
-  circle(cx, cy, 160, "rgba(0,0,0,0)"); ctx.stroke();
+  ctx.strokeStyle = "#475569"; ctx.lineWidth = 6;
+  circle(0, 0, 190, "rgba(0,0,0,0)"); ctx.stroke();
 
   // 12 Heavy Industrial Hexagonal Steel Bolts
   for (let b = 0; b < 12; b++) {
     const ba = (b * TAU) / 12;
-    const bx = cx + Math.cos(ba) * 180, by = cy + Math.sin(ba) * 180;
-    circle(bx, by, 16, "#F1F5F9");
-    ctx.strokeStyle = "#0F172A"; ctx.lineWidth = 3;
-    ctx.beginPath(); ctx.arc(bx, by, 16, 0, TAU); ctx.stroke();
-    circle(bx, by, 6, "#64748B");
+    const bx = Math.cos(ba) * 215, by = Math.sin(ba) * 215;
+    circle(bx, by, 18, "#F1F5F9");
+    ctx.strokeStyle = "#0F172A"; ctx.lineWidth = 3.5;
+    ctx.beginPath(); ctx.arc(bx, by, 18, 0, TAU); ctx.stroke();
+    circle(bx, by, 7, "#64748B");
   }
 
   // Welded Stencil Text on Cap
-  ctx.font = F(32, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "center";
-  ctx.fillText("SG-3 // 12,262M", cx, cy - 25);
-  ctx.font = F(24, "900"); ctx.fillStyle = "#FFE600";
-  ctx.fillText("WELDED & SEALED", cx, cy + 25);
-
-  drawAutoTechCard("PERMANENTLY SEALED HOLE TO THE DEEP ABYSS", cx, 860, "#E2E8F0", 24);
+  ctx.font = F(38, "900"); ctx.fillStyle = "#EF4444"; ctx.textAlign = "center";
+  ctx.fillText("SG-3 // 12,262M", 0, -30);
+  ctx.font = F(28, "900"); ctx.fillStyle = "#FFE600";
+  ctx.fillText("WELDED & SEALED", 0, 30);
 
   ctx.restore();
-  filmAtmosphere(t, 600, "rgba(148, 163, 184, 0.2)");
+
+  drawAutoTechCard("PERMANENTLY SEALED HOLE TO THE DEEP ABYSS", cx, 1180, "#E2E8F0", 26);
+  filmAtmosphere(t, 680, "rgba(148, 163, 184, 0.25)");
 }
 
 // ── I8. KOLA OUTRO CTA ────────────────────────────────────────────────────────────
 export function drawKolaOutroCTA(lt, d, t) {
-  ctx.fillStyle = "#020612"; ctx.fillRect(0, 0, W, H);
+  drawFullCanvasBackground(t, 'kola');
   hudHeader("ANCHOR AADHYA OFFICIAL // EARTH CORE", "कमेंट में बताएं और सब्सक्राइब करें!", "#F59E0B");
 
   ctx.save();
-  const ox = 540, oy = 640, s = 1.35;
+  const ox = 540, oy = 700, s = 1.45;
   ctx.translate(ox, oy); ctx.scale(s, s);
 
   // Red YouTube Button
@@ -3094,5 +3132,7 @@ export function drawKolaOutroCTA(lt, d, t) {
   drawOutroQuestionBubble("क्या इंसान कभी धरती आर-पार करेगा? ⛏️✍️");
 
   ctx.restore();
-  filmAtmosphere(t, 640, "rgba(245, 158, 11, 0.2)");
+
+  drawAutoTechCard("SUBSCRIBE FOR DAILY VIRAL SCIENCE FACTS", 540, 1180, "#F59E0B", 26);
+  filmAtmosphere(t, 700, "rgba(245, 158, 11, 0.25)");
 }
