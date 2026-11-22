@@ -7,6 +7,7 @@
 import { ctx, C, W, H } from './core/lib.js';
 import { L, T, lineWords } from './core/timing.js';
 import * as Cinema from './cinematic_scenes.js';
+import { composeMultiSkillScene } from './skills/multi_skill_director.js';
 
 // Dedicated curated topic sequences (1-to-1 matching script lines)
 const TOPIC_SEQUENCES = {
@@ -227,34 +228,8 @@ export function buildShots(script = {}) {
       sceneFn = topicCurated[i];
     } else {
       const text = String(lines[i]?.text || '');
-
-      // 1. Literal Object Director Priority (Checks if an exact spoken physical entity is requested)
-      const directMatch = DIRECT_OBJECT_MAPPINGS.find((m) => m.test.test(text) && !usedScenes.has(m.scene));
-      if (directMatch) {
-        sceneFn = directMatch.scene;
-      } else {
-        // 2. Keyword semantic category matching
-        let candidatePool = GLOBAL_FALLBACK_POOL;
-
-        if (/अंतरिक्ष|तारा|ब्लैक होल|ग्रेविटी|रोशनी|प्रकाश|ब्रह्मांड|ग्रह/.test(text)) candidatePool = POOL_SPACE;
-        else if (/समुद्र|पानी|गहराई|दबाव|महासागर|मछली|जहाज/.test(text)) candidatePool = POOL_OCEAN;
-        else if (/रेडिएशन|परमाणु|विस्फोट|धमाका|जहर|केमिकल|लावा/.test(text)) candidatePool = POOL_PHYSICS_DANGER;
-        else if (/शरीर|दिमाग|खून|दिल|आंत|दांत|कोशिका|इंसान|सांस|नाक|कान|पेशाब|छींक|टैटू/.test(text)) candidatePool = POOL_BIOLOGY_BODY;
-        else if (/कार|दरवाज़ा|कांच|खिड़की|हथौड़ा|एटीएम|फ्लाइट|हवाई/.test(text)) candidatePool = POOL_TECH_SURVIVAL;
-
-        // Find first unused scene in candidate pool
-        sceneFn = candidatePool.find((fn) => !usedScenes.has(fn));
-
-        // If all candidate pool scenes are used, find any unused scene in global pool
-        if (!sceneFn) {
-          sceneFn = GLOBAL_FALLBACK_POOL.find((fn) => !usedScenes.has(fn));
-        }
-
-        // Safety fallback (guaranteed function)
-        if (!sceneFn) {
-          sceneFn = candidatePool[i % candidatePool.length];
-        }
-      }
+      // High-Precision Multi-Skill Fusion Compositor (3-5 simultaneous skills per line, 0% cross-contamination)
+      sceneFn = composeMultiSkillScene(script, i, text, isLastLine);
     }
 
     usedScenes.add(sceneFn);
