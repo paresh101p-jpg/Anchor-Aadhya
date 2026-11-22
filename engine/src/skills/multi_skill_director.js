@@ -10,6 +10,7 @@ import { TelemetrySkill } from './telemetry_dataviz.js';
 import { ThermalSkill } from './thermal_environmental.js';
 import { BioSkill } from './bio_anatomical.js';
 import { TechSkill } from './tech_mechanical.js';
+import { AviationSkill } from './aviation_lightning.js';
 import { PixelFX } from '../core/pixelfx.js';
 import * as Cinema from '../cinematic_scenes.js';
 import { ctx, W, H, lerp, clamp } from '../core/lib.js';
@@ -89,14 +90,25 @@ export function composeMultiSkillScene(script, lineIdx, lineText, isLastLine) {
     };
   }
 
-  // 3. AIRPLANE & LIGHTNING DISASTER TOPIC
-  if (/airplane|विमान|हवाई\s*जहाज|फ्लाइट|बिजली|lightning/i.test(id + ' ' + text)) {
+  // 3. AIRPLANE & LIGHTNING DISASTER / AVIATION SCIENCE TOPIC
+  if (/airplane|विमान|हवाई\s*जहाज|फ्लाइट|बिजली|lightning|faraday/i.test(id + ' ' + text)) {
     return (lt, d, t, subIdx) => {
       if (isLastLine) {
+        AviationSkill.drawStormEnvironment(t);
         Cinema.drawUniversalOutroCTA(lt, d, t);
         return;
       }
-      Cinema.drawAirplaneStormDisaster(lt, d, t);
+
+      if (/क्रैश|crash|बचते|नहीं होती|cockpit|पायलट/i.test(text)) {
+        AviationSkill.drawCockpitRadarView(t, 540, 680);
+      } else if (/फैराडे|केज|faraday|cage|एल्युमिनियम|aluminum|स्किन|skin|करेंट|करंट|volts|volt|conductive|बॉडी/i.test(text)) {
+        AviationSkill.drawFaradayCageSkin(t, 540, 680);
+      } else if (/विस्क|डिस्चार्ज|wicks|static|विंग्स|हवा में/i.test(text)) {
+        AviationSkill.drawStaticDischargeWicks(t, 540, 680);
+      } else {
+        // Line 0, 1, or default: Giant airliner in storm with lightning strike & sub-shot zoom
+        AviationSkill.drawAirlinerLightningStrike(t, 540, 680, lt, subIdx);
+      }
     };
   }
 

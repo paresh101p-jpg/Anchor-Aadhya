@@ -1050,7 +1050,9 @@
       "Shorts"
     ],
     "description": "हवाई जहाज पर आकाशीय बिजली गिरने के बाद भी यात्री सुरक्षित कैसे बचते हैं? जानिए फैराडे केज और कंडक्टिव स्किन का रहस्य!\n\n#AnchorAadhya #Aviation #LightningStrike #Physics #HindiShorts",
-    "engagement_question": "क्या आपको बादलों के बीच फ्लाइट में टर्बुलेंस से डर लगता है? कमेंट्स में बताओ! 👇"
+    "engagement_question": "क्या आपको बादलों के बीच फ्लाइट में टर्बुलेंस से डर लगता है? कमेंट्स में बताओ! 👇",
+    "no_slice": true,
+    "is_30s": true
   },
   {
     "id": "cold_water_dive_reflex",

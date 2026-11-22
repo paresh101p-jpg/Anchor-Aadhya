@@ -68,8 +68,8 @@ export function drawCaption(t) {
   ctx.font = `900 ${size}px Inter, "Noto Sans Devanagari", "Mangal", "Nirmala UI", sans-serif`;
   ctx.letterSpacing = '0px';
 
-  // Generous spacing between words so outlines never bleed into adjacent words
-  const sp = size * 0.36;
+  // Generous spacing between words so outlines and matras never collide
+  const sp = size * 0.50;
   c.words.forEach((w) => (w.w = ctx.measureText(w.txt).width));
   const width = (ws) => ws.reduce((a, w) => a + w.w, 0) + sp * (ws.length - 1);
 
@@ -94,34 +94,37 @@ export function drawCaption(t) {
   ctx.textBaseline = 'middle';
   ctx.textAlign = 'left';
   ctx.lineJoin = 'round';
+  ctx.miterLimit = 2;
 
-  // Devanagari line height (1.36x) provides full clearance so matras on line 2 never touch line 1
-  const lh = size * 1.36;
+  // Devanagari line height (1.60x) provides complete vertical clearance so matras on line 2 never touch line 1
+  const lh = size * 1.60;
   const y0 = -(lines.length - 1) * lh / 2;
 
+  // Sleek unified dark pill container with generous padding: text NEVER overflows or touches pill borders!
+  const padX = 48;
+  const padY = 20;
+  const totalBoxW = maxLineW + padX * 2;
+  const totalBoxH = lines.length * lh + padY * 2;
+  const boxTop = y0 - lh / 2 - padY;
+
+  ctx.fillStyle = 'rgba(0, 0, 0, 0.92)';
+  ctx.beginPath();
+  ctx.roundRect(-totalBoxW / 2, boxTop, totalBoxW, totalBoxH, 24);
+  ctx.fill();
+  ctx.strokeStyle = 'rgba(255, 255, 255, 0.28)';
+  ctx.lineWidth = 2.5;
+  ctx.stroke();
+
   lines.forEach((ln, li) => {
-    // Measure line text as whole string to guarantee accurate bounding box
-    const lineText = ln.map((w) => w.txt).join(' ');
-    const stringW = ctx.measureText(lineText).width;
-    const lw = Math.max(width(ln), stringW);
+    const lw = width(ln);
     const lineY = y0 + li * lh;
-
-    // Dark pill container with generous 42px padding: text NEVER overflows or touches pill borders!
-    const padX = 42;
-    ctx.fillStyle = 'rgba(0, 0, 0, 0.90)';
-    ctx.beginPath();
-    ctx.roundRect(-lw / 2 - padX, lineY - lh * 0.44, lw + padX * 2, lh * 0.88, 22);
-    ctx.fill();
-    ctx.strokeStyle = 'rgba(255, 255, 255, 0.25)';
-    ctx.lineWidth = 2.5;
-    ctx.stroke();
-
     let x = -lw / 2;
+
     for (const w of ln) {
-      // Kinetic Word-Level Animation: Active spoken word springs up dynamically!
+      // Kinetic Word-Level Animation: Gentle 6% pulse so words never bleed into adjacent letters
       const isActiveWord = (t >= w.s && t <= w.e);
       const wProgress = clamp((t - w.s) / Math.max(0.01, (w.e - w.s)));
-      const wScale = isActiveWord ? (1 + 0.14 * Math.sin(wProgress * Math.PI)) : 1.0;
+      const wScale = isActiveWord ? (1 + 0.06 * Math.sin(wProgress * Math.PI)) : 1.0;
 
       ctx.save();
       ctx.translate(x + w.w / 2, lineY);
@@ -131,12 +134,12 @@ export function drawCaption(t) {
       if (isActiveWord) {
         ctx.fillStyle = 'rgba(255, 230, 0, 0.25)';
         ctx.beginPath();
-        ctx.roundRect(-w.w / 2 - 6, -lh * 0.40, w.w + 12, lh * 0.80, 10);
+        ctx.roundRect(-w.w / 2 - 10, -lh * 0.38, w.w + 20, lh * 0.76, 12);
         ctx.fill();
       }
 
-      // 8px crisp black outline - strong legibility without character bleed
-      ctx.lineWidth = isActiveWord ? 9 : 7;
+      // Crisp black outline - strong legibility without character bleed
+      ctx.lineWidth = isActiveWord ? 8 : 6;
       ctx.strokeStyle = '#000000';
       ctx.strokeText(w.txt, -w.w / 2, 0);
 

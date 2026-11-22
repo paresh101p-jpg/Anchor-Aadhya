@@ -234,35 +234,52 @@ export function buildShots(script = {}) {
 
     usedScenes.add(sceneFn);
 
-    // High-dopamine kinetic cuts within Line i (synced to spoken word cadence)
+    // High-dopamine kinetic cuts within Line i: Max 1.8-2.2s per sub-shot!
     const ws = lineWords(i);
     const text = String(lines[i]?.text || '');
     const lineStart = ws.length ? ws[0].s : L(i);
     const lineEnd = ws.length ? ws[ws.length - 1].e : (i + 1 < n ? L(i + 1) : T.dur);
+    const totalLineDur = Math.max(0.8, lineEnd - lineStart);
 
+    // Calculate dynamic cut points so no shot ever lingers longer than 1.8 seconds
     const cutPoints = [lineStart];
-    if (ws.length >= 8) {
-      const idx1 = Math.floor(ws.length * 0.35);
-      const idx2 = Math.floor(ws.length * 0.70);
-      cutPoints.push(ws[idx1].s);
-      cutPoints.push(ws[idx2].s);
-    } else if (ws.length >= 4) {
-      const midIdx = Math.floor(ws.length * 0.5);
-      cutPoints.push(ws[midIdx].s);
+    const targetSubDur = 1.65;
+    const numSubShots = Math.max(1, Math.round(totalLineDur / targetSubDur));
+
+    if (numSubShots > 1 && ws.length >= numSubShots) {
+      for (let s = 1; s < numSubShots; s++) {
+        const targetTime = lineStart + s * (totalLineDur / numSubShots);
+        const closestWord = ws.reduce((prev, curr) =>
+          Math.abs(curr.s - targetTime) < Math.abs(prev.s - targetTime) ? curr : prev, ws[0]
+        );
+        if (closestWord.s > cutPoints[cutPoints.length - 1] + 0.9 && closestWord.s < lineEnd - 0.6) {
+          cutPoints.push(closestWord.s);
+        }
+      }
     }
 
     cutPoints.forEach((atTime, subIdx) => {
       const nextAt = subIdx + 1 < cutPoints.length ? cutPoints[subIdx + 1] : lineEnd;
       const shotDur = Math.max(0.7, nextAt - atTime);
 
-      const cams = [[540, 960], [540, 910], [540, 870]];
-      const zooms = [0.04, 0.12, 0.18];
+      // Distinct cinematic camera perspectives per beat:
+      // Beat 0: Wide establishing view
+      // Beat 1: Tight dramatic Close-Up detail punch
+      // Beat 2: Dynamic high-tension angled perspective
+      // Beat 3: Low-angle power punch
+      const cams = [
+        [540, 920],
+        [540, 720],
+        [600, 840],
+        [480, 760],
+      ];
+      const zooms = [0.05, 0.28, 0.18, 0.32];
 
       add({
         id: `L${String(i + 1).padStart(2, '0')}_S${subIdx + 1}`,
         at: Math.max(0, atTime - 0.04),
-        cam: cams[Math.min(subIdx, cams.length - 1)],
-        zoom: zooms[Math.min(subIdx, zooms.length - 1)],
+        cam: cams[subIdx % cams.length],
+        zoom: zooms[subIdx % zooms.length],
         zoomFast: subIdx > 0,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
         draw(lt, d, t) {
