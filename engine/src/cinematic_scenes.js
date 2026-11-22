@@ -133,8 +133,6 @@ export function drawEarthGlobe(lt, d, t) {
   circle(cx + 35, cy + 15, 15, '#FFE600');
 
   // Label banner
-  ctx.font = F(38, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('मारियाना ट्रेंच (प्रशांत महासागर)', 540, 1030);
 
   ctx.restore();
   filmAtmosphere(t, 680, 'rgba(0, 242, 254, 0.2)');
@@ -325,9 +323,6 @@ export function drawSubmarineSearchlight(lt, d, t) {
   // Dual High-Intensity Xenon Pods
   circle(subX - 75, subY + 85, 24, '#FFFFFF'); circle(subX + 75, subY + 85, 24, '#FFFFFF');
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('अंधेरे को चीरती शक्तिशाली लाइट', 540, 1020);
-
   ctx.restore();
   atmosphericDust(t, 50);
   filmAtmosphere(t);
@@ -469,9 +464,6 @@ export function drawAlienCreature(lt, d, t) {
   // Glowing Eye
   circle(cx - 20, cy - 40, 18, '#00F2FE'); circle(cx - 20, cy - 40, 7, '#FFFFFF');
 
-  ctx.font = F(44, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('बायोल्यूमिनिसेंस (जीवित रोशनी)', 540, 1020);
-
   ctx.restore();
   atmosphericDust(t, 45);
   filmAtmosphere(t);
@@ -551,9 +543,6 @@ export function drawOutroCTA(lt, d, t) {
   ctx.fillText('कमेंट्स में बताओ! ✍️', 0, -135);
 
   ctx.restore();
-
-  ctx.font = F(38, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
 }
 
 // ===================================================================================
@@ -594,9 +583,6 @@ export function drawChernobylPlant(lt, d, t) {
   mist.addColorStop(0, 'rgba(0, 255, 120, 0.35)'); mist.addColorStop(1, 'rgba(0,0,0,0)');
   ctx.fillStyle = mist; ctx.beginPath(); ctx.ellipse(cx, cy + 200, 430, 170, 0, 0, TAU); ctx.fill();
 
-  ctx.font = F(48, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
-  ctx.fillText('LETHAL RADIATION ZONE', cx, 1020);
-
   ctx.restore();
   atmosphericDust(t, 35, 'rgba(255, 200, 0, 0.4)');
   filmAtmosphere(t);
@@ -630,9 +616,6 @@ export function drawCountdownTimer(lt, d, t) {
   const strobe = Math.sin(t * 12) > 0;
   circle(180, cy - 180, 28, strobe ? '#FF1744' : '#4A000E');
   circle(W - 180, cy - 180, 28, strobe ? '#FF1744' : '#4A000E');
-
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FFFFFF';
-  ctx.fillText('इतने समय में शरीर के अंग फेल!', cx, 1020);
 
   ctx.restore();
   filmAtmosphere(t, cy, 'rgba(255, 23, 68, 0.3)');
@@ -673,9 +656,6 @@ export function drawReactorExplosion(lt, d, t) {
   ctx.lineTo(770, 850); ctx.lineTo(940, 950); ctx.lineTo(140, 950);
   ctx.fill(); ctx.stroke();
 
-  ctx.font = F(44, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('26 अप्रैल 1986 // इतिहास का काला दिन', cx, 1020);
-
   ctx.restore();
   filmAtmosphere(t, cy, 'rgba(255, 100, 0, 0.4)');
 }
@@ -708,9 +688,6 @@ export function drawCoriumLavaFlow(lt, d, t) {
   ctx.fillStyle = '#FF3300';
   ctx.beginPath(); ctx.ellipse(cx, 840, 370, 100, 0, 0, TAU); ctx.fill();
   circle(cx, 840, 70, '#FFE600');
-
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('पिघला हुआ यूरेनियम और ग्रेफाइट', cx, 1020);
 
   ctx.restore();
   filmAtmosphere(t);
@@ -757,9 +734,6 @@ export function drawElephantsFoot(lt, d, t) {
 
   // Toxic Green Spores
   circle(cx - 75, cy - 50, 12, '#FFE600'); circle(cx + 95, cy + 20, 14, '#FF1744');
-
-  ctx.font = F(48, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText("हाथी का पैर (ELEPHANT'S FOOT)", cx, 1020);
 
   ctx.restore();
   filmAtmosphere(t);
@@ -837,9 +811,6 @@ export function drawMeltingCameraRobot(lt, d, t) {
     ctx.fillRect(80, ry, W - 160, 4 + rnd(k) * 6);
   }
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FF1744'; ctx.textAlign = 'center';
-  ctx.fillText('गामा किरणों ने कैमरों की रील जला दी!', cx, 1020);
-
   ctx.restore();
   filmAtmosphere(t);
 }
@@ -873,9 +844,6 @@ export function drawRadiotrophicFungus(lt, d, t) {
     const r = 215 + Math.sin(t * 5 + k) * 20;
     circle(cx + Math.cos(a) * r, cy + Math.sin(a) * r, 8, '#00FF99');
   }
-
-  ctx.font = F(44, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('रेडिएशन को भोजन बनाने वाला फंगस!', cx, 1020);
 
   ctx.restore();
   filmAtmosphere(t);
@@ -914,9 +882,6 @@ export function drawChernobylOutro(lt, d, t) {
   ctx.fillText('क्या प्रकृति इंसान से बड़ी है? ✍️', 0, -135);
 
   ctx.restore();
-
-  ctx.font = F(38, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
 }
 
 // ── D. BLACK HOLE SPAGHETTIFICATION SUITE (1080x1920 9:16) ─────────────────────────
@@ -983,9 +948,6 @@ export function drawBlackHoleGargantua(lt, d, t) {
   circle(cx, cy, 150, '#000000');
 
   ctx.restore();
-
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FFAA00'; ctx.textAlign = 'center';
-  ctx.fillText('प्रकाश भी यहाँ से बचकर नहीं निकल सकता!', 540, 1020);
 
   filmAtmosphere(t, 660, 'rgba(255, 170, 0, 0.35)');
 }
@@ -1073,9 +1035,6 @@ export function drawGravitationalLensing(lt, d, t) {
 
   ctx.restore();
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#00F2FE'; ctx.textAlign = 'center';
-  ctx.fillText('ग्रैविटी इतनी तेज कि रोशनी भी मुड़ जाती है!', 540, 1020);
-
   filmAtmosphere(t, 660, 'rgba(0, 242, 254, 0.3)');
 }
 
@@ -1125,9 +1084,6 @@ export function drawAstronautGravityVectors(lt, d, t) {
 
   ctx.restore();
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FF5500'; ctx.textAlign = 'center';
-  ctx.fillText('पैरों और सिर में भयंकर खिंचाव का अंतर!', 540, 1020);
-
   filmAtmosphere(t);
 }
 
@@ -1173,9 +1129,6 @@ export function drawSpaghettificationProcess(lt, d, t) {
 
   ctx.restore();
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FF0055'; ctx.textAlign = 'center';
-  ctx.fillText('शरीर पतले धागे की तरह लंबा खिंच जाएगा!', 540, 1020);
-
   filmAtmosphere(t, 620, 'rgba(255, 0, 85, 0.3)');
 }
 
@@ -1218,9 +1171,6 @@ export function drawFrozenTimeDilation(lt, d, t) {
 
   ctx.restore();
 
-  ctx.font = F(42, '900'); ctx.fillStyle = '#FFE600'; ctx.textAlign = 'center';
-  ctx.fillText('आप बाहर के लोगों के लिए हमेशा जम जाएंगे!', 540, 1020);
-
   filmAtmosphere(t, 650, 'rgba(0, 242, 254, 0.25)');
 }
 
@@ -1258,8 +1208,710 @@ export function drawBlackHoleSingularityCTA(lt, d, t) {
 
   ctx.restore();
 
-  ctx.font = F(38, '900'); ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center';
-  ctx.fillText('Anchor Aadhya को अभी सब्सक्राइब करें!', 540, 1030);
+  filmAtmosphere(t);
+}
 
+// ── E. SINKING CAR SURVIVAL SUITE (1080x1920 9:16) ────────────────────────────────
+
+// ── E1. SINKING CAR PLUNGE ────────────────────────────────────────────────────────
+export function drawSinkingCarPlunge(lt, d, t) {
+  ctx.fillStyle = "#020B18"; ctx.fillRect(0, 0, W, H);
+
+  // Underwater ambient light rays from surface
+  ctx.save();
+  for (let i = 0; i < 6; i++) {
+    const rx = 180 + i * 150 + Math.sin(t * 1.5 + i) * 35;
+    const g = ctx.createLinearGradient(rx, 120, rx - 100, 950);
+    g.addColorStop(0, "rgba(0, 242, 254, 0.22)");
+    g.addColorStop(0.7, "rgba(2, 136, 209, 0.08)");
+    g.addColorStop(1, "rgba(0, 0, 0, 0)");
+    ctx.fillStyle = g;
+    ctx.beginPath();
+    ctx.moveTo(rx - 30, 120); ctx.lineTo(rx + 30, 120);
+    ctx.lineTo(rx + 140, 950); ctx.lineTo(rx - 40, 950);
+    ctx.fill();
+  }
+  ctx.restore();
+
+  hudHeader("SUBMERGED VEHICLE // EMERGENCY DESCENT", "कार पानी में गिरे तो क्या होता है?", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 640;
+  ctx.translate(cx, cy);
+  ctx.rotate(0.18 + Math.sin(t * 2) * 0.04);
+
+  // Car Body Silhouette
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 5;
+  ctx.beginPath();
+  ctx.roundRect(-220, -50, 440, 110, [24, 24, 10, 10]);
+  ctx.fill(); ctx.stroke();
+  // Roof & Windows
+  ctx.beginPath();
+  ctx.moveTo(-140, -50); ctx.lineTo(-80, -115); ctx.lineTo(80, -115); ctx.lineTo(150, -50);
+  ctx.closePath();
+  ctx.fillStyle = "#0F172A"; ctx.fill(); ctx.stroke();
+  // Side Window
+  ctx.fillStyle = "rgba(56, 189, 248, 0.35)";
+  ctx.beginPath();
+  ctx.moveTo(-125, -55); ctx.lineTo(-75, -105); ctx.lineTo(70, -105); ctx.lineTo(135, -55);
+  ctx.closePath(); ctx.fill();
+
+  // Wheels
+  circle(-140, 60, 36, "#020617"); circle(-140, 60, 16, "#64748B");
+  circle(140, 60, 36, "#020617"); circle(140, 60, 16, "#64748B");
+
+  // Headlights Beams Cutting Through Murky Water
+  const beam = ctx.createLinearGradient(200, 0, 460, 40);
+  beam.addColorStop(0, "rgba(255, 230, 0, 0.85)");
+  beam.addColorStop(1, "rgba(255, 230, 0, 0)");
+  ctx.fillStyle = beam;
+  ctx.beginPath();
+  ctx.moveTo(210, -20); ctx.lineTo(460, -70); ctx.lineTo(460, 90); ctx.lineTo(210, 30);
+  ctx.fill();
+
+  // Rising Air Bubbles
+  ctx.restore();
+  for (let k = 0; k < 22; k++) {
+    const bx = cx - 180 + ((k * 37 + t * 40) % 360);
+    const by = cy + 120 - ((k * 53 + t * 140) % 400);
+    circle(bx, by, 3 + (k % 5), "rgba(255, 255, 255, 0.65)");
+  }
+
+  filmAtmosphere(t, 640, "rgba(0, 242, 254, 0.2)");
+}
+
+// ── E2. DOOR PRESSURE LOCK (800 KG HYDROSTATIC LOCK) ──────────────────────────────
+export function drawDoorPressureLock(lt, d, t) {
+  ctx.fillStyle = "#040914"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("HYDROSTATIC PRESSURE // DOOR JAMMED", "दरवाज़े पर भारी पानी का दबाव!", "#FF1744");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+
+  // Car Door Cross Section
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#64748B"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(cx - 120, cy - 240, 240, 440, 20); ctx.fill(); ctx.stroke();
+
+  // Window frame in door
+  ctx.fillStyle = "#0F172A"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 4;
+  ctx.beginPath(); ctx.roundRect(cx - 95, cy - 220, 190, 170, 12); ctx.fill(); ctx.stroke();
+
+  // Red Inward Water Pressure Force Arrows Slamming Against Door
+  const wave = Math.sin(t * 8) * 15;
+  for (let y = cy - 180; y <= cy + 150; y += 75) {
+    ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 7;
+    line([[cx + 260 + wave, y], [cx + 140, y]], "#FF1744", 7);
+    // Arrow head
+    ctx.fillStyle = "#FF1744";
+    ctx.beginPath();
+    ctx.moveTo(cx + 140, y); ctx.lineTo(cx + 165, y - 14); ctx.lineTo(cx + 165, y + 14);
+    ctx.fill();
+  }
+
+  // Pressure readout box
+  ctx.fillStyle = "rgba(255, 23, 68, 0.18)"; ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 240, cy + 225, 480, 70, 14); ctx.fill(); ctx.stroke();
+  ctx.font = F(30, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("OUTSIDE WATER PRESSURE: 800 KG!", cx, cy + 268);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── E3. WATER WEIGHT 800KG PRESS ──────────────────────────────────────────────────
+export function drawWaterWeightPress(lt, d, t) {
+  ctx.fillStyle = "#020712"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("PHYSICAL FORCE COMPARISON // 800 KG", "इंसानी ताकत से बाहर खोलना नामुमकिन!", "#FFAA00");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Massive 800KG Hydraulic Weight Graphic
+  ctx.fillStyle = "#334155"; ctx.strokeStyle = "#F59E0B"; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.roundRect(cx - 220, cy - 160, 440, 220, 18); ctx.fill(); ctx.stroke();
+
+  ctx.font = F(82, "900"); ctx.fillStyle = "#F59E0B"; ctx.textAlign = "center";
+  ctx.fillText("800 KG", cx, cy - 40);
+  ctx.font = F(32, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("WATER COLUMN WEIGHT", cx, cy + 25);
+
+  // Human Strength Vector vs Water Pressure
+  ctx.fillStyle = "rgba(16, 185, 129, 0.15)"; ctx.strokeStyle = "#10B981"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 220, cy + 85, 210, 85, 12); ctx.fill(); ctx.stroke();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#10B981";
+  ctx.fillText("HUMAN PUSH", cx - 115, cy + 120);
+  ctx.font = F(30, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("~40-50 KG", cx - 115, cy + 155);
+
+  ctx.fillStyle = "rgba(239, 68, 68, 0.15)"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx + 10, cy + 85, 210, 85, 12); ctx.fill(); ctx.stroke();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#EF4444";
+  ctx.fillText("WATER FORCE", cx + 115, cy + 120);
+  ctx.font = F(30, "900"); ctx.fillStyle = "#FFFFFF";
+  ctx.fillText("800 KG!", cx + 115, cy + 155);
+
+  ctx.restore();
+  filmAtmosphere(t, 620, "rgba(245, 158, 11, 0.2)");
+}
+
+// ── E4. TRAPPED PASSENGER STRUGGLE ────────────────────────────────────────────────
+export function drawTrappedPassenger(lt, d, t) {
+  ctx.fillStyle = "#0A0205"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("CABIN TRAP // ZERO VISIBILITY", "दरवाज़ा धकेलना जानलेवा खतरा!", "#FF1744");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Passenger Silhouette Pushing
+  circle(cx - 30, cy - 130, 48, "#E2E8F0");
+  ctx.fillStyle = "#64748B";
+  ctx.beginPath(); ctx.roundRect(cx - 75, cy - 70, 90, 160, 20); ctx.fill();
+  // Arms pushing forward
+  line([[cx - 20, cy - 40], [cx + 80, cy - 40]], "#E2E8F0", 18);
+  line([[cx - 20, cy], [cx + 80, cy]], "#E2E8F0", 18);
+
+  // Red Pressure Barrier Wall
+  ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 14;
+  line([[cx + 90, cy - 200], [cx + 90, cy + 180]], "#FF1744", 14);
+
+  // Warning flashing pulse
+  const blink = Math.sin(t * 12) > 0;
+  ctx.fillStyle = blink ? "rgba(255, 23, 68, 0.2)" : "rgba(255, 23, 68, 0.05)";
+  ctx.beginPath(); ctx.roundRect(cx - 240, cy + 170, 480, 70, 14); ctx.fill();
+  ctx.strokeStyle = "#FF1744"; ctx.lineWidth = 3; ctx.stroke();
+  ctx.font = F(30, "900"); ctx.fillStyle = "#FF1744"; ctx.textAlign = "center";
+  ctx.fillText("DO NOT PANIC // DO NOT PUSH DOOR", cx, cy + 213);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── E5. SEATBELT UNLATCH & WINDOW ROLL ─────────────────────────────────────────────
+export function drawSeatbeltAndWindow(lt, d, t) {
+  ctx.fillStyle = "#020F0D"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("SURVIVAL STEP 1 // UNBUCKLE & WINDOW", "सीटबेल्ट खोलें और खिड़की नीचे करें!", "#10B981");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Seatbelt Buckle Mechanism
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#10B981"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(cx - 180, cy - 130, 150, 190, 16); ctx.fill(); ctx.stroke();
+  // Red PRESS Button
+  ctx.fillStyle = "#EF4444";
+  ctx.beginPath(); ctx.roundRect(cx - 160, cy - 100, 110, 50, 8); ctx.fill();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("PRESS", cx - 105, cy - 68);
+
+  // Belt Strap Releasing
+  ctx.fillStyle = "#0F172A";
+  ctx.beginPath(); ctx.roundRect(cx - 145, cy + 70, 80, 100, 6); ctx.fill();
+
+  // Electric / Manual Window Rolling Down
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(cx + 30, cy - 130, 150, 190, 16); ctx.fill(); ctx.stroke();
+
+  // Glass sliding down with arrow
+  ctx.fillStyle = "rgba(56, 189, 248, 0.4)";
+  const glassY = cy - 70 + Math.min(60, (lt / d) * 70);
+  ctx.fillRect(cx + 40, glassY, 130, 120);
+
+  // Downward Green Arrow
+  ctx.strokeStyle = "#10B981"; ctx.lineWidth = 6;
+  line([[cx + 105, cy - 100], [cx + 105, cy - 30]], "#10B981", 6);
+  ctx.fillStyle = "#10B981";
+  ctx.beginPath();
+  ctx.moveTo(cx + 105, cy - 20); ctx.lineTo(cx + 90, cy - 40); ctx.lineTo(cx + 120, cy - 40);
+  ctx.fill();
+
+  // Tactical badge
+  ctx.font = F(28, "900"); ctx.fillStyle = "#10B981"; ctx.textAlign = "center";
+  ctx.fillText("PRESSURE EQUALIZATION IN PROGRESS", cx, cy + 225);
+
+  ctx.restore();
+  filmAtmosphere(t, 620, "rgba(16, 185, 129, 0.2)");
+}
+
+// ── E6. HEADREST GLASS BREAKER (कांच तोड़ने का हथियार) ────────────────────────────
+export function drawHeadrestGlassBreaker(lt, d, t) {
+  ctx.fillStyle = "#0A0406"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("EMERGENCY TOOL // STEEL HEADREST PRONGS", "सीट का हेडरेस्ट निकालें और कोने पर मारें!", "#FFE600");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Car Seat Headrest Illustration
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#FFE600"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.roundRect(cx - 140, cy - 200, 280, 130, 24); ctx.fill(); ctx.stroke();
+
+  // Two Steel Prongs Extending Downwards
+  ctx.fillStyle = "#CBD5E1"; ctx.strokeStyle = "#94A3B8"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 70, cy - 70, 24, 150, 4); ctx.fill(); ctx.stroke();
+  ctx.beginPath(); ctx.roundRect(cx + 46, cy - 70, 24, 150, 4); ctx.fill(); ctx.stroke();
+
+  // Steel Sharpened Tips
+  ctx.fillStyle = "#F8FAFC";
+  ctx.beginPath(); ctx.moveTo(cx - 70, cy + 80); ctx.lineTo(cx - 58, cy + 100); ctx.lineTo(cx - 46, cy + 80); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(cx + 46, cy + 80); ctx.lineTo(cx + 58, cy + 100); ctx.lineTo(cx + 70, cy + 80); ctx.fill();
+
+  // Spiderweb Glass Cracking Pattern at bottom right corner
+  ctx.strokeStyle = "rgba(255, 255, 255, 0.85)"; ctx.lineWidth = 3;
+  const kx = cx + 58, ky = cy + 100;
+  for (let a = 0; a < TAU; a += TAU / 10) {
+    ctx.beginPath();
+    ctx.moveTo(kx, ky);
+    ctx.lineTo(kx + Math.cos(a) * 90, ky + Math.sin(a) * 90);
+    ctx.stroke();
+  }
+
+  // Tactical Alert
+  ctx.font = F(30, "900"); ctx.fillStyle = "#FFE600"; ctx.textAlign = "center";
+  ctx.fillText("STRIKE CORNER // NEVER CENTER", cx, cy + 225);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── E7. CAR ESCAPE OUTRO CTA ──────────────────────────────────────────────────────
+export function drawCarEscapeCTA(lt, d, t) {
+  ctx.fillStyle = "#010C1A"; ctx.fillRect(0, 0, W, H);
+
+  hudHeader("ANCHOR AADHYA OFFICIAL // SURVIVAL", "कमेंट में बताएं और सब्सक्राइब करें!", "#FFE600");
+
+  ctx.save();
+  const ox = 540, oy = 640, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Red YouTube Button
+  ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  ctx.fillStyle = "#FFFFFF";
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("SUBSCRIBE", 0, 105);
+
+  // Bell
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = "#FFE600";
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, "#FFE600");
+  ctx.restore();
+
+  // Question Callout Bubble
+  ctx.fillStyle = "#00F2FE"; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#000000"; ctx.textAlign = "center";
+  ctx.fillText("क्या आपको यह हेडरेस्ट ट्रिक पता थी? 🚗", 0, -135);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F. UNIVERSAL SCIENCE & HUMAN ANATOMY PROCEDURAL SUITE ─────────────────────────
+
+// ── F1. HUMAN BRAIN SYNAPSE FIRING ────────────────────────────────────────────────
+export function drawHumanBrainSynapse(lt, d, t) {
+  ctx.fillStyle = "#05030A"; ctx.fillRect(0, 0, W, H);
+  hudHeader("HUMAN BRAIN // NEURAL SYNAPSES", "दिमाग के न्यूरॉन्स और विद्युत संकेत!", "#A855F7");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+
+  // Brain Profile Silhouette
+  ctx.fillStyle = "#1E1035"; ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.ellipse(cx, cy - 20, 220, 170, 0, 0, TAU);
+  ctx.fill(); ctx.stroke();
+
+  // Neural Firing Network
+  for (let k = 0; k < 18; k++) {
+    const a = (k * TAU) / 18;
+    const r = 80 + Math.sin(t * 4 + k) * 60;
+    const nx = cx + Math.cos(a) * r, ny = cy - 20 + Math.sin(a) * r;
+    circle(nx, ny, 6, "#FFD700");
+
+    // Connecting Synaptic Lightning
+    ctx.strokeStyle = "rgba(168, 85, 247, 0.65)"; ctx.lineWidth = 2.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy - 20);
+    ctx.lineTo(nx, ny);
+    ctx.stroke();
+  }
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(168, 85, 247, 0.25)");
+}
+
+// ── F2. CELLULAR DNA STRUCTURE ────────────────────────────────────────────────────
+export function drawCellularDNAStructure(lt, d, t) {
+  ctx.fillStyle = "#020712"; ctx.fillRect(0, 0, W, H);
+  hudHeader("CELLULAR BIOLOGY // DNA DOUBLE HELIX", "जीवन का आनुवंशिक कोड: डीएनए!", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+
+  for (let y = -220; y <= 220; y += 22) {
+    const phase = (y * 0.035 + t * 3);
+    const x1 = cx + Math.sin(phase) * 140;
+    const x2 = cx - Math.sin(phase) * 140;
+
+    // Rung
+    ctx.strokeStyle = "rgba(255, 215, 0, 0.5)"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(x1, cy + y); ctx.lineTo(x2, cy + y); ctx.stroke();
+
+    // Strands
+    circle(x1, cy + y, 9, "#00F2FE");
+    circle(x2, cy + y, 9, "#FF1744");
+  }
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(0, 242, 254, 0.2)");
+}
+
+// ── F3. HEART ARTERY PRESSURE ─────────────────────────────────────────────────────
+export function drawHeartArteryPressure(lt, d, t) {
+  ctx.fillStyle = "#0A0205"; ctx.fillRect(0, 0, W, H);
+  hudHeader("CARDIOVASCULAR SYSTEM // HEART RATE", "दिल की धड़कन और रक्तचाप का दबाव!", "#FF1744");
+
+  ctx.save();
+  const cx = 540, cy = 600;
+  const beat = 1 + 0.12 * Math.sin(t * 8);
+
+  ctx.save();
+  ctx.translate(cx, cy); ctx.scale(beat, beat);
+  // Heart Shape
+  ctx.fillStyle = "#E11D48"; ctx.strokeStyle = "#FFE4E6"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(0, 40);
+  ctx.bezierCurveTo(-120, -80, -120, -160, 0, -100);
+  ctx.bezierCurveTo(120, -160, 120, -80, 0, 40);
+  ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  // ECG Pulse Monitor
+  ctx.strokeStyle = "#00FF66"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(100, cy + 200);
+  for (let x = 100; x <= 980; x += 10) {
+    let py = cy + 200;
+    const waveX = (x - t * 160) % 300;
+    if (waveX > 100 && waveX < 140) py -= 65;
+    else if (waveX >= 140 && waveX < 170) py += 45;
+    ctx.lineTo(x, py);
+  }
+  ctx.stroke();
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F4. ATM CASH MECHANICS ────────────────────────────────────────────────────────
+export function drawAtmCashMechanics(lt, d, t) {
+  ctx.fillStyle = "#020914"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ATM MECHANISM // UV SENSOR SCAN", "नोट बाहर आने से पहले 3 सेकंड की जांच!", "#00F2FE");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Machine Interior Rollers
+  for (let i = -1; i <= 1; i++) {
+    circle(cx + i * 160, cy - 80, 44, "#334155");
+    circle(cx + i * 160, cy + 80, 44, "#334155");
+  }
+
+  // Fast Banknote Moving Through
+  ctx.fillStyle = "#10B981"; ctx.strokeStyle = "#FFFFFF"; ctx.lineWidth = 3;
+  ctx.beginPath(); ctx.roundRect(cx - 180, cy - 45, 360, 90, 8); ctx.fill(); ctx.stroke();
+  ctx.font = F(42, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("₹ 500", cx, cy + 12);
+
+  // Purple UV Optical Laser Sensor Beam
+  ctx.strokeStyle = "#A855F7"; ctx.lineWidth = 6;
+  line([[cx - 240, cy], [cx + 240, cy]], "#A855F7", 6);
+
+  ctx.restore();
+  filmAtmosphere(t, 620, "rgba(168, 85, 247, 0.25)");
+}
+
+// ── F5. MICROSCOPIC BACTERIA ──────────────────────────────────────────────────────
+export function drawMicroscopicBacteria(lt, d, t) {
+  ctx.fillStyle = "#040A06"; ctx.fillRect(0, 0, W, H);
+  hudHeader("MICROBIOLOGY // BACTERIAL SWARM", "सूक्ष्मजीव और बैक्टीरिया का हमला!", "#22C55E");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+  circle(cx, cy, 260, "#062211");
+
+  // Bacteria Rods
+  for (let k = 0; k < 14; k++) {
+    const bx = cx - 180 + ((k * 57 + t * 25) % 360);
+    const by = cy - 180 + ((k * 43 + t * 35) % 360);
+    ctx.save(); ctx.translate(bx, by); ctx.rotate(k + t);
+    ctx.fillStyle = "#4ADE80"; ctx.beginPath(); ctx.roundRect(-24, -10, 48, 20, 8); ctx.fill();
+    ctx.restore();
+  }
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F6. EAR CANAL CROSS SECTION ───────────────────────────────────────────────────
+export function drawEarCanalCrossSection(lt, d, t) {
+  ctx.fillStyle = "#080407"; ctx.fillRect(0, 0, W, H);
+  hudHeader("HUMAN EAR ANATOMY // TYMPANIC MEMBRANE", "कान का नाजुक पर्दा और नसें!", "#F43F5E");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Ear Canal Tunnel
+  ctx.fillStyle = "#2D1222"; ctx.strokeStyle = "#F43F5E"; ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(140, cy - 120); ctx.quadraticCurveTo(cx - 50, cy - 80, cx + 80, cy - 100);
+  ctx.lineTo(cx + 80, cy + 100); ctx.quadraticCurveTo(cx - 50, cy + 80, 140, cy + 120);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  // Vibrating Eardrum
+  const vib = Math.sin(t * 20) * 8;
+  ctx.strokeStyle = "#FFE4E6"; ctx.lineWidth = 10;
+  line([[cx + 80 + vib, cy - 90], [cx + 80 - vib, cy + 90]], "#FFE4E6", 10);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F7. AIRPLANE COCKPIT RADAR ────────────────────────────────────────────────────
+export function drawAirplaneCockpitRadar(lt, d, t) {
+  ctx.fillStyle = "#020712"; ctx.fillRect(0, 0, W, H);
+  hudHeader("AVIONICS // FLIGHT ALTITUDE RADAR", "हवाई जहाज और मोबाइल सिग्नल्स!", "#38BDF8");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Circular Radar Display
+  circle(cx, cy, 240, "#082F49");
+  ctx.strokeStyle = "#38BDF8"; ctx.lineWidth = 4;
+  for (let r = 60; r <= 240; r += 60) {
+    ctx.beginPath(); ctx.arc(cx, cy, r, 0, TAU); ctx.stroke();
+  }
+
+  // Radar Sweep Line
+  const sweep = t * 2.5;
+  ctx.strokeStyle = "#00FF66"; ctx.lineWidth = 4;
+  ctx.beginPath();
+  ctx.moveTo(cx, cy); ctx.lineTo(cx + Math.cos(sweep) * 240, cy + Math.sin(sweep) * 240);
+  ctx.stroke();
+
+  ctx.restore();
+  filmAtmosphere(t, 620, "rgba(56, 189, 248, 0.2)");
+}
+
+// ── F8. TOOTH ACID CAVITY DECAY ───────────────────────────────────────────────────
+export function drawToothAcidCavityDecay(lt, d, t) {
+  ctx.fillStyle = "#0A0503"; ctx.fillRect(0, 0, W, H);
+  hudHeader("DENTAL SCIENCE // ACID EROSION", "दांत का इनेमल और कैविटी का सच!", "#F59E0B");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Tooth White Molar
+  ctx.fillStyle = "#F8FAFC"; ctx.strokeStyle = "#CBD5E1"; ctx.lineWidth = 6;
+  ctx.beginPath();
+  ctx.moveTo(cx - 110, cy - 140);
+  ctx.quadraticCurveTo(cx, cy - 160, cx + 110, cy - 140);
+  ctx.lineTo(cx + 85, cy + 120);
+  ctx.lineTo(cx + 35, cy + 60);
+  ctx.lineTo(cx, cy + 130);
+  ctx.lineTo(cx - 35, cy + 60);
+  ctx.lineTo(cx - 85, cy + 120);
+  ctx.closePath(); ctx.fill(); ctx.stroke();
+
+  // Dark Cavity Hole
+  circle(cx + 25, cy - 90, 36, "#1C1917");
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F9. DEHYDRATION ORGAN FAILURE ─────────────────────────────────────────────────
+export function drawDehydrationOrganFailure(lt, d, t) {
+  ctx.fillStyle = "#0A0302"; ctx.fillRect(0, 0, W, H);
+  hudHeader("BIOLOGY // HYDRATION CRITICAL", "बिना पानी 7 दिन में क्या होगा?", "#EF4444");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Water Level Gauge Box
+  ctx.fillStyle = "#1E293B"; ctx.strokeStyle = "#EF4444"; ctx.lineWidth = 8;
+  ctx.beginPath(); ctx.roundRect(cx - 160, cy - 200, 320, 400, 20); ctx.fill(); ctx.stroke();
+
+  // Fluid Level Dropping
+  const hLevel = Math.max(50, 350 - (lt / d) * 260);
+  ctx.fillStyle = "#EF4444";
+  ctx.fillRect(cx - 140, cy + 180 - hLevel, 280, hLevel);
+
+  ctx.font = F(72, "900"); ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("CRITICAL", cx, cy);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F10. URINE BLADDER EXPANSION ──────────────────────────────────────────────────
+export function drawUrineBladderExpansion(lt, d, t) {
+  ctx.fillStyle = "#0A0702"; ctx.fillRect(0, 0, W, H);
+  hudHeader("RENAL SYSTEM // BLADDER PRESSURE", "घंटों पेशाब रोकने से शरीर में खतरा!", "#EAB308");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+  const stretch = 1 + 0.15 * Math.sin(t * 5);
+
+  ctx.save(); ctx.translate(cx, cy); ctx.scale(stretch, stretch);
+  ctx.fillStyle = "#854D0E"; ctx.strokeStyle = "#EAB308"; ctx.lineWidth = 6;
+  ctx.beginPath(); ctx.ellipse(0, 0, 180, 140, 0, 0, TAU); ctx.fill(); ctx.stroke();
+  ctx.restore();
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F11. SNEEZE BLAST PRESSURE ────────────────────────────────────────────────────
+export function drawSneezeBlastPressure(lt, d, t) {
+  ctx.fillStyle = "#03080F"; ctx.fillRect(0, 0, W, H);
+  hudHeader("RESPIRATORY VELOCITY // 160 KM/H", "छींक रोकने से अंदर होता है विस्फोट!", "#06B6D4");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Expanding Pressure Shockwave Rings
+  for (let r = 60; r <= 260; r += 50) {
+    const pulseR = (r + t * 140) % 280;
+    ctx.strokeStyle = "#06B6D4"; ctx.lineWidth = 4;
+    ctx.globalAlpha = 1 - pulseR / 280;
+    ctx.beginPath(); ctx.arc(cx, cy, pulseR, 0, TAU); ctx.stroke();
+  }
+  ctx.globalAlpha = 1.0;
+
+  ctx.font = F(84, "900"); ctx.fillStyle = "#06B6D4"; ctx.textAlign = "center";
+  ctx.fillText("160 KM/H", cx, cy + 25);
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F12. TATTOO INK MACROPHAGE ────────────────────────────────────────────────────
+export function drawTattooInkMacrophage(lt, d, t) {
+  ctx.fillStyle = "#090308"; ctx.fillRect(0, 0, W, H);
+  hudHeader("DERMATOLOGY // LYMPHATIC SYSTEM", "टैटू की स्याही कहाँ गायब होती है?", "#EC4899");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Skin Dermis Layers
+  ctx.fillStyle = "#831843"; ctx.fillRect(120, cy - 140, 840, 90);
+  ctx.fillStyle = "#500724"; ctx.fillRect(120, cy - 50, 840, 190);
+
+  // Trapped Black Ink Particles
+  for (let k = 0; k < 20; k++) {
+    const ix = 200 + ((k * 43) % 680);
+    const iy = cy - 20 + ((k * 29) % 130);
+    circle(ix, iy, 12, "#000000");
+    ctx.strokeStyle = "#EC4899"; ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.arc(ix, iy, 18, 0, TAU); ctx.stroke();
+  }
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F13. SOLAR FLARE CORONAL MASS ─────────────────────────────────────────────────
+export function drawSolarFlareCoronalMass(lt, d, t) {
+  ctx.fillStyle = "#0C0200"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ASTROPHYSICS // SOLAR FLARE PROMINENCE", "सूर्य का प्रचंड प्लाज्मा विस्फोट!", "#F97316");
+
+  ctx.save();
+  const cx = 540, cy = 630;
+
+  // Giant Fiery Corona
+  circle(cx, cy, 190, "#EA580C");
+  circle(cx, cy, 150, "#FBBF24");
+
+  // Magnetic Looping Plasma Arc
+  ctx.strokeStyle = "#F97316"; ctx.lineWidth = 14;
+  ctx.beginPath();
+  ctx.arc(cx, cy - 120, 130, Math.PI * 0.9, TAU * 0.95);
+  ctx.stroke();
+
+  ctx.restore();
+  filmAtmosphere(t, 630, "rgba(249, 115, 22, 0.3)");
+}
+
+// ── F14. NEUTRON STAR PULSAR ──────────────────────────────────────────────────────
+export function drawNeutronStarPulsar(lt, d, t) {
+  ctx.fillStyle = "#01030B"; ctx.fillRect(0, 0, W, H);
+  hudHeader("RELATIVISTIC PULSAR // MAGNETIC JETS", "ब्रह्मांड का सबसे घना तारा!", "#38BDF8");
+
+  ctx.save();
+  const cx = 540, cy = 620;
+
+  // Rotating Gamma Beams
+  const rot = t * 6;
+  ctx.save(); ctx.translate(cx, cy); ctx.rotate(rot);
+  const beamG = ctx.createLinearGradient(0, -320, 0, 320);
+  beamG.addColorStop(0, "rgba(56, 189, 248, 0.9)");
+  beamG.addColorStop(0.5, "rgba(255, 255, 255, 1)");
+  beamG.addColorStop(1, "rgba(56, 189, 248, 0.9)");
+  ctx.fillStyle = beamG;
+  ctx.beginPath();
+  ctx.moveTo(-16, -320); ctx.lineTo(16, -320); ctx.lineTo(6, 0); ctx.lineTo(-6, 0); ctx.fill();
+  ctx.beginPath();
+  ctx.moveTo(-16, 320); ctx.lineTo(16, 320); ctx.lineTo(6, 0); ctx.lineTo(-6, 0); ctx.fill();
+  ctx.restore();
+
+  // Dense Core
+  circle(cx, cy, 55, "#FFFFFF");
+  circle(cx, cy, 65, "rgba(56, 189, 248, 0.45)");
+
+  ctx.restore();
+  filmAtmosphere(t);
+}
+
+// ── F15. UNIVERSAL OUTRO CTA ──────────────────────────────────────────────────────
+export function drawUniversalOutroCTA(lt, d, t) {
+  ctx.fillStyle = "#030612"; ctx.fillRect(0, 0, W, H);
+  hudHeader("ANCHOR AADHYA OFFICIAL", "कमेंट में बताएं और सब्सक्राइब करें!", "#FFE600");
+
+  ctx.save();
+  const ox = 540, oy = 640, s = 1.35;
+  ctx.translate(ox, oy); ctx.scale(s, s);
+
+  // Red YouTube Button
+  ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
+  ctx.fillStyle = "#FFFFFF";
+  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
+
+  ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
+  ctx.fillText("SUBSCRIBE", 0, 105);
+
+  // Bell
+  const ring = Math.sin(t * 12) * 0.25;
+  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
+  ctx.fillStyle = "#FFE600";
+  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
+  circle(0, 26, 8, "#FFE600");
+  ctx.restore();
+
+  // Question Bubble
+  ctx.fillStyle = "#00F2FE"; ctx.beginPath(); ctx.roundRect(-165, -180, 330, 85, 20); ctx.fill();
+  ctx.beginPath(); ctx.moveTo(-30, -95); ctx.lineTo(0, -70); ctx.lineTo(10, -95); ctx.fill();
+  ctx.font = F(24, "900"); ctx.fillStyle = "#000000"; ctx.textAlign = "center";
+  ctx.fillText("आपकी क्या राय है? कमेंट्स में बताएं! ✍️", 0, -135);
+
+  ctx.restore();
   filmAtmosphere(t);
 }
