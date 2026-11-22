@@ -201,6 +201,14 @@ def research_fresh_rare_topic():
     4. Spoken length > 2 minutes (>120s) with 20-26 descriptive lines.
     """
     print("\n[AI Researcher v3.0] Initiating Real-Time Deep Web Curiosity Research...", flush=True)
+    force_topic = os.environ.get("FORCE_TOPIC_ID")
+    if force_topic:
+        from emergency_pool import EMERGENCY_RARE_POOL
+        for cand in EMERGENCY_RARE_POOL:
+            if cand["id"] == force_topic:
+                print(f"  🎯 [FORCE_TOPIC_ID Active] Directly selected proven curated candidate: [{cand['id']}] {cand['title']}", flush=True)
+                return inject_monetization_shield_metadata(cand)
+
     tracker = load_used_tracker()
     used_slugs, used_kw_sets = get_used_slugs_and_keywords(tracker)
     print(f"  -> Tracker Audit: {len(used_slugs)} previously covered topics strictly locked against duplicates.", flush=True)

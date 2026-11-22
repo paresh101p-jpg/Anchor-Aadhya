@@ -570,10 +570,16 @@ async def main():
     # 100% Fresh Assets: Wipe all previous cached renders, audio mixes, and frames
     clean_all_temp_assets()
 
-    topic_id_arg = os.environ.get("TOPIC_ID") or (sys.argv[1] if len(sys.argv) > 1 else None)
+    topic_id_arg = os.environ.get("TOPIC_ID") or os.environ.get("FORCE_TOPIC_ID")
+    if not topic_id_arg and len(sys.argv) > 1 and not sys.argv[1].startswith("--"):
+        topic_id_arg = sys.argv[1]
+
     if topic_id_arg:
-        topics = load_topics()
-        matched = [t for t in topics if t.get("id") == topic_id_arg]
+        from emergency_pool import EMERGENCY_RARE_POOL
+        matched = [t for t in EMERGENCY_RARE_POOL if t.get("id") == topic_id_arg]
+        if not matched:
+            topics = load_topics()
+            matched = [t for t in topics if t.get("id") == topic_id_arg]
         topic = matched[0] if matched else select_next_topic()
     else:
         topic = select_next_topic()

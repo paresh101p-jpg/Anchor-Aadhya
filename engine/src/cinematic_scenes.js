@@ -1496,34 +1496,7 @@ export function drawHeadrestGlassBreaker(lt, d, t) {
 
 // ── E7. CAR ESCAPE OUTRO CTA ──────────────────────────────────────────────────────
 export function drawCarEscapeCTA(lt, d, t) {
-  ctx.fillStyle = "#010C1A"; ctx.fillRect(0, 0, W, H);
-
-  hudHeader("ANCHOR AADHYA OFFICIAL // SURVIVAL", "कमेंट में बताएं और सब्सक्राइब करें!", "#FFE600");
-
-  ctx.save();
-  const ox = 540, oy = 640, s = 1.35;
-  ctx.translate(ox, oy); ctx.scale(s, s);
-
-  // Red YouTube Button
-  ctx.fillStyle = "#FF0000"; ctx.beginPath(); ctx.roundRect(-160, -55, 320, 110, 26); ctx.fill();
-  ctx.fillStyle = "#FFFFFF";
-  ctx.beginPath(); ctx.moveTo(-20, -32); ctx.lineTo(35, 0); ctx.lineTo(-20, 32); ctx.fill();
-
-  ctx.font = "900 34px Inter, sans-serif"; ctx.fillStyle = "#FFFFFF"; ctx.textAlign = "center";
-  ctx.fillText("SUBSCRIBE", 0, 105);
-
-  // Bell
-  const ring = Math.sin(t * 12) * 0.25;
-  ctx.save(); ctx.translate(130, -55); ctx.rotate(ring);
-  ctx.fillStyle = "#FFE600";
-  ctx.beginPath(); ctx.arc(0, 0, 24, Math.PI, TAU); ctx.lineTo(26, 20); ctx.lineTo(-26, 20); ctx.fill();
-  circle(0, 26, 8, "#FFE600");
-  ctx.restore();
-
-  drawOutroQuestionBubble("क्या आपको यह हेडरेस्ट ट्रिक पता थी? 🚗");
-
-  ctx.restore();
-  filmAtmosphere(t);
+  drawUniversalOutroCTA(lt, d, t);
 }
 
 // ── F. UNIVERSAL SCIENCE & HUMAN ANATOMY PROCEDURAL SUITE ─────────────────────────

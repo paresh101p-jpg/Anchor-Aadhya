@@ -253,6 +253,47 @@ export function buildShots(script = {}) {
 
     if (isLastLine) {
       sceneFn = outroScene;
+    } else if (script.id === 'sinking_car_door_physics') {
+      const text = String(lines[i]?.text || '');
+      if (i === 0 || /नदी\s*में\s*गिरे|डूबना\s*शुरू|कार\s*पानी\s*में/i.test(text)) sceneFn = Cinema.drawSinkingCarPlunge;
+      else if (/तैर|सतह|बाहर\s*निकल|एस्केप/i.test(text)) sceneFn = Cinema.drawSinkingCarPlunge;
+      else if (/हेडरेस्ट|रॉड|कांच\s*के\s*बीच|विंडशील्ड|टेम्पर्ड/i.test(text)) sceneFn = Cinema.drawHeadrestGlassBreaker;
+      else if (/वजन|800|किलो|सांड|दबाव\s*बराबर|पानी\s*भरने/i.test(text)) sceneFn = Cinema.drawWaterWeightPress;
+      else if (/सीटबेल्ट|विंडो|खिड़की|रोल/i.test(text)) sceneFn = Cinema.drawSeatbeltAndWindow;
+      else if (/गोल्डन|सेकंड|समय|30\s*से\s*60|चरण\s*1/i.test(text)) sceneFn = Cinema.drawCountdownTimer;
+      else if (/फंसा|यात्री|ऊर्जा|बर्बाद|पैनिक|धकेल/i.test(text)) sceneFn = Cinema.drawTrappedPassenger;
+      else if (/दरवाज़ा|प्रेशर|लॉक|दबाव|क्षेत्रफल|सेंट्रल/i.test(text)) sceneFn = Cinema.drawDoorPressureLock;
+      else sceneFn = Cinema.drawSinkingCarPlunge;
+    } else if (script.id === 'mariana_trench_abyss') {
+      const text = String(lines[i]?.text || '');
+      if (/पृथ्वी|ग्लोब|धरती/i.test(text)) sceneFn = Cinema.drawEarthGlobe;
+      else if (/एवरेस्ट|पहाड़|माउंट/i.test(text)) sceneFn = Cinema.drawMountEverest;
+      else if (/सूरज|धूप|किरणें|रोशनी/i.test(text)) sceneFn = Cinema.drawSunRays;
+      else if (/पनडुब्बी|सर्चलाइट/i.test(text)) sceneFn = Cinema.drawSubmarineSearchlight;
+      else if (/दबाव|प्रेशर|slam/i.test(text)) sceneFn = Cinema.drawPressureSlam;
+      else if (/हाथी|वजन|हवाई\s*जहाज/i.test(text)) sceneFn = Cinema.drawElephantWeight;
+      else if (/जीव|राक्षस|प्राणी|चमक/i.test(text)) sceneFn = Cinema.drawAlienCreature;
+      else if (/प्लास्टिक|कचरा/i.test(text)) sceneFn = Cinema.drawPlasticDiscovery;
+      else sceneFn = Cinema.drawMarianaChasm;
+    } else if (script.id === 'chernobyl_300s_room') {
+      const text = String(lines[i]?.text || '');
+      if (/रिएक्टर|धमाका|विस्फोट/i.test(text)) sceneFn = Cinema.drawReactorExplosion;
+      else if (/लावा|corium/i.test(text)) sceneFn = Cinema.drawCoriumLavaFlow;
+      else if (/हाथी\s*का\s*पैर|foot/i.test(text)) sceneFn = Cinema.drawElephantsFoot;
+      else if (/गीगर|काउंटर/i.test(text)) sceneFn = Cinema.drawGeigerCounter;
+      else if (/कैमरा|रोबोट|पिघल/i.test(text)) sceneFn = Cinema.drawMeltingCameraRobot;
+      else if (/फंगस|कवक/i.test(text)) sceneFn = Cinema.drawRadiotrophicFungus;
+      else if (/समय|सेकंड|टाइमर/i.test(text)) sceneFn = Cinema.drawCountdownTimer;
+      else sceneFn = Cinema.drawChernobylPlant;
+    } else if (script.id === 'bermuda_triangle_secret') {
+      const text = String(lines[i]?.text || '');
+      if (/राडार|radar/i.test(text)) sceneFn = Cinema.drawBermudaPerimeterRadar;
+      else if (/मीथेन|बुलबुले/i.test(text)) sceneFn = Cinema.drawMethaneBubblesEruption;
+      else if (/जहाज|डूब|ship/i.test(text)) sceneFn = Cinema.drawShipSinkingAbyss;
+      else if (/तूफान|बादल|air\s*bomb/i.test(text)) sceneFn = Cinema.drawHexagonalCloudAirBombs;
+      else if (/हवाई\s*जहाज|विमान|flight/i.test(text)) sceneFn = Cinema.drawAirplaneStormDisaster;
+      else if (/कंपास|दिशा|चुंबकीय/i.test(text)) sceneFn = Cinema.drawMagneticCompassChaos;
+      else sceneFn = Cinema.drawBermudaTriangleMap;
     } else if (topicCurated && i < topicCurated.length - 1 && !usedScenes.has(topicCurated[i])) {
       sceneFn = topicCurated[i];
     } else {
