@@ -11,7 +11,10 @@ const F = (s, w = '900') => `${w} ${s}px Inter, "Noto Sans Devanagari", "Mangal"
 // Utility: HUD Title Card (top safe area) - Auto-fit: text NEVER overflows the box!
 function hudHeader(title, subtitle = '', color = '#00F2FE') {
   ctx.save();
-  const boxX = 70, boxY = 125, boxW = W - 140, boxH = 130;
+  const boxW = Math.min(W - 140, 1100);
+  const boxX = (W - boxW) / 2;
+  const boxY = H > 1200 ? 125 : 65;
+  const boxH = 130;
   ctx.fillStyle = 'rgba(2, 8, 18, 0.82)';
   ctx.beginPath(); ctx.roundRect(boxX, boxY, boxW, boxH, 18); ctx.fill();
   ctx.strokeStyle = color; ctx.lineWidth = 3; ctx.stroke();
@@ -29,7 +32,7 @@ function hudHeader(title, subtitle = '', color = '#00F2FE') {
   let titleW = ctx.measureText(title).width;
   let tScale = Math.min(1, maxTextW / Math.max(titleW, 1));
   ctx.save();
-  ctx.translate(540, subtitle ? boxY + 44 : boxY + 65);
+  ctx.translate(W / 2, subtitle ? boxY + 44 : boxY + 65);
   ctx.scale(tScale, tScale);
   ctx.fillStyle = color; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
   ctx.fillText(title, 0, 0);
@@ -41,7 +44,7 @@ function hudHeader(title, subtitle = '', color = '#00F2FE') {
     let subW = ctx.measureText(subtitle).width;
     let sScale = Math.min(1, maxTextW / Math.max(subW, 1));
     ctx.save();
-    ctx.translate(540, boxY + 92);
+    ctx.translate(W / 2, boxY + 92);
     ctx.scale(sScale, sScale);
     ctx.fillStyle = '#FFFFFF'; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
     ctx.fillText(subtitle, 0, 0);
@@ -1893,15 +1896,16 @@ export function drawUniversalOutroCTA(lt, d, t) {
   // 2. Top Channel Header Card (Centered at Y: 180)
   hudHeader('ANCHOR AADHYA OFFICIAL', 'कमेंट में बताएं और सब्सक्राइब करें!', '#FFE600');
 
-  // 3. Center Hero Subscribe Card (Centered vertically at Y: 920)
-  const cx = W / 2; // 540
-  const cy = 920;   // Dead Center of 1080x1920 portrait canvas
+  // 3. Center Hero Subscribe Card (Centered vertically at Y: 920 for 9:16 or Y: 540 for 16:9)
+  const cx = W / 2;
+  const cy = H > 1200 ? 920 : 540;
+  const baseScale = H > 1200 ? 1.0 : 0.88;
 
   ctx.save();
   ctx.translate(cx, cy);
 
   // Spring entrance pop on scene transition
-  const entranceScale = lt < 0.45 ? lerp(0.65, 1.0, eob(seg(lt, 0, 0.45))) : 1.0;
+  const entranceScale = (lt < 0.45 ? lerp(0.65, 1.0, eob(seg(lt, 0, 0.45))) : 1.0) * baseScale;
   ctx.scale(entranceScale, entranceScale);
 
   // Floating gentle breathing oscillation

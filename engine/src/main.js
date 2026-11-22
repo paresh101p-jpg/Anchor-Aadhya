@@ -32,7 +32,20 @@ function draw(t) {
     const [x, y, s] = sh.camAt(clamp(lt / Math.max(d, 0.001)), lt, d);
     cx = x + shakeX; cy = y + shakeY; scale = punch * s;
   }
-  ctx.save(); ctx.translate(cx, cy); ctx.scale(scale, scale); ctx.translate(-cx, -cy);
+  ctx.save();
+  if (W > H) {
+    // ── 16:9 NATIVE WIDESCREEN BROADCAST ADAPTER ──
+    // Center portrait coordinates (540, 640) directly at widescreen center (960, 540)
+    // Scale by 1.12x so hero illustration comfortably fills the 1080 height
+    ctx.translate(W / 2 + shakeX, H / 2 + shakeY);
+    ctx.scale(scale * 1.12, scale * 1.12);
+    ctx.translate(-540, -640);
+  } else {
+    // ── 9:16 VERTICAL SHORTS ADAPTER ──
+    ctx.translate(cx, cy);
+    ctx.scale(scale, scale);
+    ctx.translate(-cx, -cy);
+  }
   sh.draw(lt, d, t);
   ctx.restore();
 
@@ -44,7 +57,8 @@ function draw(t) {
   // fade from / to black on the first and last 0.25 s
   const fade = Math.min(clamp(t / 0.25), clamp((T.dur - t) / 0.35));
   if (fade < 1) { ctx.fillStyle = '#000'; ctx.globalAlpha = 1 - fade; ctx.fillRect(0, 0, W, H); ctx.globalAlpha = 1; }
-  drawAudioVisualizer(t, 1660, 95);
+  const vizY = H > 1200 ? 1660 : 980;
+  drawAudioVisualizer(t, vizY, 95);
   drawBroadcastFrame(t);
   // drawCaption(t); // Spoken speech captions disabled per user request: visual cards take center stage
 }

@@ -1,6 +1,10 @@
 // Inside Out engine: canvas, palette, math and drawing primitives.
 // Every drawing function in the kit uses the shared `ctx` exported here (set once by main.js).
-export const W = 1080, H = 1920, FPS = 30;
+const _cv = typeof document !== 'undefined' ? document.getElementById('cv') : null;
+export const W = _cv ? _cv.width : 1080;
+export const H = _cv ? _cv.height : 1920;
+export const FPS = 30;
+export const IS_16_9 = W > H;
 export let ctx = null;
 export function setCtx(c) { ctx = c; }
 

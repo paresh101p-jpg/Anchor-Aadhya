@@ -22,6 +22,9 @@ const CHROME = [process.env.CHROME, '/Applications/Google Chrome.app/Contents/Ma
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const args = process.argv.slice(2), flags = new Set(args.filter((a) => a.startsWith('--')));
 const [mode, ...rest] = args.filter((a) => !a.startsWith('--'));
+const aspect = flags.has('--16:9') || flags.has('--widescreen') || process.env.ASPECT === '16:9' ? '16:9' : '9:16';
+const W_WIN = aspect === '16:9' ? 1920 : 1080;
+const H_WIN = aspect === '16:9' ? 1080 : 1920;
 
 const MIME = { '.html': 'text/html', '.js': 'text/javascript', '.mjs': 'text/javascript', '.json': 'application/json', '.otf': 'font/otf',
   '.ttf': 'font/ttf', '.woff2': 'font/woff2', '.wav': 'audio/wav', '.mp3': 'audio/mpeg', '.png': 'image/png', '.jpg': 'image/jpeg' };
@@ -51,7 +54,7 @@ async function openPage(port) {
     '--disable-dev-shm-usage',
     '--disable-gpu',
     '--hide-scrollbars',
-    '--window-size=1080,1920',
+    `--window-size=${W_WIN},${H_WIN}`,
     '--ignore-gpu-blocklist',
     '--enable-unsafe-swiftshader',
     ...(process.env.SOFTWARE_GL ? ['--use-angle=swiftshader'] : []),
@@ -62,7 +65,7 @@ async function openPage(port) {
   let dbg;
   for (let i = 0; i < 200 && !dbg; i++) { try { dbg = fs.readFileSync(path.join(prof, 'DevToolsActivePort'), 'utf8').split('\n')[0].trim(); } catch { await sleep(100); } }
   if (!dbg) throw new Error('Chrome did not start');
-  const r = await fetch(`http://127.0.0.1:${dbg}/json/new?${encodeURIComponent(`http://127.0.0.1:${port}/index.html?capture=1${process.env.QS || ''}`)}`, { method: 'PUT' });
+  const r = await fetch(`http://127.0.0.1:${dbg}/json/new?${encodeURIComponent(`http://127.0.0.1:${port}/index.html?capture=1&aspect=${aspect}${process.env.QS || ''}`)}`, { method: 'PUT' });
   const target = await r.json();
   const ws = new WebSocket(target.webSocketDebuggerUrl);
   await new Promise((res, rej) => { ws.onopen = res; ws.onerror = rej; });

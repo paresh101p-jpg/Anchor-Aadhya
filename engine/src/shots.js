@@ -232,6 +232,111 @@ function getOutroScene(script) {
   return Cinema.drawUniversalOutroCTA;
 }
 
+// Dynamic beat-level scene rotation: switches physical visual scene every 1.6-1.8s!
+function getSubShotScene(script, lineIdx, subIdx, numSubShots, text, primaryFn, isLastLine) {
+  if (isLastLine) return primaryFn;
+  if (subIdx === 0) return primaryFn;
+
+  if (script.id === 'sinking_car_door_physics') {
+    const carPool = [
+      Cinema.drawSinkingCarPlunge,
+      Cinema.drawDoorPressureLock,
+      Cinema.drawWaterWeightPress,
+      Cinema.drawTrappedPassenger,
+      Cinema.drawCountdownTimer,
+      Cinema.drawSeatbeltAndWindow,
+      Cinema.drawHeadrestGlassBreaker,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = carPool[offset % carPool.length];
+    return cand !== primaryFn ? cand : carPool[(offset + 1) % carPool.length];
+  }
+
+  if (script.id === 'mariana_trench_abyss') {
+    const oceanPool = [
+      Cinema.drawMarianaChasm,
+      Cinema.drawSubmarineSearchlight,
+      Cinema.drawPressureSlam,
+      Cinema.drawElephantWeight,
+      Cinema.drawAlienCreature,
+      Cinema.drawPlasticDiscovery,
+      Cinema.drawSunRays,
+      Cinema.drawEarthGlobe,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = oceanPool[offset % oceanPool.length];
+    return cand !== primaryFn ? cand : oceanPool[(offset + 1) % oceanPool.length];
+  }
+
+  if (script.id === 'chernobyl_300s_room') {
+    const chernobylPool = [
+      Cinema.drawChernobylPlant,
+      Cinema.drawCountdownTimer,
+      Cinema.drawReactorExplosion,
+      Cinema.drawCoriumLavaFlow,
+      Cinema.drawElephantsFoot,
+      Cinema.drawGeigerCounter,
+      Cinema.drawMeltingCameraRobot,
+      Cinema.drawRadiotrophicFungus,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = chernobylPool[offset % chernobylPool.length];
+    return cand !== primaryFn ? cand : chernobylPool[(offset + 1) % chernobylPool.length];
+  }
+
+  if (script.id === 'bermuda_triangle_secret') {
+    const bermudaPool = [
+      Cinema.drawBermudaTriangleMap,
+      Cinema.drawBermudaPerimeterRadar,
+      Cinema.drawMethaneBubblesEruption,
+      Cinema.drawShipSinkingAbyss,
+      Cinema.drawHexagonalCloudAirBombs,
+      Cinema.drawAirplaneStormDisaster,
+      Cinema.drawMagneticCompassChaos,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = bermudaPool[offset % bermudaPool.length];
+    return cand !== primaryFn ? cand : bermudaPool[(offset + 1) % bermudaPool.length];
+  }
+
+  if (script.id === 'gta_6_vice_city_secrets') {
+    const gtaPool = [
+      Cinema.drawGta6LogoBudget,
+      Cinema.drawGta6ViceCityMap,
+      Cinema.drawGta6LuciaJasonMugshot,
+      Cinema.drawGta6WaterPhysicsRaytracing,
+      Cinema.drawGta6SmartNpcAi,
+      Cinema.drawGta6PoliceWantedHelicopter,
+      Cinema.drawGta6SocialMediaFeed,
+      Cinema.drawGta6SupercarAndAlligator,
+      Cinema.drawGta6RobberyInteriorBank,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = gtaPool[offset % gtaPool.length];
+    return cand !== primaryFn ? cand : gtaPool[(offset + 1) % gtaPool.length];
+  }
+
+  if (script.id === 'deepest_hole_kola_superdeep') {
+    const kolaPool = [
+      Cinema.drawKolaBoreholeDrillDepth,
+      Cinema.drawKolaCrustCrossSection,
+      Cinema.drawKolaThermalInferno180C,
+      Cinema.drawKolaMeltingSteelDrill,
+      Cinema.drawKolaBoilingWaterTrapped,
+      Cinema.drawKolaAncientMicrofossils,
+      Cinema.drawKolaSealedSteelDoorCap,
+    ];
+    const offset = lineIdx * 3 + subIdx;
+    const cand = kolaPool[offset % kolaPool.length];
+    return cand !== primaryFn ? cand : kolaPool[(offset + 1) % kolaPool.length];
+  }
+
+  const pool = POOL_NEUTRAL_SCIENCE.concat(POOL_TECH_SURVIVAL);
+  const offset = lineIdx * 3 + subIdx;
+  const cand = pool[offset % pool.length];
+  return cand !== primaryFn ? cand : pool[(offset + 1) % pool.length];
+}
+
 export function buildShots(script = {}) {
   const S = [], CUES = [];
   const add = (o) => (S.push(o), o);
@@ -387,6 +492,8 @@ export function buildShots(script = {}) {
       ];
       const zooms = [0.05, 0.28, 0.18, 0.32];
 
+      const beatSceneFn = getSubShotScene(script, i, subIdx, cutPoints.length, text, sceneFn, isLastLine);
+
       add({
         id: `L${String(i + 1).padStart(2, '0')}_S${subIdx + 1}`,
         at: Math.max(0, atTime - 0.04),
@@ -394,10 +501,10 @@ export function buildShots(script = {}) {
         zoom: zooms[subIdx % zooms.length],
         zoomFast: subIdx > 0,
         note: `Line ${i + 1} Beat ${subIdx + 1}: ${text.slice(0, 32)}`,
-        sceneName: sceneFn ? (sceneFn.name || 'custom_lambda') : 'none',
+        sceneName: beatSceneFn ? (beatSceneFn.name || 'custom_lambda') : 'none',
         draw(lt, d, t) {
-          if (typeof sceneFn === 'function') {
-            sceneFn(lt, d, t, subIdx);
+          if (typeof beatSceneFn === 'function') {
+            beatSceneFn(lt, d, t, subIdx);
           }
         },
       });

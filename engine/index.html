@@ -11,6 +11,18 @@ body.capture canvas { height: auto; width: auto; }
 <body>
 <canvas id="cv" width="1080" height="1920"></canvas>
 <button id="play" hidden>▶ PLAY</button>
-<script>if (location.search.includes('capture')) document.body.className = 'capture';</script>
+<script>
+  const params = new URLSearchParams(location.search);
+  const aspect = params.get('aspect') || '9:16';
+  const cv = document.getElementById('cv');
+  if (aspect === '16:9') {
+    cv.width = 1920;
+    cv.height = 1080;
+  } else {
+    cv.width = 1080;
+    cv.height = 1920;
+  }
+  if (params.has('capture')) document.body.className = 'capture';
+</script>
 <script type="module" src="src/main.js"></script>
 </body></html>

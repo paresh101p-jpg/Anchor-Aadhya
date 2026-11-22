@@ -605,26 +605,20 @@ async def main():
     dur_long = await build_voice_and_timing(full_topic, is_short=False)
     build_audio_mix()
 
-    video_vertical_master = render_native_2d_video(aspect="9:16")
-    video_16_9 = os.path.join(RENDERS_DIR, "aadhya_video_16_9.mp4")
+    video_16_9 = render_native_2d_video(aspect="16:9")
 
-    # Convert to 16:9 widescreen master with cinematic blurred background wings
-    cmd_16_9 = [
-        "ffmpeg", "-y", "-v", "error",
-        "-i", video_vertical_master,
-        "-vf", "split[v1][v2];[v1]scale=1920:1080:force_original_aspect_ratio=increase,crop=1920:1080,boxblur=25:5[bg];[v2]scale=-1:1080[fg];[bg][fg]overlay=(W-w)/2:(H-h)/2",
-        "-c:v", "libx264", "-preset", "fast", "-crf", "20",
-        "-c:a", "copy",
-        video_16_9
-    ]
-    subprocess.run(cmd_16_9, check=True)
-
-    thumb_16_9 = os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
-    os.makedirs(os.path.dirname(thumb_16_9), exist_ok=True)
-    cmd_thumb = ["ffmpeg", "-y", "-ss", "00:00:08", "-i", video_16_9, "-vframes", "1", "-q:v", "2", thumb_16_9]
-    subprocess.run(cmd_thumb, check=False)
-    if not os.path.exists(thumb_16_9):
-        thumb_16_9 = extract_native_thumbnail(aspect="9:16")
+    # High-CTR 16:9 Master Thumbnail
+    ai_thumb = generate_aadhya_ai_thumbnail(full_topic)
+    if ai_thumb and os.path.exists(ai_thumb):
+        thumb_16_9 = ai_thumb
+        print(f"  -> Using AI Master 16:9 Thumbnail: {thumb_16_9}", flush=True)
+    else:
+        thumb_16_9 = os.path.join(REVIEW_DIR, "cover_16_9", "high_ctr_hook_thumb.jpg")
+        os.makedirs(os.path.dirname(thumb_16_9), exist_ok=True)
+        cmd_thumb = ["ffmpeg", "-y", "-ss", "00:00:08", "-i", video_16_9, "-vframes", "1", "-q:v", "2", thumb_16_9]
+        subprocess.run(cmd_thumb, check=False)
+        if not os.path.exists(thumb_16_9):
+            thumb_16_9 = extract_native_thumbnail(aspect="16:9")
 
     verify_visual_integrity(video_16_9, aspect="16:9")
 
