@@ -55,7 +55,7 @@ jobs:
       - name: Install System Dependencies (FFmpeg, Chrome & Regional Fonts)
         run: |
           sudo apt-get update
-          sudo apt-get install -y ffmpeg fonts-noto-extra fonts-noto-core fonts-deva fonts-gujr fonts-tamld fonts-telu fonts-beng
+          sudo apt-get install -y ffmpeg fonts-noto-extra fonts-noto-core fonts-deva fonts-indic
           if ! command -v google-chrome &> /dev/null && ! command -v google-chrome-stable &> /dev/null; then
             echo "Installing Google Chrome..."
             wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
