@@ -1,0 +1,97 @@
+name: Anchor Aadhya Daily Autonomous 15+ Screen Viral Reel
+
+on:
+  workflow_dispatch:
+    inputs:
+      topic_id:
+        description: 'Optional topic ID from viral_topics_pool.json'
+        required: false
+        default: ''
+        type: string
+      privacy_status:
+        description: 'YouTube Privacy Status (public or unlisted)'
+        required: false
+        default: 'public'
+        type: choice
+        options:
+          - public
+          - unlisted
+      dry_run:
+        description: 'Generate and test without uploading to YouTube'
+        required: false
+        default: false
+        type: boolean
+
+  schedule:
+    - cron: '0 1 * * *' # Daily at 06:30 AM IST (01:00 UTC)
+
+concurrency:
+  group: aadhya-viral-reel
+  cancel-in-progress: false
+
+jobs:
+  generate-and-publish-reel:
+    name: Generate 15+ Screen Zero-Overlap Reel & Publish to YouTube
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Set up Node.js 22
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Install System Dependencies (FFmpeg, Chrome & Regional Fonts)
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ffmpeg fonts-noto-extra fonts-noto-core fonts-deva fonts-gujr fonts-tamld fonts-telu fonts-beng
+          if ! command -v google-chrome &> /dev/null && ! command -v google-chrome-stable &> /dev/null; then
+            echo "Installing Google Chrome..."
+            wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb
+            sudo apt-get install -y ./google-chrome-stable_current_amd64.deb || true
+          fi
+          echo "Verified Chrome path: $(which google-chrome || which google-chrome-stable || which chromium || echo 'NOT_FOUND')"
+
+      - name: Install Python Dependencies
+        run: pip install -r requirements.txt
+
+      - name: Install Node Dependencies
+        run: npm install
+
+      - name: Run Autonomous Viral Reel Pipeline
+        env:
+          YOUTUBE_CLIENT_ID: ${{ secrets.YOUTUBE_CLIENT_ID }}
+          YOUTUBE_CLIENT_SECRET: ${{ secrets.YOUTUBE_CLIENT_SECRET }}
+          YOUTUBE_REFRESH_TOKEN: ${{ secrets.YOUTUBE_REFRESH_TOKEN }}
+          YOUTUBE_PRIVACY_STATUS: ${{ inputs.privacy_status || 'public' }}
+          DRY_RUN: ${{ inputs.dry_run || false }}
+          FORCE_TOPIC_ID: ${{ inputs.topic_id || '' }}
+        run: |
+          set -o pipefail
+          echo "🚀 Starting 15+ Screen Zero-Overlap Reel Pipeline..."
+          python -u pipeline.py 2>&1 | tee run_pipeline.log
+
+      - name: Post-Run Ephemeral Cleanup & Commit Tracker
+        if: always()
+        run: |
+          echo "🧹 Cleaning up scratch video, audio, and subtitle assets..."
+          rm -rf audio_work languages_padded subtitles temp_screens *.mp4 *.m4a *.srt *.html metadata_upload.json
+          git config user.name "Anchor Aadhya Bot"
+          git config user.email "bot@anchoraadhya.com"
+          git add used_topics_tracker.json uploaded_bulletins_tracker.txt
+          git diff --cached --quiet || git commit -m "Update used topic tracker [skip ci]"
+          for i in 1 2 3 4 5; do
+            git pull --rebase origin master || { git rebase --abort || true; git pull --rebase origin master || true; }
+            git push origin master && break || sleep 3
+          done

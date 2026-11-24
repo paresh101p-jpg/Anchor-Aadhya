@@ -1,6 +1,7 @@
 # Video & Audio Render Output (Generated daily)
 *.mp4
 *.mp3
+!assets/bgm.mp3
 *.wav
 *.tmp
 tv_scenes_list.txt

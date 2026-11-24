@@ -1,9 +1,6 @@
-edge-tts
-google-api-python-client
-google-auth-oauthlib
-google-auth
-pillow
-requests
-numpy
-scipy
-google-genai
+edge-tts>=6.1.12
+google-api-python-client>=2.100.0
+google-auth-oauthlib>=1.1.0
+google-auth>=2.23.0
+requests>=2.31.0
+pillow>=10.0.0

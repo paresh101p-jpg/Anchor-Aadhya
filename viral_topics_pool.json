@@ -1,0 +1,287 @@
+{
+  "topics": [
+    {
+      "id": "brooklyn_bridge_scam",
+      "title": "The Man Who Sold The Brooklyn Bridge Twice A Week!",
+      "category": "Historical Heists & Scams",
+      "tags": ["Brooklyn Bridge", "George C Parker", "History Scam", "Con Artist", "Mind Blowing", "Shorts"],
+      "yt_title": "The Man Who Sold The Brooklyn Bridge... TWICE A WEEK! 🤯 #Shorts",
+      "yt_description": "Did you know a con artist sold New York's famous Brooklyn Bridge twice a week for 30 years?! Meet George C. Parker, history's most shameless scammer who also 'sold' the Statue of Liberty and Madison Square Garden! Subscribe for more mind-blowing true history! #Shorts #History #MindBlowing #TrueStory",
+      "screens_count": 16,
+      "screens": [
+        {
+          "index": 1,
+          "headline": "🌉 THE MAN WHO SOLD THE BROOKLYN BRIDGE!",
+          "scripts": {
+            "hi": "क्या आप जानते हैं कि एक आदमी ने न्यू यॉर्क का मशहूर ब्रुकलिन ब्रिज हफ्ते में दो बार बेच दिया था!",
+            "gu": "શું તમે જાણો છો કે એક માણસે ન્યૂયોર્કનો પ્રખ્યાત બ્રુકલિન બ્રિજ અઠવાડિયે બે વાર વેચી માર્યો હતો!",
+            "en": "Did you know a con artist sold New York's Brooklyn Bridge twice a week for 30 years?!",
+            "mr": "तुम्हाला माहीत आहे का, एका माणसाने न्यू यॉर्कचा ब्रुकलिन ब्रिज आठवड्यातून दोनदा विकला होता!",
+            "bn": "আপনি কি জানেন এক লোক নিউইয়র্কের বিখ্যাত ব্রুকলিন ব্রিজ সপ্তাহে দুবার বিক্রি করে দিত!",
+            "ta": "நியூயார்க்கின் புகழ்பெற்ற புரூக்ளின் பாலத்தை ஒரு மனிதன் வாரத்திற்கு இரண்டு முறை விற்றான்!",
+            "te": "న్యూయార్క్ ప్రసిద్ధ బ్రూక్లిన్ వంతెనను ఒక వ్యక్తి వారానికి రెండుసార్లు అమ్మేశాడని మీకు తెలుసా!",
+            "kn": "ನ್ಯೂಯಾರ್ಕ್‌ನ ಬ್ರೂಕ್ಲಿನ್ ಸೇತುವೆಯನ್ನು ಒಬ್ಬ ವ್ಯಕ್ತಿ ವಾರಕ್ಕೆ ಎರಡು ಬಾರಿ ಮಾರಾಟ ಮಾಡುತ್ತಿದ್ದನೆಂದು ತಿಳಿದಿದೆಯೇ!",
+            "es": "¡Un estafador vendió el famoso Puente de Brooklyn de Nueva York dos veces por semana!",
+            "fr": "Saviez-vous qu'un escroc a vendu le célèbre pont de Brooklyn deux fois par semaine?!"
+          },
+          "scene_type": "bridge_wide"
+        },
+        {
+          "index": 2,
+          "headline": "🎩 MEET GEORGE C. PARKER: THE KING OF CONS!",
+          "scripts": {
+            "hi": "मिलिए जॉर्ज सी. पार्कर से, इतिहास का सबसे बड़ा और सबसे शातिर धोखेबाज!",
+            "gu": "મળો જ્યોર્જ સી. પાર્કરને — ઇતિહાસનો સૌથી મોટો અને ચતુર ઠગ!",
+            "en": "Meet George C. Parker, the most audacious and legendary con artist in human history!",
+            "mr": "भेटा जॉर्ज सी. पार्करला, मानवी इतिहासातील सर्वात धाडसी आणि महाठग!",
+            "bn": "ইনি হলেন জর্জ সি পার্কার, ইতিহাসের সবচেয়ে চতুর ও অদ্ভুত প্রতারক!",
+            "ta": "இவர்தான் ஜார்ஜ் சி. பார்க்கர், வரலாற்றின் மிகப்பெரிய மற்றும் தந்திரமான ஏமாற்றுக்காரன்!",
+            "te": "ఇతనే జార్జ్ సి. పార్కర్, మానవ చరిత్రలోనే అత్యంత తెలివైన మోసగాడు!",
+            "kn": "ಇವರೇ ಜಾರ್ಜ್ ಸಿ. ಪಾರ್ಕರ್, ಇತಿಹಾಸದಲ್ಲೇ ಅತ್ಯಂತ ಧೂರ್ತ ವಂಚಕ!",
+            "es": "¡Conozcan a George C. Parker, el estafador más audaz de toda la historia!",
+            "fr": "Voici George C. Parker, l'escroc le plus audacieux de toute l'histoire!"
+          },
+          "scene_type": "meet_parker"
+        },
+        {
+          "index": 3,
+          "headline": "🚢 HUNTING WEALTHY TOURISTS AT THE HARBOR!",
+          "scripts": {
+            "hi": "वह बंदरगाह पर उतरने वाले अमीर और भोले-भाले पर्यटकों को अपना शिकार बनाता था!",
+            "gu": "તે બંદરે જહાજમાંથી ઉતરતા અમીર અને ભોળા મુસાફરોને પોતાની જાળમાં ફસાવતો!",
+            "en": "He hung around New York harbors targeting wealthy, naive tourists arriving on ships!",
+            "mr": "तो बंदरावर जहाजातून उतरणाऱ्या श्रीमंत आणि निष्पाप पर्यटकांना लक्ष्य करायचा!",
+            "bn": "সে বন্দরে জাহাজ থেকে নামা ধনী ও সহজ-সরল পর্যটকদের টার্গেট করত!",
+            "ta": "துறைமுகத்தில் இறங்கும் பணக்கார வெளிநாட்டு பயணிகளை அவன் குறிவைத்துப் பிடித்தான்!",
+            "te": "ఓడరేవులో దిగే అమాయక ధనిక పర్యాటకులను అతను తన వలలో వేసుకునేవాడు!",
+            "kn": "ಬಂದರಿಗೆ ಹಡಗಿನಿಂದ ಇಳಿಯುವ ಶ್ರೀಮಂತ ಪ್ರವಾಸಿಗರನ್ನು ಆತ ಹುಡುಕಿ ಗಾಳ ಹಾಕುತ್ತಿದ್ದನು!",
+            "es": "Merodeaba por los muelles buscando turistas ricos e ingenuos recién desembarcados.",
+            "fr": "Il traînait sur les quais pour cibler les touristes riches et naïfs tout juste débarqués!"
+          },
+          "scene_type": "harbor_tourists"
+        },
+        {
+          "index": 4,
+          "headline": "📜 FAKE DEED: 'I PERSONALLY OWN THIS BRIDGE!'",
+          "scripts": {
+            "hi": "वह नकली सरकारी स्टांप लगे कागजात दिखाकर कहता, 'यह पूरा पुल मेरी निजी संपत्ति है!'",
+            "gu": "તે સરકારી સ્ટેમ્પ વાળા નકલી દસ્તાવેજ બતાવીને કહેતો: 'આ આખો બ્રિજ મારી માલિકીનો છે!'",
+            "en": "Flashing forged official deeds, he claimed, 'I personally own this entire bridge!'",
+            "mr": "तो खोटे सरकारी स्टॅम्प असलेले कागदपत्र दाखवून सांगायचा: 'हा संपूर्ण पूल माझा आहे!'",
+            "bn": "সে জাল সরকারি দলিল দেখিয়ে বলত: 'এই পুরো ব্রিজটি আমার নিজস্ব সম্পত্তি!'",
+            "ta": "போலி அரசு ஆவணங்களைக் காட்டி, 'இந்த பாலம் முழுவதும் என்னுடையது' என்று கூறுவான்!",
+            "te": "నకిలీ ప్రభుత్వ పత్రాలను చూపిస్తూ, 'ఈ మొత్తం వంతెన నా సొంత ఆస్తి' అని చెప్పేవాడు!",
+            "kn": "ನಕಲಿ ದಾಖಲೆ ತೋರಿಸಿ, 'ಈ ಇಡೀ ಸೇತುವೆ ನನ್ನ ಸ್ವಂತ ಆಸ್ತಿ' ಎಂದು ನಂಬಿಸುತ್ತಿದ್ದನು!",
+            "es": "Con títulos de propiedad falsos afirmaba: '¡Soy el dueño absoluto de este puente!'",
+            "fr": "Avec de faux actes notariés, il affirmait: 'Je suis le propriétaire exclusif de ce pont!'"
+          },
+          "scene_type": "fake_deed"
+        },
+        {
+          "index": 5,
+          "headline": "💰 'BUILD A TOLL BOOTH & BECOME A MILLIONAIRE!'",
+          "scripts": {
+            "hi": "उसने खरीदारों को झांसा दिया कि टोल बूथ लगाकर रोजाना लाखों डॉलर कमा सकते हैं!",
+            "gu": "તેણે ખરીદનારાઓને લાલચ આપી કે ટોલ બૂથ લગાવીને રોજના હજારો ડોલર કમાઈ શકશો!",
+            "en": "He told buyers: 'Set up a toll booth and you can earn millions every single month!'",
+            "mr": "त्याने खरेदीदारांना आमिष दाखवले: 'टोल नाका लावून तुम्ही रोज हजारो डॉलर्स कमवू शकता!'",
+            "bn": "সে ক্রেতাদের লোভ দেখাত: 'টোল বুথ বসালেই প্রতিদিন হাজার হাজার ডলার আয় হবে!'",
+            "ta": "'சுங்கச்சாவடி அமைத்து தினமும் லட்சக்கணக்கான டாலர் சம்பாதிக்கலாம்' என ஆசை காட்டினான்!",
+            "te": "'టోల్ గేట్ ఏర్పాటు చేసి ప్రతిరోజూ వేలాది డాలర్లు సంపాదించవచ్చు' అని ఆశ చూపించేవాడు!",
+            "kn": "'ಟೋಲ್ ಬೂತ್ ನಿರ್ಮಿಸಿ ಪ್ರತಿದಿನ ಲಕ್ಷಾಂತರ ಡಾಲರ್ ಸಂಪಾದಿಸಬಹುದು' ಎಂದು ಆಮಿಷವೊಡ್ಡಿದನು!",
+            "es": "'¡Instalen una cabina de peaje y ganarán millones de dólares cada mes!'",
+            "fr": "'Installez un péage et vous gagnerez des millions chaque mois!'"
+          },
+          "scene_type": "toll_booth_dream"
+        },
+        {
+          "index": 6,
+          "headline": "💵 BARGAIN PRICE: ONLY $50,000 IN CASH!",
+          "scripts": {
+            "hi": "उसने लाखों का पुल मात्र पचास हजार डॉलर के कैश में तुरंत बेच दिया!",
+            "gu": "તેણે કરોડોનો બ્રિજ માત્ર ૫૦,૦૦૦ ડોલર રોકડામાં હસતાં હસતાં વેચી માર્યો!",
+            "en": "He sold the massive bridge on the spot for bargain prices between $5,000 and $50,000!",
+            "mr": "त्याने तो भव्य पूल अवघ्या पन्नास हजार डॉलर्सच्या रोख रकमेत विकून टाकला!",
+            "bn": "সে মাত্র পঞ্চাশ হাজার ডলার নগদে বিশাল ব্রিজটি বিক্রি করে দিল!",
+            "ta": "கோடிக்கணக்கான பாலத்தை வெறும் ஐம்பதாயிரம் டாலருக்கு உடனே விற்றுவிட்டான்!",
+            "te": "లక్షలాది రూపాయల వంతెనను కేవలం యాభై వేల డాలర్లకు అమ్మేశాడు!",
+            "kn": "ಕೋಟಿಗಟ್ಟಲೆ ಬೆಲೆಯ ಸೇತುವೆಯನ್ನು ಕೇವળ ಐವತ್ತು ಸಾವಿರ ಡಾಲರ್‌ಗೆ ಮಾರಾಟ ಮಾಡಿದನು!",
+            "es": "¡Vendía el gigantesco puente por sumas ridículas de 5.000 a 50.000 dólares!",
+            "fr": "Il vendait le gigantesque pont sur place pour des sommes entre 5 000 et 50 000 dollars!"
+          },
+          "scene_type": "cash_exchange"
+        },
+        {
+          "index": 7,
+          "headline": "🔨 BUYER ARRIVES WITH HAMMERS TO BUILD TOLL BOOTH!",
+          "scripts": {
+            "hi": "अगले दिन खरीदार हथौड़े और लकड़ी लेकर पुल पर टोल गेट बनाने पहुंच जाता!",
+            "gu": "બીજા દિવસે ખરીદનાર હથોડા અને લાકડા લઈને બ્રિજ પર ટોલ ગેટ બનાવવા પહોંચી જતો!",
+            "en": "The next morning, the excited buyer arrived with lumber and hammers to build a toll gate!",
+            "mr": "दुसऱ्या दिवशी खरेदीदार हातोडा आणि लाकूड घेऊन पुलावर टोल नाका बांधायला पोहोचायचा!",
+            "bn": "পরের দিন ক্রেতা হাতুড়ি আর কাঠ নিয়ে ব্রিজে টোল গেট বানাতে পৌঁছে যেত!",
+            "ta": "மறுநாள் வாங்குபவர் சுத்தியல் மற்றும் மரக்கட்டைகளுடன் சுங்கச்சாவடி கட்ட வந்தார்!",
+            "te": "మరుసటి రోజు కొనుగోలుదారుడు సుత్తి మరియు చెక్కలతో వంతెనపై టోల్ గేట్ కట్టడానికి వచ్చాడు!",
+            "kn": "ಮರುದಿನ ಖರೀದಿದಾರನು ಸುತ್ತಿಗೆ ಹಿಡಿದು ಸೇತುವೆಯ ಮೇಲೆ ಟೋಲ್ ಬೂತ್ ಕಟ್ಟಲು ಬಂದನು!",
+            "es": "Al día siguiente, el comprador llegaba con madera y martillos a construir su peaje.",
+            "fr": "Le lendemain, l'acheteur arrivait avec du bois et des marteaux pour bâtir son péage!"
+          },
+          "scene_type": "building_toll"
+        },
+        {
+          "index": 8,
+          "headline": "👮 POLICE STOP THE DUPED BUYER IN DISBELIEF!",
+          "scripts": {
+            "hi": "न्यू यॉर्क पुलिस हैरान होकर चिल्लाई, 'तुम सार्वजनिक पुल पर क्या बना रहे हो?!'",
+            "gu": "ન્યૂયોર્ક પોલીસ આશ્ચર્યમાં પડીને બોલી: 'તમે સરકારી બ્રિજ પર આ શું બાંધી રહ્યા છો?!'",
+            "en": "Shocked New York police intervened shouting, 'What are you building on a public bridge?!'",
+            "mr": "न्यू यॉर्क पोलिसांनी चक्रावून विचारले: 'तुम्ही सरकारी पुलावर काय बांधत आहात?!'",
+            "bn": "পুলিশ অবাক হয়ে বলল: 'তুমি সরকারি ব্রিজে এটা কি বানাচ্ছো?!'",
+            "ta": "காவல்துறை அதிர்ச்சியடைந்து, 'பொதுப் பாலத்தில் என்ன கட்டிக் கொண்டிருக்கிறீர்கள்?' என்றது!",
+            "te": "పోలీసులు ఆశ్చర్యపోయి, 'ప్రభుత్వ వంతెనపై మీరేం కడుతున్నారు?!' అని అరిచారు!",
+            "kn": "ಪೊಲೀಸರು ದಂಗಾಗಿ, 'ಸಾರ್ವಜನಿಕ ಸೇತುವೆಯ ಮೇಲೆ ಏನು ಕಟ್ಟುತ್ತಿದ್ದೀರಿ?!' ಎಂದು ಗದರಿದರು!",
+            "es": "La policía atónita gritaba: '¡¿Qué rayos está construyendo en un puente público?!'",
+            "fr": "La police stupéfaite criait: 'Que diable construisez-vous sur un pont public?!'"
+          },
+          "scene_type": "police_stop"
+        },
+        {
+          "index": 9,
+          "headline": "😱 'BUT I BOUGHT THIS BRIDGE YESTERDAY!'",
+          "scripts": {
+            "hi": "खरीदार ने रोते हुए रसीद दिखाई, 'लेकिन मैंने तो कल ही यह पूरा पुल खरीदा है!'",
+            "gu": "ખરીદનારે રડમસ મોઢે રસીદ બતાવી: 'પણ મેં તો ગઈકાલે જ આખો બ્રિજ ખરીદી લીધો છે!'",
+            "en": "The naive buyer waved the fake deed crying, 'But I bought this entire bridge yesterday!'",
+            "mr": "खरेदीदाराने रडवेले होऊन पावती दाखवली: 'पण मी कालच हा संपूर्ण पूल विकत घेतला आहे!'",
+            "bn": "ক্রেতা রসিদ দেখিয়ে বলল: 'কিন্তু আমি তো কালকেই এই পুরো ব্রিজটি কিনেছি!'",
+            "ta": "வாங்கியவர் போலி ரசீதை காட்டி, 'நான் நேற்றுதான் இந்த பாலத்தை வாங்கினேன்' என்றார்!",
+            "te": "కొనుగోలుదారుడు రశీదు చూపిస్తూ, 'నేను నిన్ననే ఈ మొత్తం వంతెనను కొన్నాను!' అని ఏడ్చాడు!",
+            "kn": "ಖರೀದಿದಾರನು ಅಳುತ್ತಾ, 'ಆದರೆ ನಾನು ನಿನ್ನೆಯಷ್ಟೇ ಈ ಇಡೀ ಸೇತುವೆಯನ್ನು ಕೊಂಡುಕೊಂಡಿದ್ದೇನೆ!' ಎಂದನು!",
+            "es": "'¡Pero si yo compré este puente entero ayer!', gritaba el ingenuo comprador.",
+            "fr": "'Mais j'ai acheté ce pont en entier hier!', criait l'acheteur naïf."
+          },
+          "scene_type": "buyer_shock"
+        },
+        {
+          "index": 10,
+          "headline": "🗽 HE ALSO SOLD THE STATUE OF LIBERTY!",
+          "scripts": {
+            "hi": "इतना ही नहीं, उसने स्टैच्यू ऑफ लिबर्टी भी एक भोले अमीर को बेच दी थी!",
+            "gu": "આટલું જ નહીં, તેણે સ્ટેચ્યુ ઓફ લિબર્ટી પણ એક અમીર પ્રવાસીને વેચી મારી હતી!",
+            "en": "Parker didn't stop there — he also successfully sold the Statue of Liberty!",
+            "mr": "एवढेच नाही, त्याने स्टॅच्यू ऑफ लिबर्टी सुद्धा एका श्रीमंत प्रवाशाला विकली होती!",
+            "bn": "শুধু তাই নয়, সে স্ট্যাচু অফ লিবার্টিও এক ধনী লোকের কাছে বিক্রি করে দিয়েছিল!",
+            "ta": "அத்துடன் நிற்காமல், ஸ்டாச்சு ஆஃப் லிபர்ட்டியையும் ஒரு பணக்காரரிடம் விற்றான்!",
+            "te": "అంతటితో ఆగకుండా, అతను స్టాచ్యూ ఆఫ్ లిబర్టీని కూడా అమ్మేశాడు!",
+            "kn": "ಅಷ್ಟೇ ಅಲ್ಲ, ಆತ ಸ್ಟ್ಯಾಚ್ಯೂ ಆಫ್ ಲಿಬರ್ಟಿಯನ್ನೂ ಒಬ್ಬ ಶ್ರೀಮಂತನಿಗೆ ಮಾರಾಟ ಮಾಡಿದ್ದನು!",
+            "es": "¡Parker no se detuvo ahí: también logró vender la Estatua de la Libertad!",
+            "fr": "Parker ne s'est pas arrêté là: il a aussi vendu la Statue de la Liberté!"
+          },
+          "scene_type": "statue_of_liberty"
+        },
+        {
+          "index": 11,
+          "headline": "🏟️ AND MADISON SQUARE GARDEN & GRANT'S TOMB!",
+          "scripts": {
+            "hi": "मैडिसन स्क्वायर गार्डन और जनरल ग्रांट का ऐतिहासिक मकबरा भी बेच डाला!",
+            "gu": "તેણે મેડિસન સ્ક્વેર ગાર્ડન અને જનરલ ગ્રાન્ટની ઐતિહાસિક કબર પણ વેચી નાખી!",
+            "en": "He even sold Madison Square Garden and the historic Grant's Tomb tombstone!",
+            "mr": "मॅडिसन स्क्वेअर गार्डन आणि जनरल ग्रँटची ऐतिहासिक समाधीही विकून टाकली!",
+            "bn": "ম্যাডিসন স্কয়ার গার্ডেন এবং ঐতিহাসিক গ্রান্টস টুম্বও সে বিক্রি করে দিয়েছিল!",
+            "ta": "மேடிசன் ஸ்கொயர் கார்டன் மற்றும் ஜெனரல் கிராண்டின் வரலாற்று கல்லறையையும் விற்றான்!",
+            "te": "మ్యాడిసన్ స్క్వేర్ గార్డెన్ మరియు చారిత్రాత్మక గ్రాంట్స్ సమాధిని కూడా అమ్మేశాడు!",
+            "kn": "ಮ್ಯಾಡಿಸನ್ ಸ್ಕ್ವೇರ್ ಗಾರ್ಡನ್ ಮತ್ತು ಐತಿಹಾಸಿಕ ಗ್ರಾಂಟ್ಸ್ ಸಮಾಧಿಯನ್ನೂ ಮಾರಾಟ ಮಾಡಿದನು!",
+            "es": "¡Hasta vendió el Madison Square Garden y la famosa Tumba de Grant!",
+            "fr": "Il a même vendu le Madison Square Garden et le tombeau de Grant!"
+          },
+          "scene_type": "madison_garden"
+        },
+        {
+          "index": 12,
+          "headline": "🔁 SOLD THE SAME BRIDGE TWICE A WEEK FOR 30 YEARS!",
+          "scripts": {
+            "hi": "उसने लगातार तीस साल तक उसी एक ब्रुकलिन ब्रिज को बार-बार बेचा!",
+            "gu": "તેણે સતત ૩૦ વર્ષ સુધી એ જ એક બ્રુકલિન બ્રિજને વારંવાર વેચ્યો!",
+            "en": "For over 30 continuous years, Parker sold the exact same Brooklyn Bridge twice a week!",
+            "mr": "त्याने सलग तीस वर्षे तोच एक ब्रुकलिन ब्रिज पुन्हा पुन्हा विकला!",
+            "bn": "টানা ত্রিশ বছর ধরে সে একই ব্রুকলিন ব্রিজ বারবার বিক্রি করে গেছে!",
+            "ta": "முப்பது ஆண்டுகளாக ஒரே புரூக்ளின் பாலத்தை தொடர்ந்து மீண்டும் மீண்டும் விற்றான்!",
+            "te": "ముప్పై ఏళ్ల పాటు అతను అదే బ్రూక్లిన్ వంతెనను పదే పదే అమ్ముతూనే ఉన్నాడు!",
+            "kn": "ಸತತ ಮೂವತ್ತು ವರ್ಷಗಳ ಕಾಲ ಆತ ಅದೇ ಬ್ರೂಕ್ಲಿನ್ ಸೇತುವೆಯನ್ನು ಪದೇ ಪದೇ ಮಾರಾಟ ಮಾಡಿದನು!",
+            "es": "¡Durante 30 años vendió el mismísimo Puente de Brooklyn dos veces por semana!",
+            "fr": "Pendant 30 ans, il a vendu le même pont de Brooklyn deux fois par semaine!"
+          },
+          "scene_type": "infinite_loop"
+        },
+        {
+          "index": 13,
+          "headline": "⚖️ CAUGHT AT LAST: SENTENCED TO LIFE IN SING SING!",
+          "scripts": {
+            "hi": "आखिरकार 1928 में वह पकड़ा गया और उसे सिंग सिंग जेल में आजीवन कारावास हुआ!",
+            "gu": "છેવટે ૧૯૨૮ માં તે પકડાઈ ગયો અને તેને સિંગ સિંગ જેલમાં આજીવન કેદ થઈ!",
+            "en": "Finally caught in 1928, Parker was sentenced to life imprisonment in Sing Sing Prison!",
+            "mr": "शेवटी 1928 मध्ये तो पकडला गेला आणि त्याला सिंग सिंग तुरुंगात जन्मठेपेची शिक्षा झाली!",
+            "bn": "অবশেষে 1928 সালে সে ধরা পড়ে এবং সিং সিং কারাগারে যাবজ্জীবন কারাদণ্ড হয়!",
+            "ta": "இறுதியில் 1928 இல் பிடிபட்டு சிங் சிங் சிறையில் ஆயுள் தண்டனை பெற்றான்!",
+            "te": "చివరకు 1928లో పట్టుబడి సింగ్ సింగ్ జైలులో జీవిత ఖైదు అనుభవించాడు!",
+            "kn": "ಕೊನೆಗೂ 1928 ರಲ್ಲಿ ಸಿಕ್ಕಿಬಿದ್ದು ಸಿಂಗ್ ಸಿಂಗ್ ಜೈಲಿನಲ್ಲಿ ಜೀವಾವಧಿ ಶಿಕ್ಷೆಗೆ ಒಳಗಾದನು!",
+            "es": "¡Atrapado en 1928, Parker fue condenado a cadena perpetua en la prisión de Sing Sing!",
+            "fr": "Enfin arrêté en 1928, Parker a été condamné à perpétuité à la prison de Sing Sing!"
+          },
+          "scene_type": "court_sentenced"
+        },
+        {
+          "index": 14,
+          "headline": "🌟 POPULAR EVEN INSIDE PRISON AMONG GUARDS!",
+          "scripts": {
+            "hi": "जेल में भी पहरेदार और कैदी उसके किस्से सुनकर तालियां बजाते थे!",
+            "gu": "જેલમાં પણ ચોકીદારો અને કેદીઓ તેની વાર્તાઓ સાંભળીને ખુશ થતા!",
+            "en": "Even prison guards and wardens loved listening to his unbelievable con stories!",
+            "mr": "तुरुंगातही रक्षक आणि कैदी त्याच्या कथा ऐकून थक्क व्हायचे!",
+            "bn": "কারাগারেও প্রহরীরা তার রোমাঞ্চকর ঠকানোর গল্প শুনে মুগ্ধ হতো!",
+            "ta": "சிறைக் காவலர்களும் அவனது ஏமாற்று வித்தைகளைக் கேட்டு வியந்தனர்!",
+            "te": "జైలు గార్డులు కూడా అతని మోసపు కథలను ఆసక్తిగా వినేవారు!",
+            "kn": "ಜೈಲು ರಕ್ಷಕರೂ ಆತನ ನಂಬಲಾಗದ ವಂಚನೆಯ ಕಥೆಗಳನ್ನು ಕೇಳಿ ಬೆರಗಾಗುತ್ತಿದ್ದರು!",
+            "es": "Incluso los guardias de la prisión adoraban escuchar sus increíbles historias.",
+            "fr": "Même les gardiens adoraient écouter ses incroyables histoires d'escroquerie!"
+          },
+          "scene_type": "prison_legend"
+        },
+        {
+          "index": 15,
+          "headline": "💡 THE ORIGIN OF: 'AND I HAVE A BRIDGE TO SELL YOU!'",
+          "scripts": {
+            "hi": "यहीं से मशहूर मुहावरा बना: 'अगर तुम यह मानते हो, तो मैं तुम्हें एक पुल बेच सकता हूं!'",
+            "gu": "અહીંથી જ પ્રખ્યાત કહેવત પડી: 'જો તું આ માને છે, તો હું તને એક બ્રિજ વેચી શકું!'",
+            "en": "This gave birth to the famous idiom: 'If you believe that, I have a bridge to sell you!'",
+            "mr": "यावरूनच ती प्रसिद्ध म्हण पडली: 'जर तू हे मानतोस, तर मी तुला एक पूल विकू शकतो!'",
+            "bn": "এখান থেকেই জন্ম বিখ্যাত প্রবাদ: 'তুমি যদি এটা বিশ্বাস করো, তবে আমি তোমায় ব্রিজ বিক্রি করব!'",
+            "ta": "இதிலிருந்துதான் 'நான் உனக்கு பாலத்தை விற்கிறேன்' என்ற புகழ்பெற்ற பழமொழி பிறந்தது!",
+            "te": "'నీవు ఇది నమ్మితే, నేను నీకొక వంతెనను అమ్మగలను' అనే ప్రసిద్ధ సామెత ఇక్కడి నుంచే వచ్చింది!",
+            "kn": "'ನೀವು ಇದನ್ನು ನಂಬಿದರೆ, ನಾನು ನಿಮಗೆ ಸೇತುವೆ ಮಾರಬಲ್ಲೆ' ಎಂಬ ಪ್ರಸಿದ್ಧ ನಾಣ್ಣುಡಿ ಹುಟ್ಟಿಕೊಂಡಿತು!",
+            "es": "¡De ahí nació la famosa frase: 'Y si te crees eso, ¡tengo un puente que venderte!'",
+            "fr": "C'est de là qu'est née l'expression: 'Si tu crois ça, j'ai un pont à te vendre!'"
+          },
+          "scene_type": "famous_saying"
+        },
+        {
+          "index": 16,
+          "headline": "🔔 SUBSCRIBE FOR MORE CRAZY TRUE HISTORIES!",
+          "scripts": {
+            "hi": "अगर इतिहास के ऐसे ही मजेदार सच्चे किस्से पसंद हैं, तो अभी सब्सक्राइब करें!",
+            "gu": "જો ઇતિહાસના આવા જ રમુજી અને સાચા કિસ્સા ગમતા હોય, તો હમણાં જ સબ્સ્ક્રાઇબ કરો!",
+            "en": "If you love hilarious and mind-blowing true history, hit subscribe right now!",
+            "mr": "इतिहासातील अशाच रंजक आणि सत्य कथा आवडत असतील, तर आत्ताच सबस्क्राईબ करा!",
+            "bn": "ইতিহাসের এমন অবিশ্বাস্য সত্য ঘটনা পছন্দ হলে এখনই সাবস্ক্রাইব করুন!",
+            "ta": "இதுபோன்ற சுவாரஸ்யமான உண்மை வரலாறுகளை அறிய உடனே சப்ஸ்கிரைப் செய்யுங்கள்!",
+            "te": "ఇలాంటి ఆసక్తికరమైన నిజమైన చారిత్రక కథలను తెలుసుకోవడానికి ఇప్పుడే సబ్‌స్క్రైబ్ చేసుకోండి!",
+            "kn": "ಇಂತಹ ರೋಚಕ ನೈಜ ಇತಿಹಾಸ ಕಥೆಗಳನ್ನು ತಿಳಿಯಲು ಈಗಲೇ ಸಬ್‌ಸ್ಕ್ರೈಬ್ ಮಾಡಿ!",
+            "es": "Si te fascinan estas increíbles historias reales, ¡suscríbete ahora mismo!",
+            "fr": "Si vous aimez ces histoires vraies incroyables, abonnez-vous dès maintenant!"
+          },
+          "scene_type": "subscribe_cta"
+        }
+      ]
+    }
+  ]
+}

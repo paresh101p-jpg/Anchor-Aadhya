@@ -1,0 +1,9 @@
+{
+  "name": "anchor-aadhya-viral-reels",
+  "version": "2.0.0",
+  "type": "module",
+  "description": "Autonomous 15+ Screen Viral Storyboard Reel Engine for Anchor Aadhya",
+  "dependencies": {
+    "puppeteer-core": "^22.12.1"
+  }
+}
