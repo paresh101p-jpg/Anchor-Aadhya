@@ -15,16 +15,16 @@ import subprocess
 import edge_tts
 
 LANG_VOICES = {
-    "hi": ("hi-IN-MadhurNeural", "-2%"),
-    "gu": ("gu-IN-NiranjanNeural", "-2%"),
-    "en": ("en-US-ChristopherNeural", "-2%"),
-    "mr": ("mr-IN-ManoharNeural", "-2%"),
-    "bn": ("bn-IN-BashkarNeural", "-2%"),
-    "ta": ("ta-IN-ValluvarNeural", "-2%"),
-    "te": ("te-IN-MohanNeural", "-2%"),
-    "kn": ("kn-IN-GaganNeural", "-2%"),
-    "es": ("es-ES-AlvaroNeural", "-2%"),
-    "fr": ("fr-FR-HenriNeural", "-2%")
+    "hi": ("hi-IN-SwaraNeural", "+0%"),
+    "gu": ("gu-IN-DhwaniNeural", "+0%"),
+    "en": ("en-US-AvaNeural", "+0%"),
+    "mr": ("mr-IN-AarohiNeural", "+0%"),
+    "bn": ("bn-IN-TanishaaNeural", "+0%"),
+    "ta": ("ta-IN-PallaviNeural", "+0%"),
+    "te": ("te-IN-ShrutiNeural", "+0%"),
+    "kn": ("kn-IN-SapnaNeural", "+0%"),
+    "es": ("es-ES-ElviraNeural", "+0%"),
+    "fr": ("fr-FR-DeniseNeural", "+0%")
 }
 
 def get_audio_duration(file_path):
